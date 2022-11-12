@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-11-12 Sat 12:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DNA tamiri</title>
+<meta name="author" content="Barış Salman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">DNA tamiri</h1>
+<p>
+<a href="NER.html#ID-d1da4beb-0706-48b0-b3a1-1e8293e68e31">NER</a>
+</p>
+
+
+<div class="abstract" id="orgef40963">
+<p>
+<b>DNA tamiri olmadan, kendiliğinden meydana gelen DNA hasarı hızlıca DNA dizilerini değiştirecektir.</b>
+Örneğin, kendiliğinden meydana gelen <i>depürinasyon</i> reaksiyonundan dolayı her
+insan hücresi günlük 18.000 pürin bazını (adenin ve guanin), N-glikozil
+bağlantılarından ve deoksiriboz hidrolizinden dolayı kaybetmektedir.
+Benzer olarak, kendiliğinden gerçekleşen <i>deaminasyon</i> reaksiyonu ile bir
+hücrede günlük 100 sitozin bazı urasile dönmektedir.
+</p>
+<ul class="org-ul">
+<li>DNA bazları, hücrede üretilen yüksek enerjili oksijen vericileri ya da S-adenozilmetionin gibi reaktif metabolitler tarafındanda hasar alabilir.</li>
+<li><p>
+Benzer şekilde ultraviyole ışınları bitişik iki primidin bazı arasında kovalent bağ, timin dimeri gibi, oluşturabilir.
+</p>
+
+<p>
+Bu hasarlar tamir edilmezse yavru DNA zincirlerinde tek ya da birden fazla baz çiftinin delesyonuna ya da değişimine yol açabilir.
+</p></li>
+</ul>
+
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Hastalık İsmi</td>
+<td class="org-left">Fenotipi</td>
+<td class="org-left">Etkilenen enzim ya da süreç</td>
+</tr>
+
+<tr>
+<td class="org-left">MSH2, 3, 6, MLH1, PMS2</td>
+<td class="org-left">Kolon kanseri</td>
+<td class="org-left">Yanlış eşleşme tamiri</td>
+</tr>
+
+<tr>
+<td class="org-left">Xeroderma pigmentosum (XP) A–G</td>
+<td class="org-left">Cilt kanseri, UV duyarlılığı, nörolojik bozukluklar</td>
+<td class="org-left">Nüklotit ekzisyon tamiri</td>
+</tr>
+
+<tr>
+<td class="org-left">Cockayne sendromu</td>
+<td class="org-left">UV duyarlılığı; gelişimsel bozukluklar</td>
+<td class="org-left">Nükleotit ekzisyon tamirinin transkripsiyon ile eşleşmesi</td>
+</tr>
+
+<tr>
+<td class="org-left">XP varyantı</td>
+<td class="org-left">UV duyarlılığı, cilt kanseri</td>
+<td class="org-left">DNA polimeraz ν tarafından translezyon sentezi</td>
+</tr>
+
+<tr>
+<td class="org-left">Ataksi telanjiekstazi (AT)</td>
+<td class="org-left">Lösemi, lenfoma, γ-ışını duyarlılığı, genom dengesizliği</td>
+<td class="org-left">ATM proteini, çift zincir kırıkları tarafından aktive edilen bir protein kinaz</td>
+</tr>
+
+<tr>
+<td class="org-left">BRCA1</td>
+<td class="org-left">Meme ve rahim kanseri</td>
+<td class="org-left">Homolog rekombinasyon tamiri</td>
+</tr>
+
+<tr>
+<td class="org-left">BRCA2</td>
+<td class="org-left">Meme, rahim, ve prostat kanseri</td>
+<td class="org-left">Homolog rekombinasyon tamiri</td>
+</tr>
+
+<tr>
+<td class="org-left">Werner sendromu</td>
+<td class="org-left">Erken yaşlanma,  farklı yerlerde kanserler, genom dengesizliği</td>
+<td class="org-left">Tamirde kullanılan 3&rsquo;-ekzonükleaz ve DNA helikaza yardımcı</td>
+</tr>
+
+<tr>
+<td class="org-left">Bloom sendromu</td>
+<td class="org-left">Farklı yerlerde kanserler, gelişimin durması, genom dengesizliği</td>
+<td class="org-left">Rekombinasyon için gerekli DNA helikaz</td>
+</tr>
+
+<tr>
+<td class="org-left">Fanconi anemisi A–G</td>
+<td class="org-left">Konjenital bozukluklar, lösemi, genom dengesizliği</td>
+<td class="org-left">İplikler arası çapraz-bağlı DNA tamiri</td>
+</tr>
+
+<tr>
+<td class="org-left">46 BR patient</td>
+<td class="org-left">DNA hasar veren ajanlara aşırı duyarlılık, genom dengesizliği</td>
+<td class="org-left">DNA ligaz I</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>DNA tamiri olmadan, kendiliğinden meydana gelen DNA hasarı hızlıca DNA dizilerini değiştirecektir.</b>
+Örneğin, kendiliğinden meydana gelen <i>depürinasyon</i> reaksiyonundan dolayı her
+insan hücresi günlük 18.000 pürin bazını (adenin ve guanin), N-glikozil
+bağlantılarından ve deoksiriboz hidrolizinden dolayı kaybetmektedir.
+Benzer olarak, kendiliğinden gerçekleşen <i>deaminasyon</i> reaksiyonu ile bir
+hücrede günlük 100 sitozin bazı urasile dönmektedir.
+</p>
+<ul class="org-ul">
+<li>DNA bazları, hücrede üretilen yüksek enerjili oksijen vericileri ya da S-adenozilmetionin gibi reaktif metabolitler tarafındanda hasar alabilir.</li>
+<li><p>
+Benzer şekilde ultraviyole ışınları bitişik iki primidin bazı arasında kovalent bağ, timin dimeri gibi, oluşturabilir.
+</p>
+
+<p>
+Bu hasarlar tamir edilmezse yavru DNA zincirlerinde tek ya da birden fazla baz çiftinin delesyonuna ya da değişimine yol açabilir.
+</p></li>
+</ul>
+
+
+<div id="orgea53912" class="figure">
+<p><img src="./spontaneous_DNA_damage.png" alt="spontaneous_DNA_damage.png" width="100%" />
+</p>
+</div>
+
+<p>
+<b>DNA çifte sarmalı kolayca tamir edilebilir</b>
+</p>
+
+<p>
+DNA&rsquo;nın çifte sarmal yapısı, iki ayrı kopya taşındığı için tamir için ideal bir yapı oluşturmaktadır.
+</p>
+
+
+<div id="org20e5218" class="figure">
+<p><img src="./depuranation_deamination.png" alt="depuranation_deamination.png" width="100%" />
+</p>
+</div>
+
+<p>
+<b>DNA hasarı birden fazla yolakta düzeltilir.</b>
+</p>
+
+<p>
+Hücreler farklı hasarları tamir etmek için farklı enzimleri ve çoklu yolakları vardır. <a href="BERandNER.png">Şekildeki</a> iki yaygın tamir yolunda, DNA Polimeraz, sağlam olan zinciri örnek olarak kullanılıp onarılır ve kalan kırıklarda DNA ligaz ile kapatılır.
+</p>
+
+<p width="100%">
+<img src="./thyminedimer.png" alt="thyminedimer.png" width="100%" />
+İlk tamir yolağı <b>baz çıkarım tamirinde</b>, <i>DNA glikozilaz</i> enzimleri kullanılır. Bu enzimlerden her biri belirli değiştirilmiş bir bazı tanır ve DNA&rsquo;dan hidrolitik olarak çıkarımını sağlar. En az altı çeşit DNA glikozilaz bulunur:
+</p>
+<ul class="org-ul">
+<li>Deamine C,</li>
+<li>Deamine A,</li>
+<li>Alkiliye ya da oksidize bazlar,</li>
+<li>Açık halkalı bazlar,</li>
+<li>C=C&rsquo;nin C-C&rsquo;ye döndüğü bazlar</li>
+</ul>
+
+<p>
+Bu bazların DNA içerisinde tanınması enzim ile sağlanan, değişmiş nükleotitin &ldquo;dışarı çevrilmesi&rdquo; ile olur. Düşünülen o ki, DNA glikozilaz enzim DNA boyunca her bazı tek tek dışarı çevirerek kontrol eder. Tanıdığı hasarlı bir bazı bulduğunda, bazı şekerinden ayırır.
+DNA glikozilaz tarafından bazın çıkarılması sonra oluşan boşluk <i>AP endonuclease</i> (Apürinik/Apirimidinik) enzimi tarafından tanınır ve fosfodiester omurgasını keser. Bundan sonra oluşan boşluk tamir edilir.
+Depürinasyonlar, direk AP endonükleaz tarafından tanınır ve yolak bu noktadan devam eder.
+</p>
+
+<p>
+İkinci büyük yolak <b>nükleotit çıkarım tamiridir.</b>
+Bu mekanizma ile çift sarmal üzerindeki daha büyük hasarlar tamir edilebilir.
+Bu büyük hasarlar, büyük hidrokarbonlar tarafından (tütün, kömür, dizel yakıtların yanması ile oluşan benzopiren gibi) ya da güneşin neden olduğu pirimidin dimerleri (T-T, T-C ve C-C) olabilir.
+Bu yolakta, çoklu enzim kompleksi DNA&rsquo;yı, tek bir nükelotit yerine yapısal çarpıklıklar için tarar.
+Bir hasar bulunduğu zaman, çarpıklığın her iki yanından fosfodiester bağları kesilir ve DNA helikaz, hasarın bulunduğu tek sarmalı açar.
+Çifte sarmalda kalan boşluk DNA polimeraz ve DNA ligaz tarafından doldurulur.
+Nükleotit çıkarım tamirine, alternatif bir diğer tamir yöntemi ise DNA hasarının direk kimyasal tersinimidir.
+Bu yöntem belirli mutajenik ya da sitotoksik lezyonların onarımında kullanılır.
+Örneğin O<sup>6</sup>-metilguanin alkilasyonunda, metil grubu, tamir proteininin sistein aminoasitine transfer edilerek giderilir.
+Bir diğer örnekte, 1-metiladenin ve 3-metilsitozin bazlarındaki metil grupları demir-bağlı demetilaz tarafından bazdan formaldehit salınımı ile yakılır.
+</p>
+
+
+<div id="org57fe35a" class="figure">
+<p><img src="./BERandNER.png" alt="BERandNER.png" width="100%" />
+</p>
+</div>
+
+<p>
+<b>Nükleotit Çıkarım Tamiri ile Transkripsiyonun Eş Zamanlı Yapılması En Önemli DNA&rsquo;nın Etkili Tamirini Sağlar.</b>
+RNA transkriptaz NER mekanizması ile beraber çalışmaktadır. RNA transkriptaz bir hata gördüğünde durur ve beraberindeki proteinler NER mekanizmasını buraya yönlendirir. Tamir sonrasında, bakterilerde transkripsiyon baştan başlar, ökaryotlarda RNA polimeraz tamir sürecinde yedeklenir ve yeniden başlar.
+</p>
+
+<p>
+<b>DNA Bazlarının Kimyası Hasar Tespitini Kolaylaştırır.</b>
+Her bazın deaminasyonu DNA&rsquo;da doğal olarak bulunmayan ve belli bir DNA glikozilaz tarafından tanınabilen farklı bir baz oluşturur.
+Örneğin hipoksantin sitozin ile üçlü bağ kurabilir ancak normalde iki hidrojen bağı kuran adeninin deaminasyonu sonu oluşur.
+Hipoksantine ikinci bir amin grubunun eklenmesi ile de guanin oluşur ve yine guaninin kendiliğinden meydana gelen deaminasyonu sonucu yine farklı bir baz olarak ksantin meydana gelir.
+</p>
+
+
+<div id="orgfe23f08" class="figure">
+<p><img src="./deamination.png" alt="deamination.png" width="100%" />
+</p>
+</div>
+
+<p>
+RNA, evrimsel zaman ölçeğinde genetik materyalin aktarımında DNA&rsquo;dan önce gelir ve genetik kot A, C, U, G nükleotitleri ile taşınmıştır.
+Bu durumda U&rsquo;nun neden T&rsquo;ye (5-metilU) dönüşmüş olacağı sorusu ortaya çıkmaktadır.
+C&rsquo;nin kendiliğinden meydana gelen deaminasyonu U&rsquo;ya dönüşmektedir ve bu durum urasil DNA glikozilaz tarafından düzeltilebilir.
+Ancak eğer DNA doğal olarak U barındırsaydı, DNA&rsquo;da ki U&rsquo;ların C deaminasyonu mu yoksa doğal U mu olduğunun ayrımı yapılamazdı.
+Gen inaktivasyonunda CG dizilerinde metillenen C nükleotitlerinin deaminasyonu doğal olan T nükleotini oluşturur. Bu durumda karşı iplikteki G ile uyumsuzluk meydana gelir.
+Bu durumu özel bir DNA glikozilaz tanır ve burada ki T nükleotitini çıkartır.
+Bu DNA tamir mekanizması, çok etkili bir yöntem olmamalı ki omurgalılarda metile C mutasyonları yaygındır. İnsan DNA&rsquo;sının %3&rsquo;ünün metile olmasına rağmen kalıtılan insan hastalıklarında ki tek baz mutasyonların üçte birini oluştururlar.
+</p>
+
+
+<div id="org3d316a2" class="figure">
+<p><img src="./deamination2.png" alt="deamination2.png" width="100%" />
+</p>
+</div>
+
+<p>
+<b>Acil durumlarda özel hasar DNA polimerazları kullanılır.</b>
+Eğer hücrenin DNA&rsquo;sı ağır hasar alırsa, yukarıda anlatılan tamir mekanizmaları genelde yeterli olmayacaktır.
+Böyle durumlarda, hücrenin kendisine de zararlı olabilecek farklı bir strateji kullanılır. Yüksek kesinlikle çalışan replikasyon DNA polimerazları, DNA hasarı ile karşılaştıklarında dururlar ve acil durumlarda hücre, daha uyarlanabilir, ancak kesinliği daha düşük olan, DNA hasarında bile replikasyon yapabilen <i>hasar polimerazlarını</i> kullanır.
+İnsan hücresinde, yedi hasar polimerazı bulunur. Bunlardan bazıları DNA hasarını tanır ve onarmak için gerekli bazları ekler. Bazıları ise özellikle kalıp zincirin çok hasarlı olduğu durumlarda orada olabilecek bazı iyi-kötü tahmin edebilir. Bu hasar polimerazlarının ekzonükleik düzeltme yetenekleri yoktur ve ek olarak ilk ekledikleri nükleotitin seçiminide çok başarılı yapamazlar. Muhtemelen, bu yüzden hasar polimerazları sadece bir kaç baz ekler ve sonrasında replikasyon DNA polimerazı senteze devam eder.
+Baz değişimlerinin ve indellerin neden olmaktadırlar. Sadece hasarlı DNA&rsquo;yı kopyalarken de değil hasarsız DNA&rsquo;yı kopyalarkende.
+</p>
+
+<p>
+<b>Çift İplik Kırıkları Etkili bir Şekilde Tamir Edilir.</b>
+Özellikle tehlikeli olan bir DNA hasarı çift sarmalın her iki ipliğininde kırılmasıdır. Bu durumda kesin bir tamir için doğru bir kopya olmaz.
+İyonize radyasyon, Replikasyon hataları, oksidize edici ajanlar, ve diğer metabolitler bu tarz kırıkların oluşmasına neden olabilir.
+Eğer bu hasarlar hızlıca tamir edilmezse, bu hasarlar büyüyerek  kromozomların parçalanması ile sonuçlanabilir. Neyse ki, iki ayrı mekanizma bu tarz hasarla başa çıkmak için evrimleşmiştir.
+Bunlardan en basiti olan <b>homolog olmayan uç birleştirme</b> ile kırık uçlar DNA ligasyonu ile tekrar birleştirilir. Bunun sonucun uçlardaki nükleotitlerde kayıp olabilir. Bu yöntem ile tamirde nükleotit kaybı olsa bile memeli genomunun kalabalığından dolayı, bu kayıp kabul edilebilir.
+İnsan 70 yaşına geldiğinden, bir somatik hücre, homolog olmayan uç birleştirme sonucu oluşan bu yaralardan 2000 tane taşır.
+Bu tamir yönteminin bir başka kötü yanı ise, normalde yan yana  olmayan uçları birleştirerek rearajmanlar yaratabilir.
+Bu durumda da iki sentromerli ya da sentromeri olmayan kromozomlar yaratabilir.
+Telomerler normal kromozomların bu şekilde yanlışlıkla tamir edilmesini engeller.
+Daha doğru bir çift zincir kırık tamiri yeni replike edilen DNA ile olur. Burada, kardeş kromatit kalıp olarak kullanılır. Bu reaksiyon <i>homolog rekombinasyon</i> örneğidir.
+Çoğu organizma, çift iplik kırıklarının tamirinde her iki yöntemi de kullanır.
+İnsan hücrelerinde, daha çok homolog olmayan uç birleştirme kullanılırken, homolog rekombinasyon ile tamir ise kardeş kromatitlerin kalıp olarak kullanılabileceği DNA replikasyonu sonrasında kullanılır.
+<b>DNA Hasarı Hücre Döngüsünün İlerlemesini Geciktirir.</b>
+Memeli hücrelerinde DNA hasarı G<sub>1</sub> fazından S fazına girmeyi engeleyebilir, S fazını yavaşlatabilir, ve G<sub>2</sub> fazından M fazına girmeyi engelleyebilir.
+DNA hasarı ayrıca DNA tamir enzimlerinin sentezininde artmasına yol açar.
+Bu cevap, DNA hasarını algılayan ve uygun DNA tamir enzimlerinin sentezini arttıran sinyal proteinlerine dayanır.
+Bu mekanizmanın önemi <i>ATM</i> genindeki mutasyonları yarattığı fenotip ile görülebilir. ATM proteini kendiliğinden oluşan DNA hasarlarında sinyal veren büyük bir kinaz proteinidir.
+</p>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Barış Salman</p>
+<p class="date">Created: 2022-11-12 Sat 12:21</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-08-21 Sun 19:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Risk Değerlendirmesi ve Genetik Danışma</title>
+<meta name="author" content="Barış Salman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Risk Değerlendirmesi ve Genetik Danışma</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org130a69e">1. Aile Öyküsü ve Risk Değerlendirme</a>
+<ul>
+<li><a href="#org1914ed0">1.1. Yüksek risk</a></li>
+<li><a href="#org228d063">1.2. Orta risk</a></li>
+<li><a href="#orgc84aa83">1.3. Ortalama risk</a></li>
+</ul>
+</li>
+<li><a href="#org3335aa6">2. Klinik Uygulamada Genetik Danışma</a></li>
+<li><a href="#orgb1691a0">3. Tekrarlama Risklerinin Belirlenmesi</a></li>
+<li><a href="#org94b4c61">4. Bilinen Genotiplerin Mendelyen Kalıtıma Göre Risk Değerlendirmesi</a></li>
+<li><a href="#org96c7657">5. Alternatif Genotiplerin Mümkün Olduğu Durumlarda Koşullu Olasık ile Risk Tahmini</a></li>
+<li><a href="#orgda079a0">6. Koşullu Olasılık</a>
+<ul>
+<li><a href="#org8869b5c">6.1. Muhtemel Senaryolar</a></li>
+<li><a href="#orge37f4ec">6.2. X&rsquo;e bağlı Ölümcül Hastalıklarda Koşullu Olasılık</a></li>
+</ul>
+</li>
+<li><a href="#orgc777bd5">7. Eksik Penetranslı Hastalıklar</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org130a69e" class="outline-2">
+<h2 id="org130a69e"><span class="section-number-2">1.</span> Aile Öyküsü ve Risk Değerlendirme</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org1914ed0" class="outline-3">
+<h3 id="org1914ed0"><span class="section-number-3">1.1.</span> Yüksek risk</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>İlk derece akrabada, genel popülasyona göre daha erken başlangıçlı hastalık</li>
+<li>Etkilenmiş ilk dereceden iki yakın</li>
+<li>İkinci dereceden etkilenmiş iki yakın, en az biri erken başlangıçlı</li>
+<li>Üç ya da daha fazla etkilenmiş yakın</li>
+<li>Ailenin her iki tarafında da orta risk aile öyküsü olması</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org228d063" class="outline-3">
+<h3 id="org228d063"><span class="section-number-3">1.2.</span> Orta risk</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>İlk derecen geç ya da bilinmeyen başlangıçlı etkilenmiş bir yakın olması</li>
+<li>Aynı soydan gelen iki ikinci dereceden geç ya da bilinmeyen başlangıçlı etkilenmiş yakın</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc84aa83" class="outline-3">
+<h3 id="orgc84aa83"><span class="section-number-3">1.3.</span> Ortalama risk</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>Etkilenmiş bir yakın olmaması</li>
+<li>Sadece bir ikinci dereceden etkilenmiş bir yakın</li>
+<li>Aile öyküsünde hastalığın olmaması</li>
+<li>Aile öyküsü olmayan evlat edinilmiş biri</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3335aa6" class="outline-2">
+<h2 id="org3335aa6"><span class="section-number-2">2.</span> Klinik Uygulamada Genetik Danışma</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Klinik genetiğin sağlaması gereken temeller,
+</p>
+<ul class="org-ul">
+<li>Doğru tanı koymak, laboratuvar testleri, genetik testler ile altta yatan mutasyonu bulmak.</li>
+<li>Etkilenmiş kişi ve aile fertlerinin, hastalığı anlaması ve hastalığın doğası ve sonuçları ile uzlaşmasını sağlamakk.</li>
+<li>Uygun tedavi yönetimi sağlamak, gerekirse diğer uzmanlık alanlarına sevk etmek.</li>
+</ul>
+
+<p>
+Genetik danışmanın benzersiz tarafı, şimdi ve gelecekte hem probanta hem de ailenin diğer üyerlerine odaklanmasıdır.
+</p>
+<ul class="org-ul">
+<li>Aile üyelerini potensiyel riskten haberdar etmek için hasta ile çalışmak</li>
+<li>Diğer aile üyelerine kesin risk değerlendirmesi için, genetik ya da diğer testleri teklif etmek</li>
+<li>Bu riskleri değiştirmek için hangi yollara başvurabileceğini hasta ve yakınlarına anlatmak.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb1691a0" class="outline-2">
+<h2 id="orgb1691a0"><span class="section-number-2">3.</span> Tekrarlama Risklerinin Belirlenmesi</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li><p>
+Eğer hastalık tek gen kalıtımı gösteriyorsa tekrarlama riski temel Mendelyen prensipler ile belirlenebilir.
+</p>
+<ul class="org-ul">
+<li>Azalmış penetrans</li>
+<li>De novo mutsayonlar</li>
+</ul>
+<p>
+bu hesaplamaları karmaşıklaştırabilir. Bu durumlarda olasılıklar koşullu olarak değiştirilebilir.
+</p></li>
+<li>Tek gen hastalıklarına karşı kompleks hastalıların mekanizmaları bilinmediği için tekrarlama riskinin belirlenmesi önceki olaylara göredir.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org94b4c61" class="outline-2">
+<h2 id="org94b4c61"><span class="section-number-2">4.</span> Bilinen Genotiplerin Mendelyen Kalıtıma Göre Risk Değerlendirmesi</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>Aile bireylerinin genotipi bilindiğinde yapılabilecek en basit risk tahminidir.</li>
+<li>Örneğin anne babanın heterozigot oluduğu otozomal resesif bir hastalık için tüm gebeliklerde risk 1/4&rsquo;tür.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org96c7657" class="outline-2">
+<h2 id="org96c7657"><span class="section-number-2">5.</span> Alternatif Genotiplerin Mümkün Olduğu Durumlarda Koşullu Olasık ile Risk Tahmini</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>Genotipler kesin olarak bilinmediği durumlarda, tekrarlama risklerinin hesaplanması daha farklı olacaktır. Örneğin ilk evliliğinden sistik fibroz taşıyıcısı olduğu bilinen bir kadının ikinci evliliğinde olacak çocuğun etkilenmiş olmasının riski ikinci evliliğindeki eşinin taşıyıcı olmasına bağlıdır. Yeni eşinin taşıyıcı olması ise etnik arkaplana bağlıdır.</li>
+<li>Örnek olarak, Beyaz ırkta bu şans yaklaşık olarak 1&rsquo;de 22&rsquo;dir. Bu yüzden taşıyıcı olduğu bilinen bir eş ve bilinmeyen bir eşin çocuğunun etkilenmiş olma şansı \( \frac{1}{22} \times \frac{1}{4} = \frac{1}{88} \), yaklaşık %1&rsquo;dir.
+Tabiki eğer, baba gerçekten taşıyıcıysa, çocuğun homozigot ya da bileşik heterozigot hasta olma şansı dörtte bir eğer taşıyıcı değilse hasta olma şansı sıfır olacaktır.
+Direk babayı test edemediğimiz durumlar 22&rsquo;de 1 en iyi tahmin olackatır.
+Eğer bu çiftin daha önceden 5 sağlıklı çocuğu olmuş ve 6 çocuk için danışma veriyorsak hastalık riski 22&rsquo;de 1&rsquo;den daha az olmalıdır. Burada Bayes analizini uygularız. Bu durumda ikinci kocanın taşıyıcı olma ihtimali 119&rsquo;da 1, ve hasta çocuk olma ihtimali 476&rsquo;da 1&rsquo;dir.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgda079a0" class="outline-2">
+<h2 id="orgda079a0"><span class="section-number-2">6.</span> Koşullu Olasılık</h2>
+<div class="outline-text-2" id="text-6">
+
+<div id="org5a142db" class="figure">
+<p><img src="./koşulluOlasılıkPedigri.png" alt="koşulluOlasılıkPedigri.png" width="100%" />
+</p>
+</div>
+
+<p>
+Figürdeki A ailesinde II-1 anne X&rsquo;e bağlı Hemofili için zorunlu taşıyıcıdır ve mutant alelli aktarma şansı 2&rsquo;de 1&rsquo;dir.
+</p>
+<ul class="org-ul">
+<li>Figürdeki B ailesinde probandın annesinin taşıyıcılık durumu bilinmemektedir. Eğer III-5 tek çocuk olsaydı taşıyıcı olma şansı 4&rsquo;te 1 olacaktı.
+<ul class="org-ul">
+<li>\( \frac{1}{2} (Annenin Taşıyıcı olma şansı) \times \frac{1}{2} (Probantın anneden mutant aleli kalıtması)  = \frac{1}{4} \)</li>
+<li>Direk genetik test olmadan taşıyıcı olup olmadığını bilemeyiz ancak dört etkilenmemiş erkek kardeşi olduğunu göze alırsak anne II-2 taşıyıcı olup olmadığını 4 kere test etmiş oluyor.</li>
+</ul></li>
+</ul>
+
+
+<div id="org9cd8e88" class="figure">
+<p><img src="./koşulluOlasılıkPedigri2.png" alt="koşulluOlasılıkPedigri2.png" width="100%" />
+</p>
+</div>
+</div>
+<div id="outline-container-org8869b5c" class="outline-3">
+<h3 id="org8869b5c"><span class="section-number-3">6.1.</span> Muhtemel Senaryolar</h3>
+<div class="outline-text-3" id="text-6-1">
+<ol class="org-ol">
+<li>II-2 taşıyıcı ancak danışan değil.</li>
+<li>II-2 ve danışan ikiside taşıyıcı.</li>
+<li>II-2 taşıyıcı değil ve danışanda taşıyıcı olamaz.</li>
+<li><p>
+<code>II-2 taşıyıcı değil ancak danışan tayıcı.</code> Bu ihtimal görmezden geliniyor. Belki De novo mutasyon şansı konulabilir?
+</p>
+
+<p>
+Bu üç senaryoda II-2&rsquo;nin taşıyıcı olması ihtimali <b>ön olasılık</b> olarak adlandırılır.
+A ve B senaryosunda dört erkek çocuğun mutasyonu kalıtmamasının ihtimali \( (\frac{1}{2})^{4} \). C senaryosunda II-2 taşıyıcı olmadığı için erkek çocukların etkilenmemiş olma ihtimali 1. Bunlar II-2&rsquo;nin taşıyıcı olup olmadığına bağlı olduğu için <b>koşullu olasılıklar</b>.
+Bununla beraber, danışan III-5, A senaryosunda 2&rsquo;de 1 ihtimalle mutant aleli kalıtmadı, B senaryosunda ise 2&rsquo;de 1 ihtimalle mutant aleli kalıttı. C senaryosunda ise annesi taşıyıcı olmadığı için %100 taşıyıcı değil.
+</p>
+
+<p>
+Ön olasılıkları ve koşullu olasılıkları birbiri ile çarptığımızda <b>birleşik olasık</b> elde ederiz.
+Son olarak, her senaryo için, o senaryonun ihtimalinin, toplam birleşik olasılığıkların toplamının kaçta kaçı olduğunu bulmamız bize <b>son olasılığı</b> verir.
+</p>
+
+<p>
+Bu durumda III-5&rsquo;in taşıyıcı olma senaryosu için hesaplanacak sonsal olasılık, \( \frac{\frac{1}{64}}{\frac{1}{64}+\frac{1}{64}+\frac{1}{2}} = \frac{1}{34} ~=\%3 \)
+</p>
+
+<p>
+Eğer II-2&rsquo;nin taşıyıcı olma şansını bilmek istersek, II-2&rsquo;nin taşıyıcı olduğu A ve B senaryolarının sonsal olasılıklarını ekleyip bulabiliriz, bu da 17&rsquo;de 1, yaklaşık %6&rsquo;dır.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orge37f4ec" class="outline-3">
+<h3 id="orge37f4ec"><span class="section-number-3">6.2.</span> X&rsquo;e bağlı Ölümcül Hastalıklarda Koşullu Olasılık</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+X&rsquo;e bağlı hastalıklar hemizigot erkekte kendini direk gösterdiği için bu durum ya de novo mutasyondan ya da taşıyıcı anneden kaynaklıdır. Bu durumda gonadal mozaiklik gözardı edilebilir. Bu durumda annenin taşıyıcı olup olmadığı Bayes analizi ile tespit edilebilir.
+</p>
+
+
+<div id="orgffe14d7" class="figure">
+<p><img src="./koşulluOlasılıkPedigri3.png" alt="koşulluOlasılıkPedigri3.png" width="100%" />
+</p>
+</div>
+
+<p>
+Yukarıdaki ailede danışan III-2, DMD için taşıyıcılık şansını bilmek istiyor.
+Burada üç muhtemel senaryo olabilir.
+</p>
+<ol class="org-ol">
+<li>III-1&rsquo;in hastalığı yeni bir mutasyon sonucu olabilir. Bu durumda III-1&rsquo;in annesi teyzesi, ve kız kardeşinin taşıyıcılık riski yoktur.</li>
+<li>III-1&rsquo;in annesi II-1 taşıyıcı ancak kardeşi III-2, 2&rsquo;de 1 taşıyıcı olma ihtimali olur, ancak teyze II-3 taşıyıcı riski olmayabilir I-1 taşıyıcı olmadığı için.</li>
+<li>II-1 alleli I-1&rsquo;den kalıtılmış olabilir, bu yüzden II. jenerasyondaki kadınlar 2&rsquo;de 1 III-2 nin 4&rsquo;te 1&rsquo;dir.</li>
+</ol>
+
+<p>
+İlk olarak bu aile ağacındaki kadınların taşıyıcı önsel olasılıklarını hesaplamamız gerekecek.
+</p>
+
+<p>
+Diyelim ki H, X&rsquo;e bağlı ölümcül bir hastalık için popülasyondaki taşıyıcı kadınların frekansı olsun.
+Diyelim ki, herhangi bir gamette X&rsquo;e bağlı lokustaki mutasyon oranı &mu; olsun.
+Diyelim ki, &mu; hem kadınlarda hem erkeklerde aynı olsun. Bu &mu; sayısı 10<sup>-4</sup> ile 10<sup>-6</sup> arasında küçük bir sayı.
+O zaman, herhangi bir kadının taşıyıcı olabileceği üç ayrı yol var:
+</p>
+<ol class="org-ol">
+<li>Kadın, taşıyıcı annesinsden mutant alleli kalıtırsa \( = \frac{1}{2} \times H \).</li>
+<li>Kadın, annesinin X&rsquo;inde yeni mutant aleli kalıtılabilir =&mu; yada</li>
+<li>Kadın, babasından gelen X&rsquo;e yeni mutant alel olabilir =&mu;.</li>
+</ol>
+<p>
+Bir kadının taşıyıcı olma riski tüm bu ihtimallerin toplamı olacaktır.
+</p>
+
+<p>
+\[ H = (\frac{1}{2} \times H) + \mu + \mu = \frac{H}{2} + 2\mu \]
+</p>
+
+<p>
+H için çözdüğümüzde popülasyondaki, rastgele bir kadının X&rsquo;e bağlı hastalık için taşıyıcı olma olasılığı 4&mu; dür. Not, 4&mu;&rsquo;nun yarısı 2&mu;, bir kadının kalıtım ihtimali diğer 2&mu; yeni mutasyon ile taşıyıcı olmasıdır.
+</p>
+
+<p>
+Bu durumda,
+</p>
+<ol class="org-ol">
+<li>A senaryosunda III-1, &mu; olasılığı ile de novo mutasyon oluştu ve hem anne hem de büyük anne taşıyıcı değil yani 1-4&mu; = 1. Bu durumun birleşik olasılığı \(\mu \times 1 \times 1 = \mu \) olacaktır.</li>
+<li>B senaryosunda, I-1 taşıyıcı değil yani II-1 2&mu; olasılıkla yeni mutasyon taşımakta. II-1&rsquo;in oğlunun hasta olma şansıda 2&rsquo;de 1 olacaktır. Bu durumda birleşik olasılık \( 2\mu \times \frac{1}{2} = \mu \) olacaktır.</li>
+<li><p>
+Hem I-1 hem de II-1&rsquo;in taşıyıcı olduğu durumda I-1&rsquo;in taşıyıcı olma olasılığı 4&mu;  II-1&rsquo;in taşıyıcı olma olasılığı 2&rsquo;de 1, III-1&rsquo;in hasta olma olasılığı yine 2&rsquo;de 1 olacaktır. Bu durumda birleşik olasılık \( 4\mu \times \frac{1}{2} \times \frac{1}{2} = \mu \) olacaktır.
+</p>
+
+<p>
+Sonuç olarak sonsal olasılıklarımız: \( \frac{\mu}{\mu + \mu + \mu} = \frac{1}{3} \) olacaktır.
+</p></li>
+</ol>
+<p>
+Bu sonsal olasılıklarla, III-1&rsquo;in etkilenmiş olma şansı \(\frac{1}{3} \) olacaktır. Çünkü A durumunda yeni mutasyondan dolayı ve B ve C&rsquo;de annesinin taşıyı olmasından dolayı annenin taşıyı olma olasılığı \(\frac{1}{3} + \frac{1}{3} = \frac{2}{3} \) olacaktır. Büyükanne sadece C durumunda taşıyıcıdır ve onun taşıyı olma ihtimali de  \(\frac{1}{3} \) olacaktır.
+Bu bireyler için risk hesaplarını yaptıktan sonra diğer kadınlar, II-3 ve III-2 içinde hesap yapabiliriz.
+III-2&rsquo; nin taşıyıcı olma riski \( \frac{1}{2} \times [II-1'in taşıyıcı olma şansı] = \frac{1}{2} \times \frac{2}{3} = \frac{1}{3} \) olacaktır.
+II-3&rsquo; ün taşıyıcı olma riski \( \frac{1}{2} \times [I-1'in taşıyıcı olma şansı] = \frac{1}{2} \times \frac{1}{3} = \frac{1}{6} \) olacaktır.
+Bütün bu olasılıklarda germline mozaiklik ihtimallerini görmezden geliyoruz. Gerçek danışmada mozaiklik görmezden gelinemez.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc777bd5" class="outline-2">
+<h2 id="orgc777bd5"><span class="section-number-2">7.</span> Eksik Penetranslı Hastalıklar</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Barış Salman</p>
+<p class="date">Created: 2022-08-21 Sun 19:14</p>
+</div>
+</body>
+</html>

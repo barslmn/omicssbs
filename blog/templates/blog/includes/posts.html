@@ -1,0 +1,27 @@
+{# for path, title in posts #}
+    <!-- <a href="{# url 'base:html' path='{path}' #}">{title}</a> -->
+{# endfor #}
+
+<div id="posts">
+    <h3>posts</h3>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'blog:post' path=post.path %}">{{ post.title }}</a>
+                {{ post.abstract|safe }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+div#posts {
+    position: fixed;
+    overflow-y: auto;
+    height: 80vh;
+    width: 15vw;
+}
+div.abstract {
+ visibility: hidden;
+}
+</style>

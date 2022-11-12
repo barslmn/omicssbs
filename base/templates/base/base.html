@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load static %}
+
+<html lang="en">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="shortcut icon" href="{% static 'base/img/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'base/css/base.css' %}">
+  <title>{% block title %}omics.sbs{% endblock %}</title>
+
+</head>
+
+<body>
+  <ul id="navbar">
+    <li>
+      <a href="{% url 'blog:index' %}">Blog</a>
+    </li>
+    <li>
+      <a href="{% url 'personal:index' %}">Personal</a>
+    </li>
+    <li>
+      <a href="{% url 'bioscripts:index' %}">Bioscripts</a>
+    </li>
+  </ul>
+  <style>
+  ul#navbar li{
+    display: inline-block;
+   }
+  </style>
+  </br>
+
+  base/base.html</br>
+  {% block content %} {% endblock %}
+</body>
+</html>
