@@ -25,7 +25,7 @@ SECRET_KEY = secrets.token_hex(100)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 1
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "66.135.7.11", "omics.sbs"]
 
 
 # Application definition
