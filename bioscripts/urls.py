@@ -6,7 +6,7 @@ from . import views
 app_name = 'bioscripts'
 
 urlpatterns = [
-    # ex: /polls/
     path('', views.index, name='index'),
-    # ex: /polls/5/
+    path('var2texshade/', views.var2texshade, name='var2texshade'),
+    path('var2texshade/<str:hgvsp>', views.var2texshade_api, name='var2texshade_api'),
 ]
