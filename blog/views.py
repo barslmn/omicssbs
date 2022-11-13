@@ -42,8 +42,6 @@ def post(request, path):
         '<style>div#content {width: 60vw;}</style>' + \
         '\n{% endblock %}'
 
-
-    print(template)
     context = Context({'posts': get_posts()})
     return HttpResponse(
         Template(template).render(context)
