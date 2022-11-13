@@ -1,18 +1,15 @@
 {% extends "bioscripts/base.html" %}
+{% load static %}
 {% block content %}
   <p style="display:none;">
     bioscripts/index.html
   </p>
 
-  <ul id="modules">
-    <li>
+    <h3>
       <a href="{% url 'bioscripts:var2texshade' %}">Var2TexShade</a>
-    </li>
-  </ul>
-  <style>
-  ul#modules li{
-    display: inline-block;
-   }
-  </style>
-  </br>
+    </h3>
+    <p>
+    This tools visualizes homology of given protein change e.g. NP_001501.2:p.Arg121Leu using texshade.
+    </p>
+    <img style="width:33vw;" src="{% static 'bioscripts/img/var2texshade_example.png' %}" alt="Example TexShade Image">
 {% endblock %}

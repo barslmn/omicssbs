@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 import secrets
 from pathlib import Path
 
@@ -23,10 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = secrets.token_hex(100)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 1
-
-ALLOWED_HOSTS = ["127.0.0.1", "66.135.7.11", "omics.sbs"]
-
+if os.environ.get('DJANGO_DEBUG'):
+    ALLOWED_HOSTS = ["*"]
+    DEBUG = True
+    # When not specified, ALLOW_HOSTS defaults to:
+    # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ["omics.sbs"]
 
 # Application definition
 
