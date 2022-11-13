@@ -38,4 +38,4 @@ def var2texshade_api(request, hgvsp):
         return render(request,
                       'bioscripts/var2texshade.html',
                       {"error": f"Error: {E.output.decode('utf-8')}"})
-    return FileResponse(open(f"{module_path.joinpath(f'{hgvsp}.pdf')}", 'rb'), as_attachment=True, filename=f'{hgvsp}.pdf')
+    return FileResponse(open(f"{result.decode('utf-8').strip()}", 'rb'), as_attachment=True, filename=f'{hgvsp}.pdf')
