@@ -18,6 +18,9 @@
 <body>
   <ul id="navbar">
     <li>
+      <a href="{% url 'base:index' %}">Home</a>
+    </li>
+    <li>
       <a href="{% url 'blog:index' %}">Blog</a>
     </li>
     <li>
@@ -30,6 +33,7 @@
   <style>
   ul#navbar li{
     display: inline-block;
+    font-weight: bold;
    }
   </style>
   </br>
