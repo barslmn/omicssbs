@@ -152,9 +152,16 @@
   color: var(--bg4);
 }
 
+
 body {
-    background-color: var(--bg);
-    color: var(--fg);
+  font-size: 1.2em;
+  font-family: system-ui, sans-serif;
+  line-height: 1.8;
+  color: var(--fg);
+  background: var(--bg);
+  position: relative;
+  max-width: 64em;  /* remove this for a full-width layout */
+  margin: 0 auto;  /* centers the layout */
 }
  /* unvisited link */
 a:link {

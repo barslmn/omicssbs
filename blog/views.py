@@ -37,9 +37,8 @@ def post(request, path):
 
     template = '{% extends "base/base.html" %}\n' + \
         '{% block content %}\n' + \
-        '{% include "blog/includes/posts.html" %}' + \
         template + \
-        '<style>div#content {width: 60vw;}</style>' + \
+        '{% include "blog/includes/posts.html" %}' + \
         '\n{% endblock %}'
 
     context = Context({'posts': get_posts()})
