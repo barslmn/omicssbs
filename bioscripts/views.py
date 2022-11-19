@@ -33,7 +33,7 @@ def var2texshade(request):
 def var2texshade_api(request, hgvsp):
     module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/var2texshade/")
     try:
-        result = subprocess.check_output(f"{module_path.joinpath('var2texshade.sh')} {hgvsp}", shell=True)
+        result = subprocess.check_output(f"tsp -f {module_path.joinpath('var2texshade.sh')} {hgvsp}", shell=True)
     except subprocess.CalledProcessError as E:
         return render(request,
                       'bioscripts/var2texshade.html',
