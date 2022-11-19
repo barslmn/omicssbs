@@ -195,3 +195,10 @@ section {
 }
 section:target { /* Show section */
    display: block;
+}
+.src {
+  background: var(--bg_h);
+}
+.example {
+  background: var(--bg_s);
+}
