@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-19 Sat 21:54 -->
+<!-- 2022-11-20 Sun 18:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -202,35 +202,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgce3f43a">1. Intro</a></li>
-<li><a href="#orge138259">2. Implementation</a>
+<li><a href="#orgda54e71">1. Intro</a></li>
+<li><a href="#org5acbe2a">2. Implementation</a>
 <ul>
-<li><a href="#orga5c90ce">2.1. Creating the sample data</a>
+<li><a href="#orgf550ae3">2.1. Creating the sample data</a>
 <ul>
-<li><a href="#org614b853">2.1.1. Creating Sequences</a></li>
-<li><a href="#orgd4ce65d">2.1.2. Creating motifs</a></li>
-<li><a href="#org65a452b">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#org0f70d53">2.1.4. Putting it all together</a></li>
+<li><a href="#org62b3db7">2.1.1. Creating Sequences</a></li>
+<li><a href="#orgfa27c9c">2.1.2. Creating motifs</a></li>
+<li><a href="#orgf730e77">2.1.3. Adding motifs to sequences</a></li>
+<li><a href="#org35b6999">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#orgd9d15fd">2.2. Finding the motif</a>
+<li><a href="#org03101f4">2.2. Finding the motif</a>
 <ul>
-<li><a href="#orgd63bf42">2.2.1. Algorithm outline</a></li>
-<li><a href="#org83d21bc">2.2.2. Weighted Model Matrix</a></li>
-<li><a href="#orga5b2103">2.2.3. Calculate probability</a></li>
-<li><a href="#orgd4604d6">2.2.4. Sliding window</a></li>
-<li><a href="#orgcd8bc1a">2.2.5. Putting it all together</a></li>
+<li><a href="#orga25e80f">2.2.1. Algorithm outline</a></li>
+<li><a href="#org1c283e4">2.2.2. Weighted Model Matrix</a></li>
+<li><a href="#orgc880b50">2.2.3. Calculate probability</a></li>
+<li><a href="#orga20cdcd">2.2.4. Sliding window</a></li>
+<li><a href="#org2b7e04a">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
+<li><a href="#org5fa2a9a">2.3. Parameters affecting the results</a></li>
 </ul>
 </li>
-<li><a href="#orgac286f3">3. Closing thoughts</a></li>
+<li><a href="#org67c9768">3. Trying it out with real data</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgce3f43a" class="outline-2">
-<h2 id="orgce3f43a"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-orgda54e71" class="outline-2">
+<h2 id="orgda54e71"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This is a simple implementation of Gibbs motif sampler algorithm described in <a href="https:https://ocw.mit.edu/courses/7-91j-foundations-of-computational-and-systems-biology-spring-2014/resources/mit7_91js14_lecture9/">class 7.91 lecture 9</a>.
@@ -268,16 +269,16 @@ matplotlib 3.6.2
 </div>
 </div>
 
-<div id="outline-container-orge138259" class="outline-2">
-<h2 id="orge138259"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org5acbe2a" class="outline-2">
+<h2 id="org5acbe2a"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga5c90ce" class="outline-3">
-<h3 id="orga5c90ce"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
+<div id="outline-container-orgf550ae3" class="outline-3">
+<h3 id="orgf550ae3"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org614b853" class="outline-4">
-<h4 id="org614b853"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
+<div id="outline-container-org62b3db7" class="outline-4">
+<h4 id="org62b3db7"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 We can create our test data by using random module.
@@ -313,23 +314,23 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="org42f98a5">
-CCTTGGTAAAAAACTCCCAGGCATAATAGTTTGTACCTGGCTGCCTTTCCGCTACGAGCT
-TTTCACATAATTTAAACCCCTATTCAACCATATCTGACGCTCTTGGACCATCGTTAGCCA
-TTAACCGGGCTCTAACAGCGTTCTGTCACGCTCCGGGCGTTCGTGGAGCCGGCAGCGACC
-TGATTGGCTGCCCTCTTTTCCCAATATTAGTTTAGTCCGAAGGATAATTGGGGCCTACCC
-GGAGCATTACACCTGCAAGACGTTTGCAGGATCCAGTCAGGCGTTCACCTGGACGCTGTC
-ATGCGCTCCAATCAGTTTAAGCACTGACCTTGTATAGTATTCAAGAAGTATACTTCGTTC
-CGAGTTCCAATGTATCGACAGGCCCGAAGTAGTCGTATAGACTTGGCGACCAGTCACCTC
-TCCTTGTTATCCCTTATGCAGCACAGATCCTCGCACCTGCCGTGCACTATCCCTCCGCGA
-GTATTGAGATTGAAACAGTAGGTAGCAGTAGCGCTCCTCGCCATGCAAGTAGACATAAGA
-ACGGCATCTACTCGATAGAGTGACCGCGAGCCTTATAGGTTCAGCATTAACTTCGTGTTC
+<pre class="example" id="orgcb0f4ad">
+ACCTGGTTGCAACGCCCATTAGGTCAAGTAGAACCTGGTTCAGTTATTTCCACAACTAAG
+AGTCTTTTCCCGGAAACCCTTTGTCAGACTGTCTCGTGACATCAGGTCAAAGCGATCCGC
+CACGATCGCATACTCGGAATTCGTCTGTATCAGATATAGTTACTCTGACTCCTTAACCAG
+AAGATACATACTGGCAGGCAGAAGCATGCGCCCAACGTCGCAGCTAAACTGCAGGCTCTC
+ATTGTTCAGTCATTCTGAGTTTCTCGCCACATTACACCAGGGCTCTATTAGCGGTTATTC
+TATTAAAATTCCACCTGTCTAAAATCCGCTGGTAGCCACCAACGGACGGCAGTCGCTCCT
+TTGGACCATACCCATCTTTATTTATTTATCCACTAGCGCCAACATAGCCCTAAAAGACGT
+ATAGGATAGGTCTAATCTCTGCTTTCTAGCTATCCCCCGGCGGTCGGCTCGTTGCCGTCT
+TAACATCGCCCACGCTCAGTCCTCGCACGACAACTGGGGATGAGACCACTAGCAAGCTTT
+GGGCTTGCCTGTTTTCACATACTGGTGCATCGCTCTTCACATGTTGAACGGGGTGTGATC
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgd4ce65d" class="outline-4">
-<h4 id="orgd4ce65d"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
+<div id="outline-container-orgfa27c9c" class="outline-4">
+<h4 id="orgfa27c9c"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 There is a <a href="https:https://genome.ucsc.edu/goldenPath/help/iupac.html">standard definition from UIPAC</a> to represent multiple bases in single character.
@@ -423,24 +424,24 @@ Lets create 10 logos.
 </pre>
 </div>
 
-<pre class="example" id="orgd85c3ff">
-ATCCTCG
-AGCCTCG
-AGCCTCG
-AGCTTCG
-AGCCTCG
-AGCCTCG
+<pre class="example" id="orgcc680c6">
 AGCCTCG
 AGCCTGG
 AGCCTCG
+AGCCTGG
+AGCCTCG
+AGCTTCG
+AGCCTCG
 ATCCTCG
+AGCCTCG
+AGCTTCG
 </pre>
 </div>
 </div>
 
 
-<div id="outline-container-org65a452b" class="outline-4">
-<h4 id="org65a452b"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
+<div id="outline-container-orgf730e77" class="outline-4">
+<h4 id="orgf730e77"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Lastly we insert the motifs randomly into the sequences. Here we return the <code>insert_ind</code> so we can see where we inserted the motifs.
@@ -460,8 +461,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 
 
-<div id="outline-container-org0f70d53" class="outline-4">
-<h4 id="org0f70d53"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org35b6999" class="outline-4">
+<h4 id="org35b6999"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -551,7 +552,7 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="org15ceff5">
+<pre class="example" id="org26ca4b9">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -568,12 +569,12 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </div>
 </div>
 
-<div id="outline-container-orgd9d15fd" class="outline-3">
-<h3 id="orgd9d15fd"><span class="section-number-3">2.2.</span> Finding the motif</h3>
+<div id="outline-container-org03101f4" class="outline-3">
+<h3 id="org03101f4"><span class="section-number-3">2.2.</span> Finding the motif</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orgd63bf42" class="outline-4">
-<h4 id="orgd63bf42"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
+<div id="outline-container-orga25e80f" class="outline-4">
+<h4 id="orga25e80f"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Lecture summarizes the algorithm as such:
@@ -657,6 +658,10 @@ what we see before for that sequence in <code>max_scores</code> list. We use the
 <code>max_indices</code> when sampling new sequences.
 </p>
 
+<p>
+We return the wmm and the max<sub>indices</sub> as a result.
+</p>
+
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">find_motif</span>(query_seqs, motif_length):
@@ -680,14 +685,14 @@ what we see before for that sequence in <code>max_scores</code> list. We use the
         <span style="color: #fb4934;">if</span> max_indices_previous == max_indices:
             <span style="color: #fe8019;">print</span>(<span style="color: #b8bb26;">"No new indices!"</span>)
             <span style="color: #fb4934;">break</span>
-    <span style="color: #fb4934;">return</span> wmm
+    <span style="color: #fb4934;">return</span> wmm, max_indices
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org83d21bc" class="outline-4">
-<h4 id="org83d21bc"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
+<div id="outline-container-org1c283e4" class="outline-4">
+<h4 id="org1c283e4"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Weighted model matrix or position specific probability model implemented here as
@@ -722,8 +727,8 @@ frequeny of bases in each location.
 </div>
 </div>
 
-<div id="outline-container-orga5b2103" class="outline-4">
-<h4 id="orga5b2103"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
+<div id="outline-container-orgc880b50" class="outline-4">
+<h4 id="orgc880b50"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 We use a sliding window and calculate the probability of our <code>wmm</code> against the
@@ -757,8 +762,8 @@ probability of seeing given base in wmm to probability of seeing in background.
 </div>
 </div>
 
-<div id="outline-container-orgd4604d6" class="outline-4">
-<h4 id="orgd4604d6"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
+<div id="outline-container-orga20cdcd" class="outline-4">
+<h4 id="orga20cdcd"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 This function returns part of that sequence in motif length.
@@ -775,8 +780,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 
-<div id="outline-container-orgcd8bc1a" class="outline-4">
-<h4 id="orgcd8bc1a"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-org2b7e04a" class="outline-4">
+<h4 id="org2b7e04a"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> collections <span style="color: #fb4934;">import</span> Counter
@@ -848,7 +853,7 @@ This function returns part of that sequence in motif length.
         <span style="color: #fb4934;">if</span> max_indices_previous == max_indices:
             <span style="color: #fe8019;">print</span>(<span style="color: #b8bb26;">"No new indices!"</span>)
             <span style="color: #fb4934;">break</span>
-    <span style="color: #fb4934;">return</span> wmm
+    <span style="color: #fb4934;">return</span> wmm, max_indices
 
 </pre>
 </div>
@@ -866,7 +871,7 @@ Because initial sampling is random results will be different every time.
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #83a598;">query_seqs</span> = [seq[<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> motif_seqs]
-<span style="color: #83a598;">wmm</span> = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))
+<span style="color: #83a598;">wmm</span> = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))[<span style="color: #d3869b; font-weight: bold;">0</span>]
 <span style="color: #fe8019;">print</span>(motif_logo)
 <span style="color: #fb4934;">for</span> row <span style="color: #fb4934;">in</span> wmm:
     <span style="color: #fe8019;">print</span>(row)
@@ -903,30 +908,29 @@ AKCYTSG
         T.append(pos[<span style="color: #b8bb26;">'T'</span>])
 
     df = pd.DataFrame({<span style="color: #b8bb26;">'A'</span>:A, <span style="color: #b8bb26;">'C'</span>:C, <span style="color: #b8bb26;">'G'</span>:G, <span style="color: #b8bb26;">'T'</span>:T})
-    df.plot(kind=<span style="color: #b8bb26;">'bar'</span>, stacked=<span style="color: #d3869b;">True</span>)
+    df.plot(kind=<span style="color: #b8bb26;">'bar'</span>, stacked=<span style="color: #d3869b;">True</span>, color={<span style="color: #b8bb26;">'A'</span>: <span style="color: #b8bb26;">'#98cc1a'</span>, <span style="color: #b8bb26;">'C'</span>: <span style="color: #b8bb26;">'#4585cc'</span>, <span style="color: #b8bb26;">'G'</span>: <span style="color: #b8bb26;">'#1d2021'</span>, <span style="color: #b8bb26;">'T'</span>: <span style="color: #b8bb26;">'#cc2412'</span> })
 
     plt.ylabel(<span style="color: #b8bb26;">'Scores'</span>)
     plt.xlabel(<span style="color: #b8bb26;">'Position'</span>)
     plt.title(<span style="color: #b8bb26;">'Motif Logo'</span>)
 
     plt.savefig(file_name)
-plot_logo(wmm, file_name)
+plot_logo(wmm, <span style="color: #b8bb26;">'motif_logo.png'</span>)
 </pre>
 </div>
 
 
-<div id="orgc8bf165" class="figure">
+<div id="orgad349e0" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_logo.png' %}" alt="motif_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-</div>
 
-<div id="outline-container-orgac286f3" class="outline-2">
-<h2 id="orgac286f3"><span class="section-number-2">3.</span> Closing thoughts</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org5fa2a9a" class="outline-3">
+<h3 id="org5fa2a9a"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 There are few variables that affect the results. Which we can test by tweaking parameters above.
 </p>
@@ -971,13 +975,13 @@ Here we have a motif with double the size.
     motif_seqs.append(insert_motif(seq, motif_seq))
 
 query_seqs = [seq[<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> motif_seqs]
-wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))
+wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))[<span style="color: #d3869b; font-weight: bold;">0</span>]
 plot_logo(wmm, <span style="color: #b8bb26;">"motif_longer_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="orgc482fd4" class="figure">
+<div id="orge12644f" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_longer_logo.png' %}" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1015,13 +1019,13 @@ Here we have a motif with lower entropy. Because we change the motif weights to 
     motif_seqs.append(insert_motif(seq, motif_seq))
 
 query_seqs = [seq[<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> motif_seqs]
-wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))
+wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))[<span style="color: #d3869b; font-weight: bold;">0</span>]
 plot_logo(wmm, <span style="color: #b8bb26;">"motif_lowentropy_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="orgf6a6fe0" class="figure">
+<div id="org9448b18" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_lowentropy_logo.png' %}" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1057,22 +1061,100 @@ Here we have GC rich sequences with AT rich motifs. Even though our motif is sho
     motif_seqs.append(insert_motif(seq, motif_seq))
 
 query_seqs = [seq[<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> motif_seqs]
-wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))
+wmm = find_motif(query_seqs, <span style="color: #fe8019;">len</span>(motif_logo))[<span style="color: #d3869b; font-weight: bold;">0</span>]
 plot_logo(wmm, <span style="color: #b8bb26;">"motif_bgcontrast_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="orge007991" class="figure">
+<div id="org135cd6e" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_bgcontrast_logo.png' %}" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
+
+<div id="outline-container-org67c9768" class="outline-2">
+<h2 id="org67c9768"><span class="section-number-2">3.</span> Trying it out with real data</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lets try to use our new program with real data.
+Download human genome and annotation file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">wget https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/analysis_set/chm13v2.0.fa.gz
+wget http://ftp.ebi.ac.uk/pub/databases/ensembl/hprc/y1_freeze/GCA_009914755.4/GCA_009914755.4_genes.gff3.gz
+</pre>
+</div>
+
+<p>
+We are going to extract 60 bases around end of the 1000 random protein coding exons. First need to get the exon end position for these genes from the annotation file.
+Easiest way to achieve is with a shell script like below:
+</p>
+<ol class="org-ol">
+<li>zcat uncompresses the file</li>
+<li>grep -v skips the header lines</li>
+<li>grep ENSP gets annotations with only the proteins</li>
+<li>after that we get the exon entries with positive orientation and print them with the chromosome and the end position.</li>
+<li>shuf to randomly sample the whole genome.</li>
+<li>awk to get chromosome (with chr prefix) start and end positions.</li>
+<li>lastly head to get first 1000 entries and write them to a file.</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-shell">zcat GCA_009914755.4_genes.gff3.gz | <span style="color: #fabd2f;">grep</span> -v <span style="color: #b8bb26;">'^#'</span> | <span style="color: #fabd2f;">grep</span> <span style="color: #b8bb26;">"ENSP"</span> | awk -F<span style="color: #b8bb26;">"\t"</span> <span style="color: #b8bb26;">'{if ($3 = "exon" &amp;&amp; $7 == "+") {print $1, $5}}'</span> | sort -s -k1,1 -k2,2n -u | shuf | awk <span style="color: #b8bb26;">'{printf  "chr%s:%s-%s\n", $1, $2-10, $2+49}'</span> | head -n <span style="color: #d3869b; font-weight: bold;">1000</span> &gt; sample_positions.txt
+</pre>
+</div>
+
+<p>
+To extract the actual sequences from the genome we are going to use samtools. After indexing the genome <code>faidx</code> can retrieve sequences with given coordinates.
+We can have samtools read the sample<sub>positions.txt</sub> file we created and write the outputs to <code>sample.fa</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">samtools faidx chm13v2.0.fa.gz
+samtools faidx chm13v2.0.fa.gz -r sample_positions.txt -o sample.fa
+</pre>
+</div>
+
+<p>
+We need to read the fasta file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">with</span> <span style="color: #fe8019;">open</span>(<span style="color: #b8bb26;">"sample.fa"</span>) <span style="color: #fb4934;">as</span> <span style="color: #83a598;">f</span>:
+    query_seqs = [<span style="color: #b8bb26;">""</span>.join(entry.splitlines()[<span style="color: #d3869b; font-weight: bold;">1</span>:]).upper() <span style="color: #fb4934;">for</span> entry <span style="color: #fb4934;">in</span> f.read().split(<span style="color: #b8bb26;">'&gt;'</span>)[<span style="color: #d3869b; font-weight: bold;">1</span>:]]
+    <span style="color: #928374;"># </span><span style="color: #928374;">query_seqs = [line for line f.read().splitlines() if not line.startswith("&gt;")]</span>
+<span style="color: #fe8019;">print</span>(query_seqs[:<span style="color: #d3869b; font-weight: bold;">12</span>])
+</pre>
+</div>
+
+<p>
+We can just pass the sequences to our function. For the motif size lets pick 8.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">wmm</span>, <span style="color: #83a598;">max_indices</span> = find_motif(random.choices(query_seqs, k=<span style="color: #d3869b; font-weight: bold;">100</span>), <span style="color: #d3869b; font-weight: bold;">8</span>)
+plot_logo(wmm, <span style="color: #b8bb26;">"5prime_splice_site.png"</span>)
+</pre>
+</div>
+
+
+<div id="orgf792bf2" class="figure">
+<p><img src="{% static 'blog/posts/seqmotif/5prime_splice_site.png' %}" alt="5prime_splice_site.png" />
+</p>
+</div>
+
+<p>
+Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki/RNA_splicing">5´ splice sites</a> with the motif <code>G-G-[cut]-G-U-R-A-G-U</code>.
+</p>
+</div>
+</div>
+</div>
 <div id="postamble" class="status">
 <p class="author">Author: Barış Salman</p>
-<p class="date">Created: 2022-11-19 Sat 21:54</p>
+<p class="date">Created: 2022-11-20 Sun 18:36</p>
 </div>
 </body>
 </html>
