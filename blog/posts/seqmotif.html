@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-21 Mon 14:30 -->
+<!-- 2022-11-21 Mon 17:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -202,34 +202,34 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd94085f">1. Intro</a></li>
-<li><a href="#org75b5541">2. Implementation</a>
+<li><a href="#org659cb47">1. Intro</a></li>
+<li><a href="#org8983546">2. Implementation</a>
 <ul>
-<li><a href="#orgca55532">2.1. Creating the sample data</a>
+<li><a href="#orgfebcf12">2.1. Creating the sample data</a>
 <ul>
-<li><a href="#org7ced926">2.1.1. Creating Sequences</a></li>
-<li><a href="#orge226a56">2.1.2. Creating motifs</a></li>
-<li><a href="#org6038191">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#orgd2a4c78">2.1.4. Putting it all together</a></li>
+<li><a href="#orgdc1be4c">2.1.1. Creating Sequences</a></li>
+<li><a href="#org9edf0b8">2.1.2. Creating motifs</a></li>
+<li><a href="#org6485c18">2.1.3. Adding motifs to sequences</a></li>
+<li><a href="#org840d585">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#org3fdb6e6">2.2. Finding the motif</a>
+<li><a href="#org3dd7a60">2.2. Finding the motif</a>
 <ul>
-<li><a href="#orgaa9146c">2.2.1. Algorithm outline</a></li>
-<li><a href="#orgb8c61b5">2.2.2. Weighted Model Matrix</a></li>
-<li><a href="#org2ccf362">2.2.3. Calculate probability</a></li>
-<li><a href="#org5a7fee9">2.2.4. Sliding window</a></li>
-<li><a href="#orgf37e9aa">2.2.5. Putting it all together</a></li>
+<li><a href="#orgab6d25b">2.2.1. Algorithm outline</a></li>
+<li><a href="#orgba5b5e3">2.2.2. Weighted Model Matrix</a></li>
+<li><a href="#org9a4941e">2.2.3. Calculate probability</a></li>
+<li><a href="#org343fc26">2.2.4. Sliding window</a></li>
+<li><a href="#org85e7850">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#org323436e">2.3. Parameters affecting the results</a></li>
+<li><a href="#org122712f">2.3. Parameters affecting the results</a></li>
 </ul>
 </li>
-<li><a href="#org4035479">3. Trying it out with real data</a></li>
+<li><a href="#org01fd0c4">3. Trying it out with real data</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org19f536a">
+<div class="abstract" id="orgf7b4457">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -238,11 +238,15 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 
 </div>
 
-<div id="outline-container-orgd94085f" class="outline-2">
-<h2 id="orgd94085f"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-org659cb47" class="outline-2">
+<h2 id="org659cb47"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This is a simple implementation of Gibbs motif sampler algorithm described in <a href="https:https://ocw.mit.edu/courses/7-91j-foundations-of-computational-and-systems-biology-spring-2014/resources/mit7_91js14_lecture9/">class 7.91 lecture 9</a>.
+You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
+</p>
+
+<p>
+This is a simple implementation of Gibbs motif sampler algorithm described in <a href="https://ocw.mit.edu/courses/7-91j-foundations-of-computational-and-systems-biology-spring-2014/resources/mit7_91js14_lecture9/">class 7.91 lecture 9</a>.
 Gibbs motif sampler is a kind of Monte Carlo algorithm which relies on repeated random sampling of data.
 Algorithm is implemented in pure python and pandas and matplotlib only used to plot the results.
 Below code sets up the virtual environment.
@@ -277,16 +281,16 @@ matplotlib 3.6.2
 </div>
 </div>
 
-<div id="outline-container-org75b5541" class="outline-2">
-<h2 id="org75b5541"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org8983546" class="outline-2">
+<h2 id="org8983546"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgca55532" class="outline-3">
-<h3 id="orgca55532"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
+<div id="outline-container-orgfebcf12" class="outline-3">
+<h3 id="orgfebcf12"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org7ced926" class="outline-4">
-<h4 id="org7ced926"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
+<div id="outline-container-orgdc1be4c" class="outline-4">
+<h4 id="orgdc1be4c"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 We can create our test data by using random module.
@@ -322,26 +326,26 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="org8458576">
-GTCGGACACTCTCGGCCAAGTGGGGTTAGTTTGATAGGGCATATCTGTCTATCCTTGAGC
-AATCGCTACTGGGGTAAGCGGAGAGTAGCGGTGTTGTGCATAGGGATACGTATTTTAATA
-GACTTGCACAGTACCGACTAGTACGCCTTTCTTCCCGTCTAGCGTCTATGGAGCAGGCTT
-TAGACAACACGTTGCATGCCGACCCCCATAAAGGCTCCTTCAGGAGCGATCCGTCGATTG
-CCGTTAGAGGGAGATCCCCTACCGGTGTTAGAGAAGCGGATTGTTGCTTGAGGGTTTAGA
-GGTACCGGTGACAACAAACATACATTTGACTTTTAAGCCCCAGATATCTCTCTAGAAAGA
-CAAGGCATTCTAAAATAACCATGTCATAGGTGACTCGGCGTCCGCCACCTTTCCATTAGT
-AGTATCGACACCGGTGCCCTCACTTTAGTTAATGGTGCACGACCGGGAAATTCGTTATAG
-CAGCTGAAACAGTAGTCGGAAGGTGTGGATTACGAGTTGTCCGTATGCCTTAATAGCCCA
-GTTTCACTGGGCGAGCTCGGCAGTATTTCTTTGTACGGTGGACCGTCGATATACTAGTAA
+<pre class="example" id="org50299bb">
+ACCTGGTTGCAACGCCCATTAGGTCAAGTAGAACCTGGTTCAGTTATTTCCACAACTAAG
+AGTCTTTTCCCGGAAACCCTTTGTCAGACTGTCTCGTGACATCAGGTCAAAGCGATCCGC
+CACGATCGCATACTCGGAATTCGTCTGTATCAGATATAGTTACTCTGACTCCTTAACCAG
+AAGATACATACTGGCAGGCAGAAGCATGCGCCCAACGTCGCAGCTAAACTGCAGGCTCTC
+ATTGTTCAGTCATTCTGAGTTTCTCGCCACATTACACCAGGGCTCTATTAGCGGTTATTC
+TATTAAAATTCCACCTGTCTAAAATCCGCTGGTAGCCACCAACGGACGGCAGTCGCTCCT
+TTGGACCATACCCATCTTTATTTATTTATCCACTAGCGCCAACATAGCCCTAAAAGACGT
+ATAGGATAGGTCTAATCTCTGCTTTCTAGCTATCCCCCGGCGGTCGGCTCGTTGCCGTCT
+TAACATCGCCCACGCTCAGTCCTCGCACGACAACTGGGGATGAGACCACTAGCAAGCTTT
+GGGCTTGCCTGTTTTCACATACTGGTGCATCGCTCTTCACATGTTGAACGGGGTGTGATC
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orge226a56" class="outline-4">
-<h4 id="orge226a56"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
+<div id="outline-container-org9edf0b8" class="outline-4">
+<h4 id="org9edf0b8"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
-There is a <a href="https:https://genome.ucsc.edu/goldenPath/help/iupac.html">standard definition from UIPAC</a> to represent multiple bases in single character.
+There is a <a href="https://genome.ucsc.edu/goldenPath/help/iupac.html">standard definition from UIPAC</a> to represent multiple bases in single character.
 In order the create a motif I want to enter a motif logo that is represented by UIPAC codes like <code>ABCDMRS</code> with weights for possible bases in each location.
 </p>
 
@@ -431,12 +435,25 @@ Lets create 10 logos.
     <span style="color: #fe8019;">print</span>(motif)
 </pre>
 </div>
+
+<pre class="example" id="org7280dd7">
+AGCCTCG
+AGCCTGG
+AGCCTCG
+AGCCTGG
+AGCCTCG
+AGCTTCG
+AGCCTCG
+ATCCTCG
+AGCCTCG
+AGCTTCG
+</pre>
 </div>
 </div>
 
 
-<div id="outline-container-org6038191" class="outline-4">
-<h4 id="org6038191"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
+<div id="outline-container-org6485c18" class="outline-4">
+<h4 id="org6485c18"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Lastly we insert the motifs randomly into the sequences. Here we return the <code>insert_ind</code> so we can see where we inserted the motifs.
@@ -456,8 +473,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 
 
-<div id="outline-container-orgd2a4c78" class="outline-4">
-<h4 id="orgd2a4c78"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org840d585" class="outline-4">
+<h4 id="org840d585"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -547,7 +564,7 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="org2f7b39d">
+<pre class="example" id="org1868085">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -564,12 +581,12 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </div>
 </div>
 
-<div id="outline-container-org3fdb6e6" class="outline-3">
-<h3 id="org3fdb6e6"><span class="section-number-3">2.2.</span> Finding the motif</h3>
+<div id="outline-container-org3dd7a60" class="outline-3">
+<h3 id="org3dd7a60"><span class="section-number-3">2.2.</span> Finding the motif</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orgaa9146c" class="outline-4">
-<h4 id="orgaa9146c"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
+<div id="outline-container-orgab6d25b" class="outline-4">
+<h4 id="orgab6d25b"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Lecture summarizes the algorithm as such:
@@ -686,8 +703,8 @@ We return the wmm and the max<sub>indices</sub> as a result.
 </div>
 </div>
 
-<div id="outline-container-orgb8c61b5" class="outline-4">
-<h4 id="orgb8c61b5"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
+<div id="outline-container-orgba5b5e3" class="outline-4">
+<h4 id="orgba5b5e3"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Weighted model matrix or position specific probability model implemented here as
@@ -722,8 +739,8 @@ frequeny of bases in each location.
 </div>
 </div>
 
-<div id="outline-container-org2ccf362" class="outline-4">
-<h4 id="org2ccf362"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
+<div id="outline-container-org9a4941e" class="outline-4">
+<h4 id="org9a4941e"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 We use a sliding window and calculate the probability of our <code>wmm</code> against the
@@ -757,8 +774,8 @@ probability of seeing given base in wmm to probability of seeing in background.
 </div>
 </div>
 
-<div id="outline-container-org5a7fee9" class="outline-4">
-<h4 id="org5a7fee9"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
+<div id="outline-container-org343fc26" class="outline-4">
+<h4 id="org343fc26"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 This function returns part of that sequence in motif length.
@@ -775,8 +792,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 
-<div id="outline-container-orgf37e9aa" class="outline-4">
-<h4 id="orgf37e9aa"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-org85e7850" class="outline-4">
+<h4 id="org85e7850"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> collections <span style="color: #fb4934;">import</span> Counter
@@ -915,7 +932,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="orgad349e0" class="figure">
+<div id="org00dd31e" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_logo.png' %}" alt="motif_logo.png" />
 </p>
 </div>
@@ -923,8 +940,8 @@ plot_logo(wmm, <span style="color: #b8bb26;">'motif_logo.png'</span>)
 </div>
 </div>
 
-<div id="outline-container-org323436e" class="outline-3">
-<h3 id="org323436e"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
+<div id="outline-container-org122712f" class="outline-3">
+<h3 id="org122712f"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 There are few variables that affect the results. Which we can test by tweaking parameters above.
@@ -976,7 +993,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="orge12644f" class="figure">
+<div id="orgac65cf6" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/motif_longer_logo.png' %}" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1020,8 +1037,8 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org0d96e1f" class="figure">
-<p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
+<div id="org00f4ebb" class="figure">
+<p><img src="{% static 'blog/posts/seqmotif/motif_lowentropy_logo.png' %}" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
 
@@ -1062,16 +1079,16 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="org19171cc" class="figure">
-<p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
+<div id="org3f39291" class="figure">
+<p><img src="{% static 'blog/posts/seqmotif/motif_bgcontrast_logo.png' %}" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4035479" class="outline-2">
-<h2 id="org4035479"><span class="section-number-2">3.</span> Trying it out with real data</h2>
+<div id="outline-container-org01fd0c4" class="outline-2">
+<h2 id="org01fd0c4"><span class="section-number-2">3.</span> Trying it out with real data</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Lets try to use our new program with real data.
@@ -1141,7 +1158,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="orgf792bf2" class="figure">
+<div id="org4d333cb" class="figure">
 <p><img src="{% static 'blog/posts/seqmotif/5prime_splice_site.png' %}" alt="5prime_splice_site.png" />
 </p>
 </div>
@@ -1154,7 +1171,7 @@ Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Barış Salman</p>
-<p class="date">Created: 2022-11-21 Mon 14:30</p>
+<p class="date">Created: 2022-11-21 Mon 17:44</p>
 </div>
 </body>
 </html>
