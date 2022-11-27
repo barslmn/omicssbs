@@ -1,0 +1,3131 @@
+{% load static %}
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-11-27 Sun 03:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sequence Alignment from Scratch with BWA</title>
+<meta name="author" content="Barış Salman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style>.example {max-height: 10vh; overflow-y;auto;} </style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Sequence Alignment from Scratch with BWA</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga4d06eb">1. Intro</a></li>
+<li><a href="#org1561685">2. Implementation</a>
+<ul>
+<li><a href="#org5c7bf07">2.1. Burrows wheeler transform</a></li>
+<li><a href="#org3a76e58">2.2. Building a class</a></li>
+<li><a href="#org319f3ae">2.3. Mapping</a>
+<ul>
+<li><a href="#org9282a89">2.3.1. Visualizing the recursion</a></li>
+</ul>
+</li>
+<li><a href="#org54fa3a6">2.4. Putting it all together</a></li>
+<li><a href="#orgc38423b">2.5. Sequence generation</a></li>
+<li><a href="#org7e6815f">2.6. Outputing to SAM</a></li>
+<li><a href="#org88a120b">2.7. Visualizing our alignments with IGV</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="abstract" id="org72ef81a">
+<p>
+Burrow wheeler algorithm is used to perform short read alignment a cornerstone process in bioinformatics especially next generation sequencing.
+Short sequence alignment or mapping is the one of the primary steps in re-sequencing projects where short reads from a fragmented genome is aligned back to a reference genome.
+We can use this aligned data to discover small or structural genomic variations in clinical or population projects.
+</p>
+
+</div>
+
+<div id="outline-container-orga4d06eb" class="outline-2">
+<h2 id="orga4d06eb"><span class="section-number-2">1.</span> Intro</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+You can run this at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
+</p>
+
+<p>
+Burrow wheeler algorithm is used to perform short read alignment a cornerstone process in bioinformatics especially next generation sequencing.
+Short sequence alignment or mapping is the one of the primary steps in re-sequencing projects where short reads from a fragmented genome is aligned back to a reference genome.
+We can use this aligned data to discover small or structural genomic variations in clinical or population projects.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1561685" class="outline-2">
+<h2 id="org1561685"><span class="section-number-2">2.</span> Implementation</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org5c7bf07" class="outline-3">
+<h3 id="org5c7bf07"><span class="section-number-3">2.1.</span> Burrows wheeler transform</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Burrows wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment. Transform performed by first getting the all the possible rotation of the reference. Lets say we have example reference sequence string <code>SEQUENCE</code>. We can get the possible rotations with string splicing below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> pprint <span style="color: #fb4934;">import</span> pprint
+
+<span style="color: #83a598;">example_seq</span> = <span style="color: #b8bb26;">"OMICSSBS$"</span>
+<span style="color: #83a598;">suffix_array</span> = []
+<span style="color: #fb4934;">for</span> index <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">range</span>(<span style="color: #fe8019;">len</span>(example_seq)):
+    suffix_array.append(example_seq[index:] + example_seq[:index])
+pprint(suffix_array)
+</pre>
+</div>
+
+<pre class="example">
+['OMICSSBS$',
+ 'MICSSBS$O',
+ 'ICSSBS$OM',
+ 'CSSBS$OMI',
+ 'SSBS$OMIC',
+ 'SBS$OMICS',
+ 'BS$OMICSS',
+ 'S$OMICSSB',
+ '$OMICSSBS']
+</pre>
+
+
+<p>
+Then we sort rotations by a property we desire. In this case we are going to sort them alphabetically.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">sorted_suffix_array</span> = <span style="color: #fe8019;">sorted</span>(suffix_array)
+pprint(sorted_suffix_array)
+</pre>
+</div>
+
+<pre class="example">
+['$OMICSSBS',
+ 'BS$OMICSS',
+ 'CSSBS$OMI',
+ 'ICSSBS$OM',
+ 'MICSSBS$O',
+ 'OMICSSBS$',
+ 'S$OMICSSB',
+ 'SBS$OMICS',
+ 'SSBS$OMIC']
+</pre>
+
+
+<p>
+We also want to keep their initial order for later use. Here we use the itemgetter to sort the enumerated rotations by the sequences themselves.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
+<span style="color: #83a598;">initial_indices</span>, <span style="color: #83a598;">sorted_suffix_array</span> = <span style="color: #fe8019;">zip</span>(*<span style="color: #fe8019;">sorted</span>(<span style="color: #fe8019;">enumerate</span>(suffix_array), key=itemgetter(<span style="color: #d3869b; font-weight: bold;">1</span>)))
+
+<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"Initial index: </span>{index}<span style="color: #b8bb26;"> of the sequence: </span>{sequence}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+Initial index: 8 of the sequence: $OMICSSBS
+Initial index: 6 of the sequence: BS$OMICSS
+Initial index: 3 of the sequence: CSSBS$OMI
+Initial index: 2 of the sequence: ICSSBS$OM
+Initial index: 1 of the sequence: MICSSBS$O
+Initial index: 0 of the sequence: OMICSSBS$
+Initial index: 7 of the sequence: S$OMICSSB
+Initial index: 5 of the sequence: SBS$OMICS
+Initial index: 4 of the sequence: SSBS$OMIC
+</pre>
+
+
+<p>
+Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"Initial index: </span>{index}<span style="color: #b8bb26;"> of the sequence: </span>{sequence.split('$')[0]}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+Initial index: 8 of the sequence:
+Initial index: 6 of the sequence: BS
+Initial index: 3 of the sequence: CSSBS
+Initial index: 2 of the sequence: ICSSBS
+Initial index: 1 of the sequence: MICSSBS
+Initial index: 0 of the sequence: OMICSSBS
+Initial index: 7 of the sequence: S
+Initial index: 5 of the sequence: SBS
+Initial index: 4 of the sequence: SSBS
+</pre>
+
+
+<p>
+Bwa insted uses the last column of the sorted rotations.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;">  last column of the sequence: </span>{sequence[-1]}<span style="color: #b8bb26;">"</span>)
+<span style="color: #928374;"># </span><span style="color: #928374;">print("".join(i[-1] for i in sorted_suffix_array))</span>
+</pre>
+</div>
+
+<pre class="example">
+index=8  last column of the sequence: S
+index=6  last column of the sequence: S
+index=3  last column of the sequence: I
+index=2  last column of the sequence: M
+index=1  last column of the sequence: O
+index=0  last column of the sequence: $
+index=7  last column of the sequence: B
+index=5  last column of the sequence: S
+index=4  last column of the sequence: C
+</pre>
+
+
+<p>
+We can keep the last column in a string.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">last_column</span> = <span style="color: #b8bb26;">""</span>
+<span style="color: #fb4934;">for</span> sequence <span style="color: #fb4934;">in</span> <span style="color: #83a598;">sorted_suffix_array</span>:
+    last_column += sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>]
+<span style="color: #fe8019;">print</span>(last_column)
+</pre>
+</div>
+
+<pre class="example">
+SSIMO$BSC
+</pre>
+
+
+<p>
+This transformation is reversible and we can get our original sequence back by back tracking the characters in the sequence. To make this back tracking work we need a function that maps the character in last back to first. This is possible because index of an <i>occurrence</i> of a character in the first column will be the same in the last column. e.g. We have three <code>S</code> characters in our string <code>OMICSSBS</code> where the first occurrence of the string <code>S</code> in last column is the same <code>S</code> in the first column. We can keep track of the occurrences of <code>S</code> like below. You can watch the index beside the <code>S</code> characters and confirm they&rsquo;re the same by the whole sequence besides them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">occurrence_of_s_in_first_column</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #83a598;">occurrence_of_s_in_last_column</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+    <span style="color: #fb4934;">if</span> sequence[<span style="color: #d3869b; font-weight: bold;">0</span>] == <span style="color: #b8bb26;">'S'</span> <span style="color: #fb4934;">and</span> sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>] == <span style="color: #b8bb26;">'S'</span>:
+        <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_first_column}<span style="color: #b8bb26;"> last: </span>{sequence[-1]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_last_column}<span style="color: #b8bb26;">"</span>)
+        occurrence_of_s_in_first_column += <span style="color: #d3869b; font-weight: bold;">1</span>
+        occurrence_of_s_in_last_column += <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #fb4934;">elif</span> sequence[<span style="color: #d3869b; font-weight: bold;">0</span>] == <span style="color: #b8bb26;">'S'</span>:
+        <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_first_column}<span style="color: #b8bb26;"> last: </span>{sequence[-1]}<span style="color: #b8bb26;"> 0"</span>)
+        occurrence_of_s_in_first_column += <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #fb4934;">elif</span> sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>] == <span style="color: #b8bb26;">'S'</span>:
+        <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> 0 last: </span>{sequence[-1]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_last_column}<span style="color: #b8bb26;">"</span>)
+        occurrence_of_s_in_last_column += <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #fb4934;">else</span>:
+        <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> 0 last: </span>{sequence[-1]}<span style="color: #b8bb26;"> 0"</span>)
+<span style="color: #928374;"># </span><span style="color: #928374;">print("".join(i[-1] for i in sorted_suffix_array))</span>
+</pre>
+</div>
+
+<pre class="example">
+index=8 sequence: $OMICSSBS first: $ 0 last: S 0
+index=6 sequence: BS$OMICSS first: B 0 last: S 1
+index=3 sequence: CSSBS$OMI first: C 0 last: I 0
+index=2 sequence: ICSSBS$OM first: I 0 last: M 0
+index=1 sequence: MICSSBS$O first: M 0 last: O 0
+index=0 sequence: OMICSSBS$ first: O 0 last: $ 0
+index=7 sequence: S$OMICSSB first: S 0 last: B 0
+index=5 sequence: SBS$OMICS first: S 1 last: S 2
+index=4 sequence: SSBS$OMIC first: S 2 last: C 0
+</pre>
+
+
+<p>
+Instead of counting them characters one by one like above lets count all the characters and keep it in a lookup index using the last column. The <code>totals</code> is how many times we see a character in total and <code>tallymatrix</code> is how many we saw up to a given point.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">totals</span> = {<span style="color: #83a598;">k</span>: <span style="color: #d3869b; font-weight: bold;">0</span> <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> <span style="color: #b8bb26;">""</span>.join(<span style="color: #fe8019;">set</span>(last_column))}
+tallymatrix = {<span style="color: #83a598;">k</span>: [] <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> <span style="color: #b8bb26;">""</span>.join(<span style="color: #fe8019;">set</span>(last_column))}
+<span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> last_column:
+    totals[<span style="color: #83a598;">c</span>] += <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> tallymatrix.keys():
+        <span style="color: #fb4934;">if</span> k != c <span style="color: #fb4934;">and</span> tallymatrix[k]:
+            tallymatrix[k].append(tallymatrix[k][-<span style="color: #d3869b; font-weight: bold;">1</span>])
+        <span style="color: #fb4934;">elif</span> k == c:
+            tallymatrix[k].append(totals[c])
+        <span style="color: #fb4934;">else</span>:
+            tallymatrix[k].append(<span style="color: #d3869b; font-weight: bold;">0</span>)
+<span style="color: #fe8019;">print</span>(totals)
+<span style="color: #fe8019;">print</span>(tallymatrix)
+</pre>
+</div>
+
+<pre class="example">
+{'O': 1, 'S': 3, 'M': 1, 'C': 1, 'B': 1, '$': 1, 'I': 1}
+{'O': [0, 0, 0, 0, 1, 1, 1, 1, 1], 'S': [1, 2, 2, 2, 2, 2, 2, 3, 3], 'M': [0, 0, 0, 1, 1, 1, 1, 1, 1], 'C': [0, 0, 0, 0, 0, 0, 0, 0, 1], 'B': [0, 0, 0, 0, 0, 0, 1, 1, 1], '$': [0, 0, 0, 0, 0, 1, 1, 1, 1], 'I': [0, 0, 1, 1, 1, 1, 1, 1, 1]}
+</pre>
+
+
+<p>
+Using this we can rebuild a index of where we start and stop seeing the characters in the first column. We remove -1 because we are going to use this as an index.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">first</span> = {}
+<span style="color: #83a598;">totc</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #fb4934;">for</span> c, count <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">sorted</span>(totals.items()):
+    <span style="color: #83a598;">first</span>[<span style="color: #83a598;">c</span>] = (totc, totc + count)
+    <span style="color: #83a598;">totc</span> += count
+<span style="color: #fe8019;">print</span>(first)
+</pre>
+</div>
+
+<pre class="example">
+{'$': (0, 1), 'B': (1, 2), 'C': (2, 3), 'I': (3, 4), 'M': (4, 5), 'O': (5, 6), 'S': (6, 9)}
+</pre>
+
+
+<p>
+Using the we can map a given character with an index <code>i</code> back to first column. e.g <code>S</code> with second occurrence should map to row with initial index 4 witch is the 8th row.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fe8019;">print</span>(first[<span style="color: #b8bb26;">"S"</span>][<span style="color: #d3869b; font-weight: bold;">0</span>] + tallymatrix[<span style="color: #b8bb26;">"S"</span>][<span style="color: #d3869b; font-weight: bold;">2</span>])
+</pre>
+</div>
+
+<pre class="example">
+8
+</pre>
+
+
+<p>
+We can than reverse our transformation to build back our initial sequence. We remove one from the counts so we can use it as an index.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">i</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #83a598;">t</span> = <span style="color: #b8bb26;">"$"</span>
+<span style="color: #fb4934;">while</span> last_column[i] != <span style="color: #b8bb26;">"$"</span>:
+    <span style="color: #83a598;">c</span> = last_column[i]
+    <span style="color: #83a598;">t</span> = c + t
+    <span style="color: #83a598;">i</span> = first[c][<span style="color: #d3869b; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #d3869b; font-weight: bold;">1</span>
+<span style="color: #fe8019;">print</span>(t)
+</pre>
+</div>
+
+<pre class="example">
+OMICSSBS$
+</pre>
+
+
+<p>
+To get a better grasp of whats happening lets track the index jumps too.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">i</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #83a598;">t</span> = <span style="color: #b8bb26;">"$"</span>
+<span style="color: #83a598;">j</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"loop\tloopindex\tindex\tinitial_ind\tfirst_column\tlast_column\tc\tt\n"</span>)
+<span style="color: #fb4934;">while</span> last_column[i] != <span style="color: #b8bb26;">"$"</span>:
+    <span style="color: #83a598;">c</span> = last_column[i]
+    <span style="color: #83a598;">t</span> = c + t
+    <span style="color: #83a598;">i</span> = first[c][<span style="color: #d3869b; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #83a598;">j</span> += <span style="color: #d3869b; font-weight: bold;">1</span>
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"END</span>{j:13}<span style="color: #b8bb26;"> </span>{i:8}<span style="color: #b8bb26;"> </span>{initial_indices[j]:8}{' '*14}{[seq[0] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_suffix_array][j]:12}<span style="color: #b8bb26;"> </span>{[seq[-1] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_suffix_array][j]:14}<span style="color: #b8bb26;"> </span>{c:3}<span style="color: #b8bb26;"> </span>{t}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example" id="orge9cb8d1">
+loop	loopindex	index	initial_ind	first_column	last_column	c	t
+
+END            1        6        6              B            S              S   S$
+END            2        1        3              C            I              B   BS$
+END            3        7        2              I            M              S   SBS$
+END            4        8        1              M            O              S   SSBS$
+END            5        2        0              O            $              C   CSSBS$
+END            6        3        7              S            B              I   ICSSBS$
+END            7        4        5              S            S              M   MICSSBS$
+END            8        5        4              S            C              O   OMICSSBS$
+</pre>
+
+<p>
+Here we are building up the initial sequence backwards. Observe below the &ldquo;index&rdquo;, &ldquo;last<sub>column</sub>&rdquo; and &ldquo;c&rdquo; columns. We initiate the <code>index​=0</code> which points us to character <code>S</code> in the last column, this <code>S</code> in turn with its <code>index​=6</code> points to preceding character <code>B</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3a76e58" class="outline-3">
+<h3 id="org3a76e58"><span class="section-number-3">2.2.</span> Building a class</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Keeping track of the intermediately data and passing them through functions can become confusing to keep all this in one place lets put them in a <code>class</code>. Classes are a way of bundling data and functionality in python.
+</p>
+
+<p>
+Our class aptly named <code>BWA</code> takes a reference sequence and runs the
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
+
+
+<span style="color: #fb4934;">class</span> <span style="color: #fabd2f;">BWA</span>:
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">__init__</span>(<span style="color: #fb4934;">self</span>, ref):
+        <span style="color: #dfd2b8;">"""</span><span style="color: #fabd2f; font-weight: bold;">TODO:</span><span style="color: #dfd2b8;"> to be defined1."""</span>
+        <span style="color: #fb4934;">self</span>.ref = ref + <span style="color: #b8bb26;">"$"</span>
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">last</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        Get all the rotations of given sequence, sort them alphabetically and</span>
+<span style="color: #dfd2b8;">        return the last character from each rotation</span>
+<span style="color: #dfd2b8;">        '''</span>
+        <span style="color: #83a598;">sa</span> = [<span style="color: #fb4934;">self</span>.ref[i:] + <span style="color: #fb4934;">self</span>.ref[:i] <span style="color: #fb4934;">for</span> i <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">range</span>(<span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.ref))]
+        <span style="color: #fb4934;">return</span> <span style="color: #b8bb26;">""</span>.join(i[-<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> i <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">sorted</span>(sa))
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">occ</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        Get the occurrences and total counts for each character in bwt</span>
+<span style="color: #dfd2b8;">        '''</span>
+        <span style="color: #83a598;">totals</span> = {}
+        <span style="color: #83a598;">tallymatrix</span> = {<span style="color: #83a598;">k</span>: [] <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> <span style="color: #b8bb26;">""</span>.join(<span style="color: #fe8019;">set</span>(<span style="color: #fb4934;">self</span>.last))}
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> <span style="color: #fb4934;">self</span>.last:
+            <span style="color: #fb4934;">if</span> c <span style="color: #fb4934;">not</span> <span style="color: #fb4934;">in</span> totals:
+                totals[<span style="color: #83a598;">c</span>] = <span style="color: #d3869b; font-weight: bold;">0</span>
+            <span style="color: #83a598;">totals</span>[<span style="color: #83a598;">c</span>] += <span style="color: #d3869b; font-weight: bold;">1</span>
+            <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> tallymatrix.keys():
+                <span style="color: #fb4934;">if</span> k != c <span style="color: #fb4934;">and</span> tallymatrix[k]:
+                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #d3869b; font-weight: bold;">1</span>])
+                <span style="color: #fb4934;">elif</span> k == c:
+                    tallymatrix[k].append(totals[c])
+                <span style="color: #fb4934;">else</span>:
+                    tallymatrix[k].append(<span style="color: #d3869b; font-weight: bold;">0</span>)
+        <span style="color: #fb4934;">return</span> tallymatrix, totals
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">first</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        Get the lexicographical order of the characters</span>
+<span style="color: #dfd2b8;">        '''</span>
+        first = {}
+        totc = <span style="color: #d3869b; font-weight: bold;">0</span>
+        <span style="color: #fb4934;">for</span> c, count <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">sorted</span>(<span style="color: #fb4934;">self</span>.occ[<span style="color: #d3869b; font-weight: bold;">1</span>].items()):
+            first[<span style="color: #83a598;">c</span>] = totc
+            totc += count
+        <span style="color: #fb4934;">return</span> first
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">lf</span>(<span style="color: #fb4934;">self</span>, c, i):
+        <span style="color: #dfd2b8;">"""</span>
+<span style="color: #dfd2b8;">        The i-th occurrence of character &#8216;c&#8217; in last is the same text character</span>
+<span style="color: #dfd2b8;">        as the i-th occurrence of &#8216;c&#8217; in the first</span>
+<span style="color: #dfd2b8;">        """</span>
+        <span style="color: #fb4934;">return</span> <span style="color: #fb4934;">self</span>.first[c] + <span style="color: #fb4934;">self</span>.occ[<span style="color: #d3869b; font-weight: bold;">0</span>][c][i] - <span style="color: #d3869b; font-weight: bold;">1</span>
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">rebwt</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        rebuild the original sequence</span>
+<span style="color: #dfd2b8;">        '''</span>
+        i = <span style="color: #d3869b; font-weight: bold;">0</span>
+        t = <span style="color: #b8bb26;">"$"</span>
+        <span style="color: #fb4934;">while</span> <span style="color: #fb4934;">self</span>.last[i] != <span style="color: #b8bb26;">"$"</span>:
+            c = <span style="color: #fb4934;">self</span>.last[i]
+            t = c + t
+            i = <span style="color: #fb4934;">self</span>.lf(c, i)
+        <span style="color: #fb4934;">return</span> t[:-<span style="color: #d3869b; font-weight: bold;">1</span>]
+</pre>
+</div>
+
+<p>
+We can initialize our function with our reference and access its properties.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">example_seq</span> = <span style="color: #b8bb26;">"OMICSSBS"</span>
+<span style="color: #83a598;">bwa</span> = BWA(example_seq)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{bwa.last=}<span style="color: #b8bb26;">"</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{bwa.first=}<span style="color: #b8bb26;">"</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{bwa.occ=}<span style="color: #b8bb26;">"</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{bwa.rebwt=}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+bwa.last=('SSIMO$BSC', (8, 6, 3, 2, 1, 0, 7, 5, 4), ('$OMICSSBS', 'BS$OMICSS', 'CSSBS$OMI', 'ICSSBS$OM', 'MICSSBS$O', 'OMICSSBS$', 'S$OMICSSB', 'SBS$OMICS', 'SSBS$OMIC'))
+bwa.first={'$': (0, 0), 'B': (1, 1), 'C': (2, 2), 'I': (3, 3), 'M': (4, 4), 'O': (5, 5), 'S': (6, 8)}
+bwa.occ=({'O': [0, 0, 0, 0, 1, 1, 1, 1, 1], 'S': [1, 2, 2, 2, 2, 2, 2, 3, 3], 'M': [0, 0, 0, 1, 1, 1, 1, 1, 1], 'C': [0, 0, 0, 0, 0, 0, 0, 0, 1], 'B': [0, 0, 0, 0, 0, 0, 1, 1, 1], '$': [0, 0, 0, 0, 0, 1, 1, 1, 1], 'I': [0, 0, 1, 1, 1, 1, 1, 1, 1]}, {'S': 3, 'I': 1, 'M': 1, 'O': 1, '$': 1, 'B': 1, 'C': 1})
+bwa.rebwt='OMICSSBS'
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org319f3ae" class="outline-3">
+<h3 id="org319f3ae"><span class="section-number-3">2.3.</span> Mapping</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+We want to align the small sequences back to references. If we have a <code>read</code> sequence with no variations. We can do a backward search to match a substring. We start by getting the minimum and maximum indices of the last character. Than we map these using our <code>lf</code> function in a loop.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].find(read[-<span style="color: #d3869b; font-weight: bold;">1</span>]), <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].rfind(read[-<span style="color: #d3869b; font-weight: bold;">1</span>])
+
+<span style="color: #83a598;">i</span> = <span style="color: #fe8019;">len</span>(read) - <span style="color: #d3869b; font-weight: bold;">1</span>
+<span style="color: #fb4934;">while</span> low &lt;= high <span style="color: #fb4934;">and</span> i &gt;= <span style="color: #d3869b; font-weight: bold;">0</span>:
+    <span style="color: #83a598;">low</span> = <span style="color: #fb4934;">self</span>.lf(read[i], low)
+    <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.lf(read[i], high)
+    <span style="color: #83a598;">i</span> -= <span style="color: #d3869b; font-weight: bold;">1</span>
+<span style="color: #fb4934;">return</span> low, high
+</pre>
+</div>
+
+<p>
+Let&rsquo;s add this to our class too.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
+
+
+<span style="color: #fb4934;">class</span> <span style="color: #fabd2f;">BWA</span>:
+    .
+    .
+    .
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">exact_match</span>(<span style="color: #fb4934;">self</span>, read):
+        <span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].find(read[-<span style="color: #d3869b; font-weight: bold;">1</span>]), <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].rfind(read[-<span style="color: #d3869b; font-weight: bold;">1</span>])
+
+        <span style="color: #83a598;">i</span> = <span style="color: #fe8019;">len</span>(read) - <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #fb4934;">while</span> low &lt;= high <span style="color: #fb4934;">and</span> i &gt;= <span style="color: #d3869b; font-weight: bold;">0</span>:
+            <span style="color: #83a598;">low</span> = <span style="color: #fb4934;">self</span>.lf(read[i], low)
+            <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.lf(read[i], high)
+            <span style="color: #83a598;">i</span> -= <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #fb4934;">return</span> low, high
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">read</span> = <span style="color: #b8bb26;">"OMI"</span>
+<span style="color: #83a598;">bwa</span> = BWA(example_seq)
+<span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = bwa.exact_match(read)
+<span style="color: #83a598;">initial_ind</span> = bwa.last[<span style="color: #d3869b; font-weight: bold;">1</span>][low]
+<span style="color: #fe8019;">print</span>(low, high)
+<span style="color: #fe8019;">print</span>(initial_ind)
+<span style="color: #fe8019;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #fe8019;">len</span>(read)])
+</pre>
+</div>
+
+<pre class="example" id="orgd171e33">
+5 5
+0
+OMI
+</pre>
+
+<p>
+Most crucial part is of course matching the reads with variations. Backtracking algorithm described by (<a href="#citeproc_bib_item_1">Li and Durbin 2009</a>) accounts for insertions, deletions and mismatches.
+</p>
+
+
+<div id="org4ff8712" class="figure">
+<p><img src="{% static 'blog/posts/bwa/fig3.jpeg' %}" alt="fig3.jpeg" width="50%" />
+</p>
+</div>
+
+<p>
+Inexact search calls the function <code>calculate_diff</code> initially which calculates the lower bound of differences for each character in the read string.
+Then we call the <code>inexact_match</code> which in turns calls itself <a href="https://www.google.com/search?q=recursion">recursively</a>. This function has two stop conditions either we reach the end of the string or we run out of allowed differences.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">class</span> <span style="color: #fabd2f;">BWA</span>:
+    .
+    .
+    .
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">inexact_search</span>(<span style="color: #fb4934;">self</span>, read, z):
+        <span style="color: #fb4934;">self</span>.calculate_diff(read)
+        <span style="color: #fb4934;">return</span> <span style="color: #fb4934;">self</span>.inexact_match(read, <span style="color: #fe8019;">len</span>(read) - <span style="color: #d3869b; font-weight: bold;">1</span>, z, <span style="color: #d3869b; font-weight: bold;">1</span>, <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>)
+
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">calculate_diff</span>(<span style="color: #fb4934;">self</span>, read):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        Estimate the lower bound of allowed z for every character.</span>
+<span style="color: #dfd2b8;">        '''</span>
+        <span style="color: #83a598;">low</span> = <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #83a598;">high</span> = <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #83a598;">diffs</span> = []
+        <span style="color: #83a598;">z</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> <span style="color: #83a598;">read</span>:
+            low = <span style="color: #fb4934;">self</span>.lf(c, low - <span style="color: #d3869b; font-weight: bold;">1</span>) + <span style="color: #d3869b; font-weight: bold;">1</span>
+            <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.lf(c, high)
+            <span style="color: #fb4934;">if</span> low &gt; <span style="color: #83a598;">high</span>:
+                low = <span style="color: #d3869b; font-weight: bold;">1</span>
+                <span style="color: #83a598;">high</span> = <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>
+                <span style="color: #83a598;">z</span> +=  <span style="color: #d3869b; font-weight: bold;">1</span>
+            diffs.append(z)
+        <span style="color: #fb4934;">self</span>.<span style="color: #83a598;">diffs</span> = diffs
+
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">inexact_match</span>(<span style="color: #fb4934;">self</span>, read, i, z, low, high):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        This function has two stop condition. Either we run out of the allowed</span>
+<span style="color: #dfd2b8;">        differences or we find a match.</span>
+<span style="color: #dfd2b8;">        '''</span>
+        <span style="color: #fb4934;">if</span> z &lt; <span style="color: #fb4934;">self</span>.diffs[i]:
+            <span style="color: #fb4934;">return</span> []
+        <span style="color: #fb4934;">if</span> i &lt; <span style="color: #d3869b; font-weight: bold;">0</span>:
+            <span style="color: #fb4934;">return</span> [[low,high]]
+
+        <span style="color: #83a598;">matches</span> = []
+        matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low, high)) <span style="color: #928374;"># </span><span style="color: #928374;">Insertion</span>
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">set</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]):
+            <span style="color: #83a598;">low_</span> = <span style="color: #fb4934;">self</span>.lf(c, low - <span style="color: #d3869b; font-weight: bold;">1</span>) + <span style="color: #d3869b; font-weight: bold;">1</span>
+            <span style="color: #83a598;">high_</span> = <span style="color: #fb4934;">self</span>.lf(c, high)
+            <span style="color: #fb4934;">if</span> low &lt;= high:
+                matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">Deletion</span>
+                <span style="color: #fb4934;">if</span> c == read[i]:
+                    matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">Match</span>
+                <span style="color: #fb4934;">else</span>:
+                    matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">Mismatch</span>
+        <span style="color: #fb4934;">return</span> matches
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">example_seq</span>=<span style="color: #b8bb26;">"OMICSSBS"</span>
+<span style="color: #83a598;">bwa</span> = BWA(example_seq)
+<span style="color: #83a598;">read</span> = <span style="color: #b8bb26;">"OMC"</span>
+
+<span style="color: #83a598;">matches</span> = bwa.inexact_search(read, <span style="color: #d3869b; font-weight: bold;">2</span>)
+<span style="color: #fe8019;">print</span>( matches)
+<span style="color: #fb4934;">for</span> match <span style="color: #fb4934;">in</span> <span style="color: #83a598;">matches</span>:
+    <span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = match
+    <span style="color: #83a598;">initial_ind</span> = bwa.last[<span style="color: #d3869b; font-weight: bold;">1</span>][low]
+    <span style="color: #fe8019;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #fe8019;">len</span>(read)])
+</pre>
+</div>
+
+<pre class="example" id="org6232c88">
+Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
+OMI
+OMI
+MIC
+OMI
+OMI
+OMI
+</pre>
+</div>
+
+<div id="outline-container-org9282a89" class="outline-4">
+<h4 id="org9282a89"><span class="section-number-4">2.3.1.</span> Visualizing the recursion</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+We can use some help to better visualize the recursion. Lets yank this snippet: <a href="https://github.com/arpitbbhayani/recviz/blob/master/src/recviz/rec.py">https://github.com/arpitbbhayani/recviz/blob/master/src/recviz/rec.py</a> and use a decorator.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">class</span> <span style="color: #fabd2f;">BWA</span>:
+    .
+    .
+    .
+
+    <span style="color: #fabd2f;">@recviz</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">inexact_match</span>(<span style="color: #fb4934;">self</span>, read, i, z, low, high):
+        .
+        .
+        .
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">example_seq</span>=<span style="color: #b8bb26;">"OMICSSBS"</span>
+<span style="color: #83a598;">bwa</span> = BWA(example_seq)
+<span style="color: #83a598;">read</span> = <span style="color: #b8bb26;">"OMC"</span>
+
+<span style="color: #83a598;">matches</span> = bwa.inexact_search(read, <span style="color: #d3869b; font-weight: bold;">2</span>)
+<span style="color: #fe8019;">print</span>( matches)
+<span style="color: #fb4934;">for</span> match <span style="color: #fb4934;">in</span> <span style="color: #83a598;">matches</span>:
+    <span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = match
+    <span style="color: #83a598;">initial_ind</span> = bwa.last[<span style="color: #d3869b; font-weight: bold;">1</span>][low]
+    <span style="color: #fe8019;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #fe8019;">len</span>(read)])
+</pre>
+</div>
+
+<pre class="example" id="org4b62042">
+ -&gt; inexact_match('OMC', 2, 2, 1, 8)
+    -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
+       -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 1, 8, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 7, 8, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 7, 8, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 1, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 3, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 3, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 3, 3, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 0, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 9, 6, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 9, 6, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 7, 8, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 7, 8, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 7, 8, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 8, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 8, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 4, 4, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 4, 4, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 5, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 1, 5, 5, 'match')
+          &lt;- [[5, 5, 'match']]
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- [[5, 5, 'match']]
+       -&gt; inexact_match('OMC', 1, 0, 5, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 5, 5, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 2, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 1, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 7, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 7, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+    &lt;- [[5, 5, 'match']]
+    -&gt; inexact_match('OMC', 2, 1, 3, 3, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 3, 3, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 3, 3, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 3, 3, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 3, 3, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 4, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 0, -1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 8, 7, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 4, 4, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 4, 4, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 5, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 1, 5, 5, 'match')
+          &lt;- [[5, 5, 'match']]
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- [[5, 5, 'match']]
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 5, 4, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- [[5, 5, 'match']]
+    -&gt; inexact_match('OMC', 2, 1, 0, 0, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 0, 0, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 2, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, -1, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 9, 6, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 9, 6, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 6, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 3, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 3, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 3, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 3, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 0, 0, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 0, 0, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 9, 6, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 9, 6, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 4, 2, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 4, 2, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, -1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, -1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 9, 6, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 9, 6, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 9, 6, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 5, 3, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 5, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 6, 4, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 6, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 3, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 3, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 3, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 2, 1, 7, 8, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 7, 8, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 8, 8, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 8, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 6, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 5, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 2, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 2, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 2, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 3, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 3, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 3, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 3, 3, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 3, 3, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 1, 4, 3, 'match')
+             -&gt; inexact_match('OMC', -1, 0, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 7, 8, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 7, 8, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 7, 8, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 8, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 8, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 4, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 8, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 8, 8, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 8, 8, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 9, 8, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 9, 8, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 5, 4, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 6, 5, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 6, 5, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 2, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 2, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 2, 1, 4, 4, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 4, 4, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 5, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 4, 4, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 4, 4, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 4, 4, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 4, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 0, -1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 8, 7, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 5, 4, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 5, 5, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 2, 1, 5, 5, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 5, 5, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 0, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, 0, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 6, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 5, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 5, 5, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 5, 5, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 4, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 0, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 0, 0, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 9, 6, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 9, 6, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 8, 7, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 5, 4, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 6, 5, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 6, 5, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 6, 5, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 2, 1, 2, 2, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 2, 2, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 3, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 3, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 8, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 8, 7, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 2, 2, 2, 'match')
+       -&gt; inexact_match('OMC', 0, 1, 2, 2, 'ins')
+          -&gt; inexact_match('OMC', -1, 0, 2, 2, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 3, 3, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 3, 3, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 3, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 1, 5, 4, 'match')
+          &lt;- [[5, 4, 'match']]
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- [[5, 4, 'match']]
+       -&gt; inexact_match('OMC', 1, 1, 3, 3, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 3, 3, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 3, 3, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 8, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 4, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 1, 4, 4, 'match')
+             -&gt; inexact_match('OMC', -1, 0, 4, 4, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 4, 3, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 0, -1, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 8, 7, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 5, 4, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 5, 5, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 5, 5, 'ins')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 0, 0, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 0, 0, 'missmatch')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+                &lt;- []
+                -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+                &lt;- []
+                -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 1, 5, 5, 'match')
+             &lt;- [[5, 5, 'match']]
+             -&gt; inexact_match('OMC', 0, 0, 2, 1, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, 0, 1, 0, 'del')
+                -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+                &lt;- []
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- [[5, 5, 'match']]
+          -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- [[5, 5, 'match']]
+       -&gt; inexact_match('OMC', 0, 1, 3, 3, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 3, 3, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 8, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 4, 4, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 4, 4, 'ins')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 8, 7, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 5, 5, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, 0, 5, 5, 'match')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+             &lt;- []
+             -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+             &lt;- []
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 4, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 1, 5, 4, 'match')
+          &lt;- [[5, 4, 'match']]
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'del')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- [[5, 4, 'match']]
+       -&gt; inexact_match('OMC', 1, 1, 0, -1, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 0, -1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 0, -1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 0, -1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 8, 7, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 8, 7, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 8, 7, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 8, 7, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 8, 7, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 4, 3, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 4, 3, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 4, 3, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 2, 4, 3, 'match')
+          -&gt; inexact_match('OMC', -1, 1, 4, 3, 'ins')
+          &lt;- [[4, 3, 'ins']]
+       &lt;- [[4, 3, 'ins']]
+       -&gt; inexact_match('OMC', 1, 1, 5, 4, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 5, 4, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 5, 4, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 1, 0, 'del')
+          -&gt; inexact_match('OMC', 0, 0, 1, 0, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, 0, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- [[5, 4, 'match'], [5, 5, 'match'], [5, 4, 'match'], [4, 3, 'ins']]
+    -&gt; inexact_match('OMC', 2, 1, 1, 1, 'del')
+       -&gt; inexact_match('OMC', 1, 0, 1, 1, 'ins')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 3, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 3, 2, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 7, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 7, 7, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'missmatch')
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 1, 2, 1, 'match')
+          -&gt; inexact_match('OMC', 0, 0, 2, 1, 'ins')
+             -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+             &lt;- []
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 2, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'missmatch')
+       &lt;- []
+    &lt;- []
+    -&gt; inexact_match('OMC', 1, 1, 1, 1, 'missmatch')
+       -&gt; inexact_match('OMC', 0, 0, 1, 1, 'ins')
+          -&gt; inexact_match('OMC', -1, -1, 1, 1, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 3, 2, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 3, 2, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 0, -1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 7, 7, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 7, 7, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 5, 4, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 3, 2, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 3, 2, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 3, 2, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 0, -1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 0, -1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 0, -1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 7, 7, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 7, 7, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 7, 7, 'ins')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 4, 3, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 4, 3, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 1, 0, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 8, 8, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 8, 8, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 5, 4, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 6, 5, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, 0, 6, 5, 'match')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+          -&gt; inexact_match('OMC', 0, -1, 2, 1, 'del')
+          &lt;- []
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'missmatch')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 4, 3, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 1, 4, 3, 'match')
+          -&gt; inexact_match('OMC', -1, 0, 4, 3, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 5, 4, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 5, 4, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 5, 4, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 2, 1, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 2, 1, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 2, 1, 'ins')
+          &lt;- []
+       &lt;- []
+       -&gt; inexact_match('OMC', 1, 0, 1, 0, 'del')
+       &lt;- []
+       -&gt; inexact_match('OMC', 0, 0, 1, 0, 'missmatch')
+          -&gt; inexact_match('OMC', -1, -1, 1, 0, 'ins')
+          &lt;- []
+       &lt;- []
+    &lt;- []
+ &lt;- [[5, 5, 'match'], [5, 5, 'match'], [5, 4, 'match'], [5, 5, 'match'], [5, 4, 'match'], [4, 3, 'ins']]
+[[5, 5, 'match'], [5, 5, 'match'], [5, 4, 'match'], [5, 5, 'match'], [5, 4, 'match'], [4, 3, 'ins']]
+OMI match
+OMI match
+OMI match
+OMI match
+OMI match
+MIC ins
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org54fa3a6" class="outline-3">
+<h3 id="org54fa3a6"><span class="section-number-3">2.4.</span> Putting it all together</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
+
+
+<span style="color: #fb4934;">class</span> <span style="color: #fabd2f;">BWA</span>:
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">__init__</span>(<span style="color: #fb4934;">self</span>, ref):
+        <span style="color: #dfd2b8;">"""todo: to be defined1."""</span>
+        <span style="color: #fb4934;">self</span>.ref = ref + <span style="color: #b8bb26;">"$"</span>
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">last</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #83a598;">sa</span> = [<span style="color: #fb4934;">self</span>.ref[i:] + <span style="color: #fb4934;">self</span>.ref[:i] <span style="color: #fb4934;">for</span> i <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">range</span>(<span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.ref))]
+        <span style="color: #83a598;">idx</span>, <span style="color: #83a598;">sa</span> = <span style="color: #fe8019;">zip</span>(*<span style="color: #fe8019;">sorted</span>(<span style="color: #fe8019;">enumerate</span>(sa), key=itemgetter(<span style="color: #d3869b; font-weight: bold;">1</span>)))
+        <span style="color: #fb4934;">return</span> <span style="color: #b8bb26;">""</span>.join(i[-<span style="color: #d3869b; font-weight: bold;">1</span>] <span style="color: #fb4934;">for</span> i <span style="color: #fb4934;">in</span> sa), idx, sa
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">occ</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        get the occurrences and total counts for each character in bwt</span>
+<span style="color: #dfd2b8;">        '''</span>
+        totals = {}
+        tallymatrix = {k: [] <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> <span style="color: #b8bb26;">""</span>.join(<span style="color: #fe8019;">set</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]))}
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]:
+            <span style="color: #fb4934;">if</span> c <span style="color: #fb4934;">not</span> <span style="color: #fb4934;">in</span> totals:
+                totals[<span style="color: #83a598;">c</span>] = <span style="color: #d3869b; font-weight: bold;">0</span>
+            totals[<span style="color: #83a598;">c</span>] += <span style="color: #d3869b; font-weight: bold;">1</span>
+            <span style="color: #fb4934;">for</span> k <span style="color: #fb4934;">in</span> tallymatrix.keys():
+                <span style="color: #fb4934;">if</span> k != c <span style="color: #fb4934;">and</span> tallymatrix[k]:
+                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #d3869b; font-weight: bold;">1</span>])
+                <span style="color: #fb4934;">elif</span> k == c:
+                    tallymatrix[k].append(totals[c])
+                <span style="color: #fb4934;">else</span>:
+                    tallymatrix[k].append(<span style="color: #d3869b; font-weight: bold;">0</span>)
+        <span style="color: #fb4934;">return</span> tallymatrix, totals
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">first</span>(<span style="color: #fb4934;">self</span>):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        because first column is alphabetically sorted</span>
+<span style="color: #dfd2b8;">        its enough to just to get start and end position for each character.</span>
+<span style="color: #dfd2b8;">        '''</span>
+        first = {}
+        totc = <span style="color: #d3869b; font-weight: bold;">0</span>
+        <span style="color: #fb4934;">for</span> c, count <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">sorted</span>(<span style="color: #fb4934;">self</span>.occ[<span style="color: #d3869b; font-weight: bold;">1</span>].items()):
+            first[<span style="color: #83a598;">c</span>] = (totc, totc + count - <span style="color: #d3869b; font-weight: bold;">1</span>)
+            totc += count
+        <span style="color: #fb4934;">return</span> first
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">lf</span>(<span style="color: #fb4934;">self</span>, c, i):
+        <span style="color: #dfd2b8;">"""</span>
+<span style="color: #dfd2b8;">        the i-th occurrence of character &#8216;c&#8217; in last</span>
+<span style="color: #dfd2b8;">        column is the same text character as the i-th</span>
+<span style="color: #dfd2b8;">        occurrence of &#8216;c&#8217; in the first column</span>
+<span style="color: #dfd2b8;">        """</span>
+        <span style="color: #fb4934;">return</span> <span style="color: #fb4934;">self</span>.first[c][<span style="color: #d3869b; font-weight: bold;">0</span>] + <span style="color: #fb4934;">self</span>.occ[<span style="color: #d3869b; font-weight: bold;">0</span>][c][i] - <span style="color: #d3869b; font-weight: bold;">1</span>
+
+    @<span style="color: #fe8019;">property</span>
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">rebwt</span>(<span style="color: #fb4934;">self</span>):
+        i = <span style="color: #d3869b; font-weight: bold;">0</span>
+        t = <span style="color: #b8bb26;">"$"</span>
+        <span style="color: #fb4934;">while</span> <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>][i] != <span style="color: #b8bb26;">"$"</span>:
+            c = <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>][i]
+            t = c + t
+            i = <span style="color: #fb4934;">self</span>.lf(c, i)
+        <span style="color: #fb4934;">return</span> t[:-<span style="color: #d3869b; font-weight: bold;">1</span>]
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">exact_match</span>(<span style="color: #fb4934;">self</span>, read):
+        <span style="color: #83a598;">low</span>, <span style="color: #83a598;">high</span> = <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].find(read[-<span style="color: #d3869b; font-weight: bold;">1</span>]), <span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>].rfind(read[-<span style="color: #d3869b; font-weight: bold;">1</span>])
+
+        i = <span style="color: #fe8019;">len</span>(read) - <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #fb4934;">while</span> low &lt;= high <span style="color: #fb4934;">and</span> i &gt;= <span style="color: #d3869b; font-weight: bold;">0</span>:
+            low = <span style="color: #fb4934;">self</span>.lf(read[i], low - <span style="color: #d3869b; font-weight: bold;">1</span>) + <span style="color: #d3869b; font-weight: bold;">1</span>
+            high = <span style="color: #fb4934;">self</span>.lf(read[i], high)
+            i -= <span style="color: #d3869b; font-weight: bold;">1</span>
+        <span style="color: #fb4934;">return</span> low, high
+
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">inexact_search</span>(<span style="color: #fb4934;">self</span>, read, z):
+        <span style="color: #fb4934;">self</span>.calculate_diff(read)
+        <span style="color: #fb4934;">return</span> <span style="color: #fb4934;">self</span>.inexact_match(read, <span style="color: #fe8019;">len</span>(read) - <span style="color: #d3869b; font-weight: bold;">1</span>, z, <span style="color: #d3869b; font-weight: bold;">1</span>, <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>)
+
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">calculate_diff</span>(<span style="color: #fb4934;">self</span>, read):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        estimate the lower bound of allowed z for every character.</span>
+<span style="color: #dfd2b8;">        '''</span>
+        low = <span style="color: #d3869b; font-weight: bold;">1</span>
+        high = <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>
+        diffs = []
+        z = <span style="color: #d3869b; font-weight: bold;">0</span>
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> read:
+            low = <span style="color: #fb4934;">self</span>.lf(c, low - <span style="color: #d3869b; font-weight: bold;">1</span>) + <span style="color: #d3869b; font-weight: bold;">1</span>
+            high = <span style="color: #fb4934;">self</span>.lf(c, high)
+            <span style="color: #fb4934;">if</span> low &gt; high:
+                low = <span style="color: #d3869b; font-weight: bold;">1</span>
+                high = <span style="color: #fe8019;">len</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]) - <span style="color: #d3869b; font-weight: bold;">1</span>
+                z +=  <span style="color: #d3869b; font-weight: bold;">1</span>
+            diffs.append(z)
+        <span style="color: #fb4934;">self</span>.diffs = diffs
+
+
+    <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">inexact_match</span>(<span style="color: #fb4934;">self</span>, read, i, z, low, high):
+        <span style="color: #dfd2b8;">'''</span>
+<span style="color: #dfd2b8;">        this function has two stop condition. either we run out of the allowed</span>
+<span style="color: #dfd2b8;">        differences or we find a match.</span>
+<span style="color: #dfd2b8;">        '''</span>
+        <span style="color: #fb4934;">if</span> z &lt; <span style="color: #fb4934;">self</span>.diffs[i]:
+            <span style="color: #fb4934;">return</span> []
+        <span style="color: #fb4934;">if</span> i &lt; <span style="color: #d3869b; font-weight: bold;">0</span>:
+            <span style="color: #fb4934;">return</span> [[low, high]]
+
+        matches = []
+        matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low, high)) <span style="color: #928374;"># </span><span style="color: #928374;">insertion</span>
+        <span style="color: #fb4934;">for</span> c <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">set</span>(<span style="color: #fb4934;">self</span>.last[<span style="color: #d3869b; font-weight: bold;">0</span>]):
+            low_ = <span style="color: #fb4934;">self</span>.lf(c, low - <span style="color: #d3869b; font-weight: bold;">1</span>) + <span style="color: #d3869b; font-weight: bold;">1</span>
+            high_ = <span style="color: #fb4934;">self</span>.lf(c, high)
+            <span style="color: #fb4934;">if</span> low &lt;= high:
+                matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">deletion</span>
+                <span style="color: #fb4934;">if</span> c == read[i]:
+                    matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">match</span>
+                <span style="color: #fb4934;">else</span>:
+                    matches.extend(<span style="color: #fb4934;">self</span>.inexact_match(read, i - <span style="color: #d3869b; font-weight: bold;">1</span>, z - <span style="color: #d3869b; font-weight: bold;">1</span>, low_, high_)) <span style="color: #928374;"># </span><span style="color: #928374;">mismatch</span>
+        <span style="color: #fb4934;">return</span> matches
+
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgc38423b" class="outline-3">
+<h3 id="orgc38423b"><span class="section-number-3">2.5.</span> Sequence generation</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Lets generate our reference genome first. We are going to use the same approach as we did in <a href="https:https://omics.sbs/blog/seqmotif.html">motif finding post</a>. We are going to create our reference sequence with length <code>1200</code> with same probability of <code>.25</code> for all the bases. We add <code>$</code> character at the end to denote the end of the string which will be useful when we do the burrows wheeler below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">import</span> random
+random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
+<span style="color: #83a598;">alphabet</span> = [<span style="color: #b8bb26;">'A'</span>, <span style="color: #b8bb26;">'C'</span>, <span style="color: #b8bb26;">'G'</span>, <span style="color: #b8bb26;">'T'</span>]
+<span style="color: #83a598;">seq_weights</span> = [.<span style="color: #d3869b; font-weight: bold;">25</span>, .<span style="color: #d3869b; font-weight: bold;">25</span>, .<span style="color: #d3869b; font-weight: bold;">25</span>, .<span style="color: #d3869b; font-weight: bold;">25</span>]
+<span style="color: #83a598;">seq_length</span> = <span style="color: #d3869b; font-weight: bold;">120</span>
+
+<span style="color: #83a598;">ref_seq</span> = <span style="color: #b8bb26;">""</span>.join(
+    random.choices(population=alphabet, weights=seq_weights, k=seq_length)
+)
+<span style="color: #fe8019;">print</span>(ref_seq)
+</pre>
+</div>
+
+<pre class="example">
+TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
+</pre>
+
+
+
+<p>
+We want our reads to be different from our reference so, before sampling our samples we are going to create a mutated sequence first. Here with the <code>mutated</code> function we decide if mutation occurs with the given percentage and if it does type of the mutation. With the <code>mutate_read</code> function we either insert a single base, substitute a base or remove a base.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">
+<span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">mutated</span>(mutation_rate):
+    <span style="color: #83a598;">r</span> = random.randint(<span style="color: #d3869b; font-weight: bold;">1</span>,<span style="color: #d3869b; font-weight: bold;">100</span>)
+    <span style="color: #fb4934;">if</span> r &lt;= <span style="color: #83a598;">mutation_rate</span>:
+        r = random.randint(<span style="color: #d3869b; font-weight: bold;">1</span>,<span style="color: #d3869b; font-weight: bold;">100</span>)
+        <span style="color: #fb4934;">if</span> r &lt;= <span style="color: #d3869b; font-weight: bold;">25</span>:
+            <span style="color: #fb4934;">return</span> <span style="color: #b8bb26;">'del'</span>
+        <span style="color: #fb4934;">elif</span> <span style="color: #d3869b; font-weight: bold;">25</span> &lt; r &lt;= <span style="color: #d3869b; font-weight: bold;">50</span>:
+            <span style="color: #fb4934;">return</span> <span style="color: #b8bb26;">'ins'</span>
+        <span style="color: #fb4934;">else</span>:
+            <span style="color: #fb4934;">return</span> <span style="color: #b8bb26;">'sub'</span>
+    <span style="color: #fb4934;">else</span>:
+        <span style="color: #fb4934;">return</span> <span style="color: #d3869b;">False</span>
+
+
+<span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">mutate</span>(sequence, mutation_rate):
+    mutated_seq = <span style="color: #b8bb26;">''</span>
+    <span style="color: #83a598;">mutated_once</span> = <span style="color: #d3869b;">False</span>
+    <span style="color: #fb4934;">for</span> base <span style="color: #fb4934;">in</span> <span style="color: #83a598;">sequence</span>:
+        mutatition_type = mutated(mutation_rate)
+        match <span style="color: #83a598;">mutatition_type</span>:
+            case <span style="color: #b8bb26;">'del'</span>:
+                <span style="color: #fb4934;">pass</span>
+            case <span style="color: #b8bb26;">'ins'</span>:
+                possible_mutations = <span style="color: #b8bb26;">""</span>.join([<span style="color: #b8bb26;">'A'</span>, <span style="color: #b8bb26;">'T'</span>, <span style="color: #b8bb26;">'C'</span>, <span style="color: #b8bb26;">'G'</span>])
+                <span style="color: #83a598;">mutantion</span> = random.choice(possible_mutations)
+                <span style="color: #83a598;">mutated_seq</span> += base
+                <span style="color: #83a598;">mutated_seq</span> += mutantion
+            case <span style="color: #b8bb26;">'sub'</span>:
+                <span style="color: #83a598;">possible_mutations</span> = <span style="color: #b8bb26;">""</span>.join([<span style="color: #b8bb26;">'A'</span>, <span style="color: #b8bb26;">'T'</span>, <span style="color: #b8bb26;">'C'</span>, <span style="color: #b8bb26;">'G'</span>])
+                <span style="color: #83a598;">possible_mutations</span> = possible_mutations.replace(base, <span style="color: #b8bb26;">''</span>)
+                <span style="color: #83a598;">mutantion</span> = random.choice(possible_mutations)
+                <span style="color: #83a598;">mutated_seq</span> += mutantion
+            case <span style="color: #83a598;">_</span>:
+                mutated_seq += base
+    <span style="color: #fb4934;">return</span> mutated_seq
+</pre>
+</div>
+
+<p>
+After mutation with rate .5 we got our new mutated string some indels and substitutions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">mt_seq</span> = mutate(ref_seq, <span style="color: #d3869b; font-weight: bold;">5</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{ref_seq=}<span style="color: #b8bb26;">"</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">" </span>{mt_seq=}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+ref_seq='TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG'
+ mt_seq='TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAATTCATGTAGGGTGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTGGCGTAGAACTAAGAGTGGAGG'
+</pre>
+
+
+<p>
+Lets randomly sample 600 reads with length 6 from our mutated sequence.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">number_of_reads</span> = <span style="color: #d3869b; font-weight: bold;">600</span>
+<span style="color: #83a598;">read_length</span> = <span style="color: #d3869b; font-weight: bold;">6</span>
+<span style="color: #83a598;">random_indices</span> = [random.randrange(<span style="color: #fe8019;">len</span>(mt_seq) - read_length) <span style="color: #fb4934;">for</span> _ <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">range</span>(number_of_reads)]
+<span style="color: #83a598;">mt_reads</span> = [mt_seq[i:i + read_length] <span style="color: #fb4934;">for</span> i <span style="color: #fb4934;">in</span> random_indices]
+<span style="color: #fe8019;">print</span>(mt_reads[:<span style="color: #d3869b; font-weight: bold;">20</span>])
+</pre>
+</div>
+
+<pre class="example">
+['AGAGTG', 'TCATGT', 'GCGTAG', 'GTAGGG', 'CTCCGT', 'TGAGCT', 'GCGCAA', 'GGCGCG', 'ATGTAG', 'TAGAAC', 'TAAGAG', 'TGACTA', 'TGGCGC', 'TAATTC', 'ATTTTT', 'GTTCTC', 'CGCGCA', 'TTTCGT', 'GCTGAC', 'TTTCGT']
+</pre>
+
+
+<p>
+We can now try to align our reads from the <code>mutated_sequence</code> back to the our reference. Since BWA returns many matches we are just gonna get the most common one using the <a href="https://stackoverflow.com/a/1520716/7141527">snippet here.</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #928374;"># </span><span style="color: #928374;">Code from: https://stackoverflow.com/a/1520716/7141527</span>
+<span style="color: #928374;"># </span><span style="color: #928374;">Get the most common match</span>
+<span style="color: #fb4934;">import</span> itertools
+<span style="color: #fb4934;">import</span> operator
+
+<span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">most_common</span>(L):
+  <span style="color: #928374;"># </span><span style="color: #928374;">get an iterable of (item, iterable) pairs</span>
+  <span style="color: #83a598;">SL</span> = <span style="color: #fe8019;">sorted</span>((x, i) <span style="color: #fb4934;">for</span> i, x <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">enumerate</span>(L))
+  <span style="color: #928374;"># </span><span style="color: #928374;">print 'SL:', SL</span>
+  groups = itertools.groupby(SL, key=operator.itemgetter(<span style="color: #d3869b; font-weight: bold;">0</span>))
+  <span style="color: #928374;"># </span><span style="color: #928374;">auxiliary function to get "quality" for an item</span>
+  <span style="color: #fb4934;">def</span> <span style="color: #b8bb26;">_auxfun</span>(g):
+    item, iterable = g
+    count = <span style="color: #d3869b; font-weight: bold;">0</span>
+    min_index = <span style="color: #fe8019;">len</span>(L)
+    <span style="color: #fb4934;">for</span> _, where <span style="color: #fb4934;">in</span> iterable:
+      count += <span style="color: #d3869b; font-weight: bold;">1</span>
+      min_index = <span style="color: #fe8019;">min</span>(min_index, where)
+    <span style="color: #928374;"># </span><span style="color: #928374;">print 'item %r, count %r, minind %r' % (item, count, min_index)</span>
+    <span style="color: #fb4934;">return</span> count, -min_index
+  <span style="color: #928374;"># </span><span style="color: #928374;">pick the highest-count/earliest item</span>
+  <span style="color: #fb4934;">return</span> <span style="color: #fe8019;">max</span>(groups, key=_auxfun)[<span style="color: #d3869b; font-weight: bold;">0</span>]
+</pre>
+</div>
+
+<p>
+First lets initialize our BWA class with the <code>ref_seq</code>. Then we are going to align our mutated reads and keep track of the most common matches. Then we are going the get the <code>initial_ind</code> from <code>bwa.last[1]</code> using the <code>low</code> value.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">bwa</span> = BWA(ref_seq)
+<span style="color: #83a598;">alignment_indices</span> = []
+<span style="color: #fb4934;">for</span> mt_read <span style="color: #fb4934;">in</span> <span style="color: #83a598;">mt_reads</span>:
+    matches=bwa.inexact_search(mt_read, <span style="color: #d3869b; font-weight: bold;">2</span>)
+    <span style="color: #fb4934;">if</span> <span style="color: #83a598;">matches</span>:
+        <span style="color: #928374;"># </span><span style="color: #928374;">match = most_common(matches)</span>
+        <span style="color: #83a598;">match</span> = matches[<span style="color: #d3869b; font-weight: bold;">0</span>]
+        alignment_indices.append(bwa.last[<span style="color: #d3869b; font-weight: bold;">1</span>][match[<span style="color: #d3869b; font-weight: bold;">0</span>]])
+    <span style="color: #fb4934;">else</span>:
+        alignment_indices.append(<span style="color: #d3869b; font-weight: bold;">0</span>)
+
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{   random_indices[:20]=}<span style="color: #b8bb26;">"</span>)
+<span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{alignment_indices[:20]=}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+   random_indices[20:]=[96, 12, 79, 102, 32, 68, 90, 103, 77, 18, 39, 12, 93, 9, 108, 87, 42, 60, 71, 12]
+alignment_indices[20:]=[57, 12, 80, 39, 32, 69, 98, 109, 78, 18, 39, 12, 79, 9, 110, 88, 42, 61, 72, 12]
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7e6815f" class="outline-3">
+<h3 id="org7e6815f"><span class="section-number-3">2.6.</span> Outputing to SAM</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Lets output our alignmets as Sequence Alignment/Map (SAM) format. SAM has header lines starting with `@´ and 11 fields denoting various alignment properties. We are going to fill in just the QNAME, POS, TLEN and SEQ fields.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Col</th>
+<th scope="col" class="org-left">Field</th>
+<th scope="col" class="org-left">Type</th>
+<th scope="col" class="org-left">Regexp/Range</th>
+<th scope="col" class="org-left">Brief description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">QNAME</td>
+<td class="org-left">String</td>
+<td class="org-left">[!-?A-~]{1,254}</td>
+<td class="org-left">Query template NAME</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">FLAG</td>
+<td class="org-left">Int</td>
+<td class="org-left">[0, 216 − 1]</td>
+<td class="org-left">bitwise FLAG</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">RNAME</td>
+<td class="org-left">String</td>
+<td class="org-left">\*&vert;[:rname:<sup>*</sup>=][:rname:]*</td>
+<td class="org-left">Reference sequence NAME11</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">POS</td>
+<td class="org-left">Int</td>
+<td class="org-left">[0, 231 − 1]</td>
+<td class="org-left">1-based leftmost mapping POSition</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">MAPQ</td>
+<td class="org-left">Int</td>
+<td class="org-left">[0, 28 − 1]</td>
+<td class="org-left">MAPping Quality</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-left">CIGAR</td>
+<td class="org-left">String</td>
+<td class="org-left">\*&vert;([0-9]+[MIDNSHPX=])+</td>
+<td class="org-left">CIGAR string</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left">RNEXT</td>
+<td class="org-left">String</td>
+<td class="org-left">\*&vert;=&vert;[:rname:<sup>*</sup>=][:rname:]*</td>
+<td class="org-left">Reference name of the mate/next read</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left">PNEXT</td>
+<td class="org-left">Int</td>
+<td class="org-left">[0, 231 − 1]</td>
+<td class="org-left">Position of the mate/next read</td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-left">TLEN</td>
+<td class="org-left">Int</td>
+<td class="org-left">[−231 + 1, 231 − 1]</td>
+<td class="org-left">observed Template LENgth</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">SEQ</td>
+<td class="org-left">String</td>
+<td class="org-left">\*&vert;[A-Za-z=.]+</td>
+<td class="org-left">segment SEQuence</td>
+</tr>
+
+<tr>
+<td class="org-right">11</td>
+<td class="org-left">QUAL</td>
+<td class="org-left">String</td>
+<td class="org-left">[!-~]+</td>
+<td class="org-left">ASCII of Phred-scaled base QUALity+33</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+For header we are going to print a version number, reference sequence name and length.
+For our alignments we are going to create a name for them and sort them and print their alignment index with their sequence.
+Ideally, reads that haven&rsquo;t aligned should be flagged with 0x4. However we are
+just gonna skip them. Another thing we are skipping over is the CIGAR entries
+which says where are the indels and mismatches we are just gonna write
+everything is matched.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #83a598;">sam_contents</span> = <span style="color: #b8bb26;">""</span>
+<span style="color: #83a598;">sam_header</span> = f<span style="color: #b8bb26;">"@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:REF\tLN:</span>{<span style="color: #fe8019;">len</span>(ref_seq)}<span style="color: #b8bb26;">\n"</span>
+sam_contents += sam_header
+
+<span style="color: #83a598;">mapped_reads</span> = {i: read <span style="color: #fb4934;">for</span> i, read <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">sorted</span>(<span style="color: #fe8019;">zip</span>(alignment_indices, mt_reads))}
+<span style="color: #fb4934;">for</span> i, read <span style="color: #fb4934;">in</span> mapped_reads.items():
+    <span style="color: #928374;">#                </span><span style="color: #928374;">QNAME  FLAG RNAME POS MAPQ CIGAR RNEXT PNEXT TLEN SEQ     QUAL</span>
+    <span style="color: #fb4934;">if</span> i == <span style="color: #d3869b; font-weight: bold;">0</span>:
+        <span style="color: #fb4934;">continue</span>
+    <span style="color: #fb4934;">else</span>:
+        sam_contents += f<span style="color: #b8bb26;">"read</span>{i}<span style="color: #b8bb26;">\t0\tREF\t</span>{i+1}<span style="color: #b8bb26;">\t30\t6M\t*\t0\t</span>{<span style="color: #fe8019;">len</span>(read)}<span style="color: #b8bb26;">\t</span>{read}<span style="color: #b8bb26;">\t</span>{'K'*<span style="color: #fe8019;">len</span>(read)}<span style="color: #b8bb26;">\n"</span>
+
+<span style="color: #fe8019;">print</span>(sam_contents)
+</pre>
+</div>
+
+<pre class="example" id="org200526d">
+@HD	VN:1.6	SO:coordinate
+@SQ	SN:REF	LN:120
+read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
+read2	0	REF	3	30	6M	*	0	6	CCGCTC	KKKKKK
+read3	0	REF	4	30	6M	*	0	6	CGCTCC	KKKKKK
+read4	0	REF	5	30	6M	*	0	6	GCTCCG	KKKKKK
+read5	0	REF	6	30	6M	*	0	6	CTCCGT	KKKKKK
+read6	0	REF	7	30	6M	*	0	6	TCCGTG	KKKKKK
+read7	0	REF	8	30	6M	*	0	6	CCGTGC	KKKKKK
+read9	0	REF	10	30	6M	*	0	6	GTGCTG	KKKKKK
+read10	0	REF	11	30	6M	*	0	6	TGCTTT	KKKKKK
+read11	0	REF	12	30	6M	*	0	6	GCTGCT	KKKKKK
+read12	0	REF	13	30	6M	*	0	6	CTGCTT	KKKKKK
+read16	0	REF	17	30	6M	*	0	6	TTTTTT	KKKKKK
+read17	0	REF	18	30	6M	*	0	6	TTTCGT	KKKKKK
+read18	0	REF	19	30	6M	*	0	6	TTCGTG	KKKKKK
+read19	0	REF	20	30	6M	*	0	6	TCGTGC	KKKKKK
+read20	0	REF	21	30	6M	*	0	6	CGTGCT	KKKKKK
+read21	0	REF	22	30	6M	*	0	6	GTGCAC	KKKKKK
+read22	0	REF	23	30	6M	*	0	6	TGCACG	KKKKKK
+read23	0	REF	24	30	6M	*	0	6	GCACGT	KKKKKK
+read25	0	REF	26	30	6M	*	0	6	ACGTTC	KKKKKK
+read26	0	REF	27	30	6M	*	0	6	CGTTCT	KKKKKK
+read27	0	REF	28	30	6M	*	0	6	GTTCTC	KKKKKK
+read28	0	REF	29	30	6M	*	0	6	TTCTCT	KKKKKK
+read30	0	REF	31	30	6M	*	0	6	CTCTGA	KKKKKK
+read31	0	REF	32	30	6M	*	0	6	TCTGAG	KKKKKK
+read32	0	REF	33	30	6M	*	0	6	CTGAGC	KKKKKK
+read33	0	REF	34	30	6M	*	0	6	TGAGCT	KKKKKK
+read34	0	REF	35	30	6M	*	0	6	GAGCTG	KKKKKK
+read35	0	REF	36	30	6M	*	0	6	AGCTGA	KKKKKK
+read36	0	REF	37	30	6M	*	0	6	GCTGAC	KKKKKK
+read37	0	REF	38	30	6M	*	0	6	CTGACT	KKKKKK
+read38	0	REF	39	30	6M	*	0	6	TGACTA	KKKKKK
+read39	0	REF	40	30	6M	*	0	6	GACTAC	KKKKKK
+read40	0	REF	41	30	6M	*	0	6	ACTACT	KKKKKK
+read41	0	REF	42	30	6M	*	0	6	CTACTA	KKKKKK
+read42	0	REF	43	30	6M	*	0	6	TACTAA	KKKKKK
+read44	0	REF	45	30	6M	*	0	6	CTAATT	KKKKKK
+read48	0	REF	49	30	6M	*	0	6	ATTCAT	KKKKKK
+read51	0	REF	52	30	6M	*	0	6	CATGTA	KKKKKK
+read52	0	REF	53	30	6M	*	0	6	AATTCA	KKKKKK
+read54	0	REF	55	30	6M	*	0	6	GTAGGG	KKKKKK
+read55	0	REF	56	30	6M	*	0	6	TAGGGT	KKKKKK
+read56	0	REF	57	30	6M	*	0	6	AGGGTG	KKKKKK
+read57	0	REF	58	30	6M	*	0	6	GGGTGT	KKKKKK
+read58	0	REF	59	30	6M	*	0	6	GGTGTG	KKKKKK
+read59	0	REF	60	30	6M	*	0	6	GTGTGG	KKKKKK
+read60	0	REF	61	30	6M	*	0	6	TGTGGC	KKKKKK
+read61	0	REF	62	30	6M	*	0	6	GTGGCG	KKKKKK
+read62	0	REF	63	30	6M	*	0	6	TGGCGT	KKKKKK
+read63	0	REF	64	30	6M	*	0	6	GGCGCG	KKKKKK
+read64	0	REF	65	30	6M	*	0	6	GCGCGC	KKKKKK
+read65	0	REF	66	30	6M	*	0	6	CGCGCA	KKKKKK
+read66	0	REF	67	30	6M	*	0	6	GCGCAA	KKKKKK
+read67	0	REF	68	30	6M	*	0	6	CGCAAG	KKKKKK
+read68	0	REF	69	30	6M	*	0	6	GCAAGG	KKKKKK
+read69	0	REF	70	30	6M	*	0	6	CAAGGC	KKKKKK
+read70	0	REF	71	30	6M	*	0	6	AAGGCA	KKKKKK
+read71	0	REF	72	30	6M	*	0	6	AGGCAT	KKKKKK
+read72	0	REF	73	30	6M	*	0	6	GGCATT	KKKKKK
+read73	0	REF	74	30	6M	*	0	6	GCATTT	KKKKKK
+read74	0	REF	75	30	6M	*	0	6	CATTTT	KKKKKK
+read75	0	REF	76	30	6M	*	0	6	ATTTTT	KKKKKK
+read77	0	REF	78	30	6M	*	0	6	TTTTTG	KKKKKK
+read78	0	REF	79	30	6M	*	0	6	TTTTGC	KKKKKK
+read79	0	REF	80	30	6M	*	0	6	TTTGGC	KKKKKK
+read80	0	REF	81	30	6M	*	0	6	TTGCGC	KKKKKK
+read81	0	REF	82	30	6M	*	0	6	TGCGCT	KKKKKK
+read82	0	REF	83	30	6M	*	0	6	GCGCTT	KKKKKK
+read83	0	REF	84	30	6M	*	0	6	CGCTTT	KKKKKK
+read84	0	REF	85	30	6M	*	0	6	GCTTTT	KKKKKK
+read85	0	REF	86	30	6M	*	0	6	CTTTTC	KKKKKK
+read86	0	REF	87	30	6M	*	0	6	TTTGTG	KKKKKK
+read87	0	REF	88	30	6M	*	0	6	TTGTGC	KKKKKK
+read88	0	REF	89	30	6M	*	0	6	TGTGCG	KKKKKK
+read89	0	REF	90	30	6M	*	0	6	GTGCGT	KKKKKK
+read90	0	REF	91	30	6M	*	0	6	TGCGTT	KKKKKK
+read92	0	REF	93	30	6M	*	0	6	CGTTTG	KKKKKK
+read98	0	REF	99	30	6M	*	0	6	GCGTTT	KKKKKK
+read99	0	REF	100	30	6M	*	0	6	CGTAGA	KKKKKK
+read100	0	REF	101	30	6M	*	0	6	GTAGAA	KKKKKK
+read101	0	REF	102	30	6M	*	0	6	TAGAAC	KKKKKK
+read102	0	REF	103	30	6M	*	0	6	AGAACT	KKKKKK
+read107	0	REF	108	30	6M	*	0	6	CTAAGA	KKKKKK
+read108	0	REF	109	30	6M	*	0	6	TAAGAG	KKKKKK
+read109	0	REF	110	30	6M	*	0	6	AAGAGT	KKKKKK
+read110	0	REF	111	30	6M	*	0	6	AGAGTG	KKKKKK
+read111	0	REF	112	30	6M	*	0	6	GAGTGG	KKKKKK
+read112	0	REF	113	30	6M	*	0	6	AGTGGA	KKKKKK
+read113	0	REF	114	30	6M	*	0	6	GTGGAG	KKKKKK
+</pre>
+
+<p>
+Lets write our alignments to a file as well as our reference sequence.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">with</span> <span style="color: #fe8019;">open</span>(<span style="color: #b8bb26;">'myalignments.sam'</span>, <span style="color: #b8bb26;">'w'</span>) <span style="color: #fb4934;">as</span> f:
+    f.write(sam_contents)
+<span style="color: #fb4934;">with</span> <span style="color: #fe8019;">open</span>(<span style="color: #b8bb26;">'ref.fasta'</span>, <span style="color: #b8bb26;">'w'</span>) <span style="color: #fb4934;">as</span> f:
+    f.write(<span style="color: #b8bb26;">'&gt;REF\n'</span>)
+    f.write(ref_seq)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88a120b" class="outline-3">
+<h3 id="org88a120b"><span class="section-number-3">2.7.</span> Visualizing our alignments with IGV</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+With SAM and FASTA files we can visualize our alignmets with IGV. We can convert our SAM to BAM and index both BAM and FASTA files with samtools.
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">samtools view ./myalignments.sam -bh &gt; ./myalignments.bam
+samtools index ./myalignments.bam
+
+samtools faidx ./ref.fasta
+</pre>
+</div>
+
+
+<div id="orgbfa8802" class="figure">
+<p><img src="{% static 'blog/posts/bwa/igv.svg' %}" alt="igv.svg" class="org-svg" width="100%" />
+</p>
+</div>
+
+
+<style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
+  <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Li, Heng, and Richard Durbin. 2009. “Fast and Accurate Short Read Alignment with Burrows-Wheeler Transform.” <i>Bioinformatics (Oxford, England)</i> 25 (14): 1754–60. <a href="https://doi.org/10.1093/bioinformatics/btp324">https://doi.org/10.1093/bioinformatics/btp324</a>.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Barış Salman</p>
+<p class="date">Created: 2022-11-27 Sun 03:29</p>
+</div>
+</body>
+</html>
