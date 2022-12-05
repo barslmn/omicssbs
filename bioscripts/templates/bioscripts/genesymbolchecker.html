@@ -1,0 +1,45 @@
+{% extends "bioscripts/base.html" %}
+{% block content %}
+
+{{ error }}
+
+<p>After you sumbit your gene set, results will be streamed and downloaded as process continues so you can continue browsing as usual.</p>
+<p style="font-weight:bold; color:var(--red)">Gene symbols will be split by whitespaces (newlines, spaces or tabs); commas, semicolons or other seperators or text delimiters like double quotes won't be parsed. </p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+
+<style>
+textarea {
+    font-style: italic;
+    font-family: mono;
+    background: var(--fg);
+    color: var(--bg);
+    border:none;
+    border-radius:1em;
+    padding:1em;
+}
+select {
+    border: none;
+    color: var(--fg);
+    background: var(--bg);
+    font-weight: bold;
+    font-size: 1em;
+}
+input[type=submit] {
+    border:none;
+    border-radius:.3em;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 1em;
+    font-weight: bolder;
+ }
+ label {
+     float:left;
+     margin-right: 1em;
+ }
+
+</style>
+{% endblock %}

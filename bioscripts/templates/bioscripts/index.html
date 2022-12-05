@@ -12,4 +12,14 @@
     This tools visualizes homology of given protein change e.g. NP_001501.2:p.Arg121Leu using texshade.
     </p>
     <img style="width:33vw;background:white;" src="{% static 'bioscripts/img/var2texshade_example.svg' %}" alt="Example TexShade Image">
+
+    <h3>
+      <a href="{% url 'bioscripts:genesymbolchecker' %}">Gene Symbol Checker</a>
+    </h3>
+    <p>
+    This tool maps aliases, previous or withdrawn symbols to current approved HGNC symbols. Checks any none gene entry and fixes capitilizations.
+    Ensembl and RefSeq annotation files sometimes uses previous or alias symbols.
+    This tools also checks Ensembl and NCBI annotation files for different genome version and shows which gene symbol is used.
+    This way more appropriate gene set can be used to avoid the false negatives in variant discovery process.
+    </p>
 {% endblock %}

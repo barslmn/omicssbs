@@ -162,6 +162,7 @@ body {
   position: relative;
   max-width: 64em;  /* remove this for a full-width layout */
   margin: 0 auto;  /* centers the layout */
+  padding: 1em;
 }
  /* unvisited link */
 a:link {
