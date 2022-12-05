@@ -52,9 +52,16 @@ def genesymbolchecker(request):
             assembly = form.cleaned_data['assembly']
             source = form.cleaned_data['source']
             symbols = symbols.replace("\r\n", " ")
-            # redirect to a new URL:
-            return redirect("bioscripts:genesymbolchecker_api", source=source, assembly=assembly, symbols=symbols)
 
+            # Process
+            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/genesymbolchecker/")
+            process = subprocess.Popen(f"tsp -fn {module_path.joinpath('checkgeneset.sh')} -s {source} -a {assembly} {symbols}", stdout=subprocess.PIPE, shell=True)
+
+            return StreamingHttpResponse(
+                (line.decode('utf-8') for line in process.stdout),
+                content_type="text/plain",
+                headers={'Content-Disposition': 'attachment; filename="geneset.txt"'},
+            )
     # if a GET (or any other method) we'll create a blank form
     else:
         form = GeneSymbolCheckerForm()
