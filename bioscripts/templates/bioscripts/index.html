@@ -17,9 +17,12 @@
       <a href="{% url 'bioscripts:genesymbolchecker' %}">Gene Symbol Checker</a>
     </h3>
     <p>
-    This tool maps aliases, previous or withdrawn symbols to current approved HGNC symbols. Checks any none gene entry and fixes capitilizations.
-    Ensembl and RefSeq annotation files sometimes uses previous or alias symbols.
-    This tools also checks Ensembl and NCBI annotation files for different genome version and shows which gene symbol is used.
-    This way more appropriate gene set can be used to avoid the false negatives in variant discovery process.
+      This tool maps aliases, previous or withdrawn symbols to current approved
+      HGNC symbols. Checks for any entries that are not gene symbols and fixes
+      capitalizations. Ensembl and RefSeq annotation files sometimes use
+      previous or alias symbols. This tool also checks Ensembl and NCBI
+      annotation files for different genome versions and shows which gene symbol
+      is used. This way a more appropriate gene set can be used to avoid the
+      false negatives in the variant discovery process.
     </p>
 {% endblock %}

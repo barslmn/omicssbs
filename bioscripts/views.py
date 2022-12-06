@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import FileResponse, StreamingHttpResponse
 from django.conf import settings
 import subprocess
+import secrets
 
 from .forms import Var2TexShadeForm, GeneSymbolCheckerForm
 # Create your views here.
@@ -37,7 +38,7 @@ def var2texshade_api(request, hgvsp):
         return render(request,
                       'bioscripts/var2texshade.html',
                       {"error": f"Error: {E.output.decode('utf-8')}"})
-    return FileResponse(open(f"{result.decode('utf-8').strip()}", 'rb'), as_attachment=True, filename=f'{hgvsp}.pdf')
+    return FileResponse(open(result.decode('utf-8').strip(), 'rb'), as_attachment=True, filename=f'{hgvsp}.pdf')
 
 
 def genesymbolchecker(request):
@@ -55,13 +56,9 @@ def genesymbolchecker(request):
 
             # Process
             module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/genesymbolchecker/")
-            process = subprocess.Popen(f"tsp -fn {module_path.joinpath('checkgeneset.sh')} -s {source} -a {assembly} {symbols}", stdout=subprocess.PIPE, shell=True)
-
-            return StreamingHttpResponse(
-                (line.decode('utf-8') for line in process.stdout),
-                content_type="text/plain",
-                headers={'Content-Disposition': 'attachment; filename="geneset.txt"'},
-            )
+            label = secrets.token_urlsafe(6)
+            subprocess.run(f"tsp -L {label} {module_path.joinpath('checkgeneset.sh')} -s {source} -a {assembly} {symbols}", shell=True)
+            return redirect("bioscripts:genesymbolchecker_result", label=label)
     # if a GET (or any other method) we'll create a blank form
     else:
         form = GeneSymbolCheckerForm()
@@ -69,12 +66,24 @@ def genesymbolchecker(request):
     return render(request, 'bioscripts/genesymbolchecker.html', {'form': form})
 
 
-def genesymbolchecker_api(request, source, assembly, symbols):
-    module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/genesymbolchecker/")
-    process = subprocess.Popen(f"tsp -fn {module_path.joinpath('checkgeneset.sh')} -s {source} -a {assembly} {symbols}", stdout=subprocess.PIPE, shell=True)
-
-    return StreamingHttpResponse(
-        (line.decode('utf-8') for line in process.stdout),
-        content_type="text/plain",
-        headers={'Content-Disposition': 'attachment; filename="geneset.txt"'},
-    )
+def genesymbolchecker_result(request, label):
+    try:
+        status, filename = subprocess.check_output(f"tsp -l | grep {label} | awk '{{print $2\" \"$3}}'", shell=True).decode('utf-8').split()
+    except ValueError:
+        return render(request,
+                    'bioscripts/genesymbolchecker_result.html',
+                    {"label": label, "status": "error"})
+    if request.method == 'POST':
+        try:
+            return StreamingHttpResponse(
+                (line for line in open(filename).read()),
+                content_type="text/plain",
+                headers={'Content-Disposition': 'attachment; filename="geneset.txt"'},
+            )
+        except FileNotFoundError:
+            return render(request,
+                        'bioscripts/genesymbolchecker_result.html',
+                          {"label": label, "status": "error"})
+    return render(request,
+                'bioscripts/genesymbolchecker_result.html',
+                    {"status": status, "label": label})

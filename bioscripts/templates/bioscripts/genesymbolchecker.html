@@ -1,10 +1,15 @@
 {% extends "bioscripts/base.html" %}
 {% block content %}
 
+<div class="message">
+{{ message }}
+</div>
+<div class="error">
 {{ error }}
+</div>
 
-<p>After you sumbit your gene set, results will be streamed and downloaded as process continues so you can continue browsing as usual.</p>
-<p style="font-weight:bold; color:var(--red)">Gene symbols will be split by whitespaces (newlines, spaces or tabs); commas, semicolons or other seperators or text delimiters like double quotes won't be parsed. </p>
+<p>After you sumbit your gene set, your job will start running at the background and you will be redirected to a results page.</p>
+<p style="font-weight:bold; color:var(--red)">Gene symbols will be split by whitespaces (newlines, spaces or tabs); commas, semicolons or other seperators or text delimiters like double quotes won't be parsed.</p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
