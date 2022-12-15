@@ -160,9 +160,9 @@ body {
   color: var(--fg);
   background: var(--bg);
   position: relative;
-  max-width: 64em;  /* remove this for a full-width layout */
+  max-width: 80vw;  /* remove this for a full-width layout */
   margin: 0 auto;  /* centers the layout */
-  padding: 1em;
+  padding: 2rem 1.25rem;
 }
  /* unvisited link */
 a:link {

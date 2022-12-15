@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-27 Sun 03:29 -->
+<!-- 2022-12-15 Thu 23:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
@@ -194,7 +194,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<style>.example {max-height: 10vh; overflow-y;auto;} </style>
+<link rel="stylesheet" href="https://latex.now.sh/style.css">
+<style>.example {max-height: 30vh; overflow-y:auto;} </style>
+<style>body{max-width:80vw; color: var(--fg); background: var(--bg); --link-visited: var(--orange)} #content {width: 80vw;} #navbar{font-family: Sans;} </style>
 </head>
 <body>
 <div id="content" class="content">
@@ -203,68 +205,92 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga4d06eb">1. Intro</a></li>
-<li><a href="#org1561685">2. Implementation</a>
+<li><a href="#org11a8be1">1. Intro</a></li>
+<li><a href="#orgdcf8f51">2. Implementation</a>
 <ul>
-<li><a href="#org5c7bf07">2.1. Burrows wheeler transform</a></li>
-<li><a href="#org3a76e58">2.2. Building a class</a></li>
-<li><a href="#org319f3ae">2.3. Mapping</a>
-<ul>
-<li><a href="#org9282a89">2.3.1. Visualizing the recursion</a></li>
-</ul>
-</li>
-<li><a href="#org54fa3a6">2.4. Putting it all together</a></li>
-<li><a href="#orgc38423b">2.5. Sequence generation</a></li>
-<li><a href="#org7e6815f">2.6. Outputing to SAM</a></li>
-<li><a href="#org88a120b">2.7. Visualizing our alignments with IGV</a></li>
+<li><a href="#org426ef59">2.1. What is Burrows Wheeler Transform</a></li>
+<li><a href="#org15cee85">2.2. What is FM-index</a></li>
+<li><a href="#orge291c9c">2.3. Last to First Mapping</a></li>
+<li><a href="#org43b96df">2.4. Building a class</a></li>
+<li><a href="#orgad05122">2.5. Mapping</a></li>
+<li><a href="#orgc251eb8">2.6. Putting it all together</a></li>
+<li><a href="#orgbd922ec">2.7. Sequence generation</a></li>
+<li><a href="#org54092fa">2.8. Outputing to SAM</a></li>
+<li><a href="#orgd2eddc5">2.9. Visualizing our alignments with IGV</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org72ef81a">
+<div class="abstract" id="org646aafa">
 <p>
-Burrow wheeler algorithm is used to perform short read alignment a cornerstone process in bioinformatics especially next generation sequencing.
-Short sequence alignment or mapping is the one of the primary steps in re-sequencing projects where short reads from a fragmented genome is aligned back to a reference genome.
-We can use this aligned data to discover small or structural genomic variations in clinical or population projects.
+The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
+Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
+We can use this aligned data to discover small or structural variations in clinical or population projects.
 </p>
 
 </div>
 
-<div id="outline-container-orga4d06eb" class="outline-2">
-<h2 id="orga4d06eb"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-org11a8be1" class="outline-2">
+<h2 id="org11a8be1"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="orgc543414">
 <p>
-You can run this at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
+Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
 
+</div>
+
+
 <p>
-Burrow wheeler algorithm is used to perform short read alignment a cornerstone process in bioinformatics especially next generation sequencing.
-Short sequence alignment or mapping is the one of the primary steps in re-sequencing projects where short reads from a fragmented genome is aligned back to a reference genome.
-We can use this aligned data to discover small or structural genomic variations in clinical or population projects.
+Living organisms have long strings of DNA in their cells and are made out of 4 bases <code>A, T, C, G</code>. The order that makes up the long stretches of DNA determines the characteristics of the cell. In the case of the human genome, the order of 3.25 billion of these bases decides the makeup of our cells.
+Over the last few decades, we have had technologies that can reveal this order of bases called <i>sequencing</i>. However, the majority of these sequencing technologies can only sequence around 100 bases which are not very long. However, the strength of these sequencing methods lies in their massive capacity to perform this sequencing operation millions of times in parallel. To get a more comprehensive view, we need to put these millions of small 100-base long sequences back together. It&rsquo;s a wide puzzle with small and many pieces.
+We have sequenced genomes lots of organisms and now have picture for the puzzle that we can use as reference. However, not every individual and their genome is the same so when we are doing resequencing pieces come from a different picture. Having pieces from another picture makes solving the puzzle bit more challenging. We don&rsquo;t know what is different in these pieces and we need to account for that unknown when putting the pieces together.
+Burrows-Wheeler Transform makes it possible to put these pieces to their place despite their variation. Our end goals is to identify these differences (variation) which makes that organism unique. There are few approaches but in this tutorial we are gonna use FM-index which is used by Burrows-Wheeler Aligner. There are lots of terminology here so lets explain while showing.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1561685" class="outline-2">
-<h2 id="org1561685"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-orgdcf8f51" class="outline-2">
+<h2 id="orgdcf8f51"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5c7bf07" class="outline-3">
-<h3 id="org5c7bf07"><span class="section-number-3">2.1.</span> Burrows wheeler transform</h3>
+<div id="outline-container-org426ef59" class="outline-3">
+<h3 id="org426ef59"><span class="section-number-3">2.1.</span> What is Burrows Wheeler Transform</h3>
 <div class="outline-text-3" id="text-2-1">
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="org64a8ea6">
 <p>
-Burrows wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment. Transform performed by first getting the all the possible rotation of the reference. Lets say we have example reference sequence string <code>SEQUENCE</code>. We can get the possible rotations with string splicing below.
+Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
+
+</div>
+
+<ol class="org-ol">
+<li>Burrows-Wheeler Transform(BWT) is performed by first getting the all the possible rotations (or circular shifts) of the sequence. Lets say we have example reference sequence string <code>OMICSSBS</code>. We can get the possible rotations with string splicing below.</li>
+</ol>
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="org01db362">
+<p>
+We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
+</p>
+
+</div>
+
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> pprint <span style="color: #fb4934;">import</span> pprint
 
 <span style="color: #83a598;">example_seq</span> = <span style="color: #b8bb26;">"OMICSSBS$"</span>
-<span style="color: #83a598;">suffix_array</span> = []
+<span style="color: #83a598;">sequence_rotations</span> = []
 <span style="color: #fb4934;">for</span> index <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">range</span>(<span style="color: #fe8019;">len</span>(example_seq)):
-    suffix_array.append(example_seq[index:] + example_seq[:index])
-pprint(suffix_array)
+    sequence_rotations.append(example_seq[index:] + example_seq[:index])
+pprint(sequence_rotations)
 </pre>
 </div>
 
@@ -281,12 +307,13 @@ pprint(suffix_array)
 </pre>
 
 
-<p>
-Then we sort rotations by a property we desire. In this case we are going to sort them alphabetically.
-</p>
+<ol class="org-ol">
+<li value="2">Then we sort rotations by a property we desire. In this case we are going to sort them alphabetically (or lexicographically if you&rsquo;re fancy).</li>
+</ol>
+
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #83a598;">sorted_suffix_array</span> = <span style="color: #fe8019;">sorted</span>(suffix_array)
-pprint(sorted_suffix_array)
+<pre class="src src-python"><span style="color: #83a598;">sorted_sequence_rotations</span> = <span style="color: #fe8019;">sorted</span>(sequence_rotations)
+pprint(sorted_sequence_rotations)
 </pre>
 </div>
 
@@ -303,38 +330,74 @@ pprint(sorted_suffix_array)
 </pre>
 
 
-<p>
-We also want to keep their initial order for later use. Here we use the itemgetter to sort the enumerated rotations by the sequences themselves.
-</p>
+<ol class="org-ol">
+<li value="3">We get the last column of this sorted rotation.</li>
+</ol>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
-<span style="color: #83a598;">initial_indices</span>, <span style="color: #83a598;">sorted_suffix_array</span> = <span style="color: #fe8019;">zip</span>(*<span style="color: #fe8019;">sorted</span>(<span style="color: #fe8019;">enumerate</span>(suffix_array), key=itemgetter(<span style="color: #d3869b; font-weight: bold;">1</span>)))
-
-<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
-    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"Initial index: </span>{index}<span style="color: #b8bb26;"> of the sequence: </span>{sequence}<span style="color: #b8bb26;">"</span>)
+<pre class="src src-python"><span style="color: #fb4934;">for</span> sequence <span style="color: #fb4934;">in</span> sorted_sequence_rotations:
+    pprint(sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>])
 </pre>
 </div>
 
 <pre class="example">
-Initial index: 8 of the sequence: $OMICSSBS
-Initial index: 6 of the sequence: BS$OMICSS
-Initial index: 3 of the sequence: CSSBS$OMI
-Initial index: 2 of the sequence: ICSSBS$OM
-Initial index: 1 of the sequence: MICSSBS$O
-Initial index: 0 of the sequence: OMICSSBS$
-Initial index: 7 of the sequence: S$OMICSSB
-Initial index: 5 of the sequence: SBS$OMICS
-Initial index: 4 of the sequence: SSBS$OMIC
+'S'
+'S'
+'I'
+'M'
+'O'
+'$'
+'B'
+'S'
+'C'
 </pre>
 
 
+<p>
+And that&rsquo;s it. We done the BWT. To utilize this let&rsquo;s move to next step creating the FM-index.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org15cee85" class="outline-3">
+<h3 id="org15cee85"><span class="section-number-3">2.2.</span> What is FM-index</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+To utilize BWT we need to keep a bit more information. This information is the initial order of the sequences before sorting. Here we use the itemgetter to sort the enumerated rotations by the sequences themselves.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
+<span style="color: #83a598;">initial_indices</span>, <span style="color: #83a598;">sorted_sequence_rotations</span> = <span style="color: #fe8019;">zip</span>(*<span style="color: #fe8019;">sorted</span>(<span style="color: #fe8019;">enumerate</span>(sequence_rotations), key=itemgetter(<span style="color: #d3869b; font-weight: bold;">1</span>)))
+
+<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_sequence_rotations):
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"Initial index: </span>{index}<span style="color: #b8bb26;"> of the: </span>{sequence[-1]}<span style="color: #b8bb26;">"</span>)
+</pre>
+</div>
+
+<pre class="example">
+Initial index: 8 of the: S
+Initial index: 6 of the: S
+Initial index: 3 of the: I
+Initial index: 2 of the: M
+Initial index: 1 of the: O
+Initial index: 0 of the: $
+Initial index: 7 of the: B
+Initial index: 5 of the: S
+Initial index: 4 of the: C
+</pre>
+
+
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="orgd7e5ca4">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+<pre class="src src-python"><span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_sequence_rotations):
     <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"Initial index: </span>{index}<span style="color: #b8bb26;"> of the sequence: </span>{sequence.split('$')[0]}<span style="color: #b8bb26;">"</span>)
 </pre>
 </div>
@@ -351,37 +414,14 @@ Initial index: 5 of the sequence: SBS
 Initial index: 4 of the sequence: SSBS
 </pre>
 
-
-<p>
-Bwa insted uses the last column of the sorted rotations.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python"><span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
-    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;">  last column of the sequence: </span>{sequence[-1]}<span style="color: #b8bb26;">"</span>)
-<span style="color: #928374;"># </span><span style="color: #928374;">print("".join(i[-1] for i in sorted_suffix_array))</span>
-</pre>
 </div>
 
-<pre class="example">
-index=8  last column of the sequence: S
-index=6  last column of the sequence: S
-index=3  last column of the sequence: I
-index=2  last column of the sequence: M
-index=1  last column of the sequence: O
-index=0  last column of the sequence: $
-index=7  last column of the sequence: B
-index=5  last column of the sequence: S
-index=4  last column of the sequence: C
-</pre>
-
-
 <p>
-We can keep the last column in a string.
+We can keep the last column in a sequence.
 </p>
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #83a598;">last_column</span> = <span style="color: #b8bb26;">""</span>
-<span style="color: #fb4934;">for</span> sequence <span style="color: #fb4934;">in</span> <span style="color: #83a598;">sorted_suffix_array</span>:
+<span style="color: #fb4934;">for</span> sequence <span style="color: #fb4934;">in</span> <span style="color: #83a598;">sorted_sequence_rotations</span>:
     last_column += sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>]
 <span style="color: #fe8019;">print</span>(last_column)
 </pre>
@@ -399,7 +439,7 @@ This transformation is reversible and we can get our original sequence back by b
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #83a598;">occurrence_of_s_in_first_column</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
 <span style="color: #83a598;">occurrence_of_s_in_last_column</span> = <span style="color: #d3869b; font-weight: bold;">0</span>
-<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_suffix_array):
+<span style="color: #fb4934;">for</span> index, sequence <span style="color: #fb4934;">in</span> <span style="color: #fe8019;">zip</span>(initial_indices, sorted_sequence_rotations):
     <span style="color: #fb4934;">if</span> sequence[<span style="color: #d3869b; font-weight: bold;">0</span>] == <span style="color: #b8bb26;">'S'</span> <span style="color: #fb4934;">and</span> sequence[-<span style="color: #d3869b; font-weight: bold;">1</span>] == <span style="color: #b8bb26;">'S'</span>:
         <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_first_column}<span style="color: #b8bb26;"> last: </span>{sequence[-1]}<span style="color: #b8bb26;"> </span>{occurrence_of_s_in_last_column}<span style="color: #b8bb26;">"</span>)
         occurrence_of_s_in_first_column += <span style="color: #d3869b; font-weight: bold;">1</span>
@@ -412,7 +452,6 @@ This transformation is reversible and we can get our original sequence back by b
         occurrence_of_s_in_last_column += <span style="color: #d3869b; font-weight: bold;">1</span>
     <span style="color: #fb4934;">else</span>:
         <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"</span>{index=}<span style="color: #b8bb26;"> sequence: </span>{sequence}<span style="color: #b8bb26;"> first: </span>{sequence[0]}<span style="color: #b8bb26;"> 0 last: </span>{sequence[-1]}<span style="color: #b8bb26;"> 0"</span>)
-<span style="color: #928374;"># </span><span style="color: #928374;">print("".join(i[-1] for i in sorted_suffix_array))</span>
 </pre>
 </div>
 
@@ -474,6 +513,15 @@ Using this we can rebuild a index of where we start and stop seeing the characte
 
 
 <p>
+<b>This simplified representation of the first column and BWT is the FM-index</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge291c9c" class="outline-3">
+<h3 id="orge291c9c"><span class="section-number-3">2.3.</span> Last to First Mapping</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
 Using the we can map a given character with an index <code>i</code> back to first column. e.g <code>S</code> with second occurrence should map to row with initial index 4 witch is the 8th row.
 </p>
 
@@ -519,38 +567,38 @@ To get a better grasp of whats happening lets track the index jumps too.
     <span style="color: #83a598;">t</span> = c + t
     <span style="color: #83a598;">i</span> = first[c][<span style="color: #d3869b; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #d3869b; font-weight: bold;">1</span>
     <span style="color: #83a598;">j</span> += <span style="color: #d3869b; font-weight: bold;">1</span>
-    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"END</span>{j:13}<span style="color: #b8bb26;"> </span>{i:8}<span style="color: #b8bb26;"> </span>{initial_indices[j]:8}{' '*14}{[seq[0] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_suffix_array][j]:12}<span style="color: #b8bb26;"> </span>{[seq[-1] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_suffix_array][j]:14}<span style="color: #b8bb26;"> </span>{c:3}<span style="color: #b8bb26;"> </span>{t}<span style="color: #b8bb26;">"</span>)
+    <span style="color: #fe8019;">print</span>(f<span style="color: #b8bb26;">"END</span>{j:13}<span style="color: #b8bb26;"> </span>{i:8}<span style="color: #b8bb26;"> </span>{initial_indices[j]:8}{' '*14}{[seq[0] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_sequence_rotations][j]:12}<span style="color: #b8bb26;"> </span>{[seq[-1] <span style="color: #fb4934;">for</span> seq <span style="color: #fb4934;">in</span> sorted_sequence_rotations][j]:14}<span style="color: #b8bb26;"> </span>{c:3}<span style="color: #b8bb26;"> </span>{t}<span style="color: #b8bb26;">"</span>)
 </pre>
 </div>
 
-<pre class="example" id="orge9cb8d1">
+<pre class="example" id="org2696344">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
-END            1        6        6              B            S              S   S$
-END            2        1        3              C            I              B   BS$
-END            3        7        2              I            M              S   SBS$
-END            4        8        1              M            O              S   SSBS$
-END            5        2        0              O            $              C   CSSBS$
-END            6        3        7              S            B              I   ICSSBS$
-END            7        4        5              S            S              M   MICSSBS$
-END            8        5        4              S            C              O   OMICSSBS$
+END          1          6          6                B               S           S       S$
+END          2          1          3                C               I           B       BS$
+END          3          7          2                I               M           S       SBS$
+END          4          8          1                M               O           S       SSBS$
+END          5          2          0                O               $           C       CSSBS$
+END          6          3          7                S               B           I       ICSSBS$
+END          7          4          5                S               S           M       MICSSBS$
+END          8          5          4                S               C           O       OMICSSBS$
 </pre>
 
 <p>
-Here we are building up the initial sequence backwards. Observe below the &ldquo;index&rdquo;, &ldquo;last<sub>column</sub>&rdquo; and &ldquo;c&rdquo; columns. We initiate the <code>index​=0</code> which points us to character <code>S</code> in the last column, this <code>S</code> in turn with its <code>index​=6</code> points to preceding character <code>B</code>.
+Here we are building up the initial sequence backwards. Observe below the &ldquo;index&rdquo;, &ldquo;last​_column&rdquo; and &ldquo;c&rdquo; columns. We initiate the <code>index​=0</code> which points us to character <code>S</code> in the last column, this <code>S</code> in turn with its <code>index​=6</code> points to preceding character <code>B</code>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3a76e58" class="outline-3">
-<h3 id="org3a76e58"><span class="section-number-3">2.2.</span> Building a class</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org43b96df" class="outline-3">
+<h3 id="org43b96df"><span class="section-number-3">2.4.</span> Building a class</h3>
+<div class="outline-text-3" id="text-2-4">
 <p>
 Keeping track of the intermediately data and passing them through functions can become confusing to keep all this in one place lets put them in a <code>class</code>. Classes are a way of bundling data and functionality in python.
 </p>
 
 <p>
-Our class aptly named <code>BWA</code> takes a reference sequence and runs the
+Our class aptly named <code>BWA</code> takes a reference sequence and creates the BWT and FM-index when initialized.
 </p>
 
 <div class="org-src-container">
@@ -626,7 +674,7 @@ Our class aptly named <code>BWA</code> takes a reference sequence and runs the
 </div>
 
 <p>
-We can initialize our function with our reference and access its properties.
+We can initialize our function with our reference and access the BWT and FM-index as its properties.
 </p>
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #83a598;">example_seq</span> = <span style="color: #b8bb26;">"OMICSSBS"</span>
@@ -647,9 +695,9 @@ bwa.rebwt='OMICSSBS'
 </div>
 </div>
 
-<div id="outline-container-org319f3ae" class="outline-3">
-<h3 id="org319f3ae"><span class="section-number-3">2.3.</span> Mapping</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orgad05122" class="outline-3">
+<h3 id="orgad05122"><span class="section-number-3">2.5.</span> Mapping</h3>
+<div class="outline-text-3" id="text-2-5">
 <p>
 We want to align the small sequences back to references. If we have a <code>read</code> sequence with no variations. We can do a backward search to match a substring. We start by getting the minimum and maximum indices of the last character. Than we map these using our <code>lf</code> function in a loop.
 </p>
@@ -702,7 +750,7 @@ Let&rsquo;s add this to our class too.
 </pre>
 </div>
 
-<pre class="example" id="orgd171e33">
+<pre class="example" id="orgbcbc637">
 5 5
 0
 OMI
@@ -713,8 +761,8 @@ Most crucial part is of course matching the reads with variations. Backtracking 
 </p>
 
 
-<div id="org4ff8712" class="figure">
-<p><img src="{% static 'blog/posts/bwa/fig3.jpeg' %}" alt="fig3.jpeg" width="50%" />
+<div id="org819bdc1" class="figure">
+  <p><img src="{% static 'blog/post/bwa/fig3.jpeg' %}" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
 
@@ -792,7 +840,7 @@ Then we call the <code>inexact_match</code> which in turns calls itself <a href=
 </pre>
 </div>
 
-<pre class="example" id="org6232c88">
+<pre class="example" id="org14a1217">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -801,11 +849,15 @@ OMI
 OMI
 OMI
 </pre>
-</div>
 
-<div id="outline-container-org9282a89" class="outline-4">
-<h4 id="org9282a89"><span class="section-number-4">2.3.1.</span> Visualizing the recursion</h4>
-<div class="outline-text-4" id="text-2-3-1">
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="orgc68750e">
+<p>
+<b>Visualizing the recursion</b>
+</p>
+
 <p>
 We can use some help to better visualize the recursion. Lets yank this snippet: <a href="https://github.com/arpitbbhayani/recviz/blob/master/src/recviz/rec.py">https://github.com/arpitbbhayani/recviz/blob/master/src/recviz/rec.py</a> and use a decorator.
 </p>
@@ -839,7 +891,7 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </pre>
 </div>
 
-<pre class="example" id="org4b62042">
+<pre class="example" id="orgc1b9d78">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -2536,14 +2588,15 @@ OMI match
 OMI match
 MIC ins
 </pre>
+
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-org54fa3a6" class="outline-3">
-<h3 id="org54fa3a6"><span class="section-number-3">2.4.</span> Putting it all together</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgc251eb8" class="outline-3">
+<h3 id="orgc251eb8"><span class="section-number-3">2.6.</span> Putting it all together</h3>
+<div class="outline-text-3" id="text-2-6">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> operator <span style="color: #fb4934;">import</span> itemgetter
 
@@ -2673,11 +2726,9 @@ MIC ins
 </div>
 </div>
 
-
-
-<div id="outline-container-orgc38423b" class="outline-3">
-<h3 id="orgc38423b"><span class="section-number-3">2.5.</span> Sequence generation</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-orgbd922ec" class="outline-3">
+<h3 id="orgbd922ec"><span class="section-number-3">2.7.</span> Sequence generation</h3>
+<div class="outline-text-3" id="text-2-7">
 <p>
 Lets generate our reference genome first. We are going to use the same approach as we did in <a href="https:https://omics.sbs/blog/seqmotif.html">motif finding post</a>. We are going to create our reference sequence with length <code>1200</code> with same probability of <code>.25</code> for all the bases. We add <code>$</code> character at the end to denote the end of the string which will be useful when we do the burrows wheeler below.
 </p>
@@ -2839,9 +2890,9 @@ alignment_indices[20:]=[57, 12, 80, 39, 32, 69, 98, 109, 78, 18, 39, 12, 79, 9, 
 </div>
 </div>
 
-<div id="outline-container-org7e6815f" class="outline-3">
-<h3 id="org7e6815f"><span class="section-number-3">2.6.</span> Outputing to SAM</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-org54092fa" class="outline-3">
+<h3 id="org54092fa"><span class="section-number-3">2.8.</span> Outputing to SAM</h3>
+<div class="outline-text-3" id="text-2-8">
 <p>
 Lets output our alignmets as Sequence Alignment/Map (SAM) format. SAM has header lines starting with `@´ and 11 fields denoting various alignment properties. We are going to fill in just the QNAME, POS, TLEN and SEQ fields.
 </p>
@@ -2986,7 +3037,7 @@ sam_contents += sam_header
 </pre>
 </div>
 
-<pre class="example" id="org200526d">
+<pre class="example" id="org595639f">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3095,9 +3146,9 @@ Lets write our alignments to a file as well as our reference sequence.
 </div>
 </div>
 
-<div id="outline-container-org88a120b" class="outline-3">
-<h3 id="org88a120b"><span class="section-number-3">2.7.</span> Visualizing our alignments with IGV</h3>
-<div class="outline-text-3" id="text-2-7">
+<div id="outline-container-orgd2eddc5" class="outline-3">
+<h3 id="orgd2eddc5"><span class="section-number-3">2.9.</span> Visualizing our alignments with IGV</h3>
+<div class="outline-text-3" id="text-2-9">
 <p>
 With SAM and FASTA files we can visualize our alignmets with IGV. We can convert our SAM to BAM and index both BAM and FASTA files with samtools.
 </p>
@@ -3110,8 +3161,8 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="orgbfa8802" class="figure">
-<p><img src="{% static 'blog/posts/bwa/igv.svg' %}" alt="igv.svg" class="org-svg" width="100%" />
+<div id="org4452d98" class="figure">
+  <p><img src="{% static 'blog/post/bwa/igv.svg' %}" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>
 
@@ -3125,7 +3176,7 @@ samtools faidx ./ref.fasta
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Barış Salman</p>
-<p class="date">Created: 2022-11-27 Sun 03:29</p>
+<p class="date">Created: 2022-12-15 Thu 23:38</p>
 </div>
 </body>
 </html>
