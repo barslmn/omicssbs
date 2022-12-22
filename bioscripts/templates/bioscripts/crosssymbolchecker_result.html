@@ -18,7 +18,7 @@ Process status is
 
 {% if status == "error" %}
     Error 404 can't find your gene set anywhere. Try creating again from below link.
-    <a href="{% url 'bioscripts:genesymbolchecker' %}">Gene Symbol Checker</a>
+    <a href="{% url 'bioscripts:crosssymbolchecker' %}">Gene Symbol Checker</a>
 {% elif status == "finished" %}
     Your gene set is ready. You can download using the button below.
     <form method="post">
@@ -26,7 +26,7 @@ Process status is
         <input type="submit" value="Download">
     </form>
 
-    <a href="{% url 'bioscripts:genesymbolchecker' %}">
+    <a href="{% url 'bioscripts:crosssymbolchecker' %}">
     Check more gene symbols here
     </a>
 {% else %}

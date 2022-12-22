@@ -4,7 +4,7 @@ from django.conf import settings
 import subprocess
 import secrets
 
-from .forms import Var2TexShadeForm, GeneSymbolCheckerForm
+from .forms import Var2TexShadeForm, CrossSymbolCheckerForm
 # Create your views here.
 
 def index(request):
@@ -41,11 +41,11 @@ def var2texshade_api(request, hgvsp):
     return FileResponse(open(result.decode('utf-8').strip(), 'rb'), as_attachment=True, filename=f'{hgvsp}.pdf')
 
 
-def genesymbolchecker(request):
+def crosssymbolchecker(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = GeneSymbolCheckerForm(request.POST)
+        form = CrossSymbolCheckerForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
@@ -55,35 +55,35 @@ def genesymbolchecker(request):
             symbols = symbols.replace("\r\n", " ")
 
             # Process
-            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/genesymbolchecker/")
+            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/cross-symbol-checker/")
             label = secrets.token_urlsafe(6)
-            subprocess.run(f"tsp -L {label} {module_path.joinpath('checkgeneset.sh')} -s {source} -a {assembly} {symbols}", shell=True)
-            return redirect("bioscripts:genesymbolchecker_result", label=label)
+            subprocess.run(f"tsp -L {label} {module_path.joinpath('check-geneset.sh')} -s {source} -a {assembly} {symbols}", shell=True)
+            return redirect("bioscripts:crosssymbolchecker_result", label=label)
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = GeneSymbolCheckerForm()
+        form = CrossSymbolCheckerForm(initial={'symbols': 'ADA2\nLOC102724070\nMDR1\nSHFM6\nGSTT1\nFAM126A'})
 
-    return render(request, 'bioscripts/genesymbolchecker.html', {'form': form})
+    return render(request, 'bioscripts/crosssymbolchecker.html', {'form': form})
 
 
-def genesymbolchecker_result(request, label):
+def crosssymbolchecker_result(request, label):
     try:
         status, filename = subprocess.check_output(f"tsp -l | grep {label} | awk '{{print $2\" \"$3}}'", shell=True).decode('utf-8').split()
     except ValueError:
         return render(request,
-                    'bioscripts/genesymbolchecker_result.html',
+                    'bioscripts/crosssymbolchecker_result.html',
                     {"label": label, "status": "error"})
     if request.method == 'POST':
         try:
             return StreamingHttpResponse(
                 (line for line in open(filename).read()),
                 content_type="text/plain",
-                headers={'Content-Disposition': 'attachment; filename="geneset.txt"'},
+                headers={'Content-Disposition': f'attachment; filename="omicssbs_genesetchecker_{label}.txt"'},
             )
         except FileNotFoundError:
             return render(request,
-                        'bioscripts/genesymbolchecker_result.html',
+                        'bioscripts/crosssymbolchecker_result.html',
                           {"label": label, "status": "error"})
     return render(request,
-                'bioscripts/genesymbolchecker_result.html',
+                'bioscripts/crosssymbolchecker_result.html',
                     {"status": status, "label": label})

@@ -6,7 +6,7 @@ class Var2TexShadeForm(forms.Form):
     hgvsp = forms.CharField(label='HGVSp', max_length=100)
 
 
-class GeneSymbolCheckerForm(forms.Form):
+class CrossSymbolCheckerForm(forms.Form):
     assemblies = [
         ('GRCh37', 'GRCh37'),
         ('GRCh38', 'GRCh38'),
