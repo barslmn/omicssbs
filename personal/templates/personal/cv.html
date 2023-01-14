@@ -1,12 +1,13 @@
+{% load static %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-14 Mon 18:33 -->
+<!-- 2023-01-14 Sat 15:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Curriculum Vitae</title>
+<title>@@html:&lt;img src="{% static 'personal/pic.jpeg"&gt;@@ Barış Salman</title>
 <meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -193,17 +194,28 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
+<link rel="stylesheet" href="https://latex.now.sh/style.css">
+<style>.sidenote {padding-right: 2vw;} </style>
+<style>.example {max-height: 30vh; overflow-y:auto;} </style>
+<style>body{max-width:80vw; color: var(--fg); background: var(--bg); --link-visited: var(--orange)} #content {width: 80vw;} #navbar{font-family: Sans;} </style>
+<style>h1>img {float: left; width: 12vw;} </style>
+<style> td img {width: 50px;} </style>
 </head>
 <body>
 <div id="content" class="content">
-<h1 class="title">Curriculum Vitae</h1>
+<h1 class="title"><img src="{% static 'personal/pic.jpeg' %}"> Barış Salman
+<br />
+<span class="subtitle">Curriculum Vitae  <br> <a href="mailto:barslmn@gmail.com">E-mail</a> <a href="tel:+905343878420">Phone</a> <a href="https://omics.sbs">Website</a> <br> <a href="https://omics.sbs/github">Github</a> <a href="https://omics.sbs/linkedin">Linkedin</a> <a href="https://omics.sbs/biostars">Biostars</a> <a href="https://omics.sbs/orcid">Orcid</a></span>
+</h1>
 
-<div id="outline-container-orgb8b0cab" class="outline-2">
-<h2 id="orgb8b0cab"><span class="section-number-2">1.</span> Technical skills</h2>
+
+
+<div id="outline-container-org2a53cf9" class="outline-2">
+<h2 id="org2a53cf9"><span class="section-number-2">1.</span> Technical skills</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org5b86e62" class="outline-3">
-<h3 id="org5b86e62"><span class="section-number-3">1.1.</span> Wet Lab</h3>
+<div id="outline-container-org98dd38a" class="outline-3">
+<h3 id="org98dd38a"><span class="section-number-3">1.1.</span> Wet lab and Bioinformatics</h3>
 <div class="outline-text-3" id="text-1-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -212,14 +224,22 @@
 <col  class="org-left" />
 
 <col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
 <td class="org-left"><b>DNA/RNA/Protein</b></td>
 <td class="org-left">Isolation, quantative/qualitative PCRs, Blotting, Cytogenetics and Karyotyping</td>
+<td class="org-left"><b>Sequencing</b></td>
+<td class="org-left">WGS, WES, Panels, RNAseq, scRNAseq, Sanger</td>
 </tr>
 
 <tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 </tr>
@@ -227,9 +247,13 @@
 <tr>
 <td class="org-left"><b>Functional Studies</b></td>
 <td class="org-left">Cell Culture, <i>in vivo</i> models, Microscopy</td>
+<td class="org-left"><b>Micro-arrays</b></td>
+<td class="org-left">Genotyping, Expression</td>
 </tr>
 
 <tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 </tr>
@@ -237,13 +261,17 @@
 <tr>
 <td class="org-left"><b>Genetic Engineering</b></td>
 <td class="org-left">Recombinant DNA technologies</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="outline-container-org19aba91" class="outline-3">
-<h3 id="org19aba91"><span class="section-number-3">1.2.</span> Computers</h3>
+
+
+<div id="outline-container-orgf07b127" class="outline-3">
+<h3 id="orgf07b127"><span class="section-number-3">1.2.</span> Computers and Data Analyses</h3>
 <div class="outline-text-3" id="text-1-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -252,104 +280,29 @@
 <col  class="org-left" />
 
 <col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
 <td class="org-left"><b>Development</b></td>
 <td class="org-left">Python, R, Unix Shell</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Workflow</b></td>
-<td class="org-left">Linux, Doom Emacs, Git, Jupyter</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Writing</b></td>
-<td class="org-left">Orgmode, Zotero, Bibtex, LaTeX</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Web Development</b></td>
-<td class="org-left">Django, Javascript</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="outline-container-orgd1bb632" class="outline-3">
-<h3 id="orgd1bb632"><span class="section-number-3">1.3.</span> Bioinformatics</h3>
-<div class="outline-text-3" id="text-1-3">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left"><b>Sequencing</b></td>
-<td class="org-left">WGS, WES, Panels, RNAseq, scRNAseq, Sanger</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Micro-arrays</b></td>
-<td class="org-left">Genotyping, Expression</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="outline-container-orgb40f709" class="outline-3">
-<h3 id="orgb40f709"><span class="section-number-3">1.4.</span> Data Analyses</h3>
-<div class="outline-text-3" id="text-1-4">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<tbody>
-<tr>
 <td class="org-left"><b>Analysis</b></td>
 <td class="org-left">Python Scientific Toolkit(numpy, pandas, scipy etc.), R language, Shell Scripting, Bioinformatic tools</td>
 </tr>
 
 <tr>
 <td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">Machine Learning, PCA, Clustering</td>
 </tr>
 
 <tr>
+<td class="org-left"><b>Workflow</b></td>
+<td class="org-left">Linux, Doom Emacs, Git, Jupyter</td>
 <td class="org-left"><b>Statistics and Probability</b></td>
 <td class="org-left">Hypothesis testing, Bayesian Theorem, Data distributions</td>
 </tr>
@@ -357,11 +310,29 @@
 <tr>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
+<td class="org-left"><b>Writing</b></td>
+<td class="org-left">Orgmode, Zotero, Bibtex, LaTeX</td>
 <td class="org-left"><b>Visualization</b></td>
 <td class="org-left">Matplotlib, Plotly/Dash, LaTeX</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Web Development</b></td>
+<td class="org-left">Django, Javascript</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
@@ -369,8 +340,9 @@
 </div>
 </div>
 
-<div id="outline-container-org0e03487" class="outline-2">
-<h2 id="org0e03487"><span class="section-number-2">2.</span> Education</h2>
+
+<div id="outline-container-org1a0c482" class="outline-2">
+<h2 id="org1a0c482"><span class="section-number-2">2.</span> Education</h2>
 <div class="outline-text-2" id="text-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -385,7 +357,7 @@
 <tbody>
 <tr>
 <td class="org-left"><b>Doctorate, 2021&#x2013;2024</b></td>
-<td class="org-left">Genetics, Institute of Health Sciences, İstanbul University, Turkey</td>
+<td class="org-left">Genetics, Institute of Health Sciences, Istanbul University, Turkey</td>
 <td class="org-left"><b>GPA 3.5</b></td>
 </tr>
 
@@ -415,7 +387,7 @@
 
 <tr>
 <td class="org-left"><b>Master, 2016&#x2013;2019</b></td>
-<td class="org-left">Genetics, Institute of Health Sciences, İstanbul University, Turkey</td>
+<td class="org-left">Genetics, Institute of Health Sciences, Istanbul University, Turkey</td>
 <td class="org-left"><b>GPA 2.14</b></td>
 </tr>
 
@@ -445,7 +417,7 @@
 
 <tr>
 <td class="org-left"><b>Bachelor, 2011&#x2013;2016</b></td>
-<td class="org-left">Molecular Biology and Genetics, İstanbul University, Turkey</td>
+<td class="org-left">Molecular Biology and Genetics, Istanbul University, Turkey</td>
 <td class="org-left"><b>GPA 2.44</b></td>
 </tr>
 
@@ -469,9 +441,93 @@
 </tbody>
 </table>
 </div>
-<div id="outline-container-orgac225f0" class="outline-3">
-<h3 id="orgac225f0"><span class="section-number-3">2.1.</span> Internships</h3>
-<div class="outline-text-3" id="text-2-1">
+</div>
+
+<div id="outline-container-org4254f4f" class="outline-2">
+<h2 id="org4254f4f"><span class="section-number-2">3.</span> Jobs</h2>
+<div class="outline-text-2" id="text-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><b>Company</b></td>
+<td class="org-left">Refgen Biotechnology</td>
+<td class="org-left">Development of platform for bioinformatics</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Date</b></td>
+<td class="org-left">Mar 2021&#x2013;Ongoing</td>
+<td class="org-left">Pipeline research and development</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Position</b></td>
+<td class="org-left">Genetics and Bioinformatics Specialist</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Company</b></td>
+<td class="org-left">Gen-Era Diagnostics</td>
+<td class="org-left">Development of pipelines for NGS</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Date</b></td>
+<td class="org-left">Oct. 2018&#x2013;Mar 2021</td>
+<td class="org-left">Variant pathogenity classification automatization</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Position</b></td>
+<td class="org-left">Genetics and Bioinformatics Specialist</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Company</b></td>
+<td class="org-left">Aktif Gen</td>
+<td class="org-left">Development of bioinformatic pipelines</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Date</b></td>
+<td class="org-left">Jan. 2018&#x2013;Oct 2018</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Position</b></td>
+<td class="org-left">R&amp;D Personnel</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-org16ffb36" class="outline-3">
+<h3 id="org16ffb36"><span class="section-number-3">3.1.</span> Internships &amp; Rotations</h3>
+<div class="outline-text-3" id="text-3-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -482,13 +538,48 @@
 </colgroup>
 <tbody>
 <tr>
+<td class="org-left"><b>Genetic Counseling</b></td>
+<td class="org-left">Fall 2018</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>rotation</code></td>
+<td class="org-left">IU Cerrahpaşa, Department of Pediatric Genetics and Teratology</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Genetic Counseling</b></td>
+<td class="org-left">Spring 2018</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>rotation</code></td>
+<td class="org-left">IU Cerrahpaşa, Department of Medical Genetics</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
 <td class="org-left"><b>Cell Culture</b></td>
 <td class="org-left">August 2016</td>
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>internship</code></td>
 <td class="org-left">IU Cerrahpasa Department of Medical Biology</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
@@ -497,8 +588,13 @@
 </tr>
 
 <tr>
+<td class="org-left"><code>internship</code></td>
+<td class="org-left">IU A.S. Institute of Exprmental Medicine Department of Genetics</td>
+</tr>
+
+<tr>
 <td class="org-left">&#xa0;</td>
-<td class="org-left">IU A.S. Inst. of Expr. Medicine Department of Genetics</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
@@ -507,8 +603,13 @@
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>internship</code></td>
 <td class="org-left">IU Department of Medical Genetics</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
@@ -517,7 +618,7 @@
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>internship</code></td>
 <td class="org-left">IU Faculty of Science Quantum Technologies Laboratory</td>
 </tr>
 </tbody>
@@ -525,9 +626,9 @@
 </div>
 </div>
 
-<div id="outline-container-org150aeef" class="outline-3">
-<h3 id="org150aeef"><span class="section-number-3">2.2.</span> Certificates</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org286c6bf" class="outline-3">
+<h3 id="org286c6bf"><span class="section-number-3">3.2.</span> Certificates</h3>
+<div class="outline-text-3" id="text-3-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -545,6 +646,11 @@
 <tr>
 <td class="org-left"><b>laboratory animals</b></td>
 <td class="org-left">IU HADYEK 46. Laboratory Animal Use Training</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
@@ -577,132 +683,43 @@
 </div>
 </div>
 
-<div id="outline-container-org9248793" class="outline-2">
-<h2 id="org9248793"><span class="section-number-2">3.</span> Jobs</h2>
-<div class="outline-text-2" id="text-3">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left"><b>Company</b></td>
-<td class="org-left">Refgen Biotechnology</td>
-<td class="org-left">Development of pipelines for NGS</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Date</b></td>
-<td class="org-left">Mar 2021&#x2013;Ongoing</td>
-<td class="org-left">Variant classification automatization</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Position</b></td>
-<td class="org-left">Genetics and Bioinformatics Specialist</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Company</b></td>
-<td class="org-left">Gen-Era Diagnostics</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Date</b></td>
-<td class="org-left">Oct. 2018&#x2013;Mar 2021</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Position</b></td>
-<td class="org-left">Genetics and Bioinformatics Specialist</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Company</b></td>
-<td class="org-left">Aktif Gen</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Date</b></td>
-<td class="org-left">Jan. 2018&#x2013;Oct 2018</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><b>Position</b></td>
-<td class="org-left">R&amp;D Personnel</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div id="outline-container-org8d4a9f7" class="outline-2">
-<h2 id="org8d4a9f7"><span class="section-number-2">4.</span> Publications</h2>
+<div id="outline-container-org494876b" class="outline-2">
+<h2 id="org494876b"><span class="section-number-2">4.</span> Publications</h2>
 <div class="outline-text-2" id="text-4">
 <ol class="org-ol">
-<li>Oguz-Akarsu E, Salman B, Ugur-Iseri S, Baykan B. <b>An Extraordinary EEG Phenomenon Misdiagnosed as Nonconvulsive Status Epilepticus: Frequent Subclinical Periodic Discharges Terminated by Sudden Auditory Stimuli</b>. Clin EEG Neurosci. Published online October 5, 2022:15500594221129964. doi:10.1177/15500594221129965</li>
-<li>Salman B., Yucesan E., Samanci B., Bilgic B., Hanagasi H., Gurvit H., Ozbek U., Ugur Iseri S. <b>Combined Analysis Of Linkage And Whole Exome Sequencing Reveals CIC As A Candidate Gene For Isolated Dystonia</b>. Journal of Istanbul Faculty of Medicine. 2021;84(4):457-463. doi:10.26650/IUITFD.2021.913346</li>
-<li>Haryanyan G, Ozdemir O, Tutkavul K, Salman B et al. <b>The rare rs769301934 variant in NHLRC1 is a common cause of Lafora disease in Turkey</b>. J Hum Genet. 2021;66(12):1145-1151. doi:10.1038/s10038-021-00944-8</li>
-<li>Akçakaya NH, Salman B, Görmez Z, et al. <b>A Novel and Mosaic WDR45 Nonsense Variant Causes Beta-Propeller Protein-Associated Neurodegeneration Identified Through Whole Exome Sequencing and X chromosome Heterozygosity Analysis</b>. Neuromolecular Med. 2019;21(1):54-59. doi:10.1007/s12017-018-08522-6</li>
-<li>Bekdik Şirinocak P, Salman B, Kesim FY, Bebek N, Baykan B, Ugur İşeri SA. <b>Susceptibility to Juvenile Myoclonic Epilepsy Associated with the EFHC1 Gene: First Case Report in Turkey</b>. tnd. 2019;25(4):233-236. doi:10.4274/tnd.galenos.2019.61214</li>
+<li>Mercan S, Akcakaya NH, <b>Salman B</b>, Yapici Z, Ozbek U, Ugur Iseri SA. <b>Clinical and genetic analyses in syndromic intellectual disability with primary microcephaly reveal biallelic and de novo variants in patients with parental consanguinity</b>. Genes Genom. Published online November 12, 2022. doi:10.1007/s13258-022-01344-8</li>
+<li>Oguz-Akarsu E, <b>Salman B</b>, Ugur-Iseri S, Baykan B. <b>An Extraordinary EEG Phenomenon Misdiagnosed as Nonconvulsive Status Epilepticus: Frequent Subclinical Periodic Discharges Terminated by Sudden Auditory Stimuli</b>. Clin EEG Neurosci. Published online October 5, 2022:15500594221129964. doi:10.1177/15500594221129965</li>
+<li><b>Salman B.</b>, Yucesan E., Samanci B., Bilgic B., Hanagasi H., Gurvit H., Ozbek U., Ugur Iseri S. <b>Combined Analysis Of Linkage And Whole Exome Sequencing Reveals CIC As A Candidate Gene For Isolated Dystonia</b>. Journal of Istanbul Faculty of Medicine. 2021;84(4):457-463. doi:10.26650/IUITFD.2021.913346</li>
+<li>Haryanyan G, Ozdemir O, Tutkavul K, <b>Salman B</b>, et al. <b>The rare rs769301934 variant in NHLRC1 is a common cause of Lafora disease in Turkey</b>. J Hum Genet. 2021;66(12):1145-1151. doi:10.1038/s10038-021-00944-8</li>
+<li>Akçakaya NH, <b>Salman B</b>, Ugur İşeri SA., et al. <b>A Novel and Mosaic WDR45 Nonsense Variant Causes Beta-Propeller Protein-Associated Neurodegeneration Identified Through Whole Exome Sequencing and X chromosome Heterozygosity Analysis</b>. Neuromolecular Med. 2019;21(1):54-59. doi:10.1007/s12017-018-08522-6</li>
+<li>Bekdik Şirinocak P, <b>Salman B</b>, Kesim FY, Bebek N, Baykan B, Ugur İşeri SA. <b>Susceptibility to Juvenile Myoclonic Epilepsy Associated with the EFHC1 Gene: First Case Report in Turkey</b>. tnd. 2019;25(4):233-236. doi:10.4274/tnd.galenos.2019.61214</li>
 </ol>
 </div>
 
 
-<div id="outline-container-org9a2860a" class="outline-3">
-<h3 id="org9a2860a"><span class="section-number-3">4.1.</span> in pipeline</h3>
+<div id="outline-container-org1b9aa18" class="outline-3">
+<h3 id="org1b9aa18"><span class="section-number-3">4.1.</span> in pipeline</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>Exome sequencing reveals a treatable neurometabolic origin in two siblings with an undiagnosed form of neurodevelopmental disorder: From exon to neuron <b>(in review)</b></li>
-<li>Clinical and genetic analyses in syndromic intellectual disability with primary microcephaly reveal biallelic and de novo variants in patients with parental consanguinity <b>(in review)</b></li>
 <li>ELP2 Mutation Leads Developmental and Epileptic Encephalopathy: Case Report Consanguineous Family from Turkey and Review of Literature <b>(in review)</b></li>
 <li>Variant Version Control: A Git Framework For Keeping Track Of Variant Annotation Changes <b>(in prep.)</b></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgaa82d44" class="outline-3">
-<h3 id="orgaa82d44"><span class="section-number-3">4.2.</span> Collaborative</h3>
+<div id="outline-container-orgb109002" class="outline-3">
+<h3 id="orgb109002"><span class="section-number-3">4.2.</span> Collaborative</h3>
 <div class="outline-text-3" id="text-4-2">
-<ol class="org-ol">
-<li>Niestroj LM, Perez-Palma E, Howrigan DP, et al. Epilepsy subtype-specific copy number burden observed in a genome-wide study of 17,458 subjects. Brain. 2020;143(7):2106-2118. doi:10.1093/brain/awaa171</li>
-<li>Stevelink R, Luykx JJ, Lin BD, et al. Shared genetic basis between genetic generalized epilepsy and background electroencephalographic oscillations. Epilepsia. 2021;62(7):1518-1527. doi:10.1111/epi.16922</li>
-<li>Leu C, Stevelink R, Smith AW, et al. Polygenic burden in focal and generalized epilepsies. Brain. 2019;142(11):3473-3481. doi:10.1093/brain/awz292</li>
-<li>Koko M, Krause R, Sander T, et al. Distinct gene-set burden patterns underlie common generalized and focal epilepsies. EBioMedicine. 2021;72:103588. doi:10.1016/j.ebiom.2021.103588</li>
-<li>Epi25 Collaborative. Electronic address: s.berkovic@unimelb.edu.au, Epi25 Collaborative. Ultra-Rare Genetic Variation in the Epilepsies: A Whole-Exome Sequencing Study of 17,606 Individuals. Am J Hum Genet. 2019;105(2):267-282. doi:10.1016/j.ajhg.2019.05.020</li>
-<li>Epi25 Collaborative. Electronic address: jm4279@cumc.columbia.edu, Epi25 Collaborative. Sub-genic intolerance, ClinVar, and the epilepsies: A whole-exome sequencing study of 29,165 individuals. Am J Hum Genet. 2021;108(10):2024. doi:10.1016/j.ajhg.2021.08.008</li>
-</ol>
+<ul class="org-ul">
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/?term=epi25+collaborative">Epi25 Collaborative</a></li>
+</ul>
 </div>
 </div>
 
 
-<div id="outline-container-org9293f37" class="outline-3">
-<h3 id="org9293f37"><span class="section-number-3">4.3.</span> Posters</h3>
+<div id="outline-container-orgd25a7b6" class="outline-3">
+<h3 id="orgd25a7b6"><span class="section-number-3">4.3.</span> Posters</h3>
 <div class="outline-text-3" id="text-4-3">
 <ol class="org-ol">
 <li>Susgun S., Kesim Y., Salman B., Yucesan E., Khalilov D., Sirin G., Baykan B, Bebek N., Iseri Ugur S., <b>Two candidates bi-allelic variant to neurodevelopmental disorder in a consanguineous family from Turkey</b>, ESHG 2022</li>
@@ -712,8 +729,8 @@
 </div>
 </div>
 
-<div id="outline-container-org0952ec9" class="outline-3">
-<h3 id="org0952ec9"><span class="section-number-3">4.4.</span> Congresses</h3>
+<div id="outline-container-org9affdd5" class="outline-3">
+<h3 id="org9affdd5"><span class="section-number-3">4.4.</span> Congresses</h3>
 <div class="outline-text-3" id="text-4-4">
 <ol class="org-ol">
 <li>Investigation of Gene Variants Associated with Syndromic Intellectual Disability, 7. International Congress of Cerebral Palsy and Developmental Disorders, February 23-25 2018, Istanbul, Turkey</li>
@@ -722,8 +739,8 @@
 </div>
 </div>
 
-<div id="outline-container-orge3d5e1f" class="outline-2">
-<h2 id="orge3d5e1f"><span class="section-number-2">5.</span> Projects</h2>
+<div id="outline-container-org8c031e7" class="outline-2">
+<h2 id="org8c031e7"><span class="section-number-2">5.</span> Projects</h2>
 <div class="outline-text-2" id="text-5">
 <ol class="org-ol">
 <li>(in review) TUBITAK 1001 Project, <b>Advanced Molecular Autopsy Protocol for Sudden Deaths under 40 Years</b> Research Fellow</li>
@@ -737,8 +754,8 @@
 </div>
 </div>
 
-<div id="outline-container-org124c02c" class="outline-2">
-<h2 id="org124c02c"><span class="section-number-2">6.</span> Software</h2>
+<div id="outline-container-orgf2d4b9f" class="outline-2">
+<h2 id="orgf2d4b9f"><span class="section-number-2">6.</span> Software</h2>
 <div class="outline-text-2" id="text-6">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -757,6 +774,21 @@
 <tr>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">Tool for tracking changes in variant annotation using git.</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>&Chi;&Sigma;&Delta;</b></td>
+<td class="org-left">Cross-symbol checker</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">This tool checks Ensembl and NCBI annotation files for different genome versions and shows which gene symbol is used. This way a more appropriate gene set can be used to avoid the false negatives in the variant discovery process.</td>
 </tr>
 
 <tr>
@@ -808,8 +840,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgdbef6f5" class="outline-2">
-<h2 id="orgdbef6f5"><span class="section-number-2">7.</span> Awards</h2>
+<div id="outline-container-org0eae5e7" class="outline-2">
+<h2 id="org0eae5e7"><span class="section-number-2">7.</span> Awards</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second place project award</b>, Istanbul, Turkey, 2017
@@ -817,11 +849,11 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </div>
 </div>
 
-<div id="outline-container-org713bd34" class="outline-2">
-<h2 id="org713bd34"><span class="section-number-2">8.</span> Congresses&amp;Courses</h2>
+<div id="outline-container-org12cd7f6" class="outline-2">
+<h2 id="org12cd7f6"><span class="section-number-2">8.</span> Congresses&amp;Courses</h2>
 <div class="outline-text-2" id="text-8">
 <ol class="org-ol">
-<li>2022 Turkish Society of Medical Genetics, Nov 9-13, <b>Genome-Level Evaluation of Copy Number Changes, One of the Important Risk Factors for Genetic Epilepsy</b> (in review)</li>
+<li>2022 Turkish Society of Medical Genetics, Nov 9-13, <b>Genome-Level Evaluation of Copy Number Changes, One of the Important Risk Factors for Genetic Epilepsy</b>  (Oral Presentation)</li>
 <li>2020 ESHG 2020, June 6-9, Virtual Conference, <b>GenerAVI: Variant Interpreter and Genetic Analysis Summary Generator</b> (Poster Presentation)</li>
 <li>2019 7th International Congress of the Molecular Biology Association of Turkey, Sep 27-29, Istanbul, Turkey, <b>PICUS: Pointed Interpretation of Clinical Variant Significance</b> (Poster Presentation)</li>
 <li>2019 Bioinformatics Days III, Gazi University Faculty of Medicine, May 25, Ankara, Turkey, <b>NGS Pipelines with Python</b> (Oral Presentation)</li>
@@ -835,12 +867,12 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </div>
 </div>
 
-<div id="outline-container-orgcc86d46" class="outline-2">
-<h2 id="orgcc86d46"><span class="section-number-2">9.</span> General skills</h2>
+<div id="outline-container-org9ea0d97" class="outline-2">
+<h2 id="org9ea0d97"><span class="section-number-2">9.</span> General skills</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-orgd7c6733" class="outline-3">
-<h3 id="orgd7c6733"><span class="section-number-3">9.1.</span> Languages</h3>
+<div id="outline-container-orge91bb3c" class="outline-3">
+<h3 id="orge91bb3c"><span class="section-number-3">9.1.</span> Languages</h3>
 <div class="outline-text-3" id="text-9-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -888,7 +920,7 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Barış Salman</p>
-<p class="date">Created: 2022-11-14 Mon 18:33</p>
+<p class="date">Created: 2023-01-14 Sat 15:27</p>
 </div>
 </body>
 </html>
