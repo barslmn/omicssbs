@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.template import Template, Context
 from pathlib import Path
 import subprocess

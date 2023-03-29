@@ -2,14 +2,16 @@
 {% block content %}
 
 <div class="message">
-{{ message }}
+    {{ message }}
 </div>
 <div class="error">
-{{ error }}
+    {{ error }}
 </div>
 
-<p>After you sumbit your gene set, your job will start running at the background and you will be redirected to a results page.</p>
-<p style="font-weight:bold; color:var(--red)">Gene symbols will be split by whitespaces (newlines, spaces or tabs); commas, semicolons or other seperators or text delimiters like double quotes won't be parsed.</p>
+<p>After you sumbit your gene set, your job will start running at the background and you will be redirected to a results
+    page.</p>
+<p style="font-weight:bold; color:red">Gene symbols will be split by whitespaces (newlines, spaces or tabs);
+    commas, semicolons or other seperators or text delimiters like double quotes won't be parsed.</p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -17,34 +19,38 @@
 </form>
 
 <style>
-textarea {
-    font-style: italic;
-    font-family: mono;
-    background: var(--fg);
-    color: var(--bg);
-    border:none;
-    border-radius:1em;
-    padding:1em;
-}
-select {
-    border: none;
-    color: var(--fg);
-    background: var(--bg);
-    font-weight: bold;
-    font-size: 1em;
-}
-input[type=submit] {
-    border:none;
-    border-radius:.3em;
-    background: var(--fg);
-    color: var(--bg);
-    font-size: 1em;
-    font-weight: bolder;
- }
- label {
-     float:left;
-     margin-right: 1em;
- }
+    textarea {
+        font-style: italic;
+        font-family: mono;
+        background: var(--body-bg-color);
+        color: var(--body-color);
+        border: none;
+        border-radius: 1em;
+        padding: 1em;
+    }
+
+    select {
+        border: none;
+        color: var(--body-color);
+        background: var(--body-bg-color);
+        font-weight: bold;
+        font-size: 1em;
+        border-radius: 1em;
+    }
+
+    input[type=submit] {
+        border: none;
+        border-radius: .3em;
+        background: var(--body-bg-color);
+        color: var(--body-color);
+        font-size: 1em;
+        font-weight: bolder;
+    }
+
+    label {
+        float: left;
+        margin-right: 1em;
+    }
 
 </style>
 {% endblock %}

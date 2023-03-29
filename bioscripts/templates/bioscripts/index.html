@@ -1,29 +1,43 @@
 {% extends "bioscripts/base.html" %}
 {% load static %}
 {% block content %}
-  <p style="display:none;">
+<p style="display:none;">
     bioscripts/index.html
-  </p>
+</p>
 
-    <h3>
-      <a href="{% url 'bioscripts:var2texshade' %}">Var2TexShade</a>
-    </h3>
-    <p>
+This page indexes a collection of tools available as web applications for
+bioinformaticians and geneticists. The tools automate various tasks that often
+are performed manually. The source code for this page is available on <a
+    href="https://github.com/barslmn/omicsbs">GitHub</a>.
+
+<h3>
+    <a href="{% url 'bioscripts:var2texshade' %}">Var2TexShade</a>
+</h3>
+<p>
     This tools visualizes homology of given protein change e.g. NP_001501.2:p.Arg121Leu using texshade.
-    </p>
-    <img style="width:33vw;background:white;" src="{% static 'bioscripts/img/var2texshade_example.svg' %}" alt="Example TexShade Image">
+    Texshade is a <a href="https://ctan.org/pkg/texshade">latex package</a> for setting nucleotide and peptide
+    alignments. Multiple sequence alignments for the proteins are retrieved from <a
+        href="https://www.ncbi.nlm.nih.gov/homologene">NCBI homologene database</a>.
+    The tool is useful for visualizing a variant on evulotionary conserved regions. The source code is available on <a
+        href="https://github.com/barslmn/bioscripts/tree/master/modules/var2texshade">GitHub</a>.
 
-    <h3>
-      <a href="{% url 'bioscripts:crosssymbolchecker' %}">Cross-symbol checker</a>
-      <img  src="{% static 'bioscripts/img/crosssymbolchecker.svg' %}" alt="Cross Symbol Checker Logo">
-    </h3>
-    <p>
-      This tool maps aliases, previous or withdrawn symbols to current approved
-      HGNC symbols. Checks for any entries that are not gene symbols and fixes
-      capitalizations. Ensembl and RefSeq annotation files sometimes use
-      previous or alias symbols. This tool also checks Ensembl and NCBI
-      annotation files for different genome versions and shows which gene symbol
-      is used. This way a more appropriate gene set can be used to avoid the
-      false negatives in the variant discovery process.
-    </p>
+
+</p>
+<img style="width:33vw;background:white;" src="{% static 'bioscripts/img/var2texshade_example.svg' %}"
+    alt="Example TexShade Image">
+
+<h3>
+    <a href="{% url 'bioscripts:crosssymbolchecker' %}">Cross-symbol checker</a>
+    <img src="{% static 'bioscripts/img/crosssymbolchecker.svg' %}" alt="Cross Symbol Checker Logo">
+</h3>
+<p>
+    This tool maps aliases, and previous or withdrawn symbols to current approved
+    HGNC symbols as well as check for any entries that are not gene symbols and fix
+    capitalizations. Ensembl and RefSeq annotation files sometimes use previous or
+    alias symbols. This tool also cross checks against Ensembl and NCBI annotation
+    files for different genome versions and shows which gene symbols used. This way
+    an accurate gene set can be utilized to avoid false negatives in the variant
+    discovery process. The source code is available on <a
+        href="https://github.com/barslmn/cross-symbol-checker">GitHub</a>.
+</p>
 {% endblock %}

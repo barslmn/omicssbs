@@ -6,11 +6,8 @@
 </p>
 
 <p> You can view my cv as
-    <a href="{% static "personal/cv.pdf" %}"> pdf</a> or as <a href="#cv">html</a>
+    <a href="{% static "personal/cv.pdf" %}"> pdf</a> or as <a href="{% url 'personal:cv_html' %}">html</a>
 </p>
-<section id="cv">
-    {% include "personal/cv.html" %}
-</section>
 
 <h3>Other links</h3>
 <table>
@@ -72,8 +69,8 @@
 </table>
 
 <style>
- td>img {
-     width:16px;
- }
+    td>img {
+        width: 16px;
+    }
 </style>
 {% endblock %}
