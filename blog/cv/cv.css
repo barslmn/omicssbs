@@ -1,0 +1,42 @@
+/* <link rel="stylesheet" href="https://latex.now.sh/style.css"> */
+
+@import url("https://latex.now.sh/style.css");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@700&display=swap");
+
+body{
+    max-width:80vw;
+    color: #282828;
+    background: #fbf1f7;
+    font-family: "sans-serif";
+}
+#content {
+    width: 80vw;
+}
+h1>img {
+    float: left; width: 12vw;
+}
+h1 {
+    color: #076678;
+    font-family: "sans-serif";
+}
+h2 {
+    color: #076678;
+    text-transform: lowercase;
+    font-family: "EB Garamond";
+    font-size: 2em;
+    /* border-bottom-color: #282828; */
+    /* border-bottom-style: solid; */
+    /* border-bottom-width: thin; */
+    /* padding-bottom: 0.2em; */
+}
+h3, h4, h5, h6 {
+    font-family: "EB Garamond";
+    color: #458588;
+}
+h3, h4, h5, h6 {
+    display: list-item;
+}
+
+a:link {
+    color: #fe8019;
+}

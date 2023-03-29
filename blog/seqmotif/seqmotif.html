@@ -1,239 +1,87 @@
-{% load static %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-16 Fri 15:15 -->
+<!-- 2023-03-29 Wed 19:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
-<meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
-<style>
-  #content { max-width: 60em; margin: auto; }
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-    background-color: #f2f2f2;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: auto;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    top: -8px;
-    right: 12px;
-    padding: 3px;
-    color: #555;
-    background-color: #f2f2f299;
-  }
-  pre.src:hover:before { display: inline; margin-top: 14px;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
-</style>
 <link rel="stylesheet" href="https://latex.now.sh/style.css">
 <style>.sidenote {padding-right: 2vw;} </style>
 <style>.example {max-height: 30vh; overflow-y:auto;} </style>
 <style>body{max-width:80vw; color: var(--fg); background: var(--bg); --link-visited: var(--orange)} #content {width: 80vw;} #navbar{font-family: Sans;} </style>
 </head>
 <body>
+<div id="preamble" class="status">
+
+<script>
+if (localStorage.darkMode == "true") {
+  document.body.classList.add("latex-dark");
+}
+else {
+  document.body.classList.remove("latex-dark");
+}
+</script>
+
+    <ul id="navbar">
+        <li>
+            <a href="https://omics.sbs/">Home</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/blog">Blog</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
+        </li>
+        <li>
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+    </ul>
+</div>
 <div id="content" class="content">
 <h1 class="title">Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2abf8df">1. Intro</a></li>
-<li><a href="#orgd9ce383">2. Implementation</a>
+<li><a href="#orga4f434e">1. Intro</a></li>
+<li><a href="#org318d212">2. Implementation</a>
 <ul>
-<li><a href="#org4c163db">2.1. Creating the sample data</a>
+<li><a href="#orga68ca4b">2.1. Creating the sample data</a>
 <ul>
-<li><a href="#orgd098d67">2.1.1. Creating Sequences</a></li>
-<li><a href="#org0f7dd38">2.1.2. Creating motifs</a></li>
-<li><a href="#org1dd2c16">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#orgddfb444">2.1.4. Putting it all together</a></li>
+<li><a href="#org587c511">2.1.1. Creating Sequences</a></li>
+<li><a href="#orgb944779">2.1.2. Creating motifs</a></li>
+<li><a href="#org588201b">2.1.3. Adding motifs to sequences</a></li>
+<li><a href="#orge4b2b6a">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#org35921b6">2.2. Finding the motif</a>
+<li><a href="#org8d05af7">2.2. Finding the motif</a>
 <ul>
-<li><a href="#org68cce47">2.2.1. Algorithm outline</a></li>
-<li><a href="#org865d3da">2.2.2. Weighted Model Matrix</a></li>
-<li><a href="#org72483d6">2.2.3. Calculate probability</a></li>
-<li><a href="#org4753a5b">2.2.4. Sliding window</a></li>
-<li><a href="#org59cc66c">2.2.5. Putting it all together</a></li>
+<li><a href="#org1202984">2.2.1. Algorithm outline</a></li>
+<li><a href="#orgef21f69">2.2.2. Weighted Model Matrix</a></li>
+<li><a href="#org523911c">2.2.3. Calculate probability</a></li>
+<li><a href="#org532e5d9">2.2.4. Sliding window</a></li>
+<li><a href="#orgb469fc2">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#orgfc516f2">2.3. Parameters affecting the results</a></li>
+<li><a href="#org56c65a2">2.3. Parameters affecting the results</a></li>
 </ul>
 </li>
-<li><a href="#orga523e78">3. Trying it out with real data</a></li>
+<li><a href="#orgc84334c">3. Trying it out with real data</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org227ea02">
+<div class="abstract" id="orge8f1070">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -242,12 +90,12 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 
 </div>
 
-<div id="outline-container-org2abf8df" class="outline-2">
-<h2 id="org2abf8df"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-orga4f434e" class="outline-2">
+<h2 id="orga4f434e"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgc7f5ec6">
+<div class="sidenote" id="org85ed1d6">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -290,16 +138,16 @@ matplotlib 3.6.2
 </div>
 </div>
 
-<div id="outline-container-orgd9ce383" class="outline-2">
-<h2 id="orgd9ce383"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org318d212" class="outline-2">
+<h2 id="org318d212"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org4c163db" class="outline-3">
-<h3 id="org4c163db"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
+<div id="outline-container-orga68ca4b" class="outline-3">
+<h3 id="orga68ca4b"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-orgd098d67" class="outline-4">
-<h4 id="orgd098d67"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
+<div id="outline-container-org587c511" class="outline-4">
+<h4 id="org587c511"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 We can create our test data by using random module.
@@ -335,23 +183,23 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="org5374d27">
-ATACTCCCGGAGAGTACGAATGCATACGGCCCCCCCCCGCCTAGTGTTGCAATAGGCTGG
-CGGGATTGTAATCCCGGGGGAAATATTAACTGTAACGAGACGACGTGACTTATTCCTTTA
-GTTTTCTCGTTCAGGAACACGCACGTACACTAAGGTGTCCCCGCAGTGTGCTCACAGCTG
-CGGTAAGAGTGTCGCGAAACAAGAACATGAACAGAGACGTTCGGGTTTCCGGAGGGACTC
-CCCCTCCCCCTTTAATACCGCGCTACAGTATGTACGACAATTCGACGGTTTGTTCCTATA
-GGCGAATTGGACTGCGGGTACTGATCTTAGTGTGGAGGGCTAGAACAACATCAGTCAAGG
-GCCTCGCAAAGTAGTAGGTACACATCTGTCTTCAAGCCGTTTCCTTCACCCCAAGGTCAC
-AGAGCTTTGACTTTACACTCGAGTCAAGACCACCCGATTATGCGTCCCGGGCAAGCTACC
-GTATCGGGCCGGGAGCAGGCACACGTGAATTTGTCACGGACCTCCCTCTTCCCATCCTAG
-TTGCTACAACCGTATTCCTGGCTATTATTATCGCGAGAGCCTCAAAAAAGCGAGGGTTAT
+<pre class="example" id="orgaf4d699">
+ACCTGGTTGCAACGCCCATTAGGTCAAGTAGAACCTGGTTCAGTTATTTCCACAACTAAG
+AGTCTTTTCCCGGAAACCCTTTGTCAGACTGTCTCGTGACATCAGGTCAAAGCGATCCGC
+CACGATCGCATACTCGGAATTCGTCTGTATCAGATATAGTTACTCTGACTCCTTAACCAG
+AAGATACATACTGGCAGGCAGAAGCATGCGCCCAACGTCGCAGCTAAACTGCAGGCTCTC
+ATTGTTCAGTCATTCTGAGTTTCTCGCCACATTACACCAGGGCTCTATTAGCGGTTATTC
+TATTAAAATTCCACCTGTCTAAAATCCGCTGGTAGCCACCAACGGACGGCAGTCGCTCCT
+TTGGACCATACCCATCTTTATTTATTTATCCACTAGCGCCAACATAGCCCTAAAAGACGT
+ATAGGATAGGTCTAATCTCTGCTTTCTAGCTATCCCCCGGCGGTCGGCTCGTTGCCGTCT
+TAACATCGCCCACGCTCAGTCCTCGCACGACAACTGGGGATGAGACCACTAGCAAGCTTT
+GGGCTTGCCTGTTTTCACATACTGGTGCATCGCTCTTCACATGTTGAACGGGGTGTGATC
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org0f7dd38" class="outline-4">
-<h4 id="org0f7dd38"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
+<div id="outline-container-orgb944779" class="outline-4">
+<h4 id="orgb944779"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 There is a <a href="https://genome.ucsc.edu/goldenPath/help/iupac.html">standard definition from UIPAC</a> to represent multiple bases in single character.
@@ -445,24 +293,24 @@ Lets create 10 logos.
 </pre>
 </div>
 
-<pre class="example" id="org177f1ab">
+<pre class="example" id="org82275f1">
+AGCCTCG
 AGCCTGG
 AGCCTCG
+AGCCTGG
 AGCCTCG
 AGCTTCG
+AGCCTCG
+ATCCTCG
+AGCCTCG
 AGCTTCG
-AGCCTCG
-AGCCTCG
-ATCCTCG
-AGCTTGG
-ATCCTCG
 </pre>
 </div>
 </div>
 
 
-<div id="outline-container-org1dd2c16" class="outline-4">
-<h4 id="org1dd2c16"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
+<div id="outline-container-org588201b" class="outline-4">
+<h4 id="org588201b"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Lastly we insert the motifs randomly into the sequences. Here we return the <code>insert_ind</code> so we can see where we inserted the motifs.
@@ -482,8 +330,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 
 
-<div id="outline-container-orgddfb444" class="outline-4">
-<h4 id="orgddfb444"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-orge4b2b6a" class="outline-4">
+<h4 id="orge4b2b6a"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -573,7 +421,7 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="orgc9b30a5">
+<pre class="example" id="orgf4054f2">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -590,12 +438,12 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </div>
 </div>
 
-<div id="outline-container-org35921b6" class="outline-3">
-<h3 id="org35921b6"><span class="section-number-3">2.2.</span> Finding the motif</h3>
+<div id="outline-container-org8d05af7" class="outline-3">
+<h3 id="org8d05af7"><span class="section-number-3">2.2.</span> Finding the motif</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org68cce47" class="outline-4">
-<h4 id="org68cce47"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
+<div id="outline-container-org1202984" class="outline-4">
+<h4 id="org1202984"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Lecture summarizes the algorithm as such:
@@ -712,8 +560,8 @@ We return the wmm and the max<sub>indices</sub> as a result.
 </div>
 </div>
 
-<div id="outline-container-org865d3da" class="outline-4">
-<h4 id="org865d3da"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
+<div id="outline-container-orgef21f69" class="outline-4">
+<h4 id="orgef21f69"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Weighted model matrix or position specific probability model implemented here as
@@ -748,8 +596,8 @@ frequeny of bases in each location.
 </div>
 </div>
 
-<div id="outline-container-org72483d6" class="outline-4">
-<h4 id="org72483d6"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
+<div id="outline-container-org523911c" class="outline-4">
+<h4 id="org523911c"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 We use a sliding window and calculate the probability of our <code>wmm</code> against the
@@ -783,8 +631,8 @@ probability of seeing given base in wmm to probability of seeing in background.
 </div>
 </div>
 
-<div id="outline-container-org4753a5b" class="outline-4">
-<h4 id="org4753a5b"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
+<div id="outline-container-org532e5d9" class="outline-4">
+<h4 id="org532e5d9"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 This function returns part of that sequence in motif length.
@@ -801,8 +649,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 
-<div id="outline-container-org59cc66c" class="outline-4">
-<h4 id="org59cc66c"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-orgb469fc2" class="outline-4">
+<h4 id="orgb469fc2"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> collections <span style="color: #fb4934;">import</span> Counter
@@ -941,16 +789,16 @@ plot_logo(wmm, <span style="color: #b8bb26;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="orgbca7918" class="figure">
-<p><img src="{% static 'blog/posts/seqmotif/motif_logo.png' %}" alt="motif_logo.png" />
+<div id="orgf9d3f97" class="figure">
+<p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgfc516f2" class="outline-3">
-<h3 id="orgfc516f2"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
+<div id="outline-container-org56c65a2" class="outline-3">
+<h3 id="org56c65a2"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 There are few variables that affect the results. Which we can test by tweaking parameters above.
@@ -1002,8 +850,8 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="org99a9f64" class="figure">
-<p><img src="{% static 'blog/posts/seqmotif/motif_longer_logo.png' %}" alt="motif_longer_logo.png" />
+<div id="org7732ed0" class="figure">
+<p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
 
@@ -1046,8 +894,8 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org2bf9913" class="figure">
-<p><img src="{% static 'blog/posts/seqmotif/motif_lowentropy_logo.png' %}" alt="motif_lowentropy_logo.png" />
+<div id="org0cd5a3b" class="figure">
+<p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
 
@@ -1088,16 +936,16 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="org88d029b" class="figure">
-<p><img src="{% static 'blog/posts/seqmotif/motif_bgcontrast_logo.png' %}" alt="motif_bgcontrast_logo.png" />
+<div id="orgc23d17a" class="figure">
+<p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga523e78" class="outline-2">
-<h2 id="orga523e78"><span class="section-number-2">3.</span> Trying it out with real data</h2>
+<div id="outline-container-orgc84334c" class="outline-2">
+<h2 id="orgc84334c"><span class="section-number-2">3.</span> Trying it out with real data</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Lets try to use our new program with real data.
@@ -1152,6 +1000,11 @@ We need to read the fasta file.
 </pre>
 </div>
 
+<pre class="example">
+['ACATCGAGGAGTGCGTGCGGCGGCAACTGAGGGCCACGGGCCGCCCGCCCAGCACGGAGC', 'AGAACCAGAAGGGTAAGATTACATGTGGGCATAAATTGTTAAAAGCATAGTTATAATGAT', 'CTCAAGGCCAGCGAGCCGGGACTCTTCTCGGTGGGTCTGCACACGGGCGAGGTGCGCACG', 'CGGGCTGCGAGGTAAGAGCGCGCGACCCGCAGCGGCAGATGCACGAACCAGAACGGCCGG', 'ATGTCTATAAGGTGAGCGCCCCCCGGCGCCGAGCTGAGCCCGCTCCGTGTGCGCCCGGGT', 'CCAGGATCCAGGTGAGGGCCCGCTGCGTTCGCAAGTGCGCGCTGGAGCGGAGGCGCTGCG', 'CATCTGCTCAGGTGGGCCTTCAAGAACTTGGGCTCACTCTCTTGGGGTGGAGTTTGCTCC', 'CAAACAAGATGGTAAGTGTCAAAGGAAAATGGCTCCAGATAGAATAAAGGAGGCAAAGAA', 'TTGAAATCAGGGTAAGATGCGAAGCTGGTCGGCCAGGCCAAGGTCTACGACCAGAGTCTG', 'GACATTTAACGGTGAGGTGTATGTTTTATAATTATGTTACCTTCTTAGAAGTGTATTTTT', 'ACTTAGCCAAGGTGAGCTTCTTACCCCGTCCAGGCAGGACCCTAATCCTGGAGCTAGGCA', 'CCCCTCTCTGTGTGAGTATGGGGACCGCTCTCTGTCAGATGCTCTACCAGCAGCAGGGGG']
+</pre>
+
+
 <p>
 We can just pass the sequences to our function. For the motif size lets pick 8.
 </p>
@@ -1162,8 +1015,8 @@ plot_logo(wmm, <span style="color: #b8bb26;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="org9ee7096" class="figure">
-<p><img src="{% static 'blog/posts/seqmotif/5prime_splice_site.png' %}" alt="5prime_splice_site.png" />
+<div id="org991fffe" class="figure">
+<p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>
 
@@ -1174,8 +1027,8 @@ Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Barış Salman</p>
-<p class="date">Created: 2022-12-16 Fri 15:15</p>
+
+<script src="https://omics.sbs/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

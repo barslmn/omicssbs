@@ -1,8 +1,3 @@
-ul#navbar li {
-    display: inline-block;
-    font-weight: bold;
-}
-
 .example {
     max-height: 30vh; overflow-y:auto;
 }
