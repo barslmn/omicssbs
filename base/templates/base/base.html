@@ -24,6 +24,12 @@
         else {
             document.body.classList.remove("latex-dark");
         }
+        if (localStorage.typeface == "Libertinus") {
+            document.body.classList.add("libertinus")
+        }
+        else {
+            document.body.classList.remove("libertinus")
+        }
     </script>
 
     <ul id="navbar">
@@ -36,17 +42,22 @@
         <li>
             <a href="{% url 'bioscripts:index' %}">Bioscripts</a>
         </li>
-        <li>
-            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
-                title="Toggle color mode">
-                <div class="sun">
-                </div>
-                <div class="moon">
-                    <div class="star"></div>
-                    <div class="star small"></div>
-                </div>
-            </button>
-        </li>
+        <div id="preferences">
+            <li>
+                <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                    title="Toggle color mode">
+                    <div class="sun">
+                    </div>
+                    <div class="moon">
+                        <div class="star"></div>
+                        <div class="star small"></div>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <input type="button" id="typeface-toggle" title="" value="Aa">
+            </li>
+        </div>
     </ul>
 
     </br>

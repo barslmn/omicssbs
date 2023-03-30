@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-03-30 Thu 12:35 -->
+<!-- 2023-03-30 Thu 15:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>@@html:&lt;img src="pic.jpeg"&gt;@@ Barış Salman</title>
@@ -24,6 +24,12 @@ if (localStorage.darkMode == "true") {
 else {
   document.body.classList.remove("latex-dark");
 }
+if (localStorage.typeface == "Libertinus") {
+    document.body.classList.add("libertinus")
+}
+else {
+    document.body.classList.remove("libertinus")
+}
 </script>
 
     <ul id="navbar">
@@ -36,17 +42,22 @@ else {
         <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
-        <li>
-            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
-                title="Toggle color mode">
-                <div class="sun">
-                </div>
-                <div class="moon">
-                    <div class="star"></div>
-                    <div class="star small"></div>
-                </div>
-            </button>
-        </li>
+        <div id="preferences">
+            <li>
+                <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                    title="Toggle color mode">
+                    <div class="sun">
+                    </div>
+                    <div class="moon">
+                        <div class="star"></div>
+                        <div class="star small"></div>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <input type="button" id="typeface-toggle" title="" value="Aa">
+            </li>
+        </div>
     </ul>
 </div>
 <div id="content" class="content">
@@ -55,13 +66,13 @@ else {
 <span class="subtitle">Curriculum vitae  <br> <a href="mailto:barslmn@gmail.com">E-mail</a> <a href="tel:+905343878420">Phone</a> <a href="https://omics.sbs">Website</a> <br> <a href="https://omics.sbs/github">Github</a> <a href="https://omics.sbs/linkedin">Linkedin</a> <a href="https://omics.sbs/biostars">Biostars</a> <a href="https://omics.sbs/orcid">Orcid</a></span>
 </h1>
 
-<div id="outline-container-org0631ba6" class="outline-2">
-<h2 id="org0631ba6">Technical skills</h2>
-<div class="outline-text-2" id="text-org0631ba6">
+<div id="outline-container-orgc70cc46" class="outline-2">
+<h2 id="orgc70cc46">Technical skills</h2>
+<div class="outline-text-2" id="text-orgc70cc46">
 </div>
-<div id="outline-container-orga330910" class="outline-3">
-<h3 id="orga330910">Wet lab and Bioinformatics</h3>
-<div class="outline-text-3" id="text-orga330910">
+<div id="outline-container-orgaac7a67" class="outline-3">
+<h3 id="orgaac7a67">Wet lab and Bioinformatics</h3>
+<div class="outline-text-3" id="text-orgaac7a67">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -115,9 +126,9 @@ else {
 </div>
 
 
-<div id="outline-container-org4c92fbc" class="outline-3">
-<h3 id="org4c92fbc">Computers and Data Analyses</h3>
-<div class="outline-text-3" id="text-org4c92fbc">
+<div id="outline-container-org06e4fdc" class="outline-3">
+<h3 id="org06e4fdc">Computers and Data Analyses</h3>
+<div class="outline-text-3" id="text-org06e4fdc">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -186,9 +197,9 @@ else {
 </div>
 
 
-<div id="outline-container-org487d5fa" class="outline-2">
-<h2 id="org487d5fa">Education</h2>
-<div class="outline-text-2" id="text-org487d5fa">
+<div id="outline-container-orgf8309b6" class="outline-2">
+<h2 id="orgf8309b6">Education</h2>
+<div class="outline-text-2" id="text-orgf8309b6">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -288,9 +299,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-org18d9d26" class="outline-2">
-<h2 id="org18d9d26">Jobs</h2>
-<div class="outline-text-2" id="text-org18d9d26">
+<div id="outline-container-org2f8bde2" class="outline-2">
+<h2 id="org2f8bde2">Jobs</h2>
+<div class="outline-text-2" id="text-org2f8bde2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -370,9 +381,9 @@ else {
 </tbody>
 </table>
 </div>
-<div id="outline-container-org5a59165" class="outline-3">
-<h3 id="org5a59165">Internships &amp; Rotations</h3>
-<div class="outline-text-3" id="text-org5a59165">
+<div id="outline-container-org6805e03" class="outline-3">
+<h3 id="org6805e03">Internships &amp; Rotations</h3>
+<div class="outline-text-3" id="text-org6805e03">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -471,9 +482,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-org7d0b091" class="outline-3">
-<h3 id="org7d0b091">Certificates</h3>
-<div class="outline-text-3" id="text-org7d0b091">
+<div id="outline-container-orga3c3da9" class="outline-3">
+<h3 id="orga3c3da9">Certificates</h3>
+<div class="outline-text-3" id="text-orga3c3da9">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -528,9 +539,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-orge8f4432" class="outline-2">
-<h2 id="orge8f4432">Publications</h2>
-<div class="outline-text-2" id="text-orge8f4432">
+<div id="outline-container-org71d769d" class="outline-2">
+<h2 id="org71d769d">Publications</h2>
+<div class="outline-text-2" id="text-org71d769d">
 <ol class="org-ol">
 <li>Mercan S, Akcakaya NH, <b>Salman B</b>, Yapici Z, Ozbek U, Ugur Iseri SA. <b>Clinical and genetic analyses in syndromic intellectual disability with primary microcephaly reveal biallelic and de novo variants in patients with parental consanguinity</b>. Genes Genom. Published online November 12, 2022. doi:10.1007/s13258-022-01344-8</li>
 <li>Oguz-Akarsu E, <b>Salman B</b>, Ugur-Iseri S, Baykan B. <b>An Extraordinary EEG Phenomenon Misdiagnosed as Nonconvulsive Status Epilepticus: Frequent Subclinical Periodic Discharges Terminated by Sudden Auditory Stimuli</b>. Clin EEG Neurosci. Published online October 5, 2022:15500594221129964. doi:10.1177/15500594221129965</li>
@@ -542,9 +553,9 @@ else {
 </div>
 
 
-<div id="outline-container-org6a806ac" class="outline-3">
-<h3 id="org6a806ac">in pipeline</h3>
-<div class="outline-text-3" id="text-org6a806ac">
+<div id="outline-container-org214c01b" class="outline-3">
+<h3 id="org214c01b">in pipeline</h3>
+<div class="outline-text-3" id="text-org214c01b">
 <ul class="org-ul">
 <li>Exome sequencing reveals a treatable neurometabolic origin in two siblings with an undiagnosed form of neurodevelopmental disorder: From exon to neuron <b>(in review)</b></li>
 <li>ELP2 Mutation Leads Developmental and Epileptic Encephalopathy: Case Report Consanguineous Family from Turkey and Review of Literature <b>(in review)</b></li>
@@ -553,9 +564,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-orged069d3" class="outline-3">
-<h3 id="orged069d3">Collaborative</h3>
-<div class="outline-text-3" id="text-orged069d3">
+<div id="outline-container-org43da526" class="outline-3">
+<h3 id="org43da526">Collaborative</h3>
+<div class="outline-text-3" id="text-org43da526">
 <ul class="org-ul">
 <li><a href="https://pubmed.ncbi.nlm.nih.gov/?term=epi25+collaborative">Epi25 Collaborative</a></li>
 </ul>
@@ -563,9 +574,9 @@ else {
 </div>
 
 
-<div id="outline-container-org956a228" class="outline-3">
-<h3 id="org956a228">Posters</h3>
-<div class="outline-text-3" id="text-org956a228">
+<div id="outline-container-org4b6178c" class="outline-3">
+<h3 id="org4b6178c">Posters</h3>
+<div class="outline-text-3" id="text-org4b6178c">
 <ol class="org-ol">
 <li>Susgun S., Kesim Y., Salman B., Yucesan E., Khalilov D., Sirin G., Baykan B, Bebek N., Iseri Ugur S., <b>Two candidates bi-allelic variant to neurodevelopmental disorder in a consanguineous family from Turkey</b>, ESHG 2022</li>
 <li>Acar A., Say M., Salman B., Dulger M.V., <b>Comparison of Established Microsatellite Instability Detection Tools in Next Generation Sequencing</b>, ESHG 2021</li>
@@ -574,9 +585,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-org0293701" class="outline-3">
-<h3 id="org0293701">Congresses</h3>
-<div class="outline-text-3" id="text-org0293701">
+<div id="outline-container-orgea24758" class="outline-3">
+<h3 id="orgea24758">Congresses</h3>
+<div class="outline-text-3" id="text-orgea24758">
 <ol class="org-ol">
 <li>Investigation of Gene Variants Associated with Syndromic Intellectual Disability, 7. International Congress of Cerebral Palsy and Developmental Disorders, February 23-25 2018, Istanbul, Turkey</li>
 </ol>
@@ -584,9 +595,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-org88dafc5" class="outline-2">
-<h2 id="org88dafc5">Projects</h2>
-<div class="outline-text-2" id="text-org88dafc5">
+<div id="outline-container-org37a8094" class="outline-2">
+<h2 id="org37a8094">Projects</h2>
+<div class="outline-text-2" id="text-org37a8094">
 <ol class="org-ol">
 <li>(in review) TUBITAK 1001 Project, <b>Advanced Molecular Autopsy Protocol for Sudden Deaths under 40 Years</b> Research Fellow</li>
 <li>2021-2022 TUBITAK 1501 Project, 3210420, <b>Modeling and Automatic Analysis of Genotype-Phenotype Related Copy Number Variations</b> Researcher</li>
@@ -599,9 +610,9 @@ else {
 </div>
 </div>
 
-<div id="outline-container-orge4b1199" class="outline-2">
-<h2 id="orge4b1199">Software</h2>
-<div class="outline-text-2" id="text-orge4b1199">
+<div id="outline-container-orgc3d61cf" class="outline-2">
+<h2 id="orgc3d61cf">Software</h2>
+<div class="outline-text-2" id="text-orgc3d61cf">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -685,18 +696,18 @@ else {
 </div>
 </div>
 
-<div id="outline-container-org6fd5ff9" class="outline-2">
-<h2 id="org6fd5ff9">Awards</h2>
-<div class="outline-text-2" id="text-org6fd5ff9">
+<div id="outline-container-orge176b23" class="outline-2">
+<h2 id="orge176b23">Awards</h2>
+<div class="outline-text-2" id="text-orge176b23">
 <p>
 III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second place project award</b>, Istanbul, Turkey, 2017
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1f1f18a" class="outline-2">
-<h2 id="org1f1f18a">Congresses&amp;Courses</h2>
-<div class="outline-text-2" id="text-org1f1f18a">
+<div id="outline-container-orgb3a105b" class="outline-2">
+<h2 id="orgb3a105b">Congresses&amp;Courses</h2>
+<div class="outline-text-2" id="text-orgb3a105b">
 <ol class="org-ol">
 <li>2022 Turkish Society of Medical Genetics, Nov 9-13, <b>Genome-Level Evaluation of Copy Number Changes, One of the Important Risk Factors for Genetic Epilepsy</b>  (Oral Presentation)</li>
 <li>2020 ESHG 2020, June 6-9, Virtual Conference, <b>GenerAVI: Variant Interpreter and Genetic Analysis Summary Generator</b> (Poster Presentation)</li>
@@ -712,13 +723,13 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </div>
 </div>
 
-<div id="outline-container-org31e8946" class="outline-2">
-<h2 id="org31e8946">General skills</h2>
-<div class="outline-text-2" id="text-org31e8946">
+<div id="outline-container-org5be0d0b" class="outline-2">
+<h2 id="org5be0d0b">General skills</h2>
+<div class="outline-text-2" id="text-org5be0d0b">
 </div>
-<div id="outline-container-org153225c" class="outline-3">
-<h3 id="org153225c">Languages</h3>
-<div class="outline-text-3" id="text-org153225c">
+<div id="outline-container-org2871cd3" class="outline-3">
+<h3 id="org2871cd3">Languages</h3>
+<div class="outline-text-3" id="text-org2871cd3">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 

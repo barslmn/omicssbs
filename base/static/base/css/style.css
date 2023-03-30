@@ -2,6 +2,9 @@ ul#navbar li {
     display: inline-block;
     font-weight: bold;
 }
+#preferences {
+    float: right;
+}
 
 .example {
     max-height: 30vh; overflow-y:auto;
@@ -24,6 +27,12 @@ ul#navbar li {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+#typeface-toggle {
+  font-size: 1.6em;
+  background: none;
+  border: none;
+  color: inherit;
 }
 
 .sun {
