@@ -1,6 +1,10 @@
+ul#navbar {
+  padding : 0 2em;
+}
 ul#navbar li {
     display: inline-block;
     font-weight: bold;
+    line-height: 3em;
 }
 #preferences {
     float: right;
