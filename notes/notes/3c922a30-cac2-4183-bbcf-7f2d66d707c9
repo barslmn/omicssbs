@@ -1,0 +1,175 @@
+:PROPERTIES:
+:ID:       3c922a30-cac2-4183-bbcf-7f2d66d707c9
+:END:
+#+title: NGSoneliner
+#+filetags: :blog:publish:
+
+* Exome Analysis Oneliner
+
+** Setting up tools and data
+
+We are going to need fastp, bwa, samtools, bcftools, ensembl-vep and multiqc
+We are going to install everything from source except fastp.
+
+*** fastp
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+wget http://opengene.org/fastp/fastp -O /usr/bin/fastp
+chmod a+x /usr/bin/fastp
+#+END_SRC
+
+*** BWA
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+apt update -y
+apt install -y git gcc zlib1g-dev make
+git clone https://github.com/lh3/bwa
+cd bwa
+make
+cp ./bwa /usr/local/bin/
+cd ..
+rm -rf bwa
+#+END_SRC
+
+***  samtools
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+apt update -y
+apt install -y \
+  git gcc zlib1g-dev autoconf make \
+  liblzma-dev libbz2-dev libcurl4-openssl-dev
+git clone --recurse-submodules https://github.com/samtools/htslib.git
+git clone https://github.com/samtools/samtools
+
+cd samtools
+autoheader
+autoconf -Wno-syntax
+./configure --without-curses
+make
+make install
+cd ..
+rm -rf samtools
+rm -rf htslib
+#+END_SRC
+
+***  bcftools
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+apt update -y
+apt install -y \
+  git gcc zlib1g-dev autoconf make \
+  liblzma-dev libbz2-dev libperl-dev \
+  libgsl-dev libcurl4-openssl-dev
+git clone --recurse-submodules https://github.com/samtools/htslib.git
+git clone https://github.com/samtools/bcftools
+
+cd bcftools
+autoheader && autoconf && ./configure --enable-libgsl --enable-perl-filters
+make
+make install
+cd ..
+rm -rf bcftools
+rm -rf htslib
+#+END_SRC
+
+*** ensembl-vep
+Installing the vep cache takes time...
+
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+apt install zlib1g-dev libbz2-dev liblzma-dev \
+libmodule-build-perl libjson-perl libdbi-perl \
+libset-intervaltree-perl build-essential make \
+automake git unzip autoconf libdbd-mysql-perl \
+gcc make
+
+git clone https://github.com/Ensembl/ensembl-vep.git
+cd ensembl-vep
+perl INSTALL.pl -a acf -s homo_sapiens -y GRCh38
+#+END_SRC
+
+*** multiqc
+#+BEGIN_SRC sh :tangle ./install.sh :comments both
+apt install python3-pip
+pip3 install multiqc
+#+END_SRC
+
+*** downloading the reference genome
+#+BEGIN_SRC sh
+cd
+mkdir -p reference/GRCh38
+cd reference/GRCh38
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dict
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.alt
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.amb
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.ann
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.bwt
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.pac
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.64.sa
+wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai
+cd
+#+END_SRC
+
+*** downloading the sample data and target file
+#+BEGIN_SRC sh
+cd
+mkdir -p sample
+cd sample
+wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/NA12878/NIST_NA12878_HG001_HiSeq_300x/131219_D00360_005_BH814YADXX/Project_RM8398/Sample_U0a/U0a_CGATGT_L001_R1_005.fastq.gz
+wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/NA12878/NIST_NA12878_HG001_HiSeq_300x/131219_D00360_005_BH814YADXX/Project_RM8398/Sample_U0a/U0a_CGATGT_L001_R2_005.fastq.gz
+cd "$HOME"/reference/GRCh38
+wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/references/GRCh38/resources/hg38.refGene.exon.bed.gz
+cd
+#+END_SRC
+
+** Setting up our environment
+
+#+BEGIN_SRC sh
+THREADS=1
+ASSEMBLY="GRCh38"
+REFERENCE="$HOME/reference/hg38/Homo_sapiens_assembly38.fasta"
+TARGET="$HOME/reference/hg38/hg38.refGene.exon.bed.gz"
+INPUT="$HOME/sample/U0a_CGATGT_L001_R*_001.fastq.gz"
+OUTPUT="${INPUT%%_*}"
+columns="[%SAMPLE]\t%CHROM\t%POS\t%REF\t%ALT\t%ID\t%FILTER[\t%GT\t%VAF\t%AD\t%DP]\t%Consequence\t%IMPACT\t%SYMBOL\t%Feature\t%EXON\t%INTRON\t%HGVSc\t%HGVSp\t%cDNA_position\t%CDS_position\t%Protein_position\t%Amino_acids\t%Codons\t%Existing_variation\t%MANE_SELECT\t%MANE_PLUS_CLINICAL\t%GENE_PHENO\t%SIFT\t%PolyPhen\t%DOMAINS\t%AF\t%gnomADe_AF\t%gnomADg_AF\t%MAX_AF\t%MAX_AF_POPS\t%CLIN_SIG\t%PHENO\t%PUBMED\t%CANONICAL\n"
+header=$(echo "$columns" | sed "s/%//g;s/\[//g;s/\]//g")
+#+END_SRC
+
+** The Oneliner
+
+#+BEGIN_SRC sh
+(printf "%b\n" $header;
+fastp --in1 "$(echo $INPUT | cut -d" " -f1)" --in2 "$(echo $INPUT | cut -d" " -f2)" --stdout |
+bwa mem -p -t "$THREADS" -R "@RG\tID:name_placeholder\tSM:name_placeholder\tPL:illumina\tLB:lib1\tPU:foo" "$REFERENCE" - |
+samtools collate -@ "$THREADS" -O cram - |
+samtools fixmate -@ "$THREADS" -m -O cram - - |
+samtools sort -@ "$THREADS" -O cram - |
+samtools markdup -@ "$THREADS" -O cram - |
+tee "$OUTPUT.cram" |
+bcftools mpileup --threads "$THREADS" -Ou -A -d 10000 -L 10000 -a "FORMAT/AD,FORMAT/DP" -f "$REFERENCE" |
+bcftools call --threads "$THREADS" -Ou --ploidy "$ASSEMBLY" -mv |
+bcftools view --threads "$THREADS" -Ou -T "$TARGET" --targets-overlap 1 |
+bcftools norm --threads "$THREADS" -Ou -m-any |
+bcftools norm --threads "$THREADS" -Ou --check-ref w -f "$REFERENCE" |
+bcftools +fill-tags -Ou -- -t all,FORMAT/VAF |
+bcftools +setGT -Ou -- -t q -n c:'0/1' -i 'VAF>=.1' |
+bcftools +setGT -Ou -- -t q -n c:'1/1' -i 'VAF>=.75' |
+/home/bar/ensembl-vep/vep --everything --force_overwrite --vcf --pick --format vcf --output_file STDOUT --compress bgzip --fork "$THREADS" --database |
+bcftools +split-vep -c SYMBOL,gnomADg_AF:Float,IMPACT,Existing_variation |
+bcftools filter --threads "$THREADS" -Ou -m+ -s 'lowQual' -g3 -G10 -e 'FORMAT/DP<=15 || GQ<=20' |
+bcftools filter --threads "$THREADS" -Ou -m+ -s 'highFreq' -e 'gnomADg_AF>0.001' |
+bcftools filter --threads "$THREADS" -Ou -m+ -s 'lowIMPACT' -i 'IMPACT~"HIGH" || IMPACT~"MODERATE"' |
+bcftools filter --threads "$THREADS" -Ou -m+ -s 'HOMrare'  -e 'GT="1/1" && (gnomADg_AF <= 0.001 || (Existing_variation="." && gnomADg_AF="." && ID="."))' |
+bcftools filter --threads "$THREADS" -Ou -m+ -s 'HETnovel' -e 'GT="0/1" && Existing_variation="." && gnomADg_AF="." && ID="."' |
+bcftools +fill-tags -- -t FORMAT/VAF |
+bcftools +split-vep -f $columns -d -i 'CANONICAL~"YES"') |
+gzip -c > "$OUTPUT.tsv.gz"
+#+END_SRC
+
+
+** Getting the stats
+
+#+BEGIN_SRC sh
+samtools index -@ $THREADS "$OUTPUT.cram"
+samtools stats -t "$TARGET" "$OUTPUT.cram" > "$OUTPUT.cram.stats"
+samtools idxstats "$OUTPUT.cram" > "$OUTPUT.cram.idxstats"
+samtools flagstat "$OUTPUT.cram" > "$OUTPUT.cram.flagstat"
+bcftools stats "$OUTPUT.vcf" > "$OUTPUT.vcf.stats"
+multiqc
+#+END_SRC

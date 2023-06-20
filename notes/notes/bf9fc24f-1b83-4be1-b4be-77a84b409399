@@ -1,0 +1,147 @@
+:PROPERTIES:
+:ID:       bf9fc24f-1b83-4be1-b4be-77a84b409399
+:END:
+#+title: Risk Değerlendirmesi ve Genetik Danışma
+#+filetags: :thompson&thompson:publish:
+
+* Aile Öyküsü ve Risk Değerlendirme
+** Yüksek risk
++ İlk derece akrabada, genel popülasyona göre daha erken başlangıçlı hastalık
++ Etkilenmiş ilk dereceden iki yakın
++ İkinci dereceden etkilenmiş iki yakın, en az biri erken başlangıçlı
++ Üç ya da daha fazla etkilenmiş yakın
++ Ailenin her iki tarafında da orta risk aile öyküsü olması
+** Orta risk
++ İlk derecen geç ya da bilinmeyen başlangıçlı etkilenmiş bir yakın olması
++ Aynı soydan gelen iki ikinci dereceden geç ya da bilinmeyen başlangıçlı etkilenmiş yakın
+** Ortalama risk
++ Etkilenmiş bir yakın olmaması
++ Sadece bir ikinci dereceden etkilenmiş bir yakın
++ Aile öyküsünde hastalığın olmaması
++ Aile öyküsü olmayan evlat edinilmiş biri
+
+* Klinik Uygulamada Genetik Danışma
+Klinik genetiğin sağlaması gereken temeller,
++ Doğru tanı koymak, laboratuvar testleri, genetik testler ile altta yatan mutasyonu bulmak.
++ Etkilenmiş kişi ve aile fertlerinin, hastalığı anlaması ve hastalığın doğası ve sonuçları ile uzlaşmasını sağlamakk.
++ Uygun tedavi yönetimi sağlamak, gerekirse diğer uzmanlık alanlarına sevk etmek.
+
+Genetik danışmanın benzersiz tarafı, şimdi ve gelecekte hem probanta hem de ailenin diğer üyerlerine odaklanmasıdır.
++ Aile üyelerini potensiyel riskten haberdar etmek için hasta ile çalışmak
++ Diğer aile üyelerine kesin risk değerlendirmesi için, genetik ya da diğer testleri teklif etmek
++ Bu riskleri değiştirmek için hangi yollara başvurabileceğini hasta ve yakınlarına anlatmak.
+
+* Tekrarlama Risklerinin Belirlenmesi
++ Eğer hastalık tek gen kalıtımı gösteriyorsa tekrarlama riski temel Mendelyen prensipler ile belirlenebilir.
+  - Azalmış penetrans
+  - De novo mutsayonlar
+  bu hesaplamaları karmaşıklaştırabilir. Bu durumlarda olasılıklar koşullu olarak değiştirilebilir.
++ Tek gen hastalıklarına karşı kompleks hastalıların mekanizmaları bilinmediği için tekrarlama riskinin belirlenmesi önceki olaylara göredir.
+* Bilinen Genotiplerin Mendel Kalıtımına Göre Risk Değerlendirmesi
++ Aile bireylerinin genotipi bilindiğinde yapılabilecek en basit risk tahminidir.
++ Örneğin anne babanın heterozigot oluduğu otozomal resesif bir hastalık için tüm gebeliklerde risk 1/4'tür.
+* Alternatif Genotiplerin Mümkün Olduğu Durumlarda Koşullu Olasılık ile Risk Tahmini
++ Genotipler kesin olarak bilinmediği durumlarda, tekrarlama risklerinin hesaplanması daha farklı olacaktır. Örneğin ilk evliliğinden sistik fibroz taşıyıcısı olduğu bilinen bir kadının ikinci evliliğinde olacak çocuğun etkilenmiş olmasının riski ikinci evliliğindeki eşinin taşıyıcı olmasına bağlıdır. Yeni eşinin taşıyıcı olması ise etnik arkaplana bağlıdır.
++ Örnek olarak, Beyaz ırkta bu şans yaklaşık olarak 1'de 22'dir. Bu yüzden taşıyıcı olduğu bilinen bir eş ve bilinmeyen bir eşin çocuğunun etkilenmiş olma şansı \( \frac{1}{22} \times \frac{1}{4} = \frac{1}{88} \), yaklaşık %1'dir.
+  Tabiki eğer, baba gerçekten taşıyıcıysa, çocuğun homozigot ya da bileşik heterozigot hasta olma şansı dörtte bir eğer taşıyıcı değilse hasta olma şansı sıfır olacaktır.
+  Direk babayı test edemediğimiz durumlar 22'de 1 en iyi tahmin olackatır.
+  Eğer bu çiftin daha önceden 5 sağlıklı çocuğu olmuş ve 6 çocuk için danışma veriyorsak hastalık riski 22'de 1'den daha az olmalıdır. Burada Bayes analizini uygularız. Bu durumda ikinci kocanın taşıyıcı olma ihtimali 119'da 1, ve hasta çocuk olma ihtimali 476'da 1'dir.
+* Koşullu Olasılık
+#+NAME:   fig:kosolaped
+#+attr_html: :width 100%
+[[./koşulluOlasılıkPedigri.png]]
+
+Figürdeki A ailesinde II-1 anne X'e bağlı Hemofili için zorunlu taşıyıcıdır ve mutant alelli aktarma şansı 2'de 1'dir.
++ Figürdeki B ailesinde probandın annesinin taşıyıcılık durumu bilinmemektedir. Eğer III-5 tek çocuk olsaydı taşıyıcı olma şansı 4'te 1 olacaktı.
+  - \( \frac{1}{2} (Annenin Taşıyıcı olma şansı) \times \frac{1}{2} (Probantın anneden mutant aleli kalıtması)  = \frac{1}{4} \)
+  - Direk genetik test olmadan taşıyıcı olup olmadığını bilemeyiz ancak dört etkilenmemiş erkek kardeşi olduğunu göze alırsak anne II-2 taşıyıcı olup olmadığını 4 kere test etmiş oluyor.
+
+#+attr_html: :width 100%
+[[./koşulluOlasılıkPedigri2.png]]
+** Muhtemel Senaryolar
+A. II-2 taşıyıcı ancak danışan değil.
+B. II-2 ve danışan ikiside taşıyıcı.
+C. II-2 taşıyıcı değil ve danışanda taşıyıcı olamaz.
+D. ~II-2 taşıyıcı değil ancak danışan tayıcı.~ Bu ihtimal görmezden geliniyor. Belki De novo mutasyon şansı konulabilir?
+
+   Bu üç senaryoda II-2'nin taşıyıcı olması ihtimali *ön olasılık* olarak adlandırılır.
+   A ve B senaryosunda dört erkek çocuğun mutasyonu kalıtmamasının ihtimali \( (\frac{1}{2})^{4} \). C senaryosunda II-2 taşıyıcı olmadığı için erkek çocukların etkilenmemiş olma ihtimali 1. Bunlar II-2'nin taşıyıcı olup olmadığına bağlı olduğu için *koşullu olasılıklar*.
+   Bununla beraber, danışan III-5, A senaryosunda 2'de 1 ihtimalle mutant aleli kalıtmadı, B senaryosunda ise 2'de 1 ihtimalle mutant aleli kalıttı. C senaryosunda ise annesi taşıyıcı olmadığı için %100 taşıyıcı değil.
+
+   Ön olasılıkları ve koşullu olasılıkları birbiri ile çarptığımızda *birleşik olasık* elde ederiz.
+   Son olarak, her senaryo için, o senaryonun ihtimalinin, toplam birleşik olasılığıkların toplamının kaçta kaçı olduğunu bulmamız bize *son olasılığı* verir.
+
+   Bu durumda III-5'in taşıyıcı olma senaryosu için hesaplanacak sonsal olasılık, \( \frac{\frac{1}{64}}{\frac{1}{64}+\frac{1}{64}+\frac{1}{2}} = \frac{1}{34} ~=\%3 \)
+
+   Eğer II-2'nin taşıyıcı olma şansını bilmek istersek, II-2'nin taşıyıcı olduğu A ve B senaryolarının sonsal olasılıklarını ekleyip bulabiliriz, bu da 17'de 1, yaklaşık %6'dır.
+
+** X'e bağlı Ölümcül Hastalıklarda Koşullu Olasılık
+X'e bağlı hastalıklar hemizigot erkekte kendini direk gösterdiği için bu durum ya de novo mutasyondan ya da taşıyıcı anneden kaynaklıdır. Bu durumda gonadal mozaiklik gözardı edilebilir. Bu durumda annenin taşıyıcı olup olmadığı Bayes analizi ile tespit edilebilir.
+
+#+attr_html: :width 100%
+[[./koşulluOlasılıkPedigri3.png]]
+
+Yukarıdaki ailede danışan III-2, DMD için taşıyıcılık şansını bilmek istiyor.
+Burada üç muhtemel senaryo olabilir.
+A. III-1'in hastalığı yeni bir mutasyon sonucu olabilir. Bu durumda III-1'in annesi teyzesi, ve kız kardeşinin taşıyıcılık riski yoktur.
+B. III-1'in annesi II-1 taşıyıcı ancak kardeşi III-2, 2'de 1 taşıyıcı olma ihtimali olur, ancak teyze II-3 taşıyıcı riski olmayabilir I-1 taşıyıcı olmadığı için.
+C. II-1 alleli I-1'den kalıtılmış olabilir, bu yüzden II. jenerasyondaki kadınlar 2'de 1 III-2 nin 4'te 1'dir.
+
+İlk olarak bu aile ağacındaki kadınların taşıyıcı önsel olasılıklarını hesaplamamız gerekecek.
+
+Diyelim ki H, X'e bağlı ölümcül bir hastalık için popülasyondaki taşıyıcı kadınların frekansı olsun.
+Diyelim ki, herhangi bir gamette X'e bağlı lokustaki mutasyon oranı \mu olsun.
+Diyelim ki, \mu hem kadınlarda hem erkeklerde aynı olsun. Bu \mu sayısı 10^{-4} ile 10^{-6} arasında küçük bir sayı.
+O zaman, herhangi bir kadının taşıyıcı olabileceği üç ayrı yol var:
+1. Kadın, taşıyıcı annesinsden mutant alleli kalıtırsa \( = \frac{1}{2} \times H \).
+2. Kadın, annesinin X'inde yeni mutant aleli kalıtılabilir =\mu yada
+3. Kadın, babasından gelen X'e yeni mutant alel olabilir =\mu.
+Bir kadının taşıyıcı olma riski tüm bu ihtimallerin toplamı olacaktır.
+
+\[ H = (\frac{1}{2} \times H) + \mu + \mu = \frac{H}{2} + 2\mu \]
+
+H için çözdüğümüzde popülasyondaki, rastgele bir kadının X'e bağlı hastalık için taşıyıcı olma olasılığı 4\mu dür. Not, 4\mu'nun yarısı 2\mu, bir kadının kalıtım ihtimali diğer 2\mu yeni mutasyon ile taşıyıcı olmasıdır.
+
+Bu durumda,
+A. A senaryosunda III-1, \mu olasılığı ile de novo mutasyon oluştu ve hem anne hem de büyük anne taşıyıcı değil yani 1-4\mu = 1. Bu durumun birleşik olasılığı \(\mu \times 1 \times 1 = \mu \) olacaktır.
+B. B senaryosunda, I-1 taşıyıcı değil yani II-1 2\mu olasılıkla yeni mutasyon taşımakta. II-1'in oğlunun hasta olma şansıda 2'de 1 olacaktır. Bu durumda birleşik olasılık \( 2\mu \times \frac{1}{2} = \mu \) olacaktır.
+C. Hem I-1 hem de II-1'in taşıyıcı olduğu durumda I-1'in taşıyıcı olma olasılığı 4\mu  II-1'in taşıyıcı olma olasılığı 2'de 1, III-1'in hasta olma olasılığı yine 2'de 1 olacaktır. Bu durumda birleşik olasılık \( 4\mu \times \frac{1}{2} \times \frac{1}{2} = \mu \) olacaktır.
+
+   Sonuç olarak sonsal olasılıklarımız: \( \frac{\mu}{\mu + \mu + \mu} = \frac{1}{3} \) olacaktır.
+Bu sonsal olasılıklarla, III-1'in etkilenmiş olma şansı \(\frac{1}{3} \) olacaktır. Çünkü A durumunda yeni mutasyondan dolayı ve B ve C'de annesinin taşıyı olmasından dolayı annenin taşıyı olma olasılığı \(\frac{1}{3} + \frac{1}{3} = \frac{2}{3} \) olacaktır. Büyükanne sadece C durumunda taşıyıcıdır ve onun taşıyı olma ihtimali de  \(\frac{1}{3} \) olacaktır.
+Bu bireyler için risk hesaplarını yaptıktan sonra diğer kadınlar, II-3 ve III-2 içinde hesap yapabiliriz.
+III-2' nin taşıyıcı olma riski \( \frac{1}{2} \times [II-1'in taşıyıcı olma şansı] = \frac{1}{2} \times \frac{2}{3} = \frac{1}{3} \) olacaktır.
+II-3' ün taşıyıcı olma riski \( \frac{1}{2} \times [I-1'in taşıyıcı olma şansı] = \frac{1}{2} \times \frac{1}{3} = \frac{1}{6} \) olacaktır.
+Bütün bu olasılıklarda germline mozaiklik ihtimallerini görmezden geliyoruz. Gerçek danışmada mozaiklik görmezden gelinemez.
+
+* Eksik Penetranslı Hastalıklar
+Penetransı %70 olan bir hastalıkta, anne ve ya babası etkilenmiş olup, danışanın taşıyıcılığını belirlerken iki senaryo vardır.
+A. Danışan mutant aleli kalıtmamıştır. 2'de 1
+B. Danışan mutant aleli 2'de 1 olasılıkla kalıtmıştır ancak 0.3 ihtimalle fenotipi göstermiyordur. Bu durumda birleşik ihtimal \( \frac{1}{2} \times 0.3 = 0.15 \) olur.
+   Bu durumda danışanın taşıyıcı olma ihtimali \( \frac{0.15}{0.15 + \frac{1}{2}} = \frac{3}{13} ~= \%23 \) olur.
+
+* Geç Başlangıçlı Hastalıklar
+Otozomal dominant hastalıklar üreme çağı sonrasında gözükmesi sıktır. Örneğin, Parkinson Hastalığından etkilenmiş büyük annesi olan 35 yaşında (bu yaşta bu mt alel ile popülasyonda görülme sıklığı %5) bir danışan kendi riskini bilmek istiyor. Büyük annesinden kalıtmış olma şansı 4'te bir. Ancak danışanın 60 yaşındaki (popülasyonda bu yaşta 2/3 oranda belirti gözlenir) babasında herhangi bir belirti gözlenmiyor. Burada üç senaryo göz düşünülür.
+A. Daşınanın babası mutant aleli kalıtmadı. Danışanda riskte değil.
+B. Danışanın babası mutasyonu kalıttı ve asemptomatik ancak danışan kalıtmadı.
+C. Danışanın babası mutasyonu kalıttı ve asemptomatik ve danışan da mutasyonu kalıttı ve asemtopatik.
+   Danışanın babasının mutant alele sahip olmasının ihtimali %25 ve danışanın ihtmali %12'dir.
+
+   A durumunda birleşik olasılık \( \frac{1}{2} (babanın wt şansı) \times 1 (çocuğun wt şansı) = \frac{1}{2} \) dir.
+   B durumunda birleşik olasılık \( \frac{1}{2} (babanın mt şansı) \times \frac{1}{3} (babanın asemptomatik olma şansı) \times \frac{1}{2} (çocuğun wt şansı) = \frac{1}{12} \) dir.
+   B durumunda birleşik olasılık \( \frac{1}{2} (babanın mt şansı) \times \frac{1}{3} (babanın asemptomatik olma şansı) \times \frac{1}{2} (çocuğun mt şansı) \times 0.95 = 0.08'dir \) dir.
+
+   Sonsal olasıklar sırasıyla 0.75, 0.13 ve 0.12 olacaktır. Babanın taşıyıcı olma şansı B+C'den 0.25, danışanın mutant aleli taşıma şansı 0.12 olacaktır.
+* Empirik Tekrar Riski
+** Kompleks hastalıklar için danışmanlık
+Burada kalıtım modelleri kompleks olduğu için *Ampirik türetilmiş risk rakamları* kullanılır. Gözlemsel tekrar riski *Ampirik tekrar riski* olarak alınmıştır.
+
+Ampirik tekrar risklerinin kullanılacağı bir başka alan kromozomal bozukluklardır. Bir çiftin kromozom bozukluğu olan bir çocuğa sahip olması birkaç faktöre bağlıdır.
++ Çiftin daha önce kromozom anomalili çocuğu olduysa ya da tekrarlı düşük ya da infertilite için testler sonucunda kromozom anomalisi tespit edilmişse
++ Dahil olan kromozomlar, kromozomların hangi bölgeleri ve boyutları, trizomik ya da monozomik olması
++ Anne ya da babanın dengeli taşıyıcı olması
+
+* Akraba Evliliklerinde Genetik Danışma
+* Moleküler ve Genom Tabanlı Tanı
+** Gen Panelleri ve "Klinik Tüm Ekzom"
+** Varyant Yorumlama ve "Önemi Bilinmeyen Varyantlar"

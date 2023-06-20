@@ -1,0 +1,50 @@
+:PROPERTIES:
+:ID:       0210f33c-d51f-4c6d-b492-a0477901ff28
+:END:
+#+title: Useful snippets
+#+filetags: :publish:snippets:
+
+* Jupyter notebook over ssh
+https://coderwall.com/p/ohk6cg/remote-access-to-ipython-notebooks-via-ssh
+
+On the remote machine, start the IPython notebooks server:
+#+begin_src sh
+remote_user@remote_host$ ipython notebook --no-browser --port=8888
+#+end_src
+
+On the local machine, start an SSH tunnel:
+#+begin_src sh
+local_user@local_host$ ssh -N -f -L localhost:8888:localhost:8888 remote_user@remote_host
+#+end_src
+
+* Total size by extention
+https://unix.stackexchange.com/a/308853/291760
+
+On a GNU system:
+
+#+begin_src sh
+LC_ALL=C find . -name '?*.*' -type f -printf '%b.%f\0' |
+  LC_ALL=C gawk -F . -v RS='\0' '
+    {s[$NF] += $1; n[$NF]++}
+    END {
+      PROCINFO["sorted_in"] = "@val_num_asc"
+      for (e in s) printf "%15d %4d %s\n", s[e]*512, n[e], e
+    }' | numfmt --to=iec-i --suffix=B
+#+end_src
+
+Or the same with perl, avoiding the -printf extension of GNU find (still using a GNU extension, -print0, but this one is more widely supported nowadays):
+
+#+begin_src sh
+LC_ALL=C find . -name '?*.*' -type f -print0 |
+  perl -0ne '
+    if (@s = lstat$_){
+      ($ext = $_) =~ s/.*\.//s;
+      $s{$ext} += $s[12];
+      $n{$ext}++;
+    }
+    END {
+      for (sort{$s{$a} <=> $s{$b}} keys %s) {
+        printf "%15d %4d %s\n",  $s{$_}<<9, $n{$_}, $_;
+      }
+    }' | numfmt --to=iec-i --suffix=B
+#+end_src

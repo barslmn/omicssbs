@@ -1,0 +1,1302 @@
+:PROPERTIES:
+:ID:       e0bc0a36-6852-4bf4-916e-74b1b058b2ae
+:NOTER_DOCUMENT: ../.attach/e0/bc0a36-6852-4bf4-916e-74b1b058b2ae/John Wilson, Tim Hunt - Molecular Biology of the Cell. The Problems Book-Garland Science (2014).pdf
+:END:
+#+title: CellProblemBook
+* Skeleton
+** Chapter 1: Cells and Genomes
+:PROPERTIES:
+:NOTER_PAGE: 20
+:END:
+*** THE UNIVERSAL FEATURES OF CELLS ON EARTH
+:PROPERTIES:
+:NOTER_PAGE: 20
+:END:
+**** Definitions
+:PROPERTIES:
+:NOTER_PAGE: 20
+:END:
+
++ 1-1 plasma membrane
++ 1-2 enzyme
++ 1-3 transcription
++ 1-4 translation
++ 1-5 gene
++ 1-6 mRNA
++ 1-7 amino acids
++ 1-8 genome
+**** True/False
+:PROPERTIES:
+:NOTER_PAGE: 456
+:END:
++ 1-9 True
++ 1-10 False
+
+**** Thought problems
+:PROPERTIES:
+:NOTER_PAGE: 20
+:END:
++ 1-11 Car fulfills two characteristics 1 and 5, and gets score of 2.
+Cactus and human gets 7.
+
+**** Thought problems
+:PROPERTIES:
+:NOTER_PAGE: 21
+:END:
++ 1-12 Large hydrocarbon molecules
++ 1-13 Pasteur's experiment and swan neck bottles
++ 1-14 Frozen accident means this happened randomly and stuck the way it is. Natural selection means it evolved the its current form over time.
+I think the genetic code mostly control on tRNA level. Codon-anticodon and tRNA-aminoacid pairings are uncoupled from each other. This would result in a mailable genetic code. Most of the tRNA genes are silent. [cite:@torresEnjoySilenceNearly2019] This suggest there were various other codon-anticodon;tRNA-aminoacid pairings that got silenced over the natural selection.
++ 1-15 Sequence it! And compare it to the known earthly sequences.
++ 1-16 Chargaff rule works with double stranded DNA. [[https://en.wikipedia.org/wiki/Phi_X_174][ϕX174 is single stranded]].
++ 1-17 Living systems would follow the laws of physics and chemistry. They also build new emergent layers on top of chemistry and physics.
++ 1-18 Replication: DNA -> DNA
+Transcription: DNA -> RNA
+Translation: RNA -> Protein
+
+**** Calculations
+:PROPERTIES:
+:NOTER_PAGE: 22
+:END:
++ 1-19 A
+Cell division doubles the number of cells in every generation and we can represent this as an exponent of 2 where the exponent corresponds to the generation.
+1     -> 2     -> 4     -> 8 ...
+$2^0$ -> $2^1$ -> $2^2$ -> $2^3$
+
+We need to represent $10^{13}$ as an exponent of 2.
+
+$2^{x}=10^{13}$
+
+$x$ is the number of generations we need to get to $10^{13}$ cells from a single cell. We can get the exponent x to base with taking logarithm of the both sides. Note: $log_2{5}\approx2.322$
+
+\begin{equation}
+
+log_2{2^{x}} = log_2{10^{13}}
+
+x = log_2{2^{13}} + log_2{5^{13}}
+
+x = 13 + 13 x log_2{5}
+
+x = 13 + 13 x 2.322
+
+x \approx 43.186
+\end{equation}
+
+We need about 43 generations to reach to $10^{13}$ cells from a single cell.
+
++ 1-19 B
+  43 days.
++ 1-19 C
+  Unlike bacteria which are all the same cell with no differentiation human body is composed of organs with differentiated cells. These organs like brain and muscle requires organization and timely development to become functional.
+
+
+***** 1-20
+:PROPERTIES:
+:NOTER_PAGE: (22 0.7981803143093467 . 0.09237379162191194)
+:END:
+
++ [ ] Solve the second part.
+
+We need find length of sequence that have at least 21000 different permutations. [[id:60197625-b208-477f-b8c5-66aa15522489][Combinatorics]]
+Here the order matters meaning =AT= is different from =TA= and we can have repetition.
+We can have 4 possible nucleotide in a single position.
+
+#+begin_example
+4
+_
+A
+T
+C
+G
+#+end_example
+
+We can have 16 (4 x 4) possible combinations with 2 positions.
+
+#+begin_example
+4 4
+_ _
+A A
+A T
+A C
+A G
+T A
+T T
+T C
+T G
+C A
+C T
+C C
+C G
+G A
+G T
+G C
+G G
+#+end_example
+
+Number of unique sequences can be expressed as $4^n$ n being the length. Better simplified as $2^{2n}$.
+
+In our case n would be:
+
+$2^{2n}=21000$
+
+We can write 21000 as an exponent of 2 which is about $2^{72/5}$
+
+\begin{equation}
+2^{2n} = 2^{72/5}
+
+2n=72/5
+
+n=36/5
+
+n \approx 7.2
+\end{equation}
+
+Since we need an integer we should round up 7.2 to 8 since rounding it down to 7 would result in a smaller possible sequences than 21000.
+
+
+Let our reference genome be =ATCGATCG= length 8 with each nucleotide showing up equally. We can expect to see a sequence of length 1 (like a single =A=) in our reference 2 times. However when we have a sequence of length 2 e.g. =AT=
+#+begin_src python :results output
+import itertools
+reference = "ATCGATCG"
+permutations = sorted(list(set(["".join(i) for i in itertools.permutations(reference)])))
+print(f"{permutations[:10]=}")
+print(f"{len(permutations)=}")
+
+seqs_withAT = list(filter(lambda x: 'AT' in x, permutations))
+print(f"{seqs_withAT[:10]=}")
+print(f"{len(seqs_withAT)=}")
+
+seqs_withATtwice = list(filter(lambda x: len(x.split('AT')) >= 3, permutations))
+print(f"{seqs_withATtwice[:10]=}")
+print(f"{len(seqs_withATtwice)=}")
+#+end_src
+
+#+RESULTS:
+: permutations[:10]=['AACCGGTT', 'AACCGTGT', 'AACCGTTG', 'AACCTGGT', 'AACCTGTG', 'AACCTTGG', 'AACGCGTT', 'AACGCTGT', 'AACGCTTG', 'AACGGCTT']
+: len(permutations)=2520
+: seqs_withAT[:10]=['AATCCGGT', 'AATCCGTG', 'AATCCTGG', 'AATCGCGT', 'AATCGCTG', 'AATCGGCT', 'AATCGGTC', 'AATCGTCG', 'AATCGTGC', 'AATCTCGG']
+: len(seqs_withAT)=1170
+: seqs_withATtwice[:10]=['ATATCCGG', 'ATATCGCG', 'ATATCGGC', 'ATATGCCG', 'ATATGCGC', 'ATATGGCC', 'ATCATCGG', 'ATCATGCG', 'ATCATGGC', 'ATCCATGG']
+: len(seqs_withATtwice)=90
+
+Single selected sequence like =AT= has 90 instances of showing up twice in 2520 possible permutations. However we are looking for any possible two nucleotides.
+
+***** 1-21
+:PROPERTIES:
+:NOTER_PAGE: 23
+:END:
+#+CONSTANTS: pi=3.14159265358979323846
+Sphere's surface area is $A = 4 π r^2$ and volume is $V = 4/3 π r^3$
+
+We can make a table with our variables:
+
+| cell     | growth rate(h) | radius(µm) | surface area |    volume | surface area / volume |
+|----------+----------------+------------+--------------+-----------+-----------------------|
+| bacteria | 1/3            |          1 |    12.566371 | 4.1887902 |            0.33333332 |
+| human    | 24             |         10 |    1256.6371 | 4188.7902 |             3.3333332 |
+#+TBLFM: $4=4*$pi*$3^2::$5=4*$pi*($3^3) / 3::$6=$5/$4
+
+We would be expecting that the surface area to volume ratio would be higher in the faster growing cell however in this case faster growing cell has a smaller ratio. Growth rates are affected by various other factors other than surface area / volume.
+
+We can also generalize the equation by directly using the sphere surface area and volume formulas where we can show that surface area to volume ratio is inversely proportional to radius:
+
+\begin{equation}
+\begin{split}
+\frac{A}{V} & = \frac{ 4 π r^2 }{ \frac{4}{3} π r^3 } \\
+            & = \frac{3}{r}
+\end{split}
+\end{equation}
+
+
+*** THE DIVERSITY OF GENOMES AND THE TREE OF LIFE
+:PROPERTIES:
+:NOTER_PAGE: 23
+:END:
+**** Definitions
+:PROPERTIES:
+:NOTER_PAGE: 23
+:END:
+
++ 1-22 virus
++ 1-23 model organism
++ 1-24 archaea
++ 1-25 homolog
++ 1-26 eukaryote
++ 1-27 prokaryote
+**** [ ] True/False
+:PROPERTIES:
+:NOTER_PAGE: (23 0.5681818181818182 . 0.06442953020134232)
+:END:
++ [ ] 1-28
+
++ [ ] 1-29
+
+**** Thought problems
+:PROPERTIES:
+:NOTER_PAGE: (23 0.728476821192053 . 0.19260533104041275)
+:END:
++ 1-30
+
+
+*** GENETIC INFORMATION IN EUKARYOTES
+:PROPERTIES:
+:NOTER_PAGE: 25
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 25
+:END:
+** Chapter 2: Cell Chemistry and Bioenergetics
+:PROPERTIES:
+:NOTER_PAGE: 30
+:END:
+*** THE CHEMICAL COMPONENTS OF A CELL
+:PROPERTIES:
+:NOTER_PAGE: 30
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 30
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 470
+:END:
+*** CATALYSIS AND THE USE OF ENERGY BY CELLS
+:PROPERTIES:
+:NOTER_PAGE: 38
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 38
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 478
+:END:
+*** HOW CELLS OBTAIN ENERGY FROM FOOD
+:PROPERTIES:
+:NOTER_PAGE: 43
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 43
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 482
+:END:
+** Chapter 3: Proteins
+:PROPERTIES:
+:NOTER_PAGE: 50
+:END:
+*** THE SHAPE AND STRUCTURE OF PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 50
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 50
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 490
+:END:
+*** PROTEIN FUNCTION
+:PROPERTIES:
+:NOTER_PAGE: 56
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 56
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 496
+:END:
+** Chapter 4: DNA, Chromosomes, and Genomes
+:PROPERTIES:
+:NOTER_PAGE: 72
+:END:
+*** THE STRUCTURE AND FUNCTION OF DNA
+:PROPERTIES:
+:NOTER_PAGE: 72
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 72
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 510
+:END:
+*** CHROMOSOMAL DNA AND ITS PACKAGING IN THE CHROMATIN FIBER
+:PROPERTIES:
+:NOTER_PAGE: 74
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 74
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 513
+:END:
+*** CHROMATIN STRUCTURE AND FUNCTION
+:PROPERTIES:
+:NOTER_PAGE: 78
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 78
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 517
+:END:
+*** THE GLOBAL STRUCTURE OF CHROMOSOMES
+:PROPERTIES:
+:NOTER_PAGE: 83
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 83
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 521
+:END:
+*** HOW GENOMES EVOLVE
+:PROPERTIES:
+:NOTER_PAGE: 86
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 86
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 523
+:END:
+** Chapter 5: DNA Replication, Repair, and Recombination
+:PROPERTIES:
+:NOTER_PAGE: 96
+:END:
+*** THE MAINTENANCE OF DNA SEQUENCES
+:PROPERTIES:
+:NOTER_PAGE: 96
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 96
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 532
+:END:
+*** DNA REPLICATION MECHANISMS
+:PROPERTIES:
+:NOTER_PAGE: 97
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 97
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 534
+:END:
+*** THE INITIATION AND COMPLETION OF DNA REPLICATION IN CHROMOSOMES
+:PROPERTIES:
+:NOTER_PAGE: 103
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 103
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 540
+:END:
+*** DNA REPAIR
+:PROPERTIES:
+:NOTER_PAGE: 109
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 109
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 545
+:END:
+*** HOMOLOGOUS RECOMBINATION
+:PROPERTIES:
+:NOTER_PAGE: 114
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 114
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 549
+:END:
+*** TRANSPOSITION AND CONSERVATIVE SITE-SPECIFIC RECOMBINATION
+:PROPERTIES:
+:NOTER_PAGE: 118
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 118
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 552
+:END:
+** Chapter 6: How Cells Read the Genome: From DNA to Protein
+:PROPERTIES:
+:NOTER_PAGE: 124
+:END:
+*** FROM DNA TO RNA
+:PROPERTIES:
+:NOTER_PAGE: 124
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 124
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 556
+:END:
+*** FROM RNA TO PROTEIN
+:PROPERTIES:
+:NOTER_PAGE: 137
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 137
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 568
+:END:
+*** THE RNA WORLD AND THE ORIGINS OF LIFE
+:PROPERTIES:
+:NOTER_PAGE: 149
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 149
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 581
+:END:
+** Chapter 7: Control of Gene Expression
+:PROPERTIES:
+:NOTER_PAGE: 154
+:END:
+*** AN OVERVIEW OF GENE CONTROL
+:PROPERTIES:
+:NOTER_PAGE: 154
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 154
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 588
+:END:
+*** CONTROL OF TRANSCRIPTION BY SEQUENCE SPECIFIC DNA-BINDING PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 156
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 156
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 590
+:END:
+*** TRANSCRIPTION REGULATORS AS GENE SWITCHES
+:PROPERTIES:
+:NOTER_PAGE: 163
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 163
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 595
+:END:
+*** MOLECULAR GENETIC MECHANISMS THAT CREATE AND MAINTAIN SPECIALIZED CELL TYPES
+:PROPERTIES:
+:NOTER_PAGE: 168
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 168
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 600
+:END:
+*** MECHANISMS THAT REINFORCE CELL MEMORY IN PLANTS AND ANIMALS
+:PROPERTIES:
+:NOTER_PAGE: 173
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 173
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 603
+:END:
+*** POST-TRANSCRIPTIONAL CONTROLS
+:PROPERTIES:
+:NOTER_PAGE: 176
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 176
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 605
+:END:
+*** REGULATION OF GENE EXPRESSION BY NONCODING RNAs
+:PROPERTIES:
+:NOTER_PAGE: 180
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 180
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 609
+:END:
+** Chapter 8: Analyzing Cells, Molecules,and Systems
+:PROPERTIES:
+:NOTER_PAGE: 186
+:END:
+*** ISOLATING CELLS AND GROWING THEM IN CULTURE
+:PROPERTIES:
+:NOTER_PAGE: 186
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 186
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 614
+:END:
+*** PURIFYING PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 187
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 187
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 616
+:END:
+*** ANALYZING PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 191
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 191
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 621
+:END:
+*** ANALYZING AND MANIPULATING DNA
+:PROPERTIES:
+:NOTER_PAGE: 196
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 196
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 625
+:END:
+*** STUDYING GENE EXPRESSION AND FUNCTION
+:PROPERTIES:
+:NOTER_PAGE: 203
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 203
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 634
+:END:
+*** MATHEMATICAL ANALYSIS OF CELL FUNCTIONS
+:PROPERTIES:
+:NOTER_PAGE: 209
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 209
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 639
+:END:
+** Chapter 9: Visualizing Cells
+:PROPERTIES:
+:NOTER_PAGE: 216
+:END:
+*** LOOKING AT CELLS IN THE LIGHT MICROSCOPE
+:PROPERTIES:
+:NOTER_PAGE: 216
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 216
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 646
+:END:
+*** LOOKING AT CELLS AND MOLECULES IN THE ELECTRON MICROSCOPE
+:PROPERTIES:
+:NOTER_PAGE: 223
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 223
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 652
+:END:
+** Chapter 10: Membrane Structure
+:PROPERTIES:
+:NOTER_PAGE: 228
+:END:
+*** THE LIPID BILAYER
+:PROPERTIES:
+:NOTER_PAGE: 228
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 228
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 656
+:END:
+*** MEMBRANE PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 233
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 233
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 660
+:END:
+** Chapter 11: Membrane Transport of Small Molecules and the Electrical Properties of Membranes
+:PROPERTIES:
+:NOTER_PAGE: 238
+:END:
+*** PRINCIPLES OF MEMBRANE TRANSPORT
+:PROPERTIES:
+:NOTER_PAGE: 238
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 238
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 666
+:END:
+*** TRANSPORTERS AND ACTIVE MEMBRANE TRANSPORT
+:PROPERTIES:
+:NOTER_PAGE: 241
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 241
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 669
+:END:
+*** CHANNELS AND THE ELECTRICAL PROPERTIES OF MEMBRANES
+:PROPERTIES:
+:NOTER_PAGE: 246
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 246
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 675
+:END:
+** Chapter 12: Intracellular Compartments and Protein Sorting
+:PROPERTIES:
+:NOTER_PAGE: 256
+:END:
+*** THE COMPARTMENTALIZATION OF CELLS
+:PROPERTIES:
+:NOTER_PAGE: 256
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 256
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 686
+:END:
+*** THE TRANSPORT OF MOLECULES BETWEEN THE NUCLEUS AND THE CYTOSOL
+:PROPERTIES:
+:NOTER_PAGE: 259
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 259
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 690
+:END:
+*** THE TRANSPORT OF PROTEINS INTO MITOCHONDRIA AND CHLOROPLASTS
+:PROPERTIES:
+:NOTER_PAGE: 265
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 265
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 696
+:END:
+*** PEROXISOMES
+:PROPERTIES:
+:NOTER_PAGE: 268
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 268
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 700
+:END:
+*** THE ENDOPLASMIC RETICULUM
+:PROPERTIES:
+:NOTER_PAGE: 271
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 271
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 702
+:END:
+** Chapter 13: Intracellular Membrane Traffic
+:PROPERTIES:
+:NOTER_PAGE: 278
+:END:
+*** THE MOLECULAR MECHANISMS OF MEMBRANE TRANSPORT AND THE MAINTENANCE OF COMPARTMENTAL DIVERSITY
+:PROPERTIES:
+:NOTER_PAGE: 278
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 278
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 710
+:END:
+*** TRANSPORT FROM THE ER THROUGH THE GOLGI APPARATUS
+:PROPERTIES:
+:NOTER_PAGE: 283
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 283
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 715
+:END:
+*** TRANSPORT FROM THE TRANS GOLGI NETWORK TO LYSOSOMES
+:PROPERTIES:
+:NOTER_PAGE: 288
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 288
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 721
+:END:
+*** TRANSPORT INTO THE CELL FROM THE PLASMA MEMBRANE: ENDOCYTOSIS
+:PROPERTIES:
+:NOTER_PAGE: 291
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 291
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 724
+:END:
+*** TRANSPORT FROM THE TRANS GOLGI NETWORK TO THE CELL EXTERIOR: EXOCYTOSIS
+:PROPERTIES:
+:NOTER_PAGE: 296
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 296
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 729
+:END:
+** Chapter 14: Energy Conversion: Mitochondria and Chloroplasts
+:PROPERTIES:
+:NOTER_PAGE: 304
+:END:
+*** THE MITOCHONDRION
+:PROPERTIES:
+:NOTER_PAGE: 304
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 304
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 734
+:END:
+*** THE PROTON PUMPS OF THE ELECTRON TRANSPORTCHAIN
+:PROPERTIES:
+:NOTER_PAGE: 306
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 306
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 736
+:END:
+*** ATP PRODUCTION IN MITOCHONDRIA
+:PROPERTIES:
+:NOTER_PAGE: 311
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 311
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 742
+:END:
+*** CHLOROPLASTS AND PHOTOSYNTHESIS
+:PROPERTIES:
+:NOTER_PAGE: 315
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 315
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 746
+:END:
+*** THE GENETIC SYSTEMS OF MITOCHONDRIA AND CHLOROPLASTS
+:PROPERTIES:
+:NOTER_PAGE: 320
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 320
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 751
+:END:
+** Chapter 15: Cell Signaling
+:PROPERTIES:
+:NOTER_PAGE: 326
+:END:
+*** PRINCIPLES OF CELL SIGNALING
+:PROPERTIES:
+:NOTER_PAGE: 326
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 326
+:END:
+**** The Cytoskeleton
+:PROPERTIES:
+:NOTER_PAGE: 756
+:END:
+*** SIGNALING THROUGH G-PROTEIN-COUPLED RECEPTORS
+:PROPERTIES:
+:NOTER_PAGE: 331
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 331
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 761
+:END:
+*** SIGNALING THROUGH ENZYME-COUPLED RECEPTORS
+:PROPERTIES:
+:NOTER_PAGE: 339
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 339
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 768
+:END:
+*** ALTERNATIVE SIGNALING ROUTES IN GENE REGULATION
+:PROPERTIES:
+:NOTER_PAGE: 344
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 344
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 774
+:END:
+*** SIGNALING IN PLANTS
+:PROPERTIES:
+:NOTER_PAGE: 348
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 348
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 777
+:END:
+** Chapter 16: The Cytoskeleton
+:PROPERTIES:
+:NOTER_PAGE: 352
+:END:
+*** FUNCTION AND ORIGIN OF THE CYTOSKELETON
+:PROPERTIES:
+:NOTER_PAGE: 352
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 352
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 780
+:END:
+*** ACTIN AND ACTIN-BINDING PROTEINS
+:PROPERTIES:
+:NOTER_PAGE: 354
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 354
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 782
+:END:
+*** MYOSIN AND ACTIN
+:PROPERTIES:
+:NOTER_PAGE: 359
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 359
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 788
+:END:
+*** MICROTUBULES
+:PROPERTIES:
+:NOTER_PAGE: 363
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 363
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 791
+:END:
+*** INTERMEDIATE FILAMENTS AND SEPTINS
+:PROPERTIES:
+:NOTER_PAGE: 372
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 372
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 801
+:END:
+*** CELL POLARIZATION AND MIGRATION
+:PROPERTIES:
+:NOTER_PAGE: 375
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 375
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 804
+:END:
+** Chapter 17: The Cell Cycle
+:PROPERTIES:
+:NOTER_PAGE: 380
+:END:
+*** OVERVIEW OF THE CELL CYCLE
+:PROPERTIES:
+:NOTER_PAGE: 380
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 380
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 810
+:END:
+*** THE CELL-CYCLE CONTROL SYSTEM
+:PROPERTIES:
+:NOTER_PAGE: 383
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 383
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 813
+:END:
+*** S PHASE
+:PROPERTIES:
+:NOTER_PAGE: 385
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 385
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 815
+:END:
+*** MITOSIS
+:PROPERTIES:
+:NOTER_PAGE: 387
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 387
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 817
+:END:
+*** CYTOKINESIS
+:PROPERTIES:
+:NOTER_PAGE: 395
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 395
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 827
+:END:
+*** MEIOSIS
+:PROPERTIES:
+:NOTER_PAGE: 398
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 398
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 829
+:END:
+*** CONTROL OF CELL DIVISION AND CELL GROWTH
+:PROPERTIES:
+:NOTER_PAGE: 399
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 399
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 831
+:END:
+** Chapter 18: Cell Death
+:PROPERTIES:
+:NOTER_PAGE: 406
+:END:
+*** Problems
+:PROPERTIES:
+:NOTER_PAGE: 406
+:END:
+*** Answers
+:PROPERTIES:
+:NOTER_PAGE: 838
+:END:
+** Chapter 19: Cell Junctions and the Extracellular Matrix
+:PROPERTIES:
+:NOTER_PAGE: 412
+:END:
+*** CELL–CELL JUNCTIONS
+:PROPERTIES:
+:NOTER_PAGE: 412
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 412
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 844
+:END:
+*** THE EXTRACELLULAR MATRIX OF ANIMALS
+:PROPERTIES:
+:NOTER_PAGE: 422
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 422
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 851
+:END:
+*** CELL–MATRIX JUNCTIONS
+:PROPERTIES:
+:NOTER_PAGE: 427
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 427
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 856
+:END:
+*** THE PLANT CELL WALL
+:PROPERTIES:
+:NOTER_PAGE: 429
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 429
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 858
+:END:
+** Chapter 20: Cancer
+:PROPERTIES:
+:NOTER_PAGE: 434
+:END:
+*** CANCER AS A MICROEVOLUTIONARY PROCESS
+:PROPERTIES:
+:NOTER_PAGE: 434
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 434
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 862
+:END:
+*** CANCER-CRITICAL GENES: HOW THEY ARE FOUND AND WHAT THEY DO
+:PROPERTIES:
+:NOTER_PAGE: 437
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 437
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 865
+:END:
+*** CANCER PRVENTION AND TREATMENT: PRESENT AND FUTURE
+:PROPERTIES:
+:NOTER_PAGE: 445
+:END:
+**** Problems
+:PROPERTIES:
+:NOTER_PAGE: 445
+:END:
+**** Answers
+:PROPERTIES:
+:NOTER_PAGE: 873
+:END:
+** Answers to Problems
+:PROPERTIES:
+:NOTER_PAGE: 454
+:END:
+** Answers to Problems in Molecular Biology of the Cell, Sixth Edition
+:PROPERTIES:
+:NOTER_PAGE: 880
+:END:
+** Credits
+:PROPERTIES:
+:NOTER_PAGE: 950
+:END:
+** Index
+:PROPERTIES:
+:NOTER_PAGE: 954
+:END:
+** Tables
+:PROPERTIES:
+:NOTER_PAGE: 982
+:END:
+
+

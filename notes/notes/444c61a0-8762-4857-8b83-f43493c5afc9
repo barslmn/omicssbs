@@ -1,0 +1,132 @@
+:PROPERTIES:
+:ID:       444c61a0-8762-4857-8b83-f43493c5afc9
+:END:
+#+title: DNA tamiri
+#+filetags: :publish:DNA_tamir:molecularbiologyofthecell:
+[[id:d1da4beb-0706-48b0-b3a1-1e8293e68e31][NER]]
+
+
+#+BEGIN_abstract
+*DNA tamiri olmadan, kendiliğinden meydana gelen DNA hasarı hızlıca DNA dizilerini değiştirecektir.*
+Örneğin, kendiliğinden meydana gelen /depürinasyon/ reaksiyonundan dolayı her
+insan hücresi günlük 18.000 pürin bazını (adenin ve guanin), N-glikozil
+bağlantılarından ve deoksiriboz hidrolizinden dolayı kaybetmektedir.
+Benzer olarak, kendiliğinden gerçekleşen /deaminasyon/ reaksiyonu ile bir
+hücrede günlük 100 sitozin bazı urasile dönmektedir.
++ DNA bazları, hücrede üretilen yüksek enerjili oksijen vericileri ya da S-adenozilmetionin gibi reaktif metabolitler tarafındanda hasar alabilir.
++ Benzer şekilde ultraviyole ışınları bitişik iki primidin bazı arasında kovalent bağ, timin dimeri gibi, oluşturabilir.
+
+  Bu hasarlar tamir edilmezse yavru DNA zincirlerinde tek ya da birden fazla baz çiftinin delesyonuna ya da değişimine yol açabilir.
+#+END_abstract
+
+| Hastalık İsmi                  | Fenotipi                                                         | Etkilenen enzim ya da süreç                                                    |
+| MSH2, 3, 6, MLH1, PMS2         | Kolon kanseri                                                    | Yanlış eşleşme tamiri                                                          |
+| Xeroderma pigmentosum (XP) A–G | Cilt kanseri, UV duyarlılığı, nörolojik bozukluklar              | Nüklotit ekzisyon tamiri                                                       |
+| Cockayne sendromu              | UV duyarlılığı; gelişimsel bozukluklar                           | Nükleotit ekzisyon tamirinin transkripsiyon ile eşleşmesi                      |
+| XP varyantı                    | UV duyarlılığı, cilt kanseri                                     | DNA polimeraz ν tarafından translezyon sentezi                                 |
+| Ataksi telanjiekstazi (AT)     | Lösemi, lenfoma, γ-ışını duyarlılığı, genom dengesizliği         | ATM proteini, çift zincir kırıkları tarafından aktive edilen bir protein kinaz |
+| BRCA1                          | Meme ve rahim kanseri                                            | Homolog rekombinasyon tamiri                                                   |
+| BRCA2                          | Meme, rahim, ve prostat kanseri                                  | Homolog rekombinasyon tamiri                                                   |
+| Werner sendromu                | Erken yaşlanma,  farklı yerlerde kanserler, genom dengesizliği   | Tamirde kullanılan 3'-ekzonükleaz ve DNA helikaza yardımcı                     |
+| Bloom sendromu                 | Farklı yerlerde kanserler, gelişimin durması, genom dengesizliği | Rekombinasyon için gerekli DNA helikaz                                         |
+| Fanconi anemisi A–G            | Konjenital bozukluklar, lösemi, genom dengesizliği               | İplikler arası çapraz-bağlı DNA tamiri                                         |
+| 46 BR patient                  | DNA hasar veren ajanlara aşırı duyarlılık, genom dengesizliği    | DNA ligaz I                                                                    |
+
+*DNA tamiri olmadan, kendiliğinden meydana gelen DNA hasarı hızlıca DNA dizilerini değiştirecektir.*
+Örneğin, kendiliğinden meydana gelen /depürinasyon/ reaksiyonundan dolayı her
+insan hücresi günlük 18.000 pürin bazını (adenin ve guanin), N-glikozil
+bağlantılarından ve deoksiriboz hidrolizinden dolayı kaybetmektedir.
+Benzer olarak, kendiliğinden gerçekleşen /deaminasyon/ reaksiyonu ile bir
+hücrede günlük 100 sitozin bazı urasile dönmektedir.
++ DNA bazları, hücrede üretilen yüksek enerjili oksijen vericileri ya da S-adenozilmetionin gibi reaktif metabolitler tarafındanda hasar alabilir.
++ Benzer şekilde ultraviyole ışınları bitişik iki primidin bazı arasında kovalent bağ, timin dimeri gibi, oluşturabilir.
+
+  Bu hasarlar tamir edilmezse yavru DNA zincirlerinde tek ya da birden fazla baz çiftinin delesyonuna ya da değişimine yol açabilir.
+
+#+attr_html: :width 100%
+[[./spontaneous_DNA_damage.png]]
+
+*DNA çifte sarmalı kolayca tamir edilebilir*
+
+DNA'nın çifte sarmal yapısı, iki ayrı kopya taşındığı için tamir için ideal bir yapı oluşturmaktadır.
+
+#+attr_html: :width 100%
+[[./depuranation_deamination.png]]
+
+*DNA hasarı birden fazla yolakta düzeltilir.*
+
+Hücreler farklı hasarları tamir etmek için farklı enzimleri ve çoklu yolakları vardır. [[img:BERandNER.png][Şekildeki]] iki yaygın tamir yolunda, DNA Polimeraz, sağlam olan zinciri örnek olarak kullanılıp onarılır ve kalan kırıklarda DNA ligaz ile kapatılır.
+
+#+attr_html: :width 100%
+[[./thyminedimer.png]]
+İlk tamir yolağı *baz çıkarım tamirinde*, /DNA glikozilaz/ enzimleri kullanılır. Bu enzimlerden her biri belirli değiştirilmiş bir bazı tanır ve DNA'dan hidrolitik olarak çıkarımını sağlar. En az altı çeşit DNA glikozilaz bulunur:
++ Deamine C,
++ Deamine A,
++ Alkiliye ya da oksidize bazlar,
++ Açık halkalı bazlar,
++ C=C'nin C-C'ye döndüğü bazlar
+
+Bu bazların DNA içerisinde tanınması enzim ile sağlanan, değişmiş nükleotitin "dışarı çevrilmesi" ile olur. Düşünülen o ki, DNA glikozilaz enzim DNA boyunca her bazı tek tek dışarı çevirerek kontrol eder. Tanıdığı hasarlı bir bazı bulduğunda, bazı şekerinden ayırır.
+DNA glikozilaz tarafından bazın çıkarılması sonra oluşan boşluk /AP endonuclease/ (Apürinik/Apirimidinik) enzimi tarafından tanınır ve fosfodiester omurgasını keser. Bundan sonra oluşan boşluk tamir edilir.
+Depürinasyonlar, direk AP endonükleaz tarafından tanınır ve yolak bu noktadan devam eder.
+
+İkinci büyük yolak *nükleotit çıkarım tamiridir.*
+Bu mekanizma ile çift sarmal üzerindeki daha büyük hasarlar tamir edilebilir.
+Bu büyük hasarlar, büyük hidrokarbonlar tarafından (tütün, kömür, dizel yakıtların yanması ile oluşan benzopiren gibi) ya da güneşin neden olduğu pirimidin dimerleri (T-T, T-C ve C-C) olabilir.
+Bu yolakta, çoklu enzim kompleksi DNA'yı, tek bir nükelotit yerine yapısal çarpıklıklar için tarar.
+Bir hasar bulunduğu zaman, çarpıklığın her iki yanından fosfodiester bağları kesilir ve DNA helikaz, hasarın bulunduğu tek sarmalı açar.
+Çifte sarmalda kalan boşluk DNA polimeraz ve DNA ligaz tarafından doldurulur.
+Nükleotit çıkarım tamirine, alternatif bir diğer tamir yöntemi ise DNA hasarının direk kimyasal tersinimidir.
+Bu yöntem belirli mutajenik ya da sitotoksik lezyonların onarımında kullanılır.
+Örneğin O^{6}-metilguanin alkilasyonunda, metil grubu, tamir proteininin sistein aminoasitine transfer edilerek giderilir.
+Bir diğer örnekte, 1-metiladenin ve 3-metilsitozin bazlarındaki metil grupları demir-bağlı demetilaz tarafından bazdan formaldehit salınımı ile yakılır.
+
+#+NAME:   fig:berandner
+#+attr_html: :width 100%
+[[./BERandNER.png]]
+
+*Nükleotit Çıkarım Tamiri ile Transkripsiyonun Eş Zamanlı Yapılması En Önemli DNA'nın Etkili Tamirini Sağlar.*
+RNA transkriptaz NER mekanizması ile beraber çalışmaktadır. RNA transkriptaz bir hata gördüğünde durur ve beraberindeki proteinler NER mekanizmasını buraya yönlendirir. Tamir sonrasında, bakterilerde transkripsiyon baştan başlar, ökaryotlarda RNA polimeraz tamir sürecinde yedeklenir ve yeniden başlar.
+
+*DNA Bazlarının Kimyası Hasar Tespitini Kolaylaştırır.*
+Her bazın deaminasyonu DNA'da doğal olarak bulunmayan ve belli bir DNA glikozilaz tarafından tanınabilen farklı bir baz oluşturur.
+Örneğin hipoksantin sitozin ile üçlü bağ kurabilir ancak normalde iki hidrojen bağı kuran adeninin deaminasyonu sonu oluşur.
+Hipoksantine ikinci bir amin grubunun eklenmesi ile de guanin oluşur ve yine guaninin kendiliğinden meydana gelen deaminasyonu sonucu yine farklı bir baz olarak ksantin meydana gelir.
+
+#+attr_html: :width 100%
+[[./deamination.png]]
+
+RNA, evrimsel zaman ölçeğinde genetik materyalin aktarımında DNA'dan önce gelir ve genetik kot A, C, U, G nükleotitleri ile taşınmıştır.
+Bu durumda U'nun neden T'ye (5-metilU) dönüşmüş olacağı sorusu ortaya çıkmaktadır.
+C'nin kendiliğinden meydana gelen deaminasyonu U'ya dönüşmektedir ve bu durum urasil DNA glikozilaz tarafından düzeltilebilir.
+Ancak eğer DNA doğal olarak U barındırsaydı, DNA'da ki U'ların C deaminasyonu mu yoksa doğal U mu olduğunun ayrımı yapılamazdı.
+Gen inaktivasyonunda CG dizilerinde metillenen C nükleotitlerinin deaminasyonu doğal olan T nükleotini oluşturur. Bu durumda karşı iplikteki G ile uyumsuzluk meydana gelir.
+Bu durumu özel bir DNA glikozilaz tanır ve burada ki T nükleotitini çıkartır.
+Bu DNA tamir mekanizması, çok etkili bir yöntem olmamalı ki omurgalılarda metile C mutasyonları yaygındır. İnsan DNA'sının %3'ünün metile olmasına rağmen kalıtılan insan hastalıklarında ki tek baz mutasyonların üçte birini oluştururlar.
+
+#+attr_html: :width 100%
+[[./deamination2.png]]
+
+*Acil durumlarda özel hasar DNA polimerazları kullanılır.*
+Eğer hücrenin DNA'sı ağır hasar alırsa, yukarıda anlatılan tamir mekanizmaları genelde yeterli olmayacaktır.
+Böyle durumlarda, hücrenin kendisine de zararlı olabilecek farklı bir strateji kullanılır. Yüksek kesinlikle çalışan replikasyon DNA polimerazları, DNA hasarı ile karşılaştıklarında dururlar ve acil durumlarda hücre, daha uyarlanabilir, ancak kesinliği daha düşük olan, DNA hasarında bile replikasyon yapabilen /hasar polimerazlarını/ kullanır.
+İnsan hücresinde, yedi hasar polimerazı bulunur. Bunlardan bazıları DNA hasarını tanır ve onarmak için gerekli bazları ekler. Bazıları ise özellikle kalıp zincirin çok hasarlı olduğu durumlarda orada olabilecek bazı iyi-kötü tahmin edebilir. Bu hasar polimerazlarının ekzonükleik düzeltme yetenekleri yoktur ve ek olarak ilk ekledikleri nükleotitin seçiminide çok başarılı yapamazlar. Muhtemelen, bu yüzden hasar polimerazları sadece bir kaç baz ekler ve sonrasında replikasyon DNA polimerazı senteze devam eder.
+Baz değişimlerinin ve indellerin neden olmaktadırlar. Sadece hasarlı DNA'yı kopyalarken de değil hasarsız DNA'yı kopyalarkende.
+
+*Çift İplik Kırıkları Etkili bir Şekilde Tamir Edilir.*
+Özellikle tehlikeli olan bir DNA hasarı çift sarmalın her iki ipliğininde kırılmasıdır. Bu durumda kesin bir tamir için doğru bir kopya olmaz.
+İyonize radyasyon, Replikasyon hataları, oksidize edici ajanlar, ve diğer metabolitler bu tarz kırıkların oluşmasına neden olabilir.
+Eğer bu hasarlar hızlıca tamir edilmezse, bu hasarlar büyüyerek  kromozomların parçalanması ile sonuçlanabilir. Neyse ki, iki ayrı mekanizma bu tarz hasarla başa çıkmak için evrimleşmiştir.
+Bunlardan en basiti olan *homolog olmayan uç birleştirme* ile kırık uçlar DNA ligasyonu ile tekrar birleştirilir. Bunun sonucun uçlardaki nükleotitlerde kayıp olabilir. Bu yöntem ile tamirde nükleotit kaybı olsa bile memeli genomunun kalabalığından dolayı, bu kayıp kabul edilebilir.
+İnsan 70 yaşına geldiğinden, bir somatik hücre, homolog olmayan uç birleştirme sonucu oluşan bu yaralardan 2000 tane taşır.
+Bu tamir yönteminin bir başka kötü yanı ise, normalde yan yana  olmayan uçları birleştirerek rearajmanlar yaratabilir.
+Bu durumda da iki sentromerli ya da sentromeri olmayan kromozomlar yaratabilir.
+Telomerler normal kromozomların bu şekilde yanlışlıkla tamir edilmesini engeller.
+Daha doğru bir çift zincir kırık tamiri yeni replike edilen DNA ile olur. Burada, kardeş kromatit kalıp olarak kullanılır. Bu reaksiyon /homolog rekombinasyon/ örneğidir.
+Çoğu organizma, çift iplik kırıklarının tamirinde her iki yöntemi de kullanır.
+İnsan hücrelerinde, daha çok homolog olmayan uç birleştirme kullanılırken, homolog rekombinasyon ile tamir ise kardeş kromatitlerin kalıp olarak kullanılabileceği DNA replikasyonu sonrasında kullanılır.
+*DNA Hasarı Hücre Döngüsünün İlerlemesini Geciktirir.*
+Memeli hücrelerinde DNA hasarı G_{1} fazından S fazına girmeyi engeleyebilir, S fazını yavaşlatabilir, ve G_{2} fazından M fazına girmeyi engelleyebilir.
+DNA hasarı ayrıca DNA tamir enzimlerinin sentezininde artmasına yol açar.
+Bu cevap, DNA hasarını algılayan ve uygun DNA tamir enzimlerinin sentezini arttıran sinyal proteinlerine dayanır.
+Bu mekanizmanın önemi /ATM/ genindeki mutasyonları yarattığı fenotip ile görülebilir. ATM proteini kendiliğinden oluşan DNA hasarlarında sinyal veren büyük bir kinaz proteinidir.

@@ -1,0 +1,223 @@
+:PROPERTIES:
+:ID:       010197ec-1528-42e0-ae30-44da1fcae1eb
+:END:
+#+title: TurkishVariome2VCF
+#+filetags: :publish:
+
+* Some background
+I have a patient cohort I want to annotate. I like Ensembl VEP so that's what I am going to use but this is not about VEP. I also want to add a custom annotation.
+There is this paper https://www.pnas.org/doi/10.1073/pnas.2026076118 with following dataset https://figshare.com/articles/dataset/The_genetic_structure_of_the_Turkish_population_reveals_high_levels_of_variation_and_admixture/15147642.
+Authors shared their data as TSV file. The fields I am intrested in this dataset are columns like AF, AC, AN. In order to use this in VEP, I need to convert this to a VCF file. We are just going to use $awk$ to extract the data but first lets take a look at the data.
+
+* Taking a look at the data
+#+begin_src sh
+zcat TurkishVariome.tsv.gz | head | column -ts$'\t'
+#+end_src
+
+#+begin_example
+CHROM  GRCh37Pos  GRCh38Pos  ID               IDrs                         REF  ALT  AF           AC   AN    Hom  Het  SequencingMethod  Filter  QUAL     DP     GeneName       GeneID           Feature     FeatureID        Effect                 LoF  HGVS_C      HGVS_P  GERP_RS  CADD_phred  SIFT_pred  Polyphen2_HVAR_pred  AF_gnomAD_WES  AF_gnomAD_WGS  GME_AF  1000GP_AF   ESP_AF
+1      100000012  99534456   1_100000012_G_T  1_100000012_G_T;rs10875231   G    T    0.240621     372  1546  48   276  WGS               PASS    75630.0  23720  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-441C>A   .       .        .           .          .                    .              0.2900         .       0.301118    0.0
+1      10000006   9939948    1_10000006_G_A   1_10000006_G_A;rs186077422   G    A    0.000646831  1    1546  0    1    WGS               PASS    159.0    15959  RP11-84A14.4   ENSG00000228150  transcript  ENST00000445884  upstream_gene_variant  .    n.-2975G>A  .       .        .           .          .                    .              0.0030         .       0.00259585  0.0
+1      100000072  99534516   1_100000072_T_C  1_100000072_T_C              T    C    0.00129366   2    1546  0    2    WGS               PASS    372.0    21070  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-501A>G   .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000186  99534630   1_100000186_G_A  1_100000186_G_A;rs778254717  G    A    0.000646831  1    1546  0    1    WGS               PASS    195.0    20771  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-615C>T   .       .        .           .          .                    .              3.184e-05      .       0.0         0.0
+1      100000378  99534822   1_100000378_T_G  1_100000378_T_G              T    G    0.000646831  1    1546  0    1    WGS               PASS    253.0    20798  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-807A>C   .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000634  99535078   1_100000634_T_C  1_100000634_T_C              T    C    0.000646831  1    1546  0    1    WGS               PASS    117.0    21162  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1063A>G  .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000787  99535231   1_100000787_T_C  1_100000787_T_C              T    C    0.000646831  1    1546  0    1    WGS               PASS    189.0    21139  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1216A>G  .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000827  99535271   1_100000827_C_T  1_100000827_C_T;rs6678176    C    T    0.293661     454  1546  72   310  WGS               PASS    90471.0  23386  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1256G>A  .       .        .           .          .                    .              0.3891         .       0.392772    0.0
+1      100000843  99535287   1_100000843_T_C  1_100000843_T_C;rs78286437   T    C    0.0523933    81   1546  0    81   WGS               PASS    12146.0  21326  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1272A>G  .       .        .           .          .                    .              0.0984         .       0.091853    0.0
+#+end_example
+
+Another thing I want to get beforehand is which column is in which index because we are going to use this indices when referencing the column we want to extract with $awk$.
+#+begin_src sh
+zcat TurkishVariome.tsv.gz | sed 1q | sed 's/\t/\n/g' | nl
+#+end_src
+
+#+begin_example
+     1  CHROM
+     2  GRCh37Pos
+     3  GRCh38Pos
+     4  ID
+     5  IDrs
+     6  REF
+     7  ALT
+     8  AF
+     9  AC
+    10  AN
+    11  Hom
+    12  Het
+    13  SequencingMethod
+    14  Filter
+    15  QUAL
+    16  DP
+    17  GeneName
+    18  GeneID
+    19  Feature
+    20  FeatureID
+    21  Effect
+    22  LoF
+    23  HGVS_C
+    24  HGVS_P
+    25  GERP_RS
+    26  CADD_phred
+    27  SIFT_pred
+    28  Polyphen2_HVAR_pred
+    29  AF_gnomAD_WES
+    30  AF_gnomAD_WGS
+    31  GME_AF
+    32  1000GP_AF
+    33  ESP_AF
+#+end_example
+
+These are the columns =AF, AC, AN, Hom, Het= I want to extract and I think theses, =SequencingMethod, Filter, QUAL, DP= would be helpful too. We need to put these into the INFO column in our VCF and add meta lines for these column. Meta lines have key and value pairs that describe fields in the INFO columns.
+
+* VCF metalines
+#+begin_example
+##INFO=<ID=AF,Number=1,Type=Float,Description="Allele Frequency">
+#+end_example
+
+These keys are:
+- ID: name of the key in the info column.
+- Number: Number of values.
+- Type: Type of the values.
+- Description: Description of the value.
+
+One thing I want to make sure is how many fields are in the columns. One slow way of doing that is by checking the characters in that column. If there are separators in like comma or semicolon that would mean that there are multiple values.
+
+#+begin_src sh
+zcat ../TurkishVariome.tsv.gz | sed 1d | awk '{print $8}' | sed 's/./\0\n/g' | sort -u
+#+end_src
+
+#+begin_example
+-
+.
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+E
+#+end_example
+
+There is nothing out of the ordinary. "." is for the decimal point; "E" and "-" is for the scientific notation e.g. 2E-6. I assume there is only one value here.
+
+I checked the others by just looking at them and they all seem to have just one value.
+
+#+begin_src sh
+zcat ../TurkishVariome.tsv.gz| awk '{print $9}' | sort -u | less
+zcat ../TurkishVariome.tsv.gz| awk '{print $10}'  | less
+zcat ../TurkishVariome.tsv.gz| awk '{print $11}'  | less
+#+end_src
+
+* Multiallelic variants
+Columns don't have multiple values which raises the question: Where are the multiallelic variants? We can check by finding the duplicates in the position column.
+
+#+begin_src sh
+zcat TurkishVariome.tsv.gz| awk '{print $1" "$2}' | sed  100q | sort -k1,1V -k2,2n | uniq -d
+#+end_src
+
+#+begin_example
+1 100001671
+1 100001698
+1 100004209
+#+end_example
+
+We can than grep for these positions.
+
+#+begin_src sh
+zcat TurkishVariome.tsv.gz| grep -m 2 '100001671' | column -ts$'\t' | less -S
+#+end_src
+
+#+begin_example
+1  100001671  99536115  1_100001671_CT_C   1_100001671_CT_C;rs1212539010  CT  C    0.00323415  5   1546  0  5   WGS  PASS  1875.0    20603  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101delA         .  .  .  .  .  .  0.0035  .  0.0  0.0
+1  100001671  99536115  1_100001671_C_CTT  1_100001671_C_CTT;rs571399445  C   CTT  0.0535248   82  1532  2  78  WGS  PASS  205865.0  21435  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101_-2100insAA  .  .  .  .  .  .  0.0960  .  0.0  0.0
+#+end_example
+
+#+begin_src sh
+zcat TurkishVariome.tsv.gz| grep -m 7 '100004209' | column -ts$'\t' | less -S
+#+end_src
+
+#+begin_example
+1  100004209  99538653  1_100004209_G_GTTTTTTTT   1_100004209_G_GTTTTTTTT;rs10680837   G  GTTTTTTTT   0.00981675  15   1528  0   15   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAA   .  .  .  .  .  .  0.0016  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTT     1_100004209_G_GTTTTTT;rs10680837     G  GTTTTTT     0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAA     .  .  .  .  .  .  0.0030  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTTTTT  1_100004209_G_GTTTTTTTTT;rs10680837  G  GTTTTTTTTT  0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAAA  .  .  .  .  .  .  .       .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTTT    1_100004209_G_GTTTTTTT;rs10680837    G  GTTTTTTT    0.0327225   50   1528  0   50   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAA    .  .  .  .  .  .  0.0609  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTGT    1_100004209_G_GTTTTTGT;rs10680837    G  GTTTTTGT    0.0039267   6    1528  0   6    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insACAAAAA    .  .  .  .  .  .  0.0033  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTT      1_100004209_G_GTTTTT;rs10680837      G  GTTTTT      0.181937    278  1528  28  222  WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAA      .  .  .  .  .  .  0.1504  .  0.186302  0.0
+1  100004209  99538653  1_100004209_G_GTTTT       1_100004209_G_GTTTT;rs10680837       G  GTTTT       0.0503927   77   1528  4   69   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAA       .  .  .  .  .  .  0.1620  .  0.13139   0.0
+#+end_example
+
+INDELs and SNPs are all splitted. However INDELs are not left aligned which we might need to do so after we create the VCF file.
+
+* Converting to VCF file
+Our command is make out of few parts:
+1. write the header
+   We are writing VCF version, assembly and source. Assembly and source lines are optional but are nice to have.
+   In the INFO meta lines we are defining the types and number of the annotation values we are placing in the INFO column.
+2. unzip the tsv
+3. convert the tsv to VCF
+   + Another thing I noticed is that some of the GRCh38Pos data are missing, so we are skipping where they're "." with awk.
+   We are getting the columns:
+   - CHROM
+   - POS (GRCh38)
+   - ID
+   - REF
+   - ALT
+   - QUAL
+   - FILTER
+   - Values for our INFO columns, AF, AC, AN, nHom, nHet, DP, SeqMethod
+4. sort by position
+5. compress it back
+6. write to a new file
+
+Update 18 June 2023: Consolidated most of the commands in awk based on the [[https://www.biostars.org/p/9550897/#9550902][comment]]. Added chr prefix. Depends on bcftools>=1.17.
+#+begin_src sh
+zcat TurkishVariome.tsv.gz | awk 'BEGIN {
+    printf "##fileformat=VCFv4.3\n\
+##reference=GRCh38\n\
+##source=TurkishVariome\n\
+##contig=<ID=chr1,length=248956422>\n\
+##contig=<ID=chr2,length=242193529>\n\
+##contig=<ID=chr3,length=198295559>\n\
+##contig=<ID=chr4,length=190214555>\n\
+##contig=<ID=chr5,length=181538259>\n\
+##contig=<ID=chr6,length=170805979>\n\
+##contig=<ID=chr7,length=159345973>\n\
+##contig=<ID=chrX,length=156040895>\n\
+##contig=<ID=chr8,length=145138636>\n\
+##contig=<ID=chr9,length=138394717>\n\
+##contig=<ID=chr11,length=135086622>\n\
+##contig=<ID=chr10,length=133797422>\n\
+##contig=<ID=chr12,length=133275309>\n\
+##contig=<ID=chr13,length=114364328>\n\
+##contig=<ID=chr14,length=107043718>\n\
+##contig=<ID=chr15,length=101991189>\n\
+##contig=<ID=chr16,length=90338345>\n\
+##contig=<ID=chr17,length=83257441>\n\
+##contig=<ID=chr18,length=80373285>\n\
+##contig=<ID=chr20,length=64444167>\n\
+##contig=<ID=chr19,length=58617616>\n\
+##contig=<ID=chrY,length=57227415>\n\
+##contig=<ID=chr22,length=50818468>\n\
+##contig=<ID=chr21,length=46709983>\n\
+##contig=<ID=chrM,length=16569>\n\
+##ID=<Description=\"Turkish Variome variantion ID\">\n\
+##INFO=<ID=AF,Number=1,Type=Float,Description=\"Allele Frequency\">\n\
+##INFO=<ID=AC,Number=1,Type=Integer,Description=\"Alternative Allele Count\">\n\
+##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total Allele Number\">\n\
+##INFO=<ID=nHom,Number=1,Type=Integer,Description=\"Number of Homozygous Individuals\">\n\
+##INFO=<ID=nHet,Number=1,Type=Integer,Description=\"Number of Heterozygous Individuals\">\n\
+##INFO=<ID=SeqMethod,Number=1,Type=String,Description=\"Sequencing Method, WGS or WES\">\n\
+##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth\">\n\
+#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n"
+} NR>1 {if ($3!=".") {
+    printf "chr%s\t%s\t%s\t%s\t%s\t%s\t%s\tAF=%s;AC=%s;AN=%s;nHom=%s;nHet=%s;SeqMethod=%s;DP=%s\n",
+               $1, $3, $4, $6, $7, $15,$14,   $8,   $9,  $10,     $11,   $12,          $13,  $16}}' |
+    bcftools sort --write-index -Oz -o TurkishVariome.GRCh38.vcf.gz
+#+end_src
+
+We can now index the file with $tabix -p vcf TurkishVariome.GRCh38.vcf.gz$ and use this VCF with VEP command $--custom TurkishVariome.GRCh38.vcf.gz,TV,vcf,exact,0,AF,AC,AN$

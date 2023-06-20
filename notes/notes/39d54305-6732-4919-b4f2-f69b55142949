@@ -1,0 +1,34 @@
+:PROPERTIES:
+:ID:       39d54305-6732-4919-b4f2-f69b55142949
+:END:
+#+title: X heterozygosity
+#+filetags: :publish:snippets:
+
+X heterozygosity is a useful metric for determining the sample's sex from WES data. This [[id:0210f33c-d51f-4c6d-b492-a0477901ff28][useful snippet]]  runs on the VCF files under the current directory and prints out the ratio of the heterozygous variants to total variants in chromosome X.
+
+#+begin_src sh
+select region in "hg19" "hg38"; do
+    case $region in
+        hg19)
+            nonPARregion="chrX:2649520-154931044"
+            break
+            ;;
+        hg38)
+            nonPARregion="chrX:2781479-155701383"
+            break
+            ;;
+    esac
+done
+
+for vcf in $(find ./ -name "*.vcf.gz" | sort); do
+    sample=$(echo "$vcf" | cut -d '/' -f 2)
+    echo "$vcf"
+    bcftools query "$vcf" -r "$nonPARregion" -f "[%GT]\n" |
+    sort |
+    uniq -c |
+    sed 2q |
+    awk -v sample=$sample 'NR==1{numhet=$1} {sum+=$1;} {print $0} END{print sample"\t"numhet/sum;}'
+done
+#+end_src
+
+#+RESULTS:

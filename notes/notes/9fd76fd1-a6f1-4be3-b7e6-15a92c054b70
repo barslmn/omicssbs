@@ -1,0 +1,39 @@
+:PROPERTIES:
+:ID:       9fd76fd1-a6f1-4be3-b7e6-15a92c054b70
+:END:
+#+title: Why am I seeing this variant now?
+#+filetags: :publish:blog:
+
+Title question is
+
+*** Some background
+# TODO: write the kits names.
+Over the years we had done exome sequencing (ES) using different capture kits for various studies some of them were ...
+We were doing a collaboration for functional studies of possible pathogenic variants and wanted to reanalyse just to see if there were anything changed with the results.
+Most of the studies done at least 5 years ago. These ES studies accompanied by SNP array and linkage analyses as well as segregation done by Sanger sequencing. Some of the resulting variants were more  VUS than others  and were weaker targets for functional study but since we wre doing reanalysis we also included them too.
+
+*** One BED file to rule them all
+# TODO: look for a lazy synonym
+I collected the FASTQ files for reanalysis but because there were multiple exome capture kits I got lazy to collect all of the bed files. Instead I created a bed file with the following command.
+
+#+begin_src sh -n
+url="https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh37_latest/refseq_identifiers/GRCh37_latest_genomic.gff.gz"
+wget -q -O- "$url" \
+       | zcat \
+       | awk -F"\t" \
+       '/^#!/ {print}
+       /^##/ {next}
+       $3~/exon/ {
+               sub(/^NC_[0]+/, "chr");
+               sub(/^chr23/, "chrX"); sub(/^chr24/, "chrY");
+               split($1,chrom,".");
+               split($9,info,"gene=");
+               split(info[2],gene,";");
+               printf "%s\t%s\t%s\t%s\n", chrom[1], $4, $5, gene[1]}' |
+sort -k1,1V -k2,2n |
+bedtools merge > RefSeq.GRCh37.bed
+#+end_src
+
+This  small UNIX pipe downloads the annotation file from the NCBI (line 2), uncompresses it (line 3), takes the exons (line 7), prints it out in BED format (line 13), and merges overlapping exons (line 15) using bedtools.
+
+*** A variant better explaining the phenotype

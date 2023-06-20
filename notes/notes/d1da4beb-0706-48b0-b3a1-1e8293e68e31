@@ -1,0 +1,24 @@
+:PROPERTIES:
+:ID:       d1da4beb-0706-48b0-b3a1-1e8293e68e31
+:END:
+#+title: NER
+#+filetags: :publish:
+
+* [?] Transkripsiyon çalışmalarında RNA ekstractlarının hangi saatte alındığının çalışmaya etkisi nedir?
+* [?] GEO daki data setlerinde bu saat biası gözlenebilir mi?
+
+[[id:444c61a0-8762-4857-8b83-f43493c5afc9][DNA tamiri]]
+
+* Fotoliyaz
++ Bakterilerde bulunan bir enzimdir.
++ UV altında ölen bakterilerin daha sonra görülen ışık altına konduktan sonra hayata dönmesini açıklar.
++ Bu enzimin /folat/ kofaktörü ışığı yakalarak ekzitasyon enerjisini /FADH^{-}/'ye aktarır.
++ Bu flavin katalisti de siklik redoks reaksiyonu ile timin dimerlerini ayırır.
+
+* Nükleotit Çıkarım Tamiri
++ Bakterilerde /UvrA/, /UvrB/ ve /UvrC/ genleri insanda ise /XPA-G/ genleri ile gerçekleşir.
++ Bakteride 12bç lik insan ise 30bç uzunluğunda bir dizi çıkartılır.
+
+* Sirkadiyan Saat
++ İnsanda fotoliyaz proteinin paralogları sirkadyan saat işlevi görür.
++ Örneğin /XP/ genlerinin transkripsiyonun düzenler.

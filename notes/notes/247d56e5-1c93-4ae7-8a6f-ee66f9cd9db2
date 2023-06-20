@@ -1,0 +1,238 @@
+:PROPERTIES:
+:ID:       247d56e5-1c93-4ae7-8a6f-ee66f9cd9db2
+:END:
+#+title: ILAE Sınıflandırması
+#+filetags: :publish:
+#+date: 2022-07-28T18:52:59+03:00
+#+draft: false
+#+language: tr
+#+latex_header: \usepackage[a4paper, margin=2cm] {geometry}
+#+latex_header: \usepackage{multicol}
+#+bibliography: /home/bar/org/lib.bib
+#+cite_export: csl
+
+Bu döküman 2017 Epilepsiye Karşı Uluslararası Lig epilepsi sınıflandırma yayından özettir. [cite:@schefferILAEClassificationEpilepsies2017]
+
+* ILAE Sınıfılandırması
++ İlk sınıflandırma 1860'da Gaustat tarafından önerildi ve 1985'de yapıldı ve 1989 revize edildi.
++ En güncel sınıflandırma 2017 yılında yayınlandı.
++ Yeni sınıflandırma;
+  + Hastada ki nöbet tiplerini anlatmak,
+  + Hasta görülecek diğer nöbet tiplerini anlatmak,
+  + Nöbetlerin tetikleyen olasılıkları anlatmak,
+  + Hastalığın seyrini anlatmak amaçlamaktadır.
++ Sınıflandırma aynı zamanda
+  + Eştanılı (komorbitite)
+    - Öğrenme güçlükleri,
+    - Zihinsel yetersizlik,
+    - psikiyatrik belirtileri,
+    - otizm spektrumu riskleri hakkında ve
+  + SUDEP gibi ölüm riski hakkında bilgi verir.
+
+
+* Epilepsi Sınıflandırması
+** Nöbet Tipleri
+:PROPERTIES:
+:custom_id: nöbet-tipleri
+:END:
+
+Epilepsi sınıflandırma çerçevesinin başlangıç noktası nöbet tipidir. Nöbetler:
+- Fokal başlangıçlı
+- Jeneralize başlangıçlı
+- Bilinmeyen başlangıçlı olarak sınıflandırılır.
+
+** Epilepsi Tipleri
+:PROPERTIES:
+:custom_id: epilepsi-tipleri
+:END:
+
+Epilepsi tipi, Epilepsi Sendromu tanısı yapılamadığı durumlarda tanının son basamağı olabilir. Örneğin:
+- Yaygın bir durum olarak, etiyolojisi bilinmeyen Fokal Epilepsi gözlenen çocuk ya da yetişkinde ki lezyon gözlenmeyen temporal lop epilepsisi gözlenen
+- Jeneralize tonik-klonik nöbetler ve EEG'de jeneralize diken-dalga aktivitesi bulunan 5 yaşında bir çocuk bilinen bir Epilepsi Sendromu olarak sınıflandırılamazken Jeneralize Epilepsi tanısı kesin olan
+- Daha az yaygın bir durum olarak, hem fokal bozulmuş farkındalıklı hem de absans nöbetler gözlenen ve EEG'de hem fokal deşarjların hem de jeneralize diken dalga gözlenen, MRI'sı normal olan 20 yaşındaki bir kadın Birleşik Jeneralize ve Fokal Epilepsi tanısı alacaktır.
+
+*** Jeneralize  epilepsiler
+Hastaların EEG'sinde diken dalga aktivitesi gözlenir.
+
+Jeneralize epilepsilerde,
+- Absans
+- Miyoklonik
+- Atonik
+- Tonik
+- Tonik-klonik
+  nöbet tipleri gözlenir.
+
+*** Fokal epilepsiler
+Fokal epilepsiler tek bir hemisferi saran nöbetleri ve tek ve çoklu fokal bozuklukları içerir.
+İnteriktal EEG genelde fokal epileptiform deşarjlar gözlenir.
+
+Fokal epilepsilerde,
+- Fokal farkındalıklı
+- Fokal motor,
+- Fokal motor olmayan ve
+- Fokalden bilaterale tonik klonik
+  nöbet tipleri gözlenir.
+
+*** Birleşik Jeneralize ve Fokal epilepsiler
+Hem fokal hem jeneralize nöbetler gözüken hastaların sınıflandırılması için kullanılan yeni bir gruptur.
+İnteriktal EEG'de, hem jeneralize diken dalga aktivitesi hem de fokal epileptiform deşarjlar gözlenir.
+Her iki nöbet tipinin de gözlendiği yaygın örnekler:
+- Dravet
+- Lennox-Gastaut
+  sendromlarıdır.
+
+*** Bilinmeyen epilepsi
+Bilinmeyen terimi, hastanın Epilepsi olduğu ancak epilepsiyi fokal ya da jeneralize olarak sınıflandırabilmek için yeterli bilgi bulunmadığı zamanlarda kullanılır.
+Eğer [[#nöbet-tipleri][Nöbet Tipleri]] bilinmiyorsa [[#epilepsi-tipleri][Epilepsi Tipi]] de benzer nedenlerden ötürü bilinemeyebilir.
+Örneğin, hasta, fokal belirtiler olmadan ve EEG si normal, birkaç simetrik tonik klonik nöbet geçirmiş olabilir.
+Bu durumda nöbetlerin başlangıcı bilinemez ve epilepsi tipi de bilinemez.
+
+** Epilepsi Sendromları
+Sınıflandırmanın üçüncü aşaması *Epilepsi Sendromu* tanısıdır.
+Epilepsi sendromu, beraber gözlenen nöbet tipi, EEG, görüntüleme bulgular kümesini tanımlar.
+Genellikle, başlangıç ve remisyon, nöbetleri tetikleyen etkenler, günlük varyasyonlar ve bazen hastalığın seyri gibi yaşa bağlı belirtilere bağlıdır.
+Ayrıca belirli EEG ve görüntüleme bulgularının eşlik ettiği zihinsel yetersizlik, psikiyatrik bozukluk gibi ayırt edici eştanılar olabilir.
+Aynı zamanda etiyolojik, hastalığın seyri ve tedavisi ile ilişkilidir.
+
+*** İdyopatik Jeneralize Epilepsiler
+İdyopatik Jeneralize Epilepsiler (İJE'ler) jeneralize epilepsiler arasında iyi bilinen ve yaygın gözlenen bir alt gruptur.
+İJE'ler uzun zamandır bilinen dört epilepsi sendromunu kapsar:
+- Çocukluk Absans Epilepsisi
+- Jüvenil Absans Epilepsisi
+- Jüvenil Miyoklonik Epilepsi
+- Yalnız Jeneralize Tonik-Klonik Nöbetler
+
+İdyopatik teriminin sınıflandırmadan çıkarılması önerilmiştir.
+İdyopatik terimi, "kalıtsal yatkınlık dışında bilinen ya da şüphelenilen etiyolojinin olmaması" olarak tanımlanmıştır.
+Bu yüzden bu sendrom grubunu *Genetik Jeneralize Epilepsiler (GJE)* olarak isimlendirmek daha anlamlı olur.
+
+*** Kendi-Limitli Fokal Epilepsiler
+- Sentrotemporal dikenli kendi-limitli epilepsi
+- Çocukluk çağı kendi limitli okkipital epilepsiler
+  + Erken başlangıçlı
+  + Geç başlangıçlı
+- Diğer kendi-limitli epilepsiler
+  + Frontal lop epilepsisi
+  + Temporal lop epilepsisi
+  + Parietal lop epilepsisi
+
+** Etiyoloji
+*** Yapısal Etiyoloji
+Yapısal anormallikler, epilepsi riskinin artışı ile ilişkilidir.
+Yapısal etiyoloji, görüntüleme yöntemleri ile görülebilen ve elektroklinik ile desteklenerek hastanın nöbetlerinin altında yatan neden olduğu çıkarımı yapılabilecek anormalliklerdir.
+Yapısal etiyolojiler:
+- Felç
+- Travma
+- Enfeksiyon
+- Genetik e.g. kortikal gelişimi etkileyen malformasyonlar
+sonucu meydana gelmiş olabilir.
+
+Epilepsi ile ilişkisi iyi bilinen yapısal etiyolojiler bulunmaktadır:
+- Hipokampal skleröz ile meziyal temporal lop epilepsisi
+- Hipotalamik hamartoma ile gelastik nöbetler
+- Rasmussen Sendromu
+- Hemikonvülsüyon-hemifleji-epilepsisi
+
+Yapısal anormalliğin temeli, genetik, sonradan edinilmiş ya da ikisi bir arada olabilir.
+Örneğin polimikrogira /GPR56/ geni mutasyonları sonucu ya da rahim içi sitomegalovirüs enfeksiyonu sonucu oluşmuş olabilir.
+Edinilmiş yapısal nedenler:
+- Hipoksik-iskemik ensefalopati
+- Travma
+- Enfeksiyon
+- Felç
+  olabilir.
+
+Tuberoskleroz hastalığında yapısal etiyoloji iyi tanımlanmış olup hamartin ve tüberin kodlayan /TSC1/ ve /TSC2/ genlerindeki varyasyonlardan kaynaklanmaktadır.
+
+*** Genetik Etiyoloji
+Genetik etiyoloji, hastalığın öz belirtisi olan nöbetlerin bilinen ya da varsayılan bir genetik mutasyondan sonuçlanmasıdır.
+Altta yatan genetik varyasyonlar çok çeşitli ve çoğu daha bilinmemektedir.
+1. Genetik etiyoloji çıkarımı otozomal dominant bir hastalık için aile öyküsüne dayanabilir.
+   - Selim Ailesel Neonatal Epilepsi, gözlenen ailelerin çoğunda /KCNQ2/ ya da /KCNQ3/ potasyum kanal genlerinde mutasyon bulunur.
+   - Tersine, Otozomal Dominant Nokturnal Frontal Lop epilepsi altında yatan genetik varyasyonlar belli bir kısım insanda aydınlatılabiliştir.
+2. Genetik etiyoloji,  Çocukluk Absens Epilepsisi ya da Juvanil Miyoklonik Epilepsi sendromları olan populasyonlarda klinik araştırmalarla ortaya konabilir.
+   - Lennox'un ikiz çalışmaları
+   - Ailesel toplu çalışmalar
+3. Moleküler temel, büyük etkisi olan tek bir gen ya da kopya sayısı değişimine bağlı olarak tespit edilebilir.
+   Bilinen genetik varyasyonlar ağır ya da hafif etkiler gösterebilir.
+   Moleküler genetik, büyük sayıda epilepsi geninde mutasyonların tespitine yol açmıştır.
+   Bu mutasyonlar, büyük sıklıklar de novo ortaya çıkmakta ve %30-50'si ağır gelişimsel ve epileptik ensefalopatili çocuklarda görülmektedir.
+
+Dravet Sendromu, monogenik etiyolojiye en iyi bilinen örnektir.
+Hastaların %80'den fazlasında /SCN1A/ geninde patojenik varyant saptanmıştır.
+Dikkate değer bir nokta monogenik etiyoloji hafiften ağıra bir epilepsi yelpazesi yaratabilir.
+Örneğin /SCN1A/ genindeki mutasyonlar Dravet Sendromu ve Genetik Epilepsi Febril Nöbetli Artı (GEFN+).
+Epilepsi ile ilişkili genin yarattığı fenotipik yelpazeyi bilmek, o gende bulunan mutasyonların yorumlanabilmesi için kritik bir bilgidir.
+Şimdiye kadar tespit edilen genler fenotipik heterojenite, sendromlar is genetik heterojenite göstermektedir.
+Epilepsi, birden fazla geni içeren ve çevre etkisinin de olabileceği kompleks kalıtım modeli göstermektedir.
+Tek başına epilepsiye yol açmayan ancak hastalığın ortaya çıkmasına katkı sağlayan yatkınlık genleri de ortaya konabilir.
+
+Bir diğer önemli nokta genetik ve kalıtım terimlerinin denk olarak kullanılamayacağıdır.
+Hem hafif hem ağır epilepsilerde artan sayıda de novo varyant tespit edilmektedir.
+
+*** Bulaşıcı Etiyoloji
+Dünya çapındaki en yaygın etiyoloji enfeksiyon sonucu oluşur.
+Bilinen bir enfeksiyon sonucu ortaya çıkan nöbetlerin epilepsiye yol açmasıdır.
+Bulaşıcı etiyolojisi, akut menenjit ya da ensefalit de gözüken nöbetleri değil epilepsi hastasını kastetmektedir.
+Yaygın örnekleri,
+- Sistiserkoz
+- Tüberküloz
+- HIV
+- Serebral Sıtma
+- Subakut skleroz panensefalit
+- Serebral toksoplazmoz
+- Konjenital enfeksiyonlar
+  + Zika
+  + Sitomegalovirüs
+Bulaşıcı etiyoloji, aynı zamanda viral ensefalit gibi enfeksiyon sonrasında epilepsi gelişimini de kastedebilir.
+
+*** Metabolik Etiyoloji
+Metabolik etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan metabolik hastalıktan kaynaklanmasıdır.
++ Porfiri
++ Üremi
++ Aminoasitopatiler
++ Piridoksin bağlı nöbetler
+
+Çoğu durumda metabolik hastalıklar da genetik bir bozukluk olacaktır ancak serebral folat eksikliği gibi sonradan gelişen durumlar da olabilir. Bu ayrım tedavi seçimi ve zihinsel yetersizliğin önüne geçmede önemlidir.
+
+*** İmmün Etiyoloji
+İmmün etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan immün hastalıktan kaynaklanmasıdır. İmmün etiyoloji, otoimmün aracılı merkezi sinir sistemi inflamasyonu olarak düşünülebilir.
++ anti-NMDA (N-metil-D-aspartat) reseptör ensefaliti
++ anti-LGI1 ensefaliti
+
+*** Bilinmeyen Etiyoloji
+Epilepsinin kaynağının daha bilinmemesi durumudur. Bu kategoride frontal lop epilepsisi gibi temel elektroklinik yollar dışında bir tanı mümkün değildir.
+
+** Eştanılar
+Epilepsiler çoğu zaman farklı bozukluklarla beraber seyretmektedir. Bu bozukluklar hafiften ağıra bir yelpaze içerisindedir.
++ Otizm spektrumu
++ Depresyon
++ Psikolojik
++ Davranışsal bozuklukları
++ Öğrenme güçlükleri
++ Zihinsel yetersizlik
+* Yeni Terminoloji ve Tanımlar
+
+** Gelişimsel ve Epileptik Ensefalopatiler
+Epileptik ensefalopati (EE), altta yatan patolojinin ötesinde, epilepsinin de ağır bilişsel ve davranışsal bozukluklara yol açması durumunu anlatmak için yeniden tanımlanmıştır.
+Epileptik ensefalopati tüm yaşlardan tüm epilepsilere uygulanabilir ve sadece ağır ve erken başlangıçlı epilepsiler dışında da kullanılmalıdır.
+Ensefalopati ile ilişkili çoğu epilepsi sendromunun genetik etiyolojisi vardır.
+Aynı zamanda hipoksik-iskemik ensefalopati gibi felç gibi sonradan edinilmiş olabilir.
+
+EE' ler aynı zamanda, /CDKL5/ ensefalopatisi, /CDH2/ ensefalopatisi gibi tek gen bozukluklarına da uygulanabilir.
+Ancak tek gen bozuklukları bazı insanlarda EE'ye yol açabilirken bazı insanlarda kendi-limitli epilepsiye yol açabilir.
+Örnek olabilecek genler: /SCN1A/, /SCN2A/, /SLC2A1/, /KCNQ2/, /KCNA2/, ve /CHD2/.
+
+** Kendi-limitli Farmakoduyarlı
+Daha önceden kullanılan selim terimi diğer eştanılı durumların önemini yeterince belirtememektedir.
+Özellikle daha hafif epilepsi formlarında:
++ Sentrotemporal dikenli benin epilepsinin (BECTS)
+  - geçici ya da uzun süreli bilişsel etkileri
++ Çocukluk Absans epilepsisi (CAE)
+  - önemli psikososyal sonuçları
+  görülmüştür.
+
+Yeni isimlendirmede, "kendi-limitli" sendromun kendiliğinden çözüm bulması, "farmakoduyarlı" is sendromun uygun bir antiepileptik ilaç ile kontrol altına alınabileceğini anlatmaktadır.
+
+* Referanslar
+#+print_bibliography:

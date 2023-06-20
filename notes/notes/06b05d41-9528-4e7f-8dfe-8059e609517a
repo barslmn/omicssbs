@@ -1,0 +1,42 @@
+:PROPERTIES:
+:ID:       06b05d41-9528-4e7f-8dfe-8059e609517a
+:END:
+#+title: Varyant filtreleme
+#+filetags: :publish:tez:
+
+[[id:8da130b8-1c86-4ab7-b336-4963a017784a][Tez Analizleri]]
+[[id:42e44f63-7e98-4b5a-99c5-234df8646d2c][WES]]
+
+#+begin_src sh
+grep -i "epilep\|seizure" mart_export.txt |
+  awk '{printf "%s\t%s\t%s\t%s\n", $1, $2, $3, $4}' |
+  sort -u -k1,1n -k2,2n | grep -v '^CHR' > epilepsy_seizure.bed
+
+grep -i "neurodev\|mental retardation\|intellectual disability" mart_export.txt |
+  awk '{printf "%s\t%s\t%s\t%s\n", $1, $2, $3, $4}' |
+  sort -u -k1,1n -k2,2n | grep -v '^CHR' > neurodev.bed
+#+end_src
+
+
+#+begin_src sh
+ANNVCF="merged.normed.VEP.ann.vcf.gz"
+columns="[%SAMPLE]\t%CHROM\t%POS\t%REF\t%ALT\t%ID\t%FILTER\t%INFO/FS\t%INFO/SOR[\t%GT\t%VAF\t%AD\t%DP]$(bcftools +split-vep -l "$ANNVCF" | cut -f2 | sed 's/^/\\\\t%/' | tr -d '\n' | xargs)"
+header=$(echo "$columns" | sed "s/%//g;s/\[//g;s/\]//g")
+time (for sample in $(bcftools query -l "$ANNVCF"); do
+    echo $sample;
+    (echo -e $header;
+    bcftools view -Ou -c 1 -s $sample $ANNVCF --threads 12 |
+        bcftools filter --threads 12 -Ou -m+ -s 'EPISEI' --mask-file epilepsy_seizure.bed |
+        bcftools filter --threads 12 -Ou -m+ -s 'MENDEV' --mask-file neurodev.bed |
+        bcftools +split-vep -Ou -c gnomADg_NFE_AF:Float,gnomADg_AF:Float,MAX_AF:Float,IMPACT,Existing_variation |
+        bcftools filter --threads 12 -Ou -m+ -s 'HOMrare'  -e 'GT="1/1" && (gnomADg_NFE_AF <= 0.001 || (Existing_variation="." && gnomADg_NFE_AF="." && ID="."))' |
+        bcftools filter --threads 12 -Ou -m+ -s 'HETnovel' -e 'GT="0/1" && Existing_variation="." && gnomADg_NFE_AF="." && ID="."' |
+        bcftools filter --threads 12 -Ou -m+ -s 'highFreq' -e 'gnomADg_NFE_AF>0.001' |
+        bcftools filter --threads 12 -Ou -m+ -s 'grayFreq' -e '(MAX_AF<=0.001 && gnomADg_AF>=0.001) || (MAX_AF<=0.05 && gnomADg_AF>=0.05)' |
+        bcftools filter --threads 12 -Ou -m+ -s 'lowQual' -g3 -G10 -e 'FORMAT/DP<=15 || GQ<=20' |
+        bcftools filter --threads 12 -Ou -m+ -s 'lowIMPACT' -i 'IMPACT~"HIGH" || IMPACT~"MODERATE"' |
+        bcftools +fill-tags -Ou -- -t FORMAT/VAF |
+        bcftools +split-vep -f "$columns\n" -d -A tab) |
+        gzip -c > "VEP109/$sample.vep.baris_filtre.tsv.gz"
+done)
+#+end_src

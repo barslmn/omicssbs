@@ -1,0 +1,19 @@
+:PROPERTIES:
+:ID:       eeb03060-50dd-4a3c-942b-bcd141d5712d
+:END:
+#+title: CRISPR
+#+filetags: :publish:gene editing:CRISPR:
+
+Hedeflenmiş nükleazlar, yüksek kesinlikle genom düzenlemesi için güçlü araçlardır.
+Kazanılmış mikrobiyal bağışıklık sistemindeki *Düzenli kümelenmiş aralıklı kısa palindromik tekrarlar (CRISPR)* RNA güdümlü Cas9 nükleazı, 20bç'lik bir güdücü RNA ile, ökaryotik hücrelerde de genom mühendisliği için kullanılabilir. Memeli hücrelerinde, nükleaz kesimi sonrasında homolog olmayan uç birleştirmesi ile gen knockoutu ya da homoloji yönlendirilmiş tamir ile farklı özellikler kazandırılabilir. Hedef dışı kesimin azaltılması için çift çentikleme stratejisinde Cas9 nikazlar güdücü RNA'lar ile kullanılır.
+* Diğer genom düzenleme teknolojiler ile karşılaştırma
+Cas9 ZFN ve TALEN'lere göre
++ Daha özelleştirilebilir
+  Özelleştirme yeni güdücü RNA moleküllerinin tasarımı ile kolayca yapılabilir. Buna karşın TALEN'lerin yeniden hedeflenmesi için yeni TALEN genlerinin tasarımı gerecektir.
++ Daha verimli hedeflenir
+  WT /S. pyogenes/ Cas9 (SpCas9) hedef dizinin 17. ve 18. bazları arası (PAM'ın 5´ 3 bç) küt kesim yapar. SpCas9'un RuvC ya da HNH katalatik alanlarında yapılacak mutasyonlar, enzimi DNA çentik enzimine çevirmektedir. Buna karşın, TALEN'ler, TALEN monomer bağlanma bölgesinde 12-24 bç arasında belirsiz bir kesim yapar.
++ Çoklu genom düzenleme daha kolay olur.
+  SpCas9, TALEN'lerin aksine birden fazla güdücü RNA'lar birçok bölgede kesim yapabilir.
+
+* Cas9 Sisteminin Uçları
+Cas9, 20bç'lik sgRNA ile genomdaki belirli bir bölgeyi hedefleyebilir. Bu seçim için tek gereklilik, 20bç'lik hedef bölgenin 3´ ünde PAM (Protospacer Adjacent Motif) dizisi olmasıdır. Ancak insan genomunda bu diziler her 8-12bç bir karşılaşılabilir.

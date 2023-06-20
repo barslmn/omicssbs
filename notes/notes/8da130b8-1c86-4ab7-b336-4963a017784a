@@ -1,0 +1,21 @@
+:PROPERTIES:
+:ID:       8da130b8-1c86-4ab7-b336-4963a017784a
+:END:
+#+title: Tez Analizleri
+#+filetags: :tez:
+
+* [[id:44c146ec-c19f-4571-bd56-70ba6b8e873e][SNP array]] analizleri
+** [[id:b60cf17f-ea11-446a-82c7-a13244081b9d][Kalite Kontrolü]]
+*** Cinsiyet kontrolleri
+** Akrabalık analizleri
+*** Plink kinship
+** PCA analizleri
+
+
+* [[id:42e44f63-7e98-4b5a-99c5-234df8646d2c][WES]] analizleri
+** [[id:b60cf17f-ea11-446a-82c7-a13244081b9d][Kalite Kontrolü]]
+*** Cinsiyet kontrolleri
++ [[id:39d54305-6732-4919-b4f2-f69b55142949][X heterozygosity]]
+** Akrabalık analizleri
+*** vcftools relatedness2
+** Nadir varyant analizleri

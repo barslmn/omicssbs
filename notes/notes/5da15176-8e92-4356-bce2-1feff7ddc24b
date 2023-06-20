@@ -1,0 +1,23 @@
+:PROPERTIES:
+:ID:       5da15176-8e92-4356-bce2-1feff7ddc24b
+:END:
+#+title: Tez Terimler Sözlüğü
+
+Bu döküman kullanılan terimlerin kısa açıklamalarını içermektedir. asdfd
+
+\begin{table}
+\begin{tabular}{ll}
+\hline
+Terim & Açıklama \\
+\hline
+WES & Tüm ekzom dizileme (*W*​hole *E*​xome *S*​equencing) \\
+\hline
+\end{tabular}
+\end{table}
+
+* Glossary
+- Emacs :: A lisp-based generic user-centric text manipulation environment that masquerades as a text editor.
+- Org mode :: A rich and versatile editing mode for the lovely Org format.
+
+
+#+print_glossary: :type glossary acronym index :level 0 :consume no :all no :only-contents no
