@@ -8,6 +8,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Author: Barış Salman,
+        This is the personal website.
+        It contains my notes, blog posts, and bioinformatics scripts.">
 
     <link rel="shortcut icon" href="{% static 'base/img/fav.ico' %}" />
     <link rel="stylesheet" href="{% static 'base/css/latex.css' %}">
@@ -45,22 +48,20 @@
         <li>
             <a href="{% url 'bioscripts:index' %}">Bioscripts</a>
         </li>
-        <div id="preferences">
-            <li>
-                <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
-                    title="Toggle color mode">
-                    <div class="sun">
-                    </div>
-                    <div class="moon">
-                        <div class="star"></div>
-                        <div class="star small"></div>
-                    </div>
-                </button>
-            </li>
-            <li>
-                <input type="button" id="typeface-toggle" title="" value="Aa">
-            </li>
-        </div>
+        <li class="preferences">
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+        <li class="preferences">
+            <input type="button" id="typeface-toggle" title="" value="Aa">
+        </li>
     </ul>
 
     </br>

@@ -3,10 +3,9 @@ ul#navbar li {
     font-weight: bold;
     line-height: 3em;
 }
-#preferences {
+ul#navbar li.preferences {
     float: right;
 }
-
 .example {
     max-height: 30vh; overflow-y:auto;
 }
