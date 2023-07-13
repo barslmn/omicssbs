@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-07-13 Thu 19:33 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Converting Turkish Variome data from TSV to VCF</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+
+<script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
+<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
+<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
+<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+
+<script>
+if (localStorage.darkMode == "true") {
+  document.body.classList.add("latex-dark");
+}
+else {
+  document.body.classList.remove("latex-dark");
+}
+if (localStorage.typeface == "Libertinus") {
+    document.body.classList.add("libertinus")
+}
+else {
+    document.body.classList.remove("libertinus")
+}
+</script>
+
+    <ul id="navbar">
+        <li>
+            <a href="https://omics.sbs/">Home</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/blog">Blog</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/notes">Notes</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
+        </li>
+        <li class="preferences">
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+        <li class="preferences">
+            <input type="button" id="typeface-toggle" title="" value="Aa">
+        </li>
+    </ul>
+</div>
+<div id="content" class="content">
+<h1 class="title">Converting Turkish Variome data from TSV to VCF</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org917a0c3">1. Some background</a></li>
+<li><a href="#orgea8c5f9">2. Taking a look at the data</a></li>
+<li><a href="#org4cb6842">3. VCF metalines</a></li>
+<li><a href="#orgeacde88">4. Multiallelic variants</a></li>
+<li><a href="#org7da758a">5. Converting to VCF file</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org917a0c3" class="outline-2">
+<h2 id="org917a0c3"><span class="section-number-2">1.</span> Some background</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I have a patient cohort I want to annotate. I like Ensembl VEP so that&rsquo;s what I am going to use but this is not about VEP. I also want to add a custom annotation.
+There is this paper <a href="https://www.pnas.org/doi/10.1073/pnas.2026076118">https://www.pnas.org/doi/10.1073/pnas.2026076118</a> with following dataset <a href="https://figshare.com/articles/dataset/The_genetic_structure_of_the_Turkish_population_reveals_high_levels_of_variation_and_admixture/15147642">https://figshare.com/articles/dataset/The_genetic_structure_of_the_Turkish_population_reveals_high_levels_of_variation_and_admixture/15147642</a>.
+Authors shared their data as TSV file. The fields I am intrested in this dataset are columns like AF, AC, AN. In order to use this in VEP, I need to convert this to a VCF file. We are just going to use \(awk\) to extract the data but first lets take a look at the data.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgea8c5f9" class="outline-2">
+<h2 id="orgea8c5f9"><span class="section-number-2">2.</span> Taking a look at the data</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz | head | column -ts$<span style="color: #b8bb26;">'\t'</span>
+</pre>
+</div>
+
+<pre class="example" id="org679fd74">
+CHROM  GRCh37Pos  GRCh38Pos  ID               IDrs                         REF  ALT  AF           AC   AN    Hom  Het  SequencingMethod  Filter  QUAL     DP     GeneName       GeneID           Feature     FeatureID        Effect                 LoF  HGVS_C      HGVS_P  GERP_RS  CADD_phred  SIFT_pred  Polyphen2_HVAR_pred  AF_gnomAD_WES  AF_gnomAD_WGS  GME_AF  1000GP_AF   ESP_AF
+1      100000012  99534456   1_100000012_G_T  1_100000012_G_T;rs10875231   G    T    0.240621     372  1546  48   276  WGS               PASS    75630.0  23720  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-441C&gt;A   .       .        .           .          .                    .              0.2900         .       0.301118    0.0
+1      10000006   9939948    1_10000006_G_A   1_10000006_G_A;rs186077422   G    A    0.000646831  1    1546  0    1    WGS               PASS    159.0    15959  RP11-84A14.4   ENSG00000228150  transcript  ENST00000445884  upstream_gene_variant  .    n.-2975G&gt;A  .       .        .           .          .                    .              0.0030         .       0.00259585  0.0
+1      100000072  99534516   1_100000072_T_C  1_100000072_T_C              T    C    0.00129366   2    1546  0    2    WGS               PASS    372.0    21070  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-501A&gt;G   .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000186  99534630   1_100000186_G_A  1_100000186_G_A;rs778254717  G    A    0.000646831  1    1546  0    1    WGS               PASS    195.0    20771  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-615C&gt;T   .       .        .           .          .                    .              3.184e-05      .       0.0         0.0
+1      100000378  99534822   1_100000378_T_G  1_100000378_T_G              T    G    0.000646831  1    1546  0    1    WGS               PASS    253.0    20798  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-807A&gt;C   .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000634  99535078   1_100000634_T_C  1_100000634_T_C              T    C    0.000646831  1    1546  0    1    WGS               PASS    117.0    21162  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1063A&gt;G  .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000787  99535231   1_100000787_T_C  1_100000787_T_C              T    C    0.000646831  1    1546  0    1    WGS               PASS    189.0    21139  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1216A&gt;G  .       .        .           .          .                    .              .              .       0.0         0.0
+1      100000827  99535271   1_100000827_C_T  1_100000827_C_T;rs6678176    C    T    0.293661     454  1546  72   310  WGS               PASS    90471.0  23386  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1256G&gt;A  .       .        .           .          .                    .              0.3891         .       0.392772    0.0
+1      100000843  99535287   1_100000843_T_C  1_100000843_T_C;rs78286437   T    C    0.0523933    81   1546  0    81   WGS               PASS    12146.0  21326  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-1272A&gt;G  .       .        .           .          .                    .              0.0984         .       0.091853    0.0
+</pre>
+
+<p>
+Another thing I want to get beforehand is which column is in which index because we are going to use this indices when referencing the column we want to extract with \(awk\).
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz | sed 1q | sed <span style="color: #b8bb26;">'s/\t/\n/g'</span> | nl
+</pre>
+</div>
+
+<pre class="example" id="orge9321b1">
+     1  CHROM
+     2  GRCh37Pos
+     3  GRCh38Pos
+     4  ID
+     5  IDrs
+     6  REF
+     7  ALT
+     8  AF
+     9  AC
+    10  AN
+    11  Hom
+    12  Het
+    13  SequencingMethod
+    14  Filter
+    15  QUAL
+    16  DP
+    17  GeneName
+    18  GeneID
+    19  Feature
+    20  FeatureID
+    21  Effect
+    22  LoF
+    23  HGVS_C
+    24  HGVS_P
+    25  GERP_RS
+    26  CADD_phred
+    27  SIFT_pred
+    28  Polyphen2_HVAR_pred
+    29  AF_gnomAD_WES
+    30  AF_gnomAD_WGS
+    31  GME_AF
+    32  1000GP_AF
+    33  ESP_AF
+</pre>
+
+<p>
+These are the columns <code>AF, AC, AN, Hom, Het</code> I want to extract and I think theses, <code>SequencingMethod, Filter, QUAL, DP</code> would be helpful too. We need to put these into the INFO column in our VCF and add meta lines for these column. Meta lines have key and value pairs that describe fields in the INFO columns.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4cb6842" class="outline-2">
+<h2 id="org4cb6842"><span class="section-number-2">3.</span> VCF metalines</h2>
+<div class="outline-text-2" id="text-3">
+<pre class="example" id="orgd3bafe5">
+##INFO=&lt;ID=AF,Number=1,Type=Float,Description="Allele Frequency"&gt;
+</pre>
+
+<p>
+These keys are:
+</p>
+<ul class="org-ul">
+<li>ID: name of the key in the info column.</li>
+<li>Number: Number of values.</li>
+<li>Type: Type of the values.</li>
+<li>Description: Description of the value.</li>
+</ul>
+
+<p>
+One thing I want to make sure is how many fields are in the columns. One slow way of doing that is by checking the characters in that column. If there are separators in like comma or semicolon that would mean that there are multiple values.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">zcat ../TurkishVariome.tsv.gz | sed 1d | awk <span style="color: #b8bb26;">'{print $8}'</span> | sed <span style="color: #b8bb26;">'s/./\0\n/g'</span> | sort -u
+</pre>
+</div>
+
+<pre class="example" id="orgbe85f57">
+-
+.
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+E
+</pre>
+
+<p>
+There is nothing out of the ordinary. &ldquo;.&rdquo; is for the decimal point; &ldquo;E&rdquo; and &ldquo;-&rdquo; is for the scientific notation e.g. 2E-6. I assume there is only one value here.
+</p>
+
+<p>
+I checked the others by just looking at them and they all seem to have just one value.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">zcat ../TurkishVariome.tsv.gz| awk <span style="color: #b8bb26;">'{print $9}'</span> | sort -u | <span style="color: #fabd2f;">less</span>
+zcat ../TurkishVariome.tsv.gz| awk <span style="color: #b8bb26;">'{print $10}'</span>  | <span style="color: #fabd2f;">less</span>
+zcat ../TurkishVariome.tsv.gz| awk <span style="color: #b8bb26;">'{print $11}'</span>  | <span style="color: #fabd2f;">less</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeacde88" class="outline-2">
+<h2 id="orgeacde88"><span class="section-number-2">4.</span> Multiallelic variants</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Columns don&rsquo;t have multiple values which raises the question: Where are the multiallelic variants? We can check by finding the duplicates in the position column.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz| awk <span style="color: #b8bb26;">'{print $1" "$2}'</span> | sed  100q | sort -k1,1V -k2,2n | uniq -d
+</pre>
+</div>
+
+<pre class="example" id="orga6a4d00">
+1 100001671
+1 100001698
+1 100004209
+</pre>
+
+<p>
+We can than grep for these positions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz| <span style="color: #fabd2f;">grep</span> -m <span style="color: #d3869b; font-weight: bold;">2</span> <span style="color: #b8bb26;">'100001671'</span> | column -ts$<span style="color: #b8bb26;">'\t'</span> | <span style="color: #fabd2f;">less</span> -S
+</pre>
+</div>
+
+<pre class="example" id="orgfe8206a">
+1  100001671  99536115  1_100001671_CT_C   1_100001671_CT_C;rs1212539010  CT  C    0.00323415  5   1546  0  5   WGS  PASS  1875.0    20603  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101delA         .  .  .  .  .  .  0.0035  .  0.0  0.0
+1  100001671  99536115  1_100001671_C_CTT  1_100001671_C_CTT;rs571399445  C   CTT  0.0535248   82  1532  2  78  WGS  PASS  205865.0  21435  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101_-2100insAA  .  .  .  .  .  .  0.0960  .  0.0  0.0
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz| <span style="color: #fabd2f;">grep</span> -m <span style="color: #d3869b; font-weight: bold;">7</span> <span style="color: #b8bb26;">'100004209'</span> | column -ts$<span style="color: #b8bb26;">'\t'</span> | <span style="color: #fabd2f;">less</span> -S
+</pre>
+</div>
+
+<pre class="example" id="org05aab83">
+1  100004209  99538653  1_100004209_G_GTTTTTTTT   1_100004209_G_GTTTTTTTT;rs10680837   G  GTTTTTTTT   0.00981675  15   1528  0   15   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAA   .  .  .  .  .  .  0.0016  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTT     1_100004209_G_GTTTTTT;rs10680837     G  GTTTTTT     0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAA     .  .  .  .  .  .  0.0030  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTTTTT  1_100004209_G_GTTTTTTTTT;rs10680837  G  GTTTTTTTTT  0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAAA  .  .  .  .  .  .  .       .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTTT    1_100004209_G_GTTTTTTT;rs10680837    G  GTTTTTTT    0.0327225   50   1528  0   50   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAA    .  .  .  .  .  .  0.0609  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTTGT    1_100004209_G_GTTTTTGT;rs10680837    G  GTTTTTGT    0.0039267   6    1528  0   6    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insACAAAAA    .  .  .  .  .  .  0.0033  .  0.0       0.0
+1  100004209  99538653  1_100004209_G_GTTTTT      1_100004209_G_GTTTTT;rs10680837      G  GTTTTT      0.181937    278  1528  28  222  WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAA      .  .  .  .  .  .  0.1504  .  0.186302  0.0
+1  100004209  99538653  1_100004209_G_GTTTT       1_100004209_G_GTTTT;rs10680837       G  GTTTT       0.0503927   77   1528  4   69   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAA       .  .  .  .  .  .  0.1620  .  0.13139   0.0
+</pre>
+
+<p>
+INDELs and SNPs are all splitted. However INDELs are not left aligned which we might need to do so after we create the VCF file.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7da758a" class="outline-2">
+<h2 id="org7da758a"><span class="section-number-2">5.</span> Converting to VCF file</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Our command is make out of few parts:
+</p>
+<ol class="org-ol">
+<li>write the header
+We are writing VCF version, assembly and source. Assembly and source lines are optional but are nice to have.
+In the INFO meta lines we are defining the types and number of the annotation values we are placing in the INFO column.</li>
+<li>unzip the tsv</li>
+<li><p>
+convert the tsv to VCF
+</p>
+<ul class="org-ul">
+<li>Another thing I noticed is that some of the GRCh38Pos data are missing, so we are skipping where they&rsquo;re &ldquo;.&rdquo; with awk.</li>
+</ul>
+<p>
+We are getting the columns:
+</p>
+<ul class="org-ul">
+<li>CHROM</li>
+<li>POS (GRCh38)</li>
+<li>ID</li>
+<li>REF</li>
+<li>ALT</li>
+<li>QUAL</li>
+<li>FILTER</li>
+<li>Values for our INFO columns, AF, AC, AN, nHom, nHet, DP, SeqMethod</li>
+</ul></li>
+<li>sort by position</li>
+<li>compress it back</li>
+<li>write to a new file</li>
+</ol>
+
+<p>
+Update 18 June 2023: Consolidated most of the commands in awk based on the <a href="https://www.biostars.org/p/9550897/#9550902">comment</a>. Added chr prefix. Depends on bcftools&gt;=1.17.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">zcat TurkishVariome.tsv.gz | awk <span style="color: #b8bb26;">'BEGIN {</span>
+<span style="color: #b8bb26;">    printf "##fileformat=VCFv4.3\n\</span>
+<span style="color: #b8bb26;">##reference=GRCh38\n\</span>
+<span style="color: #b8bb26;">##source=TurkishVariome\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr1,length=248956422&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr2,length=242193529&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr3,length=198295559&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr4,length=190214555&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr5,length=181538259&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr6,length=170805979&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr7,length=159345973&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chrX,length=156040895&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr8,length=145138636&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr9,length=138394717&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr11,length=135086622&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr10,length=133797422&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr12,length=133275309&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr13,length=114364328&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr14,length=107043718&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr15,length=101991189&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr16,length=90338345&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr17,length=83257441&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr18,length=80373285&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr20,length=64444167&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr19,length=58617616&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chrY,length=57227415&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr22,length=50818468&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chr21,length=46709983&gt;\n\</span>
+<span style="color: #b8bb26;">##contig=&lt;ID=chrM,length=16569&gt;\n\</span>
+<span style="color: #b8bb26;">##ID=&lt;Description=\"Turkish Variome variantion ID\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=AF,Number=1,Type=Float,Description=\"Allele Frequency\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=AC,Number=1,Type=Integer,Description=\"Alternative Allele Count\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=AN,Number=1,Type=Integer,Description=\"Total Allele Number\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=nHom,Number=1,Type=Integer,Description=\"Number of Homozygous Individuals\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=nHet,Number=1,Type=Integer,Description=\"Number of Heterozygous Individuals\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=SeqMethod,Number=1,Type=String,Description=\"Sequencing Method, WGS or WES\"&gt;\n\</span>
+<span style="color: #b8bb26;">##INFO=&lt;ID=DP,Number=1,Type=Integer,Description=\"Total read depth\"&gt;\n\</span>
+<span style="color: #b8bb26;">#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n"</span>
+<span style="color: #b8bb26;">} NR&gt;1 {if ($3!=".") {</span>
+<span style="color: #b8bb26;">    printf "chr%s\t%s\t%s\t%s\t%s\t%s\t%s\tAF=%s;AC=%s;AN=%s;nHom=%s;nHet=%s;SeqMethod=%s;DP=%s\n",</span>
+<span style="color: #b8bb26;">               $1, $3, $4, $6, $7, $15,$14,   $8,   $9,  $10,     $11,   $12,          $13,  $16}}'</span> |
+    bcftools sort --write-index -Oz -o TurkishVariome.GRCh38.vcf.gz
+</pre>
+</div>
+
+<p>
+We can now index the file with \(tabix -p vcf TurkishVariome.GRCh38.vcf.gz\) and use this VCF with VEP command \(--custom TurkishVariome.GRCh38.vcf.gz,TV,vcf,exact,0,AF,AC,AN\)
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+
+<script src="https://omics.sbs/static/base/js/script.js"></script>
+</div>
+</body>
+</html>

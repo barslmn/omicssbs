@@ -14,14 +14,7 @@ def get_bulletin(title="", json_file="", feed_url="", json_url="", site_key="", 
 
     response = urlopen(json_url)
     if response.status != 200:
-        item = {
-            "id": "Hata",
-            "title": "Hata",
-            "content_html": "Hata",
-            "date_published": f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
-            "url": url
-        }
-        feed['items'].append(item)
+        print(f"Error on {json_url}. Skipping...")
     else:
         entries = json.loads(response.read())
         for entry in filter(lambda x: x['Header'] not in map(lambda x: x['id'], feed['items']), entries['Data']['Data']):

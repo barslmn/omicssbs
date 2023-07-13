@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-06-20 Tue 03:40 -->
+<!-- 2023-07-13 Thu 19:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -193,6 +193,7 @@
   .org-svg { }
 </style>
 
+<script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
@@ -223,24 +224,25 @@ else {
             <a href="https://omics.sbs/blog">Blog</a>
         </li>
         <li>
+            <a href="https://omics.sbs/notes">Notes</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
-        <div id="preferences">
-            <li>
-                <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
-                    title="Toggle color mode">
-                    <div class="sun">
-                    </div>
-                    <div class="moon">
-                        <div class="star"></div>
-                        <div class="star small"></div>
-                    </div>
-                </button>
-            </li>
-            <li>
-                <input type="button" id="typeface-toggle" title="" value="Aa">
-            </li>
-        </div>
+        <li class="preferences">
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+        <li class="preferences">
+            <input type="button" id="typeface-toggle" title="" value="Aa">
+        </li>
     </ul>
 </div>
 <div id="content" class="content">
@@ -257,7 +259,7 @@ else {
 <li><a href="#org2dbbaf4">2.1.1. Creating Sequences</a></li>
 <li><a href="#org3ea01cb">2.1.2. Creating motifs</a></li>
 <li><a href="#org671c158">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#orgebc809d">2.1.4. Putting it all together</a></li>
+<li><a href="#orga1f450c">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org6024fb9">2.2. Finding the motif</a>
@@ -266,7 +268,7 @@ else {
 <li><a href="#orgc583856">2.2.2. Weighted Model Matrix</a></li>
 <li><a href="#org98723a0">2.2.3. Calculate probability</a></li>
 <li><a href="#orgf99386a">2.2.4. Sliding window</a></li>
-<li><a href="#orgad9e829">2.2.5. Putting it all together</a></li>
+<li><a href="#org6cf7715">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org73fe12a">2.3. Parameters affecting the results</a></li>
@@ -276,7 +278,7 @@ else {
 </ul>
 </div>
 </div>
-<div class="abstract" id="org2690ad6">
+<div class="abstract" id="orgfd922c1">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -290,7 +292,7 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org7bb2f3f">
+<div class="sidenote" id="orgb9dbc2d">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -378,17 +380,17 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="orge6b2a5e">
-ACAACTTCGCCCACACAATAATCGTCTCCGCTAGACAATTGCTTGTGTGGAACTATCCAT
-CTCATTCGGGGTCAATCAAATGAGTCAGCGAAGCACGTACTCGGCACTCTTTTGTCAATA
-GGAGATTATTTGGCACTAACTTAAAGCTTAGAGAAGTGCGTTATCATTCTCACTGTCGCG
-TTTATTTTACCAAGTCTTGGTCAGACAAGAACGTTTTTATGTAGGTCTCATATATGTGGA
-GAACCCTGGCCTTCCGTGCAGTACTCCACGTCTGCCACCATGTAAAACCATAAAGAAGAC
-TGTGATTCCCACAAGCTAATAGTCCAAACACGTATCGAATTAAGGAGGGTGAGCCTGTTG
-TAAGGGAGTGTTCGCGCGTCGCCTTTCCGCACGTGAGGTGTTGTATTATCTCTCTTGAAT
-CGCCAGACTACCGCGGCCCAATCTTGGACCGGGCCGCGTCAGATCTATTTCTGGTATGTA
-TGCCAGGCATGGTGAGTTCACGGTCCCGCAAAGCGCACTACAAGCAAGCCATTCGCAGCC
-GGGTCAAAAAGGCTAATCGACCCCATAGGTTGACGACCCTCTGGTTCTTACGAGCTTAAA
+<pre class="example" id="orgd505d4a">
+TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGG
+TGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
+GCCTAATAAATTACACAGCAGAATACGTTAGTAGTCCGCACCGGCCTCGAGCACATCCCT
+GGGCCGAACAGCTGCCGCGACCAGCGTTCCCTTTATGAGTCGCAGATGAAGTCTATCACC
+TTAGGCTCAAGGTTTAGGGGTGCGAGAACTGCGAATCCGCCAAAGACCCATCTTCCGCCG
+TTGCTGAAGAACGCCGGCCTCTCCATGTCGACAATAAACGATTACGTCTCCCGAGACTTT
+AACTTGGTAATAAAATCAAGTGTGGGTTTGTAGGTCTCGTTGAAGCATTCCTAGACTAAC
+CTGGATCGCACAAGGAGCCTCTGCGCAGGTATTTTGTGTATCTCTAATCTTGGAATTTGC
+CACGTTCATGACGATTGAACACATTATAAGTAACAGTAACTATCCCTTGATAGATTTCAT
+CCAAAAACGGACGACCTACCGCACCTTCGGTCCTCACTACGCAAGGACTGGAGCGTATCT
 </pre>
 </div>
 </div>
@@ -487,6 +489,19 @@ Lets create 10 logos.
     <span style="color: #fe8019;">print</span>(motif)
 </pre>
 </div>
+
+<pre class="example" id="org407a8a3">
+AGCCTGG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTCG
+AGCCTGG
+</pre>
 </div>
 </div>
 
@@ -512,8 +527,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 
 
-<div id="outline-container-orgebc809d" class="outline-4">
-<h4 id="orgebc809d"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-orga1f450c" class="outline-4">
+<h4 id="orga1f450c"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -603,7 +618,7 @@ random.seed(<span style="color: #d3869b; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="orgcc10fb9">
+<pre class="example" id="org05161b1">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -831,8 +846,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 
-<div id="outline-container-orgad9e829" class="outline-4">
-<h4 id="orgad9e829"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-org6cf7715" class="outline-4">
+<h4 id="org6cf7715"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #fb4934;">from</span> collections <span style="color: #fb4934;">import</span> Counter
@@ -932,13 +947,13 @@ Because initial sampling is random results will be different every time.
 <pre class="example">
 No new indices!
 AKCYTSG
-{'A': 0.18, 'T': 0.42, 'C': 0.21, 'G': 0.19}
-{'A': 0.37, 'T': 0.25, 'C': 0.25, 'G': 0.12}
-{'A': 0.5, 'T': 0.11, 'C': 0.21, 'G': 0.19}
-{'A': 0.13, 'T': 0.11, 'C': 0.15, 'G': 0.61}
-{'A': 0.02, 'T': 0.1, 'C': 0.51, 'G': 0.37}
-{'A': 0.2, 'T': 0.45, 'C': 0.25, 'G': 0.11}
-{'A': 0.11, 'T': 0.46, 'C': 0.33, 'G': 0.1}
+{'A': 0.78, 'T': 0.06, 'C': 0.1, 'G': 0.07}
+{'A': 0.07, 'T': 0.18, 'C': 0.08, 'G': 0.67}
+{'A': 0.04, 'T': 0.07, 'C': 0.79, 'G': 0.1}
+{'A': 0.05, 'T': 0.26, 'C': 0.59, 'G': 0.11}
+{'A': 0.03, 'T': 0.72, 'C': 0.08, 'G': 0.16}
+{'A': 0.03, 'T': 0.11, 'C': 0.68, 'G': 0.17}
+{'A': 0.06, 'T': 0.03, 'C': 0.12, 'G': 0.79}
 </pre>
 
 
@@ -971,7 +986,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="orgf1a08a2" class="figure">
+<div id="org55f3e59" class="figure">
 <p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
@@ -1032,7 +1047,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="org9b25eb7" class="figure">
+<div id="orgdc72033" class="figure">
 <p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1076,7 +1091,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org833d1bc" class="figure">
+<div id="orgef6f8da" class="figure">
 <p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1118,7 +1133,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="org6bec46b" class="figure">
+<div id="orgbb15a1e" class="figure">
 <p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
@@ -1197,7 +1212,7 @@ plot_logo(wmm, <span style="color: #b8bb26;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="org88603a8" class="figure">
+<div id="org82a0938" class="figure">
 <p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>

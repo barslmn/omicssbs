@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-06-19 Mon 16:53 -->
+<!-- 2023-07-13 Thu 19:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
@@ -193,6 +193,7 @@
   .org-svg { }
 </style>
 
+<script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
@@ -255,24 +256,25 @@ else {
             <a href="https://omics.sbs/blog">Blog</a>
         </li>
         <li>
+            <a href="https://omics.sbs/notes">Notes</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
-        <div id="preferences">
-            <li>
-                <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
-                    title="Toggle color mode">
-                    <div class="sun">
-                    </div>
-                    <div class="moon">
-                        <div class="star"></div>
-                        <div class="star small"></div>
-                    </div>
-                </button>
-            </li>
-            <li>
-                <input type="button" id="typeface-toggle" title="" value="Aa">
-            </li>
-        </div>
+        <li class="preferences">
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+        <li class="preferences">
+            <input type="button" id="typeface-toggle" title="" value="Aa">
+        </li>
     </ul>
 </div>
 <div id="content" class="content">
@@ -311,7 +313,7 @@ else {
 </ul>
 </div>
 </div>
-<div class="abstract" id="org7e5622c">
+<div class="abstract" id="org0f65cbf">
 <p>
 The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
 Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
@@ -325,7 +327,7 @@ We can use this aligned data to discover small or structural variations in clini
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgf59239d">
+<div class="sidenote" id="orge236575">
 <p>
 Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
@@ -351,7 +353,7 @@ Burrows-Wheeler Transform makes it possible to put these pieces to their place d
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org341fa82">
+<div class="sidenote" id="org5846998">
 <p>
 Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
@@ -364,7 +366,7 @@ Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org2f7ac26">
+<div class="sidenote" id="orgfc175de">
 <p>
 We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
 </p>
@@ -480,7 +482,7 @@ Initial index: 4 of the: C
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org9ed7a18">
+<div class="sidenote" id="orgb645e6c">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
@@ -660,7 +662,7 @@ To get a better grasp of whats happening lets track the index jumps too.
 </pre>
 </div>
 
-<pre class="example" id="org2731913">
+<pre class="example" id="org07b784f">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
 END          1          6          6                B               S           S       S$
@@ -843,7 +845,7 @@ Let&rsquo;s add this to our class too.
 </pre>
 </div>
 
-<pre class="example" id="org47d0ee2">
+<pre class="example" id="orgdd12128">
 5 5
 0
 OMI
@@ -859,7 +861,7 @@ Most crucial part is of course matching the reads with variations. Backtracking 
 </p>
 
 
-<div id="org61ad0d2" class="figure">
+<div id="org12b8b3a" class="figure">
 <p><img src="./fig3.jpeg" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
@@ -938,7 +940,7 @@ Then we call the <code>inexact_match</code> which in turns calls itself <a href=
 </pre>
 </div>
 
-<pre class="example" id="org5a0f565">
+<pre class="example" id="org7fd6c2b">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -951,7 +953,7 @@ OMI
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org6676613">
+<div class="sidenote" id="org7a0a75c">
 <p>
 <b>Visualizing the recursion</b>
 </p>
@@ -989,7 +991,7 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </pre>
 </div>
 
-<pre class="example" id="org67a1684">
+<pre class="example" id="orgbf5dad0">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -3152,7 +3154,7 @@ sam_contents += sam_header
 </pre>
 </div>
 
-<pre class="example" id="orgcf2bc42">
+<pre class="example" id="org2fc8004">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3276,7 +3278,7 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="orgfee0698" class="figure">
+<div id="org01b6400" class="figure">
 <p><img src="./igv.svg" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>

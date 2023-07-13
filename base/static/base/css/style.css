@@ -6,15 +6,6 @@ ul#navbar li {
 ul#navbar li.preferences {
     float: right;
 }
-.example {
-    max-height: 30vh; overflow-y:auto;
-}
-/* #content { */
-/*     width: 80vw; */
-/* } */
-/* #navbar{ */
-/*     font-family: Sans; */
-/* }  */
 
 .dark-mode-button {
   width: 46px;
@@ -148,4 +139,16 @@ ul#navbar li.preferences {
 .moon.visible .star.small {
   opacity: .7;
   transform: scale(0.45) rotate(35deg);
+}
+
+/* org-publish */
+.src {
+  background: var(--bg_h);
+}
+.example {
+  background: var(--bg_s);
+  max-height: 30vh; overflow-y:auto;
+}
+.org-center {
+  width: fit-content;
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>Omics.SBS</title>
+  <subtitle>Barış personal blog</subtitle>
+  <link href="http://omics.sbs/feeds/feed.xml" rel="self" />
+  <link href="http://omics.sbs/" />
+  <id>https://omics.sbs/</id>
+  <updated>2023-07-13T18:30:02Z</updated>
+
+  <entry>
+    <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
+    <id>https://omics.sbs/blog/seqmotif/seqmotif.html</id>
+    <link href="https://omics.sbs/blog/seqmotif/seqmotif.html" />
+    <updated>2022-11-22T18:30:02Z</updated>
+    <summary>Gibbs sampling algorithm implemented in python.</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
+
+  <entry>
+    <title>Sequence Alignment from Scratch with BWA</title>
+    <id>https://omics.sbs/blog/bwa/bwa.html</id>
+    <link href="https://omics.sbs/blog/bwa/bwa.html" />
+    <updated>2022-12-22T18:30:02Z</updated>
+    <summary>Burrows Wheeler back tracking algorithm demonstration.</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
+
+  <entry>
+    <title>Converting Turkish Variome data from TSV to VCF</title>
+    <id>https://omics.sbs/blog/turkishvariome2vcf.html</id>
+    <link href="https://omics.sbs/blog/turkishvariome2vcf.html" />
+    <updated>2023-01-22T18:30:02Z</updated>
+    <summary>Converting from TSV and creating a VCF using AWK.</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
+
+</feed>
