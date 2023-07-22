@@ -1,3 +1,7 @@
+body {
+  font-size: 1.4em;
+}
+
 ul#navbar li {
     display: inline-block;
     font-weight: bold;

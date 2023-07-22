@@ -29,11 +29,13 @@ window.onload=function() {
     sun.classList.remove("visible")
   }
 
-  if(localStorage.typeface=="Libertinus") {
-    document.body.classList.add("libertinus")
-  }
-  else {
-    document.body.classList.remove("libertinus")
-  }
-  typeFaceToggle.title = localStorage.typeface || "Latin Modern";
+  // if(localStorage.typeface=="Libertinus") {
+  //   document.body.classList.add("libertinus")
+  // }
+  // else {
+  //   // document.body.classList.remove("libertinus")
+  //   // Use libertinus as default
+  //   document.body.classList.add("libertinus")
+  // }
+  typeFaceToggle.title = localStorage.typeface || "Libertinus";
 };
