@@ -10,6 +10,9 @@ from .forms import Var2TexShadeForm, CrossSymbolCheckerForm
 def index(request):
     return render(request, 'bioscripts/index.html')
 
+def prism(request):
+    return render(request, 'bioscripts/prism.html')
+
 def var2texshade(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

@@ -156,3 +156,6 @@ ul#navbar li.preferences {
 .org-center {
   width: fit-content;
 }
+img.latex-fragment-block {
+  display: inline;
+}

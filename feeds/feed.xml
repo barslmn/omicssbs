@@ -45,4 +45,28 @@
     </author>
   </entry>
 
+  <entry>
+    <title>Polygenic Risk Score Calculation</title>
+    <id>https://omics.sbs/blog/prs/prs_calculation.html</id>
+    <link href="https://omics.sbs/blog/prs/prs_calculation.html" />
+    <updated>2023-08-08:30:02Z</updated>
+    <summary>PRS is a method for estimating the underlying genetic risk that common variation create for complex phenotypes.</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
+
+  <entry>
+    <title>Polygenic Risk Score Simulation</title>
+    <id>https://omics.sbs/bioscripts/prism</id>
+    <link href="https://omics.sbs/bioscripts/prism" />
+    <updated>2023-08-08:30:02Z</updated>
+    <summary>Tool for basic PRS simulation</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
+
 </feed>
