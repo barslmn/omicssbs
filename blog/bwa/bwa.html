@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:01 -->
+<!-- 2023-08-13 Sun 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
@@ -197,6 +197,7 @@
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
      function CodeHighlightOn(elem, id)
@@ -329,11 +330,12 @@ else {
 </li>
 </ul>
 </li>
-<li><a href="#org2a55f3c">3. Referanslar</a></li>
+<li><a href="#org727d3b4">3. References</a></li>
+<li><a href="#org61563ab">Comments</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org3f1902f">
+<div class="abstract" id="orgef5a886">
 <p>
 The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
 Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
@@ -347,7 +349,7 @@ We can use this aligned data to discover small or structural variations in clini
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org5c81fd0">
+<div class="sidenote" id="org28d683f">
 <p>
 Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
@@ -373,7 +375,7 @@ Burrows-Wheeler Transform makes it possible to put these pieces to their place d
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org3838ad1">
+<div class="sidenote" id="org56398f9">
 <p>
 Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
@@ -386,7 +388,7 @@ Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org31dbc61">
+<div class="sidenote" id="orgd08aced">
 <p>
 We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
 </p>
@@ -502,7 +504,7 @@ Initial index: 4 of the: C
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgacf9166">
+<div class="sidenote" id="org94638d4">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
@@ -682,7 +684,7 @@ To get a better grasp of whats happening lets track the index jumps too.
 </pre>
 </div>
 
-<pre class="example" id="orgac66082">
+<pre class="example" id="org9971b7a">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
 END          1          6          6                B               S           S       S$
@@ -865,7 +867,7 @@ Let&rsquo;s add this to our class too.
 </pre>
 </div>
 
-<pre class="example" id="orge4be0a3">
+<pre class="example" id="orgef163a6">
 5 5
 0
 OMI
@@ -881,7 +883,7 @@ Most crucial part is of course matching the reads with variations. Backtracking 
 </p>
 
 
-<div id="orgc1bbb48" class="figure">
+<div id="org3c1fc7a" class="figure">
 <p><img src="./fig3.jpeg" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
@@ -960,7 +962,7 @@ Then we call the <code>inexact_match</code> which in turns calls itself <a href=
 </pre>
 </div>
 
-<pre class="example" id="org8ce08a7">
+<pre class="example" id="org056046c">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -973,7 +975,7 @@ OMI
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org27369e5">
+<div class="sidenote" id="orgaabeda9">
 <p>
 <b>Visualizing the recursion</b>
 </p>
@@ -1011,7 +1013,7 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </pre>
 </div>
 
-<pre class="example" id="org822c611">
+<pre class="example" id="orgb0cc2e3">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -3174,7 +3176,7 @@ everything is matched.
 </pre>
 </div>
 
-<pre class="example" id="org527482d">
+<pre class="example" id="org83629c5">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3298,7 +3300,7 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="org94ea8c1" class="figure">
+<div id="org36890cc" class="figure">
 <p><img src="./igv.svg" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>
@@ -3307,12 +3309,21 @@ samtools faidx ./ref.fasta
 </div>
 </div>
 
-<div id="outline-container-org2a55f3c" class="outline-2">
-<h2 id="org2a55f3c"><span class="section-number-2">3.</span> Referanslar</h2>
+<div id="outline-container-org727d3b4" class="outline-2">
+<h2 id="org727d3b4"><span class="section-number-2">3.</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Li, Heng, and Richard Durbin. 2009. “Fast and Accurate Short Read Alignment with Burrows-Wheeler Transform.” <i>Bioinformatics (Oxford, England)</i> 25 (14): 1754–60. <a href="https://doi.org/10.1093/bioinformatics/btp324">https://doi.org/10.1093/bioinformatics/btp324</a>.</div>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org61563ab" class="outline-2">
+<h2 id="org61563ab">Comments</h2>
+<div class="outline-text-2" id="text-org61563ab">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
 </div>
 </div>
 </div>

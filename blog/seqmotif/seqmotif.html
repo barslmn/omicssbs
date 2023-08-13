@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:01 -->
+<!-- 2023-08-13 Sun 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -197,6 +197,7 @@
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
      function CodeHighlightOn(elem, id)
@@ -279,7 +280,7 @@ else {
 <li><a href="#orge65e4d3">2.1.1. Creating Sequences</a></li>
 <li><a href="#org93821ea">2.1.2. Creating motifs</a></li>
 <li><a href="#orgb03d08a">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#org9b86ad8">2.1.4. Putting it all together</a></li>
+<li><a href="#org37eef31">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org9bda147">2.2. Finding the motif</a>
@@ -288,17 +289,18 @@ else {
 <li><a href="#orgd2b03a2">2.2.2. Weighted Model Matrix</a></li>
 <li><a href="#org946470b">2.2.3. Calculate probability</a></li>
 <li><a href="#org4926b31">2.2.4. Sliding window</a></li>
-<li><a href="#orga812f9a">2.2.5. Putting it all together</a></li>
+<li><a href="#org081dbe9">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#orgccafe06">2.3. Parameters affecting the results</a></li>
 </ul>
 </li>
 <li><a href="#orgb2df730">3. Trying it out with real data</a></li>
+<li><a href="#orgd9eec32">Comments</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="orgdbd198e">
+<div class="abstract" id="orgff4e813">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -312,7 +314,7 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd1250bb">
+<div class="sidenote" id="org256ba45">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -400,7 +402,7 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="org0bb56ee">
+<pre class="example" id="orgb03fb33">
 TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGG
 TGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
 GCCTAATAAATTACACAGCAGAATACGTTAGTAGTCCGCACCGGCCTCGAGCACATCCCT
@@ -510,7 +512,7 @@ Lets create 10 logos.
 </pre>
 </div>
 
-<pre class="example" id="orgd045741">
+<pre class="example" id="org55faaec">
 AGCCTGG
 AGCCTCG
 AGCCTCG
@@ -547,8 +549,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 
 
-<div id="outline-container-org9b86ad8" class="outline-4">
-<h4 id="org9b86ad8"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org37eef31" class="outline-4">
+<h4 id="org37eef31"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -638,7 +640,7 @@ random.seed(<span style="color: #da8548; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="org087c856">
+<pre class="example" id="org7264acb">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -866,8 +868,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 
-<div id="outline-container-orga812f9a" class="outline-4">
-<h4 id="orga812f9a"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-org081dbe9" class="outline-4">
+<h4 id="org081dbe9"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #e45649;">from</span> collections <span style="color: #e45649;">import</span> Counter
@@ -1006,7 +1008,7 @@ plot_logo(wmm, <span style="color: #50a14f;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="org6c22d98" class="figure">
+<div id="org54d0958" class="figure">
 <p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
@@ -1067,7 +1069,7 @@ plot_logo(wmm, <span style="color: #50a14f;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="orgb56c566" class="figure">
+<div id="org3386ec3" class="figure">
 <p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1111,7 +1113,7 @@ plot_logo(wmm, <span style="color: #50a14f;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org31159b3" class="figure">
+<div id="org58f4ab5" class="figure">
 <p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1153,7 +1155,7 @@ plot_logo(wmm, <span style="color: #50a14f;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="orgde220f8" class="figure">
+<div id="orgeed77b6" class="figure">
 <p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
@@ -1232,7 +1234,7 @@ plot_logo(wmm, <span style="color: #50a14f;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="org3fa27e0" class="figure">
+<div id="orgf5436fd" class="figure">
 <p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>
@@ -1240,6 +1242,15 @@ plot_logo(wmm, <span style="color: #50a14f;">"5prime_splice_site.png"</span>)
 <p>
 Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki/RNA_splicing">5´ splice sites</a> with the motif <code>G-G-[cut]-G-U-R-A-G-U</code>.
 </p>
+</div>
+</div>
+
+<div id="outline-container-orgd9eec32" class="outline-2">
+<h2 id="orgd9eec32">Comments</h2>
+<div class="outline-text-2" id="text-orgd9eec32">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
 </div>
 </div>
 </div>

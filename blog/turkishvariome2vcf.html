@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:01 -->
+<!-- 2023-08-13 Sun 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Converting Turkish Variome data from TSV to VCF</title>
@@ -197,6 +197,7 @@
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
      function CodeHighlightOn(elem, id)
@@ -308,6 +309,7 @@ else {
 <li><a href="#org62bf0c5">3. VCF metalines</a></li>
 <li><a href="#org6b6f212">4. Multiallelic variants</a></li>
 <li><a href="#org1db3398">5. Converting to VCF file</a></li>
+<li><a href="#org8108d35">Comments</a></li>
 </ul>
 </div>
 </div>
@@ -331,7 +333,7 @@ Authors shared their data as TSV file. The fields I am intrested in this dataset
 </pre>
 </div>
 
-<pre class="example" id="org4aa3b42">
+<pre class="example" id="org06fd8c9">
 CHROM  GRCh37Pos  GRCh38Pos  ID               IDrs                         REF  ALT  AF           AC   AN    Hom  Het  SequencingMethod  Filter  QUAL     DP     GeneName       GeneID           Feature     FeatureID        Effect                 LoF  HGVS_C      HGVS_P  GERP_RS  CADD_phred  SIFT_pred  Polyphen2_HVAR_pred  AF_gnomAD_WES  AF_gnomAD_WGS  GME_AF  1000GP_AF   ESP_AF
 1      100000012  99534456   1_100000012_G_T  1_100000012_G_T;rs10875231   G    T    0.240621     372  1546  48   276  WGS               PASS    75630.0  23720  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-441C&gt;A   .       .        .           .          .                    .              0.2900         .       0.301118    0.0
 1      10000006   9939948    1_10000006_G_A   1_10000006_G_A;rs186077422   G    A    0.000646831  1    1546  0    1    WGS               PASS    159.0    15959  RP11-84A14.4   ENSG00000228150  transcript  ENST00000445884  upstream_gene_variant  .    n.-2975G&gt;A  .       .        .           .          .                    .              0.0030         .       0.00259585  0.0
@@ -352,7 +354,7 @@ Another thing I want to get beforehand is which column is in which index because
 </pre>
 </div>
 
-<pre class="example" id="orgc7c879b">
+<pre class="example" id="orga05f9c5">
      1  CHROM
      2  GRCh37Pos
      3  GRCh38Pos
@@ -397,7 +399,7 @@ These are the columns <code>AF, AC, AN, Hom, Het</code> I want to extract and I 
 <div id="outline-container-org62bf0c5" class="outline-2">
 <h2 id="org62bf0c5"><span class="section-number-2">3.</span> VCF metalines</h2>
 <div class="outline-text-2" id="text-3">
-<pre class="example" id="org6a4b73a">
+<pre class="example" id="orgf7eaf53">
 ##INFO=&lt;ID=AF,Number=1,Type=Float,Description="Allele Frequency"&gt;
 </pre>
 
@@ -420,7 +422,7 @@ One thing I want to make sure is how many fields are in the columns. One slow wa
 </pre>
 </div>
 
-<pre class="example" id="orgbc8d9ec">
+<pre class="example" id="org1ae9677">
 -
 .
 0
@@ -465,7 +467,7 @@ Columns don&rsquo;t have multiple values which raises the question: Where are th
 </pre>
 </div>
 
-<pre class="example" id="orga149aea">
+<pre class="example" id="org4d755ce">
 1 100001671
 1 100001698
 1 100004209
@@ -480,7 +482,7 @@ We can than grep for these positions.
 </pre>
 </div>
 
-<pre class="example" id="org7cc9110">
+<pre class="example" id="orgf8292ec">
 1  100001671  99536115  1_100001671_CT_C   1_100001671_CT_C;rs1212539010  CT  C    0.00323415  5   1546  0  5   WGS  PASS  1875.0    20603  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101delA         .  .  .  .  .  .  0.0035  .  0.0  0.0
 1  100001671  99536115  1_100001671_C_CTT  1_100001671_C_CTT;rs571399445  C   CTT  0.0535248   82  1532  2  78  WGS  PASS  205865.0  21435  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101_-2100insAA  .  .  .  .  .  .  0.0960  .  0.0  0.0
 </pre>
@@ -490,7 +492,7 @@ We can than grep for these positions.
 </pre>
 </div>
 
-<pre class="example" id="org06bfb21">
+<pre class="example" id="orgbc26666">
 1  100004209  99538653  1_100004209_G_GTTTTTTTT   1_100004209_G_GTTTTTTTT;rs10680837   G  GTTTTTTTT   0.00981675  15   1528  0   15   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAA   .  .  .  .  .  .  0.0016  .  0.0       0.0
 1  100004209  99538653  1_100004209_G_GTTTTTT     1_100004209_G_GTTTTTT;rs10680837     G  GTTTTTT     0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAA     .  .  .  .  .  .  0.0030  .  0.0       0.0
 1  100004209  99538653  1_100004209_G_GTTTTTTTTT  1_100004209_G_GTTTTTTTTT;rs10680837  G  GTTTTTTTTT  0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAAA  .  .  .  .  .  .  .       .  0.0       0.0
@@ -593,6 +595,15 @@ Update 18 June 2023: Consolidated most of the commands in awk based on the <a hr
 <p>
 We can now index the file with \(tabix -p vcf TurkishVariome.GRCh38.vcf.gz\) and use this VCF with VEP command \(--custom TurkishVariome.GRCh38.vcf.gz,TV,vcf,exact,0,AF,AC,AN\)
 </p>
+</div>
+</div>
+
+<div id="outline-container-org8108d35" class="outline-2">
+<h2 id="org8108d35">Comments</h2>
+<div class="outline-text-2" id="text-org8108d35">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
 </div>
 </div>
 </div>

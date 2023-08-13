@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:01 -->
+<!-- 2023-08-13 Sun 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Polygenic Risk Score Calculation</title>
@@ -197,6 +197,7 @@
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
      function CodeHighlightOn(elem, id)
@@ -295,6 +296,7 @@ else {
 <li><a href="#orgc1bfbb9">4. References</a></li>
 <li><a href="#orgda94d6b">5. Acronyms</a></li>
 <li><a href="#org800b6bb">6. Glossary</a></li>
+<li><a href="#org091f733">Comments</a></li>
 </ul>
 </div>
 </div>
@@ -309,7 +311,7 @@ You can find the <a href="https://barslmn.shinyapps.io/PRiSm/">interactive app h
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org5102529">
+<div class="sidenote" id="org459c426">
 <p>
 
 </p>
@@ -375,7 +377,7 @@ Since association studies show correlations and not causation a variant like rs1
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org62b1776">
+<div class="sidenote" id="orgab08e0f">
 <p>
 You can create this ideogram at: <a href="https://www.ncbi.nlm.nih.gov/genome/tools/gdp">https://www.ncbi.nlm.nih.gov/genome/tools/gdp</a>
 </p>
@@ -466,7 +468,7 @@ With the following intervals:
 </div>
 
 
-<div id="org51c9770" class="figure">
+<div id="org8888ade" class="figure">
 <p><img src="./ideogram.svg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Variations are marked with pink circles.</p>
@@ -574,7 +576,7 @@ Instead, we use the most significant variation and investigate their effect in o
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org24ff782">
+<div class="sidenote" id="org51d861f">
 <p>
 A great resource for viewing studies and their results is the <a href="https://www.ebi.ac.uk/gwas/">GWAS catalog</a>.
 A more hands-on example can be found at <a href="https://hail.is/docs/0.2/tutorials/01-genome-wide-association-study.html">Hail&rsquo;s site</a>.
@@ -594,7 +596,7 @@ First, let&rsquo;s go over the <a class="org-gls" href="#gls.12" id="glsr.12.5">
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org5216731">snp_number <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">10</span>
+<pre class="src src-R" id="org742ae07">snp_number <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">10</span>
 
 gwas <span style="color: #b751b6;">&lt;-</span> data.frame(
   SNP_id = paste(<span style="color: #50a14f;">"SNP"</span>, seq(snp_number), sep=<span style="color: #50a14f;">""</span>)
@@ -741,7 +743,7 @@ We are going to use the log of <a href="https://en.wikipedia.org/wiki/Odds_ratio
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org7c05697">
+<div class="sidenote" id="org9737471">
 <p>
 I want to set it up so every <code>SNP</code> is observed <code>2</code> % more incrementally.
 The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-step_case');" onmouseout="CodeHighlightOff(this, 'coderef-step_case');"><code>step_case</code></a> and <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');"><code>obs_case</code></a> just generalize this instead of hard-coding so it applies to any number of <code>SNPs</code> and sample size.
@@ -750,7 +752,7 @@ The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHig
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="orga5f82cf">gwas_control_number = <span style="color: #da8548; font-weight: bold;">50000</span>
+<pre class="src src-R" id="orgb9be04b">gwas_control_number = <span style="color: #da8548; font-weight: bold;">50000</span>
 gwas_case_number = <span style="color: #da8548; font-weight: bold;">50000</span>
 increment_percent = <span style="color: #da8548; font-weight: bold;">0.02</span>
 gwas_sample_number = gwas_control_number + gwas_case_number
@@ -874,13 +876,13 @@ A <code>BB</code> genotype would have score of
 <div class="outline-text-3" id="text-2-2">
 <p>
 We are screening our population concerning a phenotype.
-We aim to determine risk scores using the <a href="#orgea307a5">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.11" id="glsr.11.4">PRS</a> and phenotype.
-We have genotyped <a href="#orgba2d6be">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
+We aim to determine risk scores using the <a href="#org0602230">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.11" id="glsr.11.4">PRS</a> and phenotype.
+We have genotyped <a href="#orgd33f426">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orga79d881">
+<div class="sidenote" id="org4183712">
 <p>
 The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-set_seed');" onmouseout="CodeHighlightOff(this, 'coderef-set_seed');"><code>set.seed()</code></a> in the first line ensure <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> randoms the same values every time.
 </p>
@@ -1085,7 +1087,7 @@ We <a href="#coderef-prs" class="coderef" onmouseover="CodeHighlightOn(this, 'co
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgfee4734">
+<div class="sidenote" id="orgfd50249">
 <p>
 We have both <code>AB</code> and <code>BA</code> genotypes in the <a href="#coderef-dosage_list" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-dosage_list');" onmouseout="CodeHighlightOff(this, 'coderef-dosage_list');">dosage list</a> because our <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> returns both of these. Since there are no haplotypes or variant phasing both <code>AB</code> and <code>BA</code> are the same.
 </p>
@@ -1274,7 +1276,7 @@ We <a href="#coderef-zero_shift" class="coderef" onmouseover="CodeHighlightOn(th
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org968b561">
+<div class="sidenote" id="orgcfb13b7">
 <p>
 We get the <a href="#coderef-mean_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-mean_case');" onmouseout="CodeHighlightOff(this, 'coderef-mean_case');">mean and standard deviations</a> to plot the curves with the <code>stat_function</code>.
 </p>
@@ -1306,7 +1308,7 @@ ggplot(samples, aes(x=PRS, color=status, fill=status)) +
 </div>
 
 
-<div id="org6aa0b41" class="figure">
+<div id="org4068cdf" class="figure">
 <p><img src="PRS.svg" alt="PRS.svg" class="org-svg" />
 </p>
 </div>
@@ -1335,7 +1337,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org1617fa7">
+<div class="sidenote" id="orgb8e372c">
 <ul class="org-ul">
 <li>Because most of the totals are the same they overlap and we plot only a few points as a result. <code>position_jitter</code> with <code>w=0.5</code> spreads the points around a bit allowing us the plot all of the points.</li>
 </ul>
@@ -1351,7 +1353,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 </div>
 
 
-<div id="org24b2320" class="figure">
+<div id="org981c998" class="figure">
 <p><img src="PRS2.svg" alt="PRS2.svg" class="org-svg" />
 </p>
 </div>
@@ -1363,7 +1365,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="org41b4e5b">
+<pre class="example" id="org952dd7c">
 
 Call:
 glm(formula = status ~ PRS, family = "binomial", data = samples)
@@ -1454,7 +1456,7 @@ ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #da
 </div>
 
 
-<div id="orgf23a3b8" class="figure">
+<div id="org83891b8" class="figure">
 <p><img src="PRS3.svg" alt="PRS3.svg" class="org-svg" />
 </p>
 </div>
@@ -1474,7 +1476,7 @@ The closer it gets to 1 better the fit.
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org9db13b6">
+<div class="sidenote" id="orga037c08">
 <p>
 <code>rcompanion</code> has the <img src="ltximg/prs_calculation_e6111ace9eb2bfa750b24ae889f04ae5765eb3f7.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> calculations modules when the <code>Nagelkerke</code> function is called other methods results are also returned.
 </p>
@@ -1487,7 +1489,7 @@ nagelkerke(model)
 </pre>
 </div>
 
-<pre class="example" id="orgbf33911">
+<pre class="example" id="org38f4a84">
 $Models
 
 Model: "glm, status ~ PRS, binomial, samples"
@@ -1715,7 +1717,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="orged4cf25">
+<pre class="example" id="orgb37c222">
 
 Call:
 glm(formula = status ~ deciles, family = "binomial", data = samples)
@@ -1767,7 +1769,7 @@ ggplot(my_sum_data, aes(decile, odds_ratio)) +
 </div>
 
 
-<div id="org11b875b" class="figure">
+<div id="org88a63be" class="figure">
 <p><img src="PRS-decile.svg" alt="PRS-decile.svg" class="org-svg" />
 </p>
 </div>
@@ -1891,6 +1893,16 @@ This post also never goes into more finickier subjects like population stratific
 <p>
 <b><span class="org-glsdef" id="gls.10">Variant of unknown significance</span></b>&emsp;The variants we can&rsquo;t decide whether its pathogenic or benign&ensp;<a class="org-glsdef" href="#glsr.10.1">1</a>
 </p>
+</div>
+</div>
+
+
+<div id="outline-container-org091f733" class="outline-2">
+<h2 id="org091f733">Comments</h2>
+<div class="outline-text-2" id="text-org091f733">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
 </div>
 </div>
 </div>
