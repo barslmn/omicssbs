@@ -8,9 +8,15 @@
 - https://musclewiki.com
   Shows which workouts target which muscle groups.
 
+- https://workout.lol/
+  Creates workout plans using musclewiki.
+
 ** Blogs
 - https://ciechanow.ski/
   In-depth explanation's of physical concepts.
+
+- https://xai.sh/
+  Post on small tools like ~pv~ and ~reptyr~ and other stuff.
 
 - https://www.haggardhawks.com/
   Blog about words, language, and etymology
@@ -20,16 +26,35 @@
 
 - https://nawalcooking.blogspot.com/
 
+- https://blog.everydayscientist.com/
+
+*** https://irreal.org/ :emacs:orgmode:
+Has great tips on emacs and org-mode!
+
+*** https://writepermission.com :emacs:orgmode:
+Has great tips on emacs and org-mode!
+
+
+** Not categorized
+*** https://www.angryreviewer.com/ :writing:stylechecker:
+
+*** https://metazooa.com/game
+Phylogeny game for animals
+
+*** https://dinosaurpictures.org/ancient-earth
+Ancient earth in different time periods.
+
 ** News
 https://news.ycombinator.com/
 
-** Genetics
+** Biology
+*** Genetics
 - https://www.gencodegenes.org/
 - https://www.ensembl.org
 - http://gtrnadb.ucsc.edu/index.html
   tRNA database
 
-** Bioinformatics
+*** Bioinformatics
 - https://www.biostars.org/
   Q&A forum
 
@@ -39,14 +64,11 @@ https://news.ycombinator.com/
 - https://learn.gencore.bio.nyu.edu/
   NGS tutorial
 
-** Music
-- https://www.musictheory.net
-  Basics of musical notation with exercises.
+**** Databases
+- https://www.informatics.jax.org/
+Collection of various databases. Gene expression database is here.
 
-- https://radiooooo.com/
-  It used to be better.
-
-** Somatic databases
+**** Somatic databases
 - https://www.cancer.gov
   Cancer.gov is a comprehensive cancer information database from the National Cancer Institute (NCI). It contains information about cancer treatment, prevention, screening, genetics, supportive care, and clinical trials. It also contains a catalog of databases, software tools, and other resources for cancer researchers.
 - https://nccn.org/
@@ -61,3 +83,17 @@ https://news.ycombinator.com/
   Catalogue Of Somatic Mutations In Cancer (COSMIC) is a database of somatic mutations in human cancer.
 - https://www.cancergenomeinterpreter.org/home
   Cancer Genome Interpreter (CGI) is a resource to interpret the results of cancer genome analysis.
+
+*** Dev-Bio
+- https://vimeo.com/user34329786
+Dev-bio video conferences from the Barresi, Gilbert book Developmental Biology.
+
+** Music
+- https://www.musictheory.net
+  Basics of musical notation with exercises.
+
+- https://radiooooo.com/
+  It used to be better.
+
+** Computers
+*** https://learnbyexample.github.io/ :awk:shell:

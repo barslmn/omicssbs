@@ -1,0 +1,212 @@
+:PROPERTIES:
+:ID:       e574319b-e159-4c6a-80b8-02ed07c570ae
+:NOTER_DOCUMENT: /home/bar/Documents/Zotero/storage/347KHYJC/Michael J. F. Barresi_ Scott F. Gilbert - Developmental Biology.pdf
+:END:
+#+title: barresiDevelopmentalBiology2020
+#+filetags: :SHFM:publish:
+
+* [[https://learninglink.oup.com/access/barresi12xe-student-resources#tag_chapter-19][Online Resources]]
+
+* Development of the tetrapod limb
+:PROPERTIES:
+:NOTER_PAGE: (788 0.14367816091954022 . 0.35997963340122197)
+:END:
+Skeletogenesis is controlled by a "Truing-type" mechanism of self organization through morphogen interactions.
+In certain animals, the early webbed tissue between digits remain; in others, it dies via BMP-mediated apoptosis.
+Each limb signaling system influences the differential expression of Hox genes along each axis, modification of which supports the evolution of fins to fingers.
+** Limb anatomy
+:PROPERTIES:
+:NOTER_PAGE: (789 0.6902218570254725 . 0.22556008146639508)
+:END:
+Tetrapods (amphibians, reptiles, birds and mammals) are four-limbed vertebrates. The bones of tetrapod limb (arm, leg, wing or flipper) consist of a proximal *stylopod* (humerus/femur) adjacent to the body wall, a *zeugopod* (radius-ulna/tibia-fibula) in the middle region, and a distal *autopod* (carpals-fingers/tarsals-toes)
+
+** Three-dimensional coordinate system
+:PROPERTIES:
+:NOTER_PAGE: (789 0.7929334428923583 . 0.8192464358452138)
+:END:
+
+- Proximal-distal axis ("close-far"; shoulder-to-finger or hip-to-toe)
+- Anterior-posterior axis (thumb-to-pinkie)
+- Dorsal-ventral axis (knuckle-to-palm)
+
+** The limb bud
+:PROPERTIES:
+:NOTER_PAGE: (790 0.16420361247947454 . 0.2479633401221996)
+:END:
+The limb bud is the first visible sign of limb development. They occur bilaterally at presumptive forelimb and hindlimb locations.
+Disc of cells in center of the Lateral plate mesoderm give rise to limb itself.
+Adjacent cells will form the peribranchial (around the limb) flank tissue and the shoulder girdle.
+This larger region, representing all the cells are capable of forming a limb on their on, is the *limb field*.
+
+** Specifying the limb fields
+:PROPERTIES:
+:NOTER_PAGE: (795 0.4313886606409203 . 0.33741080530071355)
+:END:
+
+The mesodermal cells that give rise to a vertebrate limb have been identifiedidentified by:
+    1. Removing certain groups of cells and observing that a limb does not develop in their absence ("lose it")
+    2. Transplanting groups of cells to a new location and observing that they form a limb in this new place ("move it")
+    3. Marking groups of cells with dyes or radioactive precursors and observing that their descendants partake in limb development ("find it")
+
+It is probable that positional information from the Hox gene expression domains causes the paraxial mesoderm in the limb-forming regions to be a different from all other paraxial mesoderm.
+
+** Outgrowth: generating the proximal-distal axis of the limb
+:PROPERTIES:
+:NOTER_PAGE: (802 0.6077302631578948 . 0.31498470948012236)
+:END:
+The diverse roles of the AER include:
+    1. Maintaining the mesenchyme beneath it in a plastic, proliferating state that enables the linear growth of the limb.
+    2. Maintaining the expression of those molecules that generate the anterior-posterior axis
+    3. Interacting with the proteins specifying the anterior posterior and dorsal-ventral axes so that each cell is given instructions on how to differentiate.
+AER interacts with limb bud mesenchyme directly below it called progress zone (PZ)
+
+    * If AER is removed at any time, further development of distal limb skeletal elements ceases.
+    * If an extra AER is grafted onto an existing limb bud, supernumery structures are formed usually towards the distal end of the limb.
+    * If leg mesenchyme is placed directly beneath the wing AER, distal hindlimb structures develop at the end of the limb. (If this mesenchyme is placed farther from the AER, the leg mesenchyme integrates into wing structure)
+    * If limb mesenchyme is replaced by non-limb mesenchyme beneath the AER, the AER regresses and limb development ceases.
+
+AER keeps the mesenchyme below in mitotic proliferation and prevents them from forming cartilage.
+Loss of FGF genes causes specific skeletal malformations. AER derived FGF's have some control over patterning.
+
+** Specifying the limb mesoderm: Determining the proximal-distal polarity
+:PROPERTIES:
+:NOTER_PAGE: (804 0.14462809917355374 . 0.22387295081967215)
+:END:
+
+*** Role of the AER
+:PROPERTIES:
+:NOTER_PAGE: (804 0.12396694214876033 . 0.2914959016393443)
+:END:
+If AER removed early only humerus forms, if AER removed later humerus, radius, and ulna forms.
+First, where the Proximal-distal polarity resided whether in the AER or in the PZ needed to be determined.
+PD specificity found to be residing in the PZ mesenchyme.
+If the AER had provided the positional information: then older AERs combined with younger mesoderm should have produced limbs with deletions in the middle, whereas younger AERs combined with older PZ should have produced duplicated structures.
+This was not the case and in both experiments normal limbs formed.
+When the entire PZ with AER from an early stage embryo grafted to a late stage limb bud new proximal structures was formed beyond already present.
+Conversely, when old PZ was added to young limb buds, distal structures developed such that digits were seen to emerge from the humerus without intervening ulna and radius.
+
+
+** Turing's model: a reaction-diffusion mechanism of PD limb dev
+:PROPERTIES:
+:NOTER_PAGE: (808 0.6264462809917356 . 0.7761270491803279)
+:END:
+Cells produce the skeleton not genes and proteins. Cell types of the stylopod and the autopod are the same; only arrangment changes.
+Why one cartilage formed in the stylopod and two in the zeugopod and several in the autopod?
+Why fingers and toes always at the distal end of the limb?
+
+*** The Reaction-diffusion model
+The *Reaction-diffusion mechanism* is a mathematical model formulated by Alan Turing to explain how complex chemical patterns can be generated out of substances that are initially homogeneously distributed.
+
+In this model there is no dependence on molecular prepatterns; rather, interactions between two molecules can spontaneously produce a nonuniform pattern.
+Turing realized that generation of such patterns would not occur in the presence of just a single diffusible morphogen, but that it could be achieved by how homogeneously distributed substances.
+Morphogen A for activator and morphogen I for inhibitor.
+
+The Turing model provides a framework for a system of "local autoactivation-lateral inhibition" (LALI) to generate stable patterns that could be used to drive developmental change.
+In Turing's model, morphogen A promotes the production of more morphogen A (autoactivation) as well ass the production of morphogen I.
+Morphogen I, inhibits the production of morphogen A (lateral inhibition).
+Turing's mathematical analysis shows that if I diffuses more readily than A, sharp waves of concentration differences will be generated for morphogen A.
+
+Turing model can explain the number of digits.
+
+*** "Turing" along the limb
+:PROPERTIES:
+:NOTER_PAGE: (811 0.37333333333333335 . 0.4091209517514871)
+:END:
+During chondrogenesis along the PD axis, the AER is seen as dividing the limb into two domains: the inhibitory domain (apical zone), the most distal mesenchyme subjacent to the AER, in which precartilage condensation is repressed; and the active zone, which lies proximally adjacent to the inhibitory domain and the morphogenetically active domain where cartilage-forming condensations coalesce.
+ A third domain the "frozen zone" well beyond the influence of the AER, contains the formed cartilage primordia of the skeleton at proximal regions of the developing limb.
+It is within the active zone of the limb mesenchyme that the Turing parameters apply. The active and frozen zones are further defined by their unique expression of FgfR2 and FgfR3, respectivly.
+The limb mesenchyme cells with the active zone synthesize activators of cartilage nodule formation. These activator include TGF-β, BMPs, Activins and certain carbonhydrate-binding proteins called galectins. Galectins can induce the formation of certain cell adhesion molecules and extracellular matrix proteins, such as fibronection, that cause cells to aggregate together to form the catilaginous skeleton. These same cells, however, also synthesize inhibitors of aggregation, such as Noggin and inhibitory galections, As a result, what were once cartilage-forming aggregates inhibit the areas surrounding them from forming such aggregates.
+
+At different sizes of the limb, different numbers of precartilaginous condensations can form.
+First, a single condensation can fit (humerus) , then two (ulna and raius) then several (wrist, digits).
+In this reaction-diffusion hypothesis, the aggregations of precartilage mesenchyme actively recruit more cells from the surrounding area and laterally inhibit the formation of other foci of condensation.
+The number of these condensations, then, depends on the geometry of the active zone and the strength of the lateal inhibition.
+Once formed, the aggregates of mesenchyme interact with one another not only to recruit more cells but also to express the transcription factors (Sox9) and extracellular matrix ( collagen 2 ) characteristics of cartilage.
+
+** Specifying the Anterior-Posterior Axis
+:PROPERTIES:
+:NOTER_PAGE: (814 0.21333333333333335 . 0.35095836087243887)
+:END:
+
+*** SSh defines a zone of polarizing activity
+AP axis is specified by a small block  of mesodermal tissue near the posterior junction of the young limb bud and the body wall. When tissue from this region is taken from a young limb bud and transplanted to a position on the anterior sied of another limb bud, the number of digits on the resulting wing is doubled. Moreover, the structures of the extra set of digits are mirror images of the normally produced structures. Polarity is maintained, but the information is now coming from both an anterior and posterior direction. Thus, this region of the mesoderm has been called the zone of polarizing activity, or ZPA.
+
+*** Specifying digit identity by Shh
+:PROPERTIES:
+:NOTER_PAGE: (814 0.88 . 0.48909451421017847)
+:END:
+How does Ssh specify yhe identities of the digits? Cells that expressed Shh did not undergo apoptosis in the way the AEr does after it finishes its job. Rather, the descendants of Shh-secreting cells become the bone and muscle of the posterior limb. Digits 5 and 4 (and port of digit 4) of the mouse hindlimb are formed from the descendants of Shh-secreting cells.
+
+It seems that specification of the digits is primarily dependent on the amount of time the Shh gene is expressed and only a little bit on the concentration of Shh protein that other cells receive. The difference between digits 4 and 5 is that the cells of the more postrior digit 5 express Shh longer and are exposed to Shh for longer time. Digit 3 is made up of some cells that secreted ssh for a shorter period than those of digit 4, and they also depend on Shh diffusion from the ZPA. Digit 2 is dependent entirely on ssh diffusion for its specification, and digit 1 is specified independently of Shh. Shh lacking mutants only form digit 1.
+
+Shh works by two temporally distinct mechanisms. The first phase involves specification of digit identity (AP axis).
+Shh acts as morhogen, concentration of Shh matters and duration of exposure to Shh. In the second phase, Shh works as a mitogen to stimulate proliferation and expansion of the limb bud mesenchyme, thus helping shape the limb bud.
+
+*** The Shh digit identity mechanism
+:PROPERTIES:
+:NOTER_PAGE: (817 0.7856000000000001 . 0.6999339061467283)
+:END:
+
+It may involve cell-cycle regulation and the BMP pathway. The time and concentration dependent actions of Shh lead to the graded activation of the downstream transcriptional effetor Gli3. These targets include the genes for the BMP antagonist Gremlin, the cell cycle regulator Cdk6, and the genes that synthesize hyaluronic acid (for cell adhesion). Shh (through Gli3) restricts the proliferation of cartilage progenitor cells (by downregulating Cdk6) and promotes their BMP-stimulated differentiation into cartilage by inhibiting the BMP antagonist Gremlin and by upregulating hyaluronic acid syntase 2.
+
+Shh initiates and sustains a gradient of BMP proteins across the limb bud, and this BMP gradient can specify the digits. Identity is not specified directly in each digit primordium. Rather the identity of each digit is determined by the interdigital mesoderm—that is, by the webbing between the digits.
+
+The interdigital tissue specifies the identity of the digit forming anteriorly to it. Thus, when the webbing is removed cartilaginous condensations forming the chich hindlimb 2 and 3, the second digit was changed into a copy of digit 1.
+Similarly,  when the webbing on the other side of the digit 3 was removed, digit 3 becomes copy of the digit 2.
+Moreover, the positional value of the webbing could be altered by changing the BMP level.
+Each digit has a characteristic array of nodules that form the digit skeleteon.
+Different levels of BMP signaling in the interdigital webbing regulate the recruitment of PZ mesenchymal cells into the nodules that make the digits.
+
+*** Shh and Fgf: another positive feedback loop
+:PROPERTIES:
+:NOTER_PAGE: (818 0.732 . 0.5318181818181819)
+:END:
+Initial positive feedback loop is establish between Fgf10 produced in mesoderm and Fgf8 produces in the ectoderm, promoting limb outgrowth. When ZPA established another regulatory loop is created. BMPs in the mesoderm would downregulate FGFs in the AER.
+This is prevented by Shh-dependent expression of a BMP inhibitor, Gremlin.
+Shh in the ZPA activates Gremlin, which inhibits BMPs, thus promoting the maintenance of FGF expression and  continued limb outgrowth.
+FGF in turn inhibits repressors of Shh to complete the positive feedback loop.
+
+Depending on the levels of FGF in the AER, ZPA can be activated or shu down.
+At first, low levels of AER FGFs activate Shh and keep the ZPA functioning. The FGF signals appear to inhibit the proteins Etv4 and Etv5, which repress the Shh transcription. Thus, the AER and ZPA mutally support each other.  In more anterior region of the limb bud, Fgf8 positively regulates Etv4/5, which in turn represses shh in this region, further reinforcing the PA gradient of Shh from ZPA.
+
+As a result of Shh-FGF pf, levels of Gremlin become high, and the FGF/Shh loop sustains limb growth.
+As long as the Gremlin signal can diffuse to the AER, FGFs will be made and the AER maintained.
+However, as FGF levels consequently also rise, a negative feedback loop to block Gremlin expression in the distal mesenchyme is triggered.
+This repression of Gremlin synthesis paired with the progressive expansion of the limb bud creates increased distance between Gremlin and the signaling centers (AER and ZPA) in the distalmost mesenchyme.
+At that time the BMPs abrogate FGF synthesis, the AER collapses and the ZPA is terminated.
+The embryonic phase of limb development ends.
+
+*** Hox genes are part of the regulatory network specifying digit identity
+:PROPERTIES:
+:NOTER_PAGE: (821 0.31666666666666665 . 0.7909090909090909)
+:END:
+Hox genes are critical for specifying fates along each axis of the limb especially Hoxd cluster.
+They function in two phases.
+The first phase is important for the specification of the stylopod and zeuopod.
+ The later phase of HoxD expression helps specify the autopod. There are two major early cis-regulatory regions imvolved, composed of numerous enhancers that work together to activate Hoxd genes in a specific temporal and spatial array—the ELCR and POST regulatory regions.
+The major early regulatory, or early limb control regulatory (ELCR),  region activates transcription in a time dependent manner: the closer the gene is to the ELCR region, the earlier it is activated.
+The second early regulatory region, POST ("posterior restriction"), imposes spatial restrictions on the expression of the 5' Hoxd genes (Hoxd10-13) such that the genes closes to this region have the most restricted expression domains, starting from the posterior margion of the limb bud.
+
+This situation create a pattern of nested Hoxd proteins essential for activating the long range enhancer (ZRS enhancer) of Shh gene, thereby activating Shh expression in the posterior limb bud mesoderm and forming the ZPA.
+In addition, the ZPA is also influenced by the presence of Hoxb8 in the flank mesenchyme, which appers to help define the posterior boundary of the forelimb bud. If Hoxb8 is expressed ectopically in the anterior compartment of the mouse forelimb bud, a ZPA will also form there.
+
+The ZPA now feeds back to alter the Hoxd gene expression patterns.
+Shh expressed from the posterior margin activates a second set of enhancers called the global control region, or GCR.
+The Hox genes closest to the GCR are expressed most broadly.
+This expression inverts the original pattern of Hoxd10-13 expression such that Hoxd13 is expressed at the highest level and exptend most anteriorly.
+Hoxd12, Hoxd11, and Hoxd10 are expressed in slighly narrow domians, so that the most anterior digit expresses Hoxd13 bu no other Hox gene.
+Thus, the first phase of Hoxd gene expression, heps specify the ZPA, while second phase of Hoxd expression the ZPA instructs the expression patterns, and the patterns define the identities of the digits.
+Transplantation of either ZPA or other Shh secreting cells to the anterior margin of the limb bud at this stage lead to the formation of mirror image patters of Hoxd expression and results in mirror-image digits.
+
+*** A Turing model for self organizing digit skeletogenesis
+:PROPERTIES:
+:NOTER_PAGE: (823 0.16666666666666666 . 0.16363636363636364)
+:END:
+Shh and Gli3 single and double null mutants still form digits.
+These mutants form lots of digits.
+These data imply either that some other inductive system generates digits, or that digit formation is built on an intrinsic molecular prepattern of skeletogenesis. The AP striped pattern of five digits in the mouse paw is reminiscent of Turing-type patterning. If a Turing type mechanism is enabling the distal mesenchyme to self-organize during chondrogenesis.
+Hoxa13/Hoxd11-13 genes function through a Turing mechanism to control digit number.
+One way to theoretically increase the number of digits would be to narrow the wavelength of patterned chondrogenesis; that is one could divide the distal mesenchyme into smaller stripes of precartilage development.
+Progressive loss of distal Hox genes combined with similarly dosed reduction in /Gli3/ correlated with gradual increases in the number of digits.
+Hox genes in combination with AER-derived Fgf gradients were sufficient modulators of the wavelength of a Turing system to recapitulate the skeletogenix pattern of digits in normal mice and in Gli3-null backgrounds.
+Wnt- and BMP- genes are highly upregulated where Sox9 is not expressed.

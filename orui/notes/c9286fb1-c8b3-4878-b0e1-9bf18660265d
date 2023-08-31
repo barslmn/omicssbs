@@ -4,9 +4,11 @@
 #+title: Gibbs Sampling Algorithm Implementation for Searching DNA Motifs
 #+filetags: :publish:compbio:blog:
 #+DATE: <2022-10-20 Thu>
-
+#+PROPERTY: HEADER-ARGS+ :eval no-export
 #+bibliography: /home/bar/org/lib.bib
 #+cite_export: csl
+#+INDEX: Gibbs Sampling
+#+INDEX: Sequence motifs
 
 #+begin_abstract
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
@@ -807,3 +809,14 @@ plot_logo(wmm, "5prime_splice_site.png")
 [[file:5prime_splice_site.png]]
 
 Here what we are looking for is the [[https:https://en.wikipedia.org/wiki/RNA_splicing][5´ splice sites]] with the motif =G-G-[cut]-G-U-R-A-G-U=.
+
+* Comments
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+HTML_HEAD_EXTRA: <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
+#+BEGIN_EXPORT html
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
+#+END_EXPORT

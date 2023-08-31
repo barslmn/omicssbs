@@ -48,3 +48,6 @@ LC_ALL=C find . -name '?*.*' -type f -print0 |
       }
     }' | numfmt --to=iec-i --suffix=B
 #+end_src
+
+* Cool dark mode switch
+https://codepen.io/NotFish/pen/PoyGyVo

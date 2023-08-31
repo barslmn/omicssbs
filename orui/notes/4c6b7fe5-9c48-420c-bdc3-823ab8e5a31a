@@ -1,0 +1,632 @@
+:PROPERTIES:
+:ID:       4c6b7fe5-9c48-420c-bdc3-823ab8e5a31a
+:END:
+#+title: Tez WES X heterozigotluğu
+#+filetags: :publish:tez:
+
+[[id:39d54305-6732-4919-b4f2-f69b55142949][X heterozygosity]]
+[[id:b60cf17f-ea11-446a-82c7-a13244081b9d][Kalite Kontrolü]]
+[[id:42e44f63-7e98-4b5a-99c5-234df8646d2c][WES]]
+
+* X heterozygosity :ATTACH:
+#+begin_src sh :results output :dir /ssh:g5:/mnt/e/epi25/WES :async
+bcftools view -H WES.vcf.gz | head | cut -c 1-100
+#+end_src
+
+#+RESULTS:
+#+begin_example
+chr1	12198	.	G	C	187.8	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	ExcessHet=3.0103;FS=0;InbreedingCoeff=0.3376;MQ=24.67;QD=28.73;SOR=2.833;VQSLOD=-17.34;culprit=MQ;BaseQRankSum=0;MQRankSum
+chr1	12659	.	G	C	69.48	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	BaseQRankSum=0.487;ExcessHet=3.1141;FS=0;InbreedingCoeff=0.3414;MQ=24.81;MQRankSum=-2.2;QD=2.32;ReadPosRankSum=-1.262;SOR=
+chr1	12672	.	C	T	157.79	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	BaseQRankSum=0.56;ExcessHet=3.2131;FS=0;InbreedingCoeff=0.3;MQ=24.77;MQRankSum=-2.2;QD=3.22;ReadPosRankSum=-0.85;SOR=0.05
+chr1	12719	.	G	C	756.74	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	BaseQRankSum=0;ExcessHet=0.8324;FS=0;InbreedingCoeff=0.1338;MQ=25.12;MQRankSum=-1.345;QD=4.96;ReadPosRankSum=0.872;SOR=0.
+chr1	12774	.	G	A	276.23	VQSRTrancheSNP99.95to100.00	BaseQRankSum=1.08;ExcessHet=3.0103;FS=0;InbreedingCoeff=0.4753;MQ=25.82;MQRankSum=0.353;QD=11.51;ReadPosRankSum=1.19;SOR=0.693;VQSLOD=-17.37;culprit
+chr1	12796	.	T	A	519.68	VQSRTrancheSNP99.90to99.95	BaseQRankSum=-1.45;ExcessHet=3.0103;FS=0;InbreedingCoeff=0.4767;MQ=25.87;MQRankSum=1.25;QD=15.75;ReadPosRankSum=-0.096;SOR=1.542;DP=1045;AF=0.008929;
+chr1	12807	.	C	T	3640.17	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	BaseQRankSum=0;ExcessHet=0.7787;FS=0;InbreedingCoeff=0.0141;MQ=25.47;MQRankSum=-1.584;QD=8.04;ReadPosRankSum=0.514;SOR=0
+chr1	13079	.	C	G	402.72	VQSRTrancheSNP99.95to100.00;VQSRTrancheSNP99.90to99.95	BaseQRankSum=0.431;ExcessHet=0;FS=2.231;InbreedingCoeff=0.6123;MQ=24.55;MQRankSum=-0.135;QD=12.59;ReadPosRankSum=1.47;SOR
+chr1	13273	.	G	C	94044.1	VQSRTrancheSNP99.80to99.90	BaseQRankSum=0.247;ExcessHet=0;FS=3.964;InbreedingCoeff=0.5819;MQ=37.2;MQRankSum=-0.838;QD=17.69;ReadPosRankSum=-0.56;SOR=0.452;VQSLOD=-7.913;culpri
+chr1	13284	.	G	A	3204.66	VQSRTrancheSNP99.90to99.95	BaseQRankSum=2.12;ExcessHet=3.0103;FS=10.236;InbreedingCoeff=0.593;MQ=39.05;MQRankSum=-3.447;QD=8.88;ReadPosRankSum=0.094;SOR=1.232;VQSLOD=-8.752;cu
+#+end_example
+
+#+begin_src sh :results output :dir /ssh:g5:/mnt/e/epi25/WES :async
+
+nonPARregion="chrX:2781479-155701383"
+vcf="WES.vcf.gz"
+
+for sample in $(bcftools query -l "$vcf"); do
+    bcftools view -c 1 -s "$sample" -r "$nonPARregion" "$vcf" | bcftools norm -m-any 2>/dev/null | bcftools view -c 1 | bcftools query -f '[%GT]\n' | grep -v '1/0' |
+    sort |
+    uniq -c |
+    sed 2q |
+    awk -v sample=$sample 'NR==1{numhet=$1} {sum+=$1;} {print $0} END{print sample"\t"numhet/sum;}'
+done
+#+end_src
+
+#+name: Xhet-block-1
+#+RESULTS:
+#+begin_example
+    584 0/1
+   1693 1/1
+TURIBU-07-105	0.256478
+   2018 0/1
+   1135 1/1
+TURIBU-07-112A	0.640025
+   2179 0/1
+   1175 1/1
+TURIBU-07-115	0.649672
+    622 0/1
+   1842 1/1
+TURIBU-07-28A	0.252435
+    628 0/1
+   1668 1/1
+TURIBU-07-317	0.273519
+    610 0/1
+   1705 1/1
+TURIBU-08-117A	0.263499
+    573 0/1
+   1790 1/1
+TURIBU-08-141A	0.242488
+   2300 0/1
+   1123 1/1
+TURIBU-08-94	0.671925
+    649 0/1
+   1578 1/1
+TURIBU-09-01	0.291423
+    536 0/1
+   1769 1/1
+TURIBU-09-102A	0.232538
+   2111 0/1
+   1177 1/1
+TURIBU-09-104A	0.642032
+    673 0/1
+   1600 1/1
+TURIBU-09-105A	0.296084
+    599 0/1
+   1773 1/1
+TURIBU-09-108A	0.25253
+   2139 0/1
+   1134 1/1
+TURIBU-09-38A	0.653529
+   2130 0/1
+   1066 1/1
+TURIBU-09-49A	0.666458
+   2128 0/1
+   1198 1/1
+TURIBU-09-53A	0.639808
+    567 0/1
+   1662 1/1
+TURIBU-09-57A	0.254374
+   1878 0/1
+   1111 1/1
+TURIBU-10-09A	0.628304
+    530 0/1
+   1655 1/1
+TURIBU-10-110A	0.242563
+   2326 0/1
+   1260 1/1
+TURIBU-10-116A	0.648634
+    557 0/1
+   1678 1/1
+TURIBU-10-119A	0.249217
+   2262 0/1
+   1153 1/1
+TURIBU-10-13A	0.662372
+   2201 0/1
+   1179 1/1
+TURIBU-10-145	0.651183
+   2061 0/1
+   1085 1/1
+TURIBU-10-166	0.655118
+   2151 0/1
+   1166 1/1
+TURIBU-10-169	0.648478
+   2224 0/1
+   1096 1/1
+TURIBU-10-16A	0.66988
+   2192 0/1
+   1187 1/1
+TURIBU-10-180	0.648713
+   1919 0/1
+   1162 1/1
+TURIBU-10-201	0.62285
+   2164 0/1
+   1100 1/1
+TURIBU-10-210	0.66299
+    632 0/1
+   1788 1/1
+TURIBU-10-224	0.261157
+    555 0/1
+   1784 1/1
+TURIBU-10-23A	0.237281
+   2305 0/1
+   1172 1/1
+TURIBU-10-24A	0.662928
+   2106 0/1
+   1188 1/1
+TURIBU-10-28A	0.639344
+   1961 0/1
+   1165 1/1
+TURIBU-10-30A	0.627319
+   2183 0/1
+   1200 1/1
+TURIBU-10-35A	0.645285
+   1998 0/1
+   1206 1/1
+TURIBU-10-47A	0.623596
+    665 0/1
+   1662 1/1
+TURIBU-10-49A	0.285776
+    562 0/1
+   1728 1/1
+TURIBU-10-55A	0.245415
+   2298 0/1
+   1042 1/1
+TURIBU-10-58A	0.688024
+   2248 0/1
+   1042 1/1
+TURIBU-10-64A	0.683283
+   2196 0/1
+   1127 1/1
+TURIBU-10-69A	0.660849
+   2142 0/1
+   1079 1/1
+TURIBU-10-81A	0.665011
+   2117 0/1
+   1169 1/1
+TURIBU-10-87A	0.644248
+    672 0/1
+   1592 1/1
+TURIBU-11-48A	0.29682
+   2225 0/1
+   1206 1/1
+TURIBU-14P155	0.648499
+   2284 0/1
+   1131 1/1
+TURIBU-14P205	0.668814
+    704 0/1
+   1908 1/1
+TURIBU-14P208	0.269525
+   2149 0/1
+   1176 1/1
+TURIBU-14P209	0.646316
+    656 0/1
+   1912 1/1
+TURIBU-14P23	0.255452
+    610 0/1
+   1673 1/1
+TURIBU-14P238	0.267192
+   2125 0/1
+   1175 1/1
+TURIBU-14P256	0.643939
+   2365 0/1
+   1193 1/1
+TURIBU-14P258	0.664699
+    660 0/1
+   1805 1/1
+TURIBU-14P501	0.267748
+    682 0/1
+   1736 1/1
+TURIBU-14P502	0.282051
+    567 0/1
+   1926 1/1
+TURIBU-14P516	0.227437
+    699 0/1
+   1721 1/1
+TURIBU-14P559	0.288843
+   2172 0/1
+   1154 1/1
+TURIBU-14P586	0.653037
+   2102 0/1
+   1224 1/1
+TURIBU-14P587	0.63199
+    577 0/1
+   1799 1/1
+TURIBU-14P606	0.242845
+   2215 0/1
+   1225 1/1
+TURIBU-14P609	0.643895
+    598 0/1
+   1842 1/1
+TURIBU-14P612	0.245082
+   2345 0/1
+   1162 1/1
+TURIBU-14P614	0.668663
+   2252 0/1
+   1139 1/1
+TURIBU-14P618	0.664111
+   1909 0/1
+   1211 1/1
+TURIBU-14P619	0.611859
+   2105 0/1
+   1201 1/1
+TURIBU-14P644	0.636721
+   2226 0/1
+   1260 1/1
+TURIBU-14P645	0.638554
+   1985 0/1
+   1211 1/1
+TURIBU-14P648	0.621089
+    642 0/1
+   1758 1/1
+TURIBU-14P653	0.2675
+    595 0/1
+   1778 1/1
+TURIBU-4436	0.250737
+   1970 0/1
+   1178 1/1
+TURIBU-E06-43	0.625794
+    534 0/1
+   1683 1/1
+TURIBU-E07-223	0.240866
+    630 0/1
+   1653 1/1
+TURIBU-E07-315	0.275953
+    606 0/1
+   1637 1/1
+TURIBU-E08-04	0.270174
+   2118 0/1
+   1167 1/1
+TURIBU-E08-13	0.644749
+   2155 0/1
+   1120 1/1
+TURIBU-E08-52	0.658015
+   2089 0/1
+   1037 1/1
+TURIBU-E08-60	0.668266
+   2061 0/1
+   1179 1/1
+TURIBU-E09-09	0.636111
+    528 0/1
+   1657 1/1
+TURIBU-E09-66	0.241648
+   1998 0/1
+   1168 1/1
+TURIBU-E09-83	0.63108
+    603 0/1
+   1719 1/1
+TURIBU-E12-13	0.25969
+    577 0/1
+   1667 1/1
+TURIBU-E12-33	0.25713
+   2231 0/1
+   1234 1/1
+TURIBU-E12-72	0.643867
+   1923 0/1
+   1182 1/1
+TURIBU-E13-05	0.619324
+    657 0/1
+   1823 1/1
+TURIBU-E13-106	0.264919
+   2296 0/1
+   1050 1/1
+TURIBU-E13-115	0.686192
+   2250 0/1
+   1114 1/1
+TURIBU-E13-124	0.668847
+   2160 0/1
+   1204 1/1
+TURIBU-E13-21	0.642093
+   2159 0/1
+   1137 1/1
+TURIBU-E13-22	0.655036
+    621 0/1
+   1749 1/1
+TURIBU-E13-25A	0.262025
+    661 0/1
+   1701 1/1
+TURIBU-E13-28	0.279848
+   2377 0/1
+   1174 1/1
+TURIBU-E13-44	0.669389
+   2155 0/1
+   1184 1/1
+TURIBU-E13-54	0.645403
+   2121 0/1
+   1149 1/1
+TURIBU-E13-61	0.648624
+   1931 0/1
+   1211 1/1
+TURIBU-E13-65a	0.614577
+    636 0/1
+   1836 1/1
+TURIBU-E13-73	0.257282
+    650 0/1
+   1705 1/1
+TURIBU-E14-04	0.276008
+   2234 0/1
+   1160 1/1
+TURIBU-E15-41	0.65822
+   2169 0/1
+   1194 1/1
+TURIBU-E16-05	0.64496
+    633 0/1
+   1728 1/1
+TURIBU-E16-10	0.268107
+    570 0/1
+   1785 1/1
+TURIBU-E16-17	0.242038
+    603 0/1
+   1858 1/1
+TURIBU-E16-18	0.245022
+   1992 0/1
+   1215 1/1
+TURIBU-E16-36	0.621141
+    613 0/1
+   1821 1/1
+TURIBU-Epi01	0.251849
+   2251 0/1
+   1196 1/1
+TURIBU-Epi02	0.653032
+   2109 0/1
+   1296 1/1
+TURIBU-Epi03	0.619383
+    687 0/1
+   1745 1/1
+TURIBU-Epi04	0.282484
+   2350 0/1
+   1095 1/1
+TURIBU-Epi05	0.682148
+   2564 0/1
+   1265 1/1
+TURIBU-Epi06	0.669627
+    657 0/1
+   1659 1/1
+TURIBU-Epi07	0.283679
+   2251 0/1
+   1228 1/1
+TURIBU-Epi08	0.647025
+    664 0/1
+   1702 1/1
+TURIBU-Epi09	0.280642
+   2154 0/1
+   1185 1/1
+TURIBU-Epi10	0.645103
+    652 0/1
+   1875 1/1
+TURIBU-Epi11	0.258013
+   2308 0/1
+   1208 1/1
+TURIBU-Epi12	0.656428
+   2381 0/1
+   1078 1/1
+TURIBU-Epi13	0.688349
+    669 0/1
+   1756 1/1
+TURIBU-Epi14	0.275876
+   2222 0/1
+   1233 1/1
+TURIBU-Epi16	0.643126
+   2197 0/1
+   1093 1/1
+TURIBU-Epi17	0.667781
+    582 0/1
+   1689 1/1
+TURIBU-Epi18	0.256275
+   2082 0/1
+   1124 1/1
+TURIBU-Epi19	0.649407
+   2155 0/1
+   1424 1/1
+TURIBU-Epi20	0.602123
+   2240 0/1
+   1158 1/1
+TURIBU-Epi21	0.659211
+    684 0/1
+   1766 1/1
+TURIBU-Epi22	0.279184
+   2054 0/1
+   1102 1/1
+TURIBU-Epi23	0.650824
+    619 0/1
+   1704 1/1
+TURIBU-Epi24	0.266466
+   1480 0/1
+   1521 1/1
+TURIBU-Epi25	0.493169
+    748 0/1
+   1879 1/1
+TURIBU-Epi26	0.284735
+    683 0/1
+   1814 1/1
+TURIBU-Epi27	0.273528
+    652 0/1
+   1832 1/1
+TURIBU-Epi28	0.26248
+   2304 0/1
+   1174 1/1
+TURIBU-Epi29	0.66245
+   2071 0/1
+   1134 1/1
+TURIBU-Epi30	0.646178
+    570 0/1
+   1718 1/1
+TURIBU-Epi31	0.249126
+   1850 0/1
+   1114 1/1
+TURIBU-Epi32	0.624157
+   2189 0/1
+   1278 1/1
+TURIBU-Epi33	0.631382
+   1996 0/1
+   1207 1/1
+TURIBU-Epi34	0.623166
+   2156 0/1
+   1149 1/1
+TURIBU-Epi35	0.652345
+    496 0/1
+   1732 1/1
+TURIBU-Epi36	0.222621
+    582 0/1
+   1547 1/1
+TURIBU-Epi37	0.273368
+    611 0/1
+   1722 1/1
+TURIBU-Epi38	0.261895
+   2072 0/1
+   1169 1/1
+TURIBU-Epi39	0.639309
+   2009 0/1
+   1202 1/1
+TURIBU-Epi40	0.625662
+   2005 0/1
+   1213 1/1
+TURIBU-Epi41	0.623058
+   2184 0/1
+   1073 1/1
+TURIBU-Epi42	0.670556
+   1630 0/1
+   1300 1/1
+TURIBU-Epi43	0.556314
+   2099 0/1
+   1131 1/1
+TURIBU-Epi44	0.649845
+    697 0/1
+   1768 1/1
+TURIBU-Epi45	0.282759
+    624 0/1
+   1758 1/1
+TURIBU-Epi46	0.261965
+   1983 0/1
+   1174 1/1
+TURIBU-Epi47	0.628128
+    648 0/1
+   1713 1/1
+TURIBU-Epi48	0.27446
+    670 0/1
+   1698 1/1
+TURIBU-Epi49	0.282939
+   2101 0/1
+   1131 1/1
+TURIBU-Epi50	0.650062
+   2496 0/1
+   1276 1/1
+TURIBU-Epi52	0.661718
+    557 0/1
+   1809 1/1
+TURIBU-Epi53	0.235418
+   2462 0/1
+   1237 1/1
+TURIBU-Epi54	0.665585
+   1822 0/1
+   1243 1/1
+TURIBU-Epi55	0.594454
+    617 0/1
+   1767 1/1
+TURIBU-Epi56	0.258809
+   2153 0/1
+   1135 1/1
+TURIBU-Epi57	0.654805
+   2119 0/1
+   1103 1/1
+TURIBU-Epi58	0.657666
+    609 0/1
+   1744 1/1
+TURIBU-Epi59	0.258819
+   2116 0/1
+   1165 1/1
+TURIBU-Epi60	0.644925
+    755 0/1
+   1758 1/1
+TURIBU-Epi61	0.300438
+    728 0/1
+   1935 1/1
+TURIBU-Epi62	0.273376
+    561 0/1
+   1841 1/1
+TURIBU-Epi63	0.233555
+#+end_example
+
+#+begin_src R :results output :session TezWESXHet
+.libPaths("~/.local/share/R/4.3")
+library(ggplot2)
+library(cowplot)
+library(ggrepel)
+theme_Publication <- function(base_size=14, base_family="Helvetica") {
+      library(grid)
+      library(ggthemes)
+      (theme_foundation(base_size=base_size, base_family=base_family)
+       + theme(plot.title = element_text(face = "bold",
+                                         size = rel(1.2), hjust = 0.5),
+               text = element_text(),
+               panel.background = element_rect(colour = NA),
+               plot.background = element_rect(colour = NA),
+               panel.border = element_rect(colour = NA),
+               axis.title = element_text(face = "bold",size = rel(1)),
+               axis.title.y = element_text(angle=90,vjust =2),
+               axis.title.x = element_text(vjust = -0.2),
+               axis.text = element_text(),
+               axis.line = element_line(colour="black"),
+               axis.ticks = element_line(),
+               panel.grid.major = element_line(colour="#f0f0f0"),
+               panel.grid.minor = element_blank(),
+               legend.key = element_rect(colour = NA),
+               legend.position = "bottom",
+               legend.direction = "horizontal",
+               legend.key.size= unit(1.0, "cm"),
+               legend.margin = unit(0, "cm"),
+               legend.title = element_text(face="italic"),
+               plot.margin=unit(c(10,5,5,5),"mm"),
+               strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+               strip.text = element_text(face="bold")
+          ))
+
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output :session TezWESXHet :var data=Xhet-block-1
+# split the new lines and remove the lines starting with white space
+data <- strsplit(data, "\n")[[1]]
+data <- data[!grepl("^\\s", data)]
+head(data)
+# split the lines by tab and make a data frame
+data <- strsplit(data, "\t")
+data <- do.call(rbind, data)
+data <- as.data.frame(data, stringsAsFactors = FALSE)
+colnames(data) <- c("sample", "xHet")
+data$xHet <- as.numeric(data$xHet)
+head(data)
+#plot the data and label the each sample point, theme from cowplot
+p <- ggplot(data, aes(x = sample, y = xHet)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  geom_label_repel(aes(label = sample), size = 3, nudge_x = 0.5, nudge_y = 0.1)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "TURIBU-07-105\t0.256478"  "TURIBU-07-112A\t0.640025"
+[3] "TURIBU-07-115\t0.649672"  "TURIBU-07-28A\t0.252435"
+[5] "TURIBU-07-317\t0.273519"  "TURIBU-08-117A\t0.263499"
+          sample     xHet
+1  TURIBU-07-105 0.256478
+2 TURIBU-07-112A 0.640025
+3  TURIBU-07-115 0.649672
+4  TURIBU-07-28A 0.252435
+5  TURIBU-07-317 0.273519
+6 TURIBU-08-117A 0.263499
+#+end_example
+
+#+begin_src R :file ./görsel/Xhet.svg :results output graphics file :session TezWESXHet :width 24 :height 12
+#plot the data and label the each sample point, theme from cowplot
+# rotate the x axis labels by 90 degrees
+# nudge the labels a bit to the right and up
+# scale up the x axis to fit the labels
+ggplot(data, aes(x = sample, y = xHet)) +
+  geom_point(size = 3) +
+  theme_Publication() +
+  theme(axis.text.x = element_text(size=10, angle = 90, vjust = 0.5, hjust = 1))
+  ## geom_label_repel(aes(label = sample), size = 10)
+#+end_src
+
+#+RESULTS:
+[[file:./görsel/Xhet.svg]]
+
+#+begin_src R :results table file :session TezWESXHet :file Xhet.tahminler.tsv
+data$sex <- ifelse(data$xHet >= 0.5, "Kadın", "Erkek")
+print(data)
+#+end_src
+
+#+RESULTS:
+[[file:Xhet.tahminler.tsv]]

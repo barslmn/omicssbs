@@ -1,0 +1,89 @@
+:PROPERTIES:
+:ID:       3b383637-3c75-491f-b598-785ac067fd7d
+:ROAM_ALIASES: "Tez indeksi"
+:END:
+#+title: Tez İndeks
+#+filetags: :publish:tez:
+
+* Epilepsilerde Genetik Altyapının Genomik Yaklaşımlar ile Araştırılması
+
+
+Bu döküman tezin planlanması, analizleri ve yazımı hakkındaki herşeyi bir araya getirmeyi amaçlar.
+
+[[id:8da130b8-1c86-4ab7-b336-4963a017784a][Tez analizleri]]
+[[id:5da15176-8e92-4356-bce2-1feff7ddc24b][Tez Terimler Sözlüğü]]
+
+* [ ] Giriş ve Amaç [0/5]
+Birkaç cümle ile başlıkları toparla.
++ [ ] epilepsi [0/2]
+  - [ ] etiyolojileri
+  - [ ] nörogelişim
++ [ ] dizileme ve mikroarray yöntemleri
++ [ ] epilepsinin genetik altyapısı [0/3]
+  - [ ] kromozomal anomaliler
+  - [ ] monogenik epilepsiler
+  - [ ] poligenik epilepsiler
++ [ ] Transkriptomik çalışmalar
++ [ ] Epilepside ara-omik çalışmaların olmaması
+
+* [ ] Genel Bilgiler [0/6]
++ [ ] Epilepsi sınıflandırması :: [[id:247d56e5-1c93-4ae7-8a6f-ee66f9cd9db2][ILAE Sınıflandırması]]
++ [ ] Genetik ve epilepsi [0/0]
++ [ ] Genetik yöntemler [0/2]
+  - [ ] Tüm genom genotipleme
+  - [ ] WES
+
++ [ ] İnsan referans genomları [0/3]
+  - [ ] GRCh37
+  - [ ] GRCh38
+  - [ ] T2T CHM13
++ [ ] Anotasyonlar [0/3]
+  - [ ] HGNC sembolleri
+  - [ ] RefSeq
+  - [ ] GENCODE
+
++ [ ] Genetik varyasyonlar [0/1]
+  - [ ] Genetik varyasyonların sınıflandırılması
+    * [ ] HGVS nomenklaturu
+    * [ ] Dizi ontolojisi
+    * [ ] ACMG kriterleri
+
+* [ ] Gereç ve Yöntem [0/3]
++ [ ] Örnekler [0/4]
+  - [ ] Etik kurul onayı
+  - [ ] Klinik bilgiler
+  - [ ] DNA izolasyonu
+  - [ ] Kalite kontrolleri
+    * [ ] DNA kalitesi
+    * [ ] DNA konsantrasyonu
+    * [ ] DNA bütünlüğü
+
++ [ ] Tüm genom genotipleme [0/5]
+  - [ ] Kalite kontrolleri
+    * [ ] Çağırım Oranları
+    * [ ] PCA
+    * [ ] Akrabalık analizleri
+    * [ ] Cinsiyet tahminleri
+      Genom Stüdyo ile yapıldı.
+
+  - [ ] CNV analizleri
+  - [ ] LOH analizleri
+  - [ ] Bağlantı analizleri
+  - [ ] PRS analizleri
+
++ [-] [[id:42e44f63-7e98-4b5a-99c5-234df8646d2c][WES]] [0/3]
+  - [-] Kalite kontrolleri
+    * [ ] Dizileme istatistikleri
+    * [ ] Varyant istatistikleri
+      + [ ] SNP/indel sayıları ve oranları
+      + [ ] Heterozigot/Homozigot oranları
+    * [ ] PCA
+    * [ ] Akrabalık analizleri
+    * [-] Cinsiyet tahminleri [1/2]
+      + [X] [[id:4c6b7fe5-9c48-420c-bdc3-823ab8e5a31a][Tez WES X heterozigotluğu]] :: Analiz
+      + [ ] Yazı :: Analiz
+  - [ ] SNV ve delins analizleri
+  - [ ] CNV analizleri
+
+* [ ] Bulgular
+* [ ] Tartışma

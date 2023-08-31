@@ -2,9 +2,11 @@
 :ID:       85b9f2b2-b1f9-40a3-bf17-1bfa2e800f27
 :END:
 #+title: Sequence Alignment from Scratch with BWA
-#+filetags: :publish:compbio:bioinformatics:blog:
+#+filetags: :bwa:sequencealignment:publish:compbio:bioinformatics:blog:
 #+DATE:<2022-12-16 Fri>
-
+#+PROPERTY: HEADER-ARGS+ :eval no-export
+#+INDEX: Seqeunce alignment
+#+INDEX: BWA
 #+bibliography: /home/bar/org/lib.bib
 #+cite_export: csl
 
@@ -2761,5 +2763,16 @@ samtools faidx ./ref.fasta
 #+ATTR_HTML: :width 100%
 [[./igv.svg]]
 
-* Referanslar
+* References
 #+print_bibliography:
+
+* Comments
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+HTML_HEAD_EXTRA: <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
+#+BEGIN_EXPORT html
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
+#+END_EXPORT

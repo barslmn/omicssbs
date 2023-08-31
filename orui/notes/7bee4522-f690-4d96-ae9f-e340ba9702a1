@@ -1,0 +1,91 @@
+:PROPERTIES:
+:ID:       7bee4522-f690-4d96-ae9f-e340ba9702a1
+:NOTER_DOCUMENT: /home/bar/Documents/Zotero/storage/62MKIQ5N/Nuño De La Rosa and Müller - 2021 - Evolutionary Developmental Biology A Reference Gu.pdf
+:END:
+#+title: nunodelarosaEvolutionaryDevelopmentalBiology2021
+#+filetags: :publish:books:shfm:
+
+* More reading material
+:PROPERTIES:
+:NOTER_PAGE: (29 0.12960526315789475 . 0.1541916167664671)
+:END:
+Other books to check out
+
+* Concepts in Evo-Devo
+:PROPERTIES:
+:NOTER_PAGE: (30 0.32894736842105265 . 0.16516966067864272)
+:END:
+Heterochrony, Developmental exaptation, Concept of Burden in Evo-Devo etc..
+
+* Heterochrony
+:PROPERTIES:
+:NOTER_PAGE: (39 0.4391046741277156 . 0.14321357285429143)
+:END:
+Difference in the timing of development in descendants compared to their ancestors.
+Ontogenetic schedule of development can potentially produce tremendous phenotypic diversity.
+Heterochrony involves oth changes in the relative timing in the appearance of the trait (/event heterochronies/) and/or differences in the relative amount of time for a feature to develop (/rate heterochronies/).
+Event heterochronies are single point of development (/onset or offset/).
+Rate heterochronies are differences in the degree of developmental change between at least two time points(/rate/).
+Both rate and event can be accelerated or decelerated in descendants compare to ancestors.
+
+* Fin-to-Limb development
+:PROPERTIES:
+:NOTER_PAGE: (892 0.5378538512179065 . 0.16516966067864272)
+:END:
+Ectodermal jacket of the fin bud has a ridge along the dorsoventral border called apical ectodermal ridge (AER), which elongates into the apical fold (AF).
+Tetrapod limb bud never undergo this transformation, suggestting that epithelial changes might be the key to understand the evolutionary developmental mechanism behind fin-to-limb transition.
+
+Morphologically limb skeleton made out of stylopod (humerus/femur), zeugopod (radius/tibia and ulna/fibula), and autopod (carpals/tarsals, metacarpals/metatarsals, and phalanges)
+Tetropod limbs and paired finds are homologous.
+
+
+* Fin rays to digits
+:PROPERTIES:
+:NOTER_PAGE: (895 0.6907894736842105 . 0.4615768463073852)
+:END:
+/Acanthostega/ and /Ichthyostega/
+
+* Lateral plate mesoderm
+:PROPERTIES:
+:NOTER_PAGE: (896 0.2467105263157895 . 0.2310379241516966)
+:END:
+Both endochondral bones and dermal bones are derived from lateral plate mesoderm (LPM).
+
+* Apical ectodermal ridge
+:PROPERTIES:
+:NOTER_PAGE: (896 0.4276315789473684 . 0.560379241516966)
+:END:
+Both fin and limb buds have an ectodermal ridge structure running alond the entire dorsoventral border on the bud.
+
+In tetrapods the AER is maintained throughout the limb bud outgrowth.
+In teleost AER is retained until fin bud appears than turns into the AF.
+AER plays role in PD axis and results in elongation of the limb/fin.
+
+* Zone of polarizing activity
+:PROPERTIES:
+:NOTER_PAGE: (896 0.6368421052631579 . 0.3408183632734531)
+:END:
+formation of three-dimensional pattern depends on two signaling centers: AER and ZPA.
+
+ZPA, is an aera of the posterior limb mesenchyme and has and inductive activity of the AP.
+Shh protein plays role in ZPA.
+/Shh/ expression  in the ZPA is induced by RA signaling from trunk.
+Expression of /ssh/ is localized to the posterior fin bud.
+
+* Homeobox genes
+:PROPERTIES:
+:NOTER_PAGE: (898 0.27960526315789475 . 0.40668662674650696)
+:END:
+5' /HoxA/ and /HoxD/ cluster genes regulate downstream patterning.
+
+
+* Acronyms
+- AER :: Apical Ectodermal Ridge
+- AF :: Apical Fold
+- AP :: Anterior-posterior (thumb-pinkie)
+- DV :: Dorsal-ventral (knuckle-palm)
+- FGF :: Fibroblast growth factor
+- LPM :: Lateral Plate Mesoderm
+- PD :: Proximo-distal
+- RA :: Retionic acid
+- ZPA :: Zone of Polarizing Activity

@@ -1,8 +1,12 @@
 :PROPERTIES:
 :ID:       010197ec-1528-42e0-ae30-44da1fcae1eb
 :END:
-#+title: TurkishVariome2VCF
+#+title: Converting Turkish Variome data from TSV to VCF
 #+filetags: :publish:
+#+PROPERTY: HEADER-ARGS+ :eval no-export
+#+INDEX: VCF
+#+INDEX: AWK
+#+CREATED:<2022-11-22 Tue>
 
 * Some background
 I have a patient cohort I want to annotate. I like Ensembl VEP so that's what I am going to use but this is not about VEP. I also want to add a custom annotation.
@@ -221,3 +225,14 @@ zcat TurkishVariome.tsv.gz | awk 'BEGIN {
 #+end_src
 
 We can now index the file with $tabix -p vcf TurkishVariome.GRCh38.vcf.gz$ and use this VCF with VEP command $--custom TurkishVariome.GRCh38.vcf.gz,TV,vcf,exact,0,AF,AC,AN$
+
+* Comments
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+HTML_HEAD_EXTRA: <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
+#+BEGIN_EXPORT html
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
+#+END_EXPORT
