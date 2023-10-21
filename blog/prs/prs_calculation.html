@@ -3,10 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:18 -->
+<!-- 2023-10-22 Sun 02:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Polygenic Risk Score Calculation</title>
+<meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
 <style>
   #content { max-width: 60em; margin: auto; }
@@ -305,13 +306,12 @@ else {
 You can find the <a href="https://barslmn.shinyapps.io/PRiSm/">interactive app here.</a>
 </p>
 </blockquote>
-
 <div id="outline-container-orga87538a" class="outline-2">
 <h2 id="orga87538a"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org459c426">
+<div class="sidenote" id="orgbcb54ea">
 <p>
 
 </p>
@@ -361,7 +361,6 @@ We model this additive effect of multiple variations on a given phenotype with a
 This writing aims to give a basic understanding of <a class="org-gls" href="#gls.11" id="glsr.11.2">PRS</a> and some concepts related to it in literature.
 </p>
 </div>
-
 <div id="outline-container-orge54fd77" class="outline-3">
 <h3 id="orge54fd77"><span class="section-number-3">1.1.</span> Polygenic</h3>
 <div class="outline-text-3" id="text-1-1">
@@ -377,7 +376,7 @@ Since association studies show correlations and not causation a variant like rs1
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgab08e0f">
+<div class="sidenote" id="org86a8b8d">
 <p>
 You can create this ideogram at: <a href="https://www.ncbi.nlm.nih.gov/genome/tools/gdp">https://www.ncbi.nlm.nih.gov/genome/tools/gdp</a>
 </p>
@@ -468,14 +467,13 @@ With the following intervals:
 </div>
 
 
-<div id="org8888ade" class="figure">
+<div id="org58879e1" class="figure">
 <p><img src="./ideogram.svg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Variations are marked with pink circles.</p>
 </div>
 </div>
 </div>
-
 <div id="outline-container-org277f63c" class="outline-3">
 <h3 id="org277f63c"><span class="section-number-3">1.2.</span> Risk</h3>
 <div class="outline-text-3" id="text-1-2">
@@ -504,7 +502,6 @@ Here the term <code>risk</code> refers to a relative risk since we are comparing
 </p>
 </div>
 </div>
-
 <div id="outline-container-orgc66a9ad" class="outline-3">
 <h3 id="orgc66a9ad"><span class="section-number-3">1.3.</span> Score</h3>
 <div class="outline-text-3" id="text-1-3">
@@ -558,7 +555,6 @@ PRS_j = \frac{\sum_{i}^{N} S_i \times G_{ij}}{P \times M_j}
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgc358366" class="outline-2">
 <h2 id="orgc358366"><span class="section-number-2">2.</span> Calculating Polygenic Risk Scores</h2>
 <div class="outline-text-2" id="text-2">
@@ -570,13 +566,12 @@ The idea here is that most of the time we don&rsquo;t have access to every genot
 Instead, we use the most significant variation and investigate their effect in our cohort.
 </p>
 </div>
-
 <div id="outline-container-orge2a72b4" class="outline-3">
 <h3 id="orge2a72b4"><span class="section-number-3">2.1.</span> Genome-wide Association Studies</h3>
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org51d861f">
+<div class="sidenote" id="orgf8eef65">
 <p>
 A great resource for viewing studies and their results is the <a href="https://www.ebi.ac.uk/gwas/">GWAS catalog</a>.
 A more hands-on example can be found at <a href="https://hail.is/docs/0.2/tutorials/01-genome-wide-association-study.html">Hail&rsquo;s site</a>.
@@ -596,19 +591,19 @@ First, let&rsquo;s go over the <a class="org-gls" href="#gls.12" id="glsr.12.5">
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org742ae07">snp_number <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">10</span>
+<pre class="src src-R" id="orgd33f426">snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
 
-gwas <span style="color: #b751b6;">&lt;-</span> data.frame(
-  SNP_id = paste(<span style="color: #50a14f;">"SNP"</span>, seq(snp_number), sep=<span style="color: #50a14f;">""</span>)
+gwas <span style="color: #8f3f71;">&lt;-</span> data.frame(
+  SNP_id = paste(<span style="color: #79740e;">"SNP"</span>, seq(snp_number), sep=<span style="color: #79740e;">""</span>)
 )
 gwas[c(
-  <span style="color: #50a14f;">"non_effect_allele"</span>,
-  <span style="color: #50a14f;">"effect_allele"</span>
-)] <span style="color: #b751b6;">&lt;-</span> t(replicate(snp_number,
-  sample(c(<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"T"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>), <span style="color: #da8548; font-weight: bold;">2</span>)
+  <span style="color: #79740e;">"non_effect_allele"</span>,
+  <span style="color: #79740e;">"effect_allele"</span>
+)] <span style="color: #8f3f71;">&lt;-</span> t(replicate(snp_number,
+  sample(c(<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"T"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>), <span style="color: #8f3f71; font-weight: bold;">2</span>)
   ))
 
-print(rbind(head(gwas, <span style="color: #da8548; font-weight: bold;">3</span>), tail(gwas, <span style="color: #da8548; font-weight: bold;">3</span>)))
+print(rbind(head(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
 </div>
 
@@ -674,9 +669,9 @@ However, we don&rsquo;t need to know the <code>non-effect allele</code> and <cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org82f01ec">gwas$non_effect_allele = <span style="color: #50a14f;">"A"</span>
-gwas$effect_allele = <span style="color: #50a14f;">"B"</span>
-print(rbind(head(gwas, <span style="color: #da8548; font-weight: bold;">3</span>), tail(gwas, <span style="color: #da8548; font-weight: bold;">3</span>)))
+<pre class="src src-R" id="org82f01ec">gwas$non_effect_allele = <span style="color: #79740e;">"A"</span>
+gwas$effect_allele = <span style="color: #79740e;">"B"</span>
+print(rbind(head(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
 </div>
 
@@ -743,7 +738,7 @@ We are going to use the log of <a href="https://en.wikipedia.org/wiki/Odds_ratio
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org9737471">
+<div class="sidenote" id="orgead668e">
 <p>
 I want to set it up so every <code>SNP</code> is observed <code>2</code> % more incrementally.
 The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-step_case');" onmouseout="CodeHighlightOff(this, 'coderef-step_case');"><code>step_case</code></a> and <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');"><code>obs_case</code></a> just generalize this instead of hard-coding so it applies to any number of <code>SNPs</code> and sample size.
@@ -752,27 +747,27 @@ The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHig
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="orgb9be04b">gwas_control_number = <span style="color: #da8548; font-weight: bold;">50000</span>
-gwas_case_number = <span style="color: #da8548; font-weight: bold;">50000</span>
-increment_percent = <span style="color: #da8548; font-weight: bold;">0.02</span>
+<pre class="src src-R" id="org0602230">gwas_control_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
+gwas_case_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
+increment_percent = <span style="color: #8f3f71; font-weight: bold;">0.02</span>
 gwas_sample_number = gwas_control_number + gwas_case_number
 
 <span id="coderef-step_case" class="coderef-off">step_case = round(gwas_case_number * increment_percent)</span>
-<span id="coderef-obs_case" class="coderef-off">gwas$obs_case = seq(gwas_case_number / <span style="color: #da8548; font-weight: bold;">2</span> + step_case,</span>
-                    gwas_case_number / <span style="color: #da8548; font-weight: bold;">2</span> + step_case * nrow(gwas),
+<span id="coderef-obs_case" class="coderef-off">gwas$obs_case = seq(gwas_case_number / <span style="color: #8f3f71; font-weight: bold;">2</span> + step_case,</span>
+                    gwas_case_number / <span style="color: #8f3f71; font-weight: bold;">2</span> + step_case * nrow(gwas),
                     step_case)
 
 <span id="coderef-step_control" class="coderef-off">step_control = round(gwas_control_number * increment_percent)</span>
-<span id="coderef-obs_control" class="coderef-off">gwas$obs_control = seq(gwas_control_number / <span style="color: #da8548; font-weight: bold;">2</span> - step_control,</span>
-                       gwas_control_number / <span style="color: #da8548; font-weight: bold;">2</span> - step_control * nrow(gwas),
+<span id="coderef-obs_control" class="coderef-off">gwas$obs_control = seq(gwas_control_number / <span style="color: #8f3f71; font-weight: bold;">2</span> - step_control,</span>
+                       gwas_control_number / <span style="color: #8f3f71; font-weight: bold;">2</span> - step_control * nrow(gwas),
                        -step_control)
 
-gwas$log_OR <span style="color: #b751b6;">&lt;-</span> signif(log(
+gwas$log_OR <span style="color: #8f3f71;">&lt;-</span> signif(log(
     (gwas$obs_case / (gwas_case_number - gwas$obs_case)) /
     (gwas$obs_control / (gwas_control_number - gwas$obs_control))
-<span id="coderef-log_OR" class="coderef-off">), <span style="color: #da8548; font-weight: bold;">2</span>)</span>
+<span id="coderef-log_OR" class="coderef-off">), <span style="color: #8f3f71; font-weight: bold;">2</span>)</span>
 
-print(rbind(head(gwas, <span style="color: #da8548; font-weight: bold;">3</span>), tail(gwas, <span style="color: #da8548; font-weight: bold;">3</span>)))
+print(rbind(head(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
 </div>
 
@@ -864,25 +859,24 @@ We get <code>effect sizes</code>
 for the first genotype and
 for the last genotype.
 A <code>BB</code> genotype would have score of
- <img src="ltximg/prs_calculation_d6b0b7084e1e89b6e493e1ee1b5bae8dcee647c6.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_b7f7bfc8fa1ffd080a1790df5a95eaebe19af4a8.svg" alt="$=$" class="latex-fragment-block" /> 
+ <img src="ltximg/prs_calculation_d6b0b7084e1e89b6e493e1ee1b5bae8dcee647c6.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_b7f7bfc8fa1ffd080a1790df5a95eaebe19af4a8.svg" alt="$=$" class="latex-fragment-block" /> <code>TRUE</code>
  for the first genotype and
  <img src="ltximg/prs_calculation_d6b0b7084e1e89b6e493e1ee1b5bae8dcee647c6.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_b7f7bfc8fa1ffd080a1790df5a95eaebe19af4a8.svg" alt="$=$" class="latex-fragment-block" /> .
 </p>
 </div>
 </div>
-
 <div id="outline-container-orgfb67807" class="outline-3">
 <h3 id="orgfb67807"><span class="section-number-3">2.2.</span> Toy dataset</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 We are screening our population concerning a phenotype.
-We aim to determine risk scores using the <a href="#org0602230">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.11" id="glsr.11.4">PRS</a> and phenotype.
-We have genotyped <a href="#orgd33f426">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
+We aim to determine risk scores using the <a href="#org40b965d">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.11" id="glsr.11.4">PRS</a> and phenotype.
+We have genotyped <a href="#orgfae9174">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org4183712">
+<div class="sidenote" id="org07a5a52">
 <p>
 The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-set_seed');" onmouseout="CodeHighlightOff(this, 'coderef-set_seed');"><code>set.seed()</code></a> in the first line ensure <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> randoms the same values every time.
 </p>
@@ -890,36 +884,36 @@ The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(thi
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org015b1b2"><span id="coderef-set_seed" class="coderef-off">set.seed(<span style="color: #da8548; font-weight: bold;">42</span>)</span>
+<pre class="src src-R" id="org015b1b2"><span id="coderef-set_seed" class="coderef-off">set.seed(<span style="color: #8f3f71; font-weight: bold;">42</span>)</span>
 
-sample_number <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">2000</span>
-snp_number <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">10</span>
-samples <span style="color: #b751b6;">&lt;-</span> data.frame(
-  sample_id = paste(<span style="color: #50a14f;">"Sample"</span>, seq(sample_number), sep=<span style="color: #50a14f;">""</span>),
+sample_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">2000</span>
+snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
+samples <span style="color: #8f3f71;">&lt;-</span> data.frame(
+  sample_id = paste(<span style="color: #79740e;">"Sample"</span>, seq(sample_number), sep=<span style="color: #79740e;">""</span>),
   status = c(
-    rep(<span style="color: #50a14f;">"Control"</span>, sample_number / <span style="color: #da8548; font-weight: bold;">2</span>),
-    rep(<span style="color: #50a14f;">"Case"</span>, sample_number / <span style="color: #da8548; font-weight: bold;">2</span>))
+    rep(<span style="color: #79740e;">"Control"</span>, sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>),
+    rep(<span style="color: #79740e;">"Case"</span>, sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>))
 )
 
-<span id="coderef-get_genotype" class="coderef-off"><span style="color: #a626a4;">get_genotype</span> <span style="color: #b751b6;">&lt;-</span> <span style="color: #e45649;">function</span>(prob=c(.5, .5)) {</span>
-  paste(sample(c(<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"B"</span>), <span style="color: #da8548; font-weight: bold;">2</span>, replace=T, prob = prob), collapse=<span style="color: #50a14f;">""</span>)
+<span id="coderef-get_genotype" class="coderef-off"><span style="color: #b57614;">get_genotype</span> <span style="color: #8f3f71;">&lt;-</span> <span style="color: #9d0006;">function</span>(prob=c(.5, .5)) {</span>
+  paste(sample(c(<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"B"</span>), <span style="color: #8f3f71; font-weight: bold;">2</span>, replace=T, prob = prob), collapse=<span style="color: #79740e;">""</span>)
 }
 
-<span id="coderef-control_prob" class="coderef-off">control_prob <span style="color: #b751b6;">&lt;-</span> c(<span style="color: #da8548; font-weight: bold;">0.55</span>, <span style="color: #da8548; font-weight: bold;">0.45</span>)</span>
-<span id="coderef-case_prob" class="coderef-off">case_prob <span style="color: #b751b6;">&lt;-</span> c(<span style="color: #da8548; font-weight: bold;">0.45</span>, <span style="color: #da8548; font-weight: bold;">0.55</span>)</span>
-samples[gwas$SNP_id] <span style="color: #b751b6;">&lt;-</span> rbind(
+<span id="coderef-control_prob" class="coderef-off">control_prob <span style="color: #8f3f71;">&lt;-</span> c(<span style="color: #8f3f71; font-weight: bold;">0.55</span>, <span style="color: #8f3f71; font-weight: bold;">0.45</span>)</span>
+<span id="coderef-case_prob" class="coderef-off">case_prob <span style="color: #8f3f71;">&lt;-</span> c(<span style="color: #8f3f71; font-weight: bold;">0.45</span>, <span style="color: #8f3f71; font-weight: bold;">0.55</span>)</span>
+samples[gwas$SNP_id] <span style="color: #8f3f71;">&lt;-</span> rbind(
   matrix(
     replicate(
-      snp_number * sample_number / <span style="color: #da8548; font-weight: bold;">2</span>,
+      snp_number * sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>,
       get_genotype(control_prob)),
-    nrow=sample_number / <span style="color: #da8548; font-weight: bold;">2</span>),
+    nrow=sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>),
   matrix(
     replicate(
-      snp_number * sample_number / <span style="color: #da8548; font-weight: bold;">2</span>,
+      snp_number * sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>,
       get_genotype(case_prob)),
-    nrow=sample_number / <span style="color: #da8548; font-weight: bold;">2</span>)
+    nrow=sample_number / <span style="color: #8f3f71; font-weight: bold;">2</span>)
 )
-print(rbind(head(samples, <span style="color: #da8548; font-weight: bold;">3</span>), tail(samples, <span style="color: #da8548; font-weight: bold;">3</span>)))
+print(rbind(head(samples, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(samples, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
 </div>
 
@@ -1072,7 +1066,6 @@ This way cases are more prone to having the <a class="org-gls" href="#gls.2" id=
 </p>
 </div>
 </div>
-
 <div id="outline-container-orgca6c7d6" class="outline-3">
 <h3 id="orgca6c7d6"><span class="section-number-3">2.3.</span> Calculate the PRS</h3>
 <div class="outline-text-3" id="text-2-3">
@@ -1087,7 +1080,7 @@ We <a href="#coderef-prs" class="coderef" onmouseover="CodeHighlightOn(this, 'co
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgfd50249">
+<div class="sidenote" id="orgecf2a04">
 <p>
 We have both <code>AB</code> and <code>BA</code> genotypes in the <a href="#coderef-dosage_list" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-dosage_list');" onmouseout="CodeHighlightOff(this, 'coderef-dosage_list');">dosage list</a> because our <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> returns both of these. Since there are no haplotypes or variant phasing both <code>AB</code> and <code>BA</code> are the same.
 </p>
@@ -1095,15 +1088,15 @@ We have both <code>AB</code> and <code>BA</code> genotypes in the <a href="#code
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R"><span id="coderef-dosage_list" class="coderef-off">dosage <span style="color: #b751b6;">&lt;-</span> list(<span style="color: #50a14f;">"AA"</span> = <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #50a14f;">"AB"</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #50a14f;">"BA"</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #50a14f;">"BB"</span> = <span style="color: #da8548; font-weight: bold;">2</span>)</span>
+<pre class="src src-R"><span id="coderef-dosage_list" class="coderef-off">dosage <span style="color: #8f3f71;">&lt;-</span> list(<span style="color: #79740e;">"AA"</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>, <span style="color: #79740e;">"AB"</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #79740e;">"BA"</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #79740e;">"BB"</span> = <span style="color: #8f3f71; font-weight: bold;">2</span>)</span>
 
-<span id="coderef-prs" class="coderef-off">samples$PRS <span style="color: #b751b6;">&lt;-</span> colSums(as.data.frame(</span>
+<span id="coderef-prs" class="coderef-off">samples$PRS <span style="color: #8f3f71;">&lt;-</span> colSums(as.data.frame(</span>
   apply(
     samples[gwas$SNP_id],
-    <span style="color: #da8548; font-weight: bold;">1</span>,
-    <span style="color: #e45649;">function</span>(x) as.numeric(dosage[x]) * gwas$log_OR)))
+    <span style="color: #8f3f71; font-weight: bold;">1</span>,
+    <span style="color: #9d0006;">function</span>(x) as.numeric(dosage[x]) * gwas$log_OR)))
 
-print(rbind(head(samples, <span style="color: #da8548; font-weight: bold;">3</span>), tail(samples, <span style="color: #da8548; font-weight: bold;">3</span>)))
+print(rbind(head(samples, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(samples, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
 </div>
 
@@ -1254,8 +1247,6 @@ print(rbind(head(samples, <span style="color: #da8548; font-weight: bold;">3</sp
 </table>
 </div>
 </div>
-
-
 <div id="outline-container-orgde1d9a6" class="outline-3">
 <h3 id="orgde1d9a6"><span class="section-number-3">2.4.</span> Ploting the normal curves</h3>
 <div class="outline-text-3" id="text-2-4">
@@ -1265,7 +1256,7 @@ To create the plot we will need <code>ggplot2</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #b751b6;">library</span>(ggplot2)
+<pre class="src src-R"><span style="color: #8f3f71;">library</span>(ggplot2)
 </pre>
 </div>
 
@@ -1276,7 +1267,7 @@ We <a href="#coderef-zero_shift" class="coderef" onmouseover="CodeHighlightOn(th
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgcfb13b7">
+<div class="sidenote" id="org4f1ae4c">
 <p>
 We get the <a href="#coderef-mean_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-mean_case');" onmouseout="CodeHighlightOff(this, 'coderef-mean_case');">mean and standard deviations</a> to plot the curves with the <code>stat_function</code>.
 </p>
@@ -1285,30 +1276,30 @@ We get the <a href="#coderef-mean_case" class="coderef" onmouseover="CodeHighlig
 
 <div class="org-src-container">
 <pre class="src src-R">
-samples$status <span style="color: #b751b6;">&lt;-</span> as.factor(with(samples, reorder(status, PRS)))
-<span id="coderef-zero_shift" class="coderef-off">samples$PRS <span style="color: #b751b6;">&lt;-</span> samples$PRS - mean(samples[which(samples$status==<span style="color: #50a14f;">"Control"</span>), <span style="color: #50a14f;">"PRS"</span>])</span>
-mean_control <span style="color: #b751b6;">&lt;-</span> mean(samples[which(samples$status==<span style="color: #50a14f;">"Control"</span>), <span style="color: #50a14f;">"PRS"</span>])
-sd_control <span style="color: #b751b6;">&lt;-</span> sd(samples[which(samples$status==<span style="color: #50a14f;">"Control"</span>), <span style="color: #50a14f;">"PRS"</span>])
+samples$status <span style="color: #8f3f71;">&lt;-</span> as.factor(with(samples, reorder(status, PRS)))
+<span id="coderef-zero_shift" class="coderef-off">samples$PRS <span style="color: #8f3f71;">&lt;-</span> samples$PRS - mean(samples[which(samples$status==<span style="color: #79740e;">"Control"</span>), <span style="color: #79740e;">"PRS"</span>])</span>
+mean_control <span style="color: #8f3f71;">&lt;-</span> mean(samples[which(samples$status==<span style="color: #79740e;">"Control"</span>), <span style="color: #79740e;">"PRS"</span>])
+sd_control <span style="color: #8f3f71;">&lt;-</span> sd(samples[which(samples$status==<span style="color: #79740e;">"Control"</span>), <span style="color: #79740e;">"PRS"</span>])
 
-<span id="coderef-mean_case" class="coderef-off">mean_case <span style="color: #b751b6;">&lt;-</span> mean(samples[which(samples$status==<span style="color: #50a14f;">"Case"</span>), <span style="color: #50a14f;">"PRS"</span>])</span>
-sd_case <span style="color: #b751b6;">&lt;-</span> sd(samples[which(samples$status==<span style="color: #50a14f;">"Case"</span>), <span style="color: #50a14f;">"PRS"</span>])
+<span id="coderef-mean_case" class="coderef-off">mean_case <span style="color: #8f3f71;">&lt;-</span> mean(samples[which(samples$status==<span style="color: #79740e;">"Case"</span>), <span style="color: #79740e;">"PRS"</span>])</span>
+sd_case <span style="color: #8f3f71;">&lt;-</span> sd(samples[which(samples$status==<span style="color: #79740e;">"Case"</span>), <span style="color: #79740e;">"PRS"</span>])
 
 ggplot(samples, aes(x=PRS, color=status, fill=status)) +
-  geom_histogram(aes(y=..density..), position=<span style="color: #50a14f;">"dodge"</span>, alpha=.5, bins=<span style="color: #da8548; font-weight: bold;">30</span>) +
+  geom_histogram(aes(y=..density..), position=<span style="color: #79740e;">"dodge"</span>, alpha=.5, bins=<span style="color: #8f3f71; font-weight: bold;">30</span>) +
   stat_function(fun = dnorm,
-                color=<span style="color: #50a14f;">"darkred"</span>,
+                color=<span style="color: #79740e;">"darkred"</span>,
                 args = list(mean = mean_control, sd = sd_control)) +
 <span id="coderef-norm_case" class="coderef-off">  stat_function(fun = dnorm,</span>
-                color=<span style="color: #50a14f;">"darkblue"</span>,
+                color=<span style="color: #79740e;">"darkblue"</span>,
                 args = list(mean = mean_case, sd = sd_case )) +
   ggtitle(sprintf(
-    <span style="color: #50a14f;">"PRS distributions Controls &#956; %.2f &#963; %.2f Cases &#956; %.2f &#963; %.2f"</span>,
+    <span style="color: #79740e;">"PRS distributions Controls &#956; %.2f &#963; %.2f Cases &#956; %.2f &#963; %.2f"</span>,
     mean_control, sd_control, mean_case, sd_case))
 </pre>
 </div>
 
 
-<div id="org4068cdf" class="figure">
+<div id="org88a63be" class="figure">
 <p><img src="PRS.svg" alt="PRS.svg" class="org-svg" />
 </p>
 </div>
@@ -1318,8 +1309,6 @@ When you visit <a href="https://www.pgscatalog.org">www.pgscatalog.org</a> or im
 </p>
 </div>
 </div>
-
-
 <div id="outline-container-orge5fee08" class="outline-3">
 <h3 id="orge5fee08"><span class="section-number-3">2.5.</span> Logistic regression</h3>
 <div class="outline-text-3" id="text-2-5">
@@ -1337,7 +1326,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgb8e372c">
+<div class="sidenote" id="org5f88b0b">
 <ul class="org-ul">
 <li>Because most of the totals are the same they overlap and we plot only a few points as a result. <code>position_jitter</code> with <code>w=0.5</code> spreads the points around a bit allowing us the plot all of the points.</li>
 </ul>
@@ -1345,27 +1334,27 @@ Because the scores and the risk calculated here are relative. The effect becomes
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R">ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #da8548; font-weight: bold;">1</span>, color=status)) +
-  geom_point(shape = <span style="color: #50a14f;">"|"</span>, position = position_jitter(w = <span style="color: #da8548; font-weight: bold;">0.5</span>, h = <span style="color: #da8548; font-weight: bold;">0</span>)) +
-  geom_hline(yintercept = c(<span style="color: #da8548; font-weight: bold;">0</span>,<span style="color: #da8548; font-weight: bold;">1</span>), linetype = <span style="color: #50a14f;">"dashed"</span>, color = <span style="color: #50a14f;">"grey"</span>) +
-  scale_y_discrete(name =<span style="color: #50a14f;">"Status"</span>, labels=c(<span style="color: #50a14f;">"Control"</span>,<span style="color: #50a14f;">"Case"</span>), limits=c(<span style="color: #da8548; font-weight: bold;">0</span>,<span style="color: #da8548; font-weight: bold;">1</span>))
+<pre class="src src-R">ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #8f3f71; font-weight: bold;">1</span>, color=status)) +
+  geom_point(shape = <span style="color: #79740e;">"|"</span>, position = position_jitter(w = <span style="color: #8f3f71; font-weight: bold;">0.5</span>, h = <span style="color: #8f3f71; font-weight: bold;">0</span>)) +
+  geom_hline(yintercept = c(<span style="color: #8f3f71; font-weight: bold;">0</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>), linetype = <span style="color: #79740e;">"dashed"</span>, color = <span style="color: #79740e;">"grey"</span>) +
+  scale_y_discrete(name =<span style="color: #79740e;">"Status"</span>, labels=c(<span style="color: #79740e;">"Control"</span>,<span style="color: #79740e;">"Case"</span>), limits=c(<span style="color: #8f3f71; font-weight: bold;">0</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>))
 </pre>
 </div>
 
 
-<div id="org981c998" class="figure">
+<div id="org56287b9" class="figure">
 <p><img src="PRS2.svg" alt="PRS2.svg" class="org-svg" />
 </p>
 </div>
 
 
 <div class="org-src-container">
-<pre class="src src-R">model <span style="color: #b751b6;">&lt;-</span> glm(status~PRS, family=<span style="color: #50a14f;">"binomial"</span>, data=samples)
+<pre class="src src-R">model <span style="color: #8f3f71;">&lt;-</span> glm(status~PRS, family=<span style="color: #79740e;">"binomial"</span>, data=samples)
 summary(model)
 </pre>
 </div>
 
-<pre class="example" id="org952dd7c">
+<pre class="example" id="orgae841be">
 
 Call:
 glm(formula = status ~ PRS, family = "binomial", data = samples)
@@ -1435,8 +1424,6 @@ p(X)= \frac{e^{\beta_0+\beta_1X}}{1 + e^{\beta_0+\beta_1X}}
 </p>
 </div>
 </div>
-
-
 <div id="outline-container-org1a3e866" class="outline-3">
 <h3 id="org1a3e866"><span class="section-number-3">2.6.</span> Plotting the regression curve</h3>
 <div class="outline-text-3" id="text-2-6">
@@ -1445,24 +1432,23 @@ We can plot our model&rsquo;s S-shaped curve that shows the probabilities.
 </p>
 <div class="org-src-container">
 <pre class="src src-R">
-ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #da8548; font-weight: bold;">1</span>)) +
-  geom_point(shape = <span style="color: #50a14f;">"|"</span>, position = position_jitter(w = <span style="color: #da8548; font-weight: bold;">0.5</span>, h = <span style="color: #da8548; font-weight: bold;">0</span>), aes(color=status)) +
-  geom_smooth(method = <span style="color: #50a14f;">"glm"</span>,
-    method.args = list(family = <span style="color: #50a14f;">"binomial"</span>),
-    se = <span style="color: #986801;">FALSE</span>) +
-  geom_hline(yintercept = c(<span style="color: #da8548; font-weight: bold;">0</span>,<span style="color: #da8548; font-weight: bold;">1</span>), linetype = <span style="color: #50a14f;">"dashed"</span>, color = <span style="color: #50a14f;">"grey"</span>) +
-  scale_y_discrete(name =<span style="color: #50a14f;">"Status"</span>, labels=c(<span style="color: #50a14f;">"Control"</span>,<span style="color: #50a14f;">"Case"</span>), limits=c(<span style="color: #da8548; font-weight: bold;">0</span>,<span style="color: #da8548; font-weight: bold;">1</span>))
+ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #8f3f71; font-weight: bold;">1</span>)) +
+  geom_point(shape = <span style="color: #79740e;">"|"</span>, position = position_jitter(w = <span style="color: #8f3f71; font-weight: bold;">0.5</span>, h = <span style="color: #8f3f71; font-weight: bold;">0</span>), aes(color=status)) +
+  geom_smooth(method = <span style="color: #79740e;">"glm"</span>,
+    method.args = list(family = <span style="color: #79740e;">"binomial"</span>),
+    se = <span style="color: #8f3f71;">FALSE</span>) +
+  geom_hline(yintercept = c(<span style="color: #8f3f71; font-weight: bold;">0</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>), linetype = <span style="color: #79740e;">"dashed"</span>, color = <span style="color: #79740e;">"grey"</span>) +
+  scale_y_discrete(name =<span style="color: #79740e;">"Status"</span>, labels=c(<span style="color: #79740e;">"Control"</span>,<span style="color: #79740e;">"Case"</span>), limits=c(<span style="color: #8f3f71; font-weight: bold;">0</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>))
 </pre>
 </div>
 
 
-<div id="org83891b8" class="figure">
+<div id="org23bac8f" class="figure">
 <p><img src="PRS3.svg" alt="PRS3.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
-
 <div id="outline-container-org488be39" class="outline-3">
 <h3 id="org488be39"><span class="section-number-3">2.7.</span> Measuring goodness of fit</h3>
 <div class="outline-text-3" id="text-2-7">
@@ -1476,20 +1462,20 @@ The closer it gets to 1 better the fit.
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orga037c08">
+<div class="sidenote" id="orgb71678a">
 <p>
 <code>rcompanion</code> has the <img src="ltximg/prs_calculation_e6111ace9eb2bfa750b24ae889f04ae5765eb3f7.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> calculations modules when the <code>Nagelkerke</code> function is called other methods results are also returned.
 </p>
 
 </div>
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #b751b6;">library</span>(rcompanion)
+<pre class="src src-R"><span style="color: #8f3f71;">library</span>(rcompanion)
 
 nagelkerke(model)
 </pre>
 </div>
 
-<pre class="example" id="org38f4a84">
+<pre class="example" id="org3dc6b1c">
 $Models
 
 Model: "glm, status ~ PRS, binomial, samples"
@@ -1518,7 +1504,6 @@ $Warnings
 </pre>
 </div>
 </div>
-
 <div id="outline-container-org7a93ff5" class="outline-3">
 <h3 id="org7a93ff5"><span class="section-number-3">2.8.</span> Enrichment in the highest PRS burden percentiles</h3>
 <div class="outline-text-3" id="text-2-8">
@@ -1538,65 +1523,65 @@ What we are looking at in this table is the increase in the <a class="org-gls" h
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #b751b6;">library</span>(caret)
+<pre class="src src-R"><span style="color: #8f3f71;">library</span>(caret)
 
 my_sum_rows = list()
-<span id="coderef-percents" class="coderef-off">percents = c(<span style="color: #da8548; font-weight: bold;">20</span>, <span style="color: #da8548; font-weight: bold;">10</span>, <span style="color: #da8548; font-weight: bold;">5</span>, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0.5</span>)</span>
-<span style="color: #e45649;">for</span> (percent <span style="color: #e45649;">in</span> percents) {
-    samples$percentile <span style="color: #b751b6;">&lt;-</span> ifelse(
-<span id="coderef-quantile" class="coderef-off">      samples$PRS &gt;= quantile(samples$PRS,prob=<span style="color: #da8548; font-weight: bold;">1</span>-percent/<span style="color: #da8548; font-weight: bold;">100</span>),</span>
-      <span style="color: #50a14f;">"Above"</span>, <span style="color: #50a14f;">"Below"</span>)
-    samples$percentile <span style="color: #b751b6;">&lt;-</span> as.factor(with(samples, reorder(percentile, PRS)))
+<span id="coderef-percents" class="coderef-off">percents = c(<span style="color: #8f3f71; font-weight: bold;">20</span>, <span style="color: #8f3f71; font-weight: bold;">10</span>, <span style="color: #8f3f71; font-weight: bold;">5</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0.5</span>)</span>
+<span style="color: #9d0006;">for</span> (percent <span style="color: #9d0006;">in</span> percents) {
+    samples$percentile <span style="color: #8f3f71;">&lt;-</span> ifelse(
+<span id="coderef-quantile" class="coderef-off">      samples$PRS &gt;= quantile(samples$PRS,prob=<span style="color: #8f3f71; font-weight: bold;">1</span>-percent/<span style="color: #8f3f71; font-weight: bold;">100</span>),</span>
+      <span style="color: #79740e;">"Above"</span>, <span style="color: #79740e;">"Below"</span>)
+    samples$percentile <span style="color: #8f3f71;">&lt;-</span> as.factor(with(samples, reorder(percentile, PRS)))
 
-    model <span style="color: #b751b6;">&lt;-</span> glm(status~percentile, family=<span style="color: #50a14f;">"binomial"</span>, data=samples)
+    model <span style="color: #8f3f71;">&lt;-</span> glm(status~percentile, family=<span style="color: #79740e;">"binomial"</span>, data=samples)
 
-    threshold <span style="color: #b751b6;">&lt;-</span> <span style="color: #da8548; font-weight: bold;">0.5</span>
-<span id="coderef-confusionMatrix" class="coderef-off">    cm <span style="color: #b751b6;">&lt;-</span> confusionMatrix(</span>
-      as.factor(ifelse(predict(model,type=<span style="color: #50a14f;">"response"</span>)&gt; threshold, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0</span>)),
+    threshold <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">0.5</span>
+<span id="coderef-confusionMatrix" class="coderef-off">    cm <span style="color: #8f3f71;">&lt;-</span> confusionMatrix(</span>
+      as.factor(ifelse(predict(model,type=<span style="color: #79740e;">"response"</span>)&gt; threshold, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>)),
       as.factor(model$y)
     )
 
-    above_control <span style="color: #b751b6;">&lt;-</span> nrow(
-      samples[which(samples$status==<span style="color: #50a14f;">"Control"</span> &amp; samples$percentile==<span style="color: #50a14f;">"Above"</span>),]
+    above_control <span style="color: #8f3f71;">&lt;-</span> nrow(
+      samples[which(samples$status==<span style="color: #79740e;">"Control"</span> &amp; samples$percentile==<span style="color: #79740e;">"Above"</span>),]
     )
-    below_control <span style="color: #b751b6;">&lt;-</span> nrow(
-      samples[which(samples$status==<span style="color: #50a14f;">"Control"</span> &amp; samples$percentile==<span style="color: #50a14f;">"Below"</span>),]
+    below_control <span style="color: #8f3f71;">&lt;-</span> nrow(
+      samples[which(samples$status==<span style="color: #79740e;">"Control"</span> &amp; samples$percentile==<span style="color: #79740e;">"Below"</span>),]
     )
-    above_case <span style="color: #b751b6;">&lt;-</span> nrow(
-      samples[which(samples$status==<span style="color: #50a14f;">"Case"</span> &amp; samples$percentile==<span style="color: #50a14f;">"Above"</span>),]
+    above_case <span style="color: #8f3f71;">&lt;-</span> nrow(
+      samples[which(samples$status==<span style="color: #79740e;">"Case"</span> &amp; samples$percentile==<span style="color: #79740e;">"Above"</span>),]
     )
-    below_case <span style="color: #b751b6;">&lt;-</span> nrow(
-      samples[which(samples$status==<span style="color: #50a14f;">"Case"</span> &amp; samples$percentile==<span style="color: #50a14f;">"Below"</span>),]
+    below_case <span style="color: #8f3f71;">&lt;-</span> nrow(
+      samples[which(samples$status==<span style="color: #79740e;">"Case"</span> &amp; samples$percentile==<span style="color: #79740e;">"Below"</span>),]
     )
 
-    my_sum_row <span style="color: #b751b6;">&lt;-</span> data.frame(
-    <span style="color: #50a14f;">"Reference Group"</span> = sprintf(<span style="color: #50a14f;">"Remaining %s%% "</span>, <span style="color: #da8548; font-weight: bold;">100</span>-percent),
-    <span style="color: #50a14f;">"Cases/Controls Above PRS%"</span> = sprintf(<span style="color: #50a14f;">"%s/%s"</span>, above_case, above_control),
-    <span style="color: #50a14f;">"Cases/Controls Below PRS%"</span> = sprintf(<span style="color: #50a14f;">"%s/%s"</span>, below_case, below_control),
-    <span style="color: #50a14f;">"Odds Ratio"</span> = round(exp(coef(model)[<span style="color: #da8548; font-weight: bold;">2</span>]), <span style="color: #da8548; font-weight: bold;">2</span>),
-    <span style="color: #50a14f;">"95% CI"</span> = do.call(sprintf, c(
-                                  <span style="color: #50a14f;">"%.2f - %.2f"</span>,
-                                  as.list(exp(confint(model, level=.90)[<span style="color: #da8548; font-weight: bold;">2</span>,])))),
-    <span style="color: #50a14f;">"P value"</span> = sprintf(<span style="color: #50a14f;">"%.2e"</span>,
-                        summary(model)$coefficients[<span style="color: #50a14f;">'percentileAbove'</span>, <span style="color: #50a14f;">'Pr(&gt;|z|)'</span>]
+    my_sum_row <span style="color: #8f3f71;">&lt;-</span> data.frame(
+    <span style="color: #79740e;">"Reference Group"</span> = sprintf(<span style="color: #79740e;">"Remaining %s%% "</span>, <span style="color: #8f3f71; font-weight: bold;">100</span>-percent),
+    <span style="color: #79740e;">"Cases/Controls Above PRS%"</span> = sprintf(<span style="color: #79740e;">"%s/%s"</span>, above_case, above_control),
+    <span style="color: #79740e;">"Cases/Controls Below PRS%"</span> = sprintf(<span style="color: #79740e;">"%s/%s"</span>, below_case, below_control),
+    <span style="color: #79740e;">"Odds Ratio"</span> = round(exp(coef(model)[<span style="color: #8f3f71; font-weight: bold;">2</span>]), <span style="color: #8f3f71; font-weight: bold;">2</span>),
+    <span style="color: #79740e;">"95% CI"</span> = do.call(sprintf, c(
+                                  <span style="color: #79740e;">"%.2f - %.2f"</span>,
+                                  as.list(exp(confint(model, level=.90)[<span style="color: #8f3f71; font-weight: bold;">2</span>,])))),
+    <span style="color: #79740e;">"P value"</span> = sprintf(<span style="color: #79740e;">"%.2e"</span>,
+                        summary(model)$coefficients[<span style="color: #79740e;">'percentileAbove'</span>, <span style="color: #79740e;">'Pr(&gt;|z|)'</span>]
                         ),
-<span id="coderef-senspe" class="coderef-off">    <span style="color: #50a14f;">"Sensitivity / Specificity"</span> = sprintf(</span>
-        <span style="color: #50a14f;">"%.3f / %.3f"</span>,
+<span id="coderef-senspe" class="coderef-off">    <span style="color: #79740e;">"Sensitivity / Specificity"</span> = sprintf(</span>
+        <span style="color: #79740e;">"%.3f / %.3f"</span>,
         as.list(cm$byClass)$Sensitivity,
         as.list(cm$byClass)$Specificity
       )
     )
-    my_sum_rows[[sprintf(<span style="color: #50a14f;">"Top %s%% of distribution"</span>, percent)]] <span style="color: #b751b6;">&lt;-</span> my_sum_row
+    my_sum_rows[[sprintf(<span style="color: #79740e;">"Top %s%% of distribution"</span>, percent)]] <span style="color: #8f3f71;">&lt;-</span> my_sum_row
 }
-my_sum_table <span style="color: #b751b6;">&lt;-</span> do.call(rbind, my_sum_rows)
-colnames(my_sum_table) <span style="color: #b751b6;">&lt;-</span> c(
-  <span style="color: #50a14f;">"Reference group"</span>,
-  <span style="color: #50a14f;">"Cases/Controls above PRS%"</span>,
-  <span style="color: #50a14f;">"Cases/Controls below PRS%"</span>,
-  <span style="color: #50a14f;">"Odds ratio"</span>,
-  <span style="color: #50a14f;">"95% CI"</span>,
-  <span style="color: #50a14f;">"P value"</span>,
-  <span style="color: #50a14f;">"Sensitivity / Specificity"</span>
+my_sum_table <span style="color: #8f3f71;">&lt;-</span> do.call(rbind, my_sum_rows)
+colnames(my_sum_table) <span style="color: #8f3f71;">&lt;-</span> c(
+  <span style="color: #79740e;">"Reference group"</span>,
+  <span style="color: #79740e;">"Cases/Controls above PRS%"</span>,
+  <span style="color: #79740e;">"Cases/Controls below PRS%"</span>,
+  <span style="color: #79740e;">"Odds ratio"</span>,
+  <span style="color: #79740e;">"95% CI"</span>,
+  <span style="color: #79740e;">"P value"</span>,
+  <span style="color: #79740e;">"Sensitivity / Specificity"</span>
 )
 my_sum_table
 </pre>
@@ -1693,7 +1678,6 @@ my_sum_table
 </table>
 </div>
 </div>
-
 <div id="outline-container-org8783166" class="outline-3">
 <h3 id="org8783166"><span class="section-number-3">2.9.</span> PRS deciles</h3>
 <div class="outline-text-3" id="text-2-9">
@@ -1707,17 +1691,17 @@ I just <a href="#coderef-fifthasref" class="coderef" onmouseover="CodeHighlightO
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R">samples$deciles <span style="color: #b751b6;">&lt;-</span> factor(.bincode(samples$PRS,
-        breaks = quantile(samples$PRS, seq(<span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0.1</span>)),
-        include.lowest = <span style="color: #986801;">TRUE</span>
-<span id="coderef-fifthasref" class="coderef-off">      ), levels = c(<span style="color: #da8548; font-weight: bold;">5</span>, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>, <span style="color: #da8548; font-weight: bold;">6</span>, <span style="color: #da8548; font-weight: bold;">7</span>, <span style="color: #da8548; font-weight: bold;">8</span>, <span style="color: #da8548; font-weight: bold;">9</span>, <span style="color: #da8548; font-weight: bold;">10</span>))</span>
+<pre class="src src-R">samples$deciles <span style="color: #8f3f71;">&lt;-</span> factor(.bincode(samples$PRS,
+        breaks = quantile(samples$PRS, seq(<span style="color: #8f3f71; font-weight: bold;">0</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0.1</span>)),
+        include.lowest = <span style="color: #8f3f71;">TRUE</span>
+<span id="coderef-fifthasref" class="coderef-off">      ), levels = c(<span style="color: #8f3f71; font-weight: bold;">5</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">2</span>, <span style="color: #8f3f71; font-weight: bold;">3</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>, <span style="color: #8f3f71; font-weight: bold;">6</span>, <span style="color: #8f3f71; font-weight: bold;">7</span>, <span style="color: #8f3f71; font-weight: bold;">8</span>, <span style="color: #8f3f71; font-weight: bold;">9</span>, <span style="color: #8f3f71; font-weight: bold;">10</span>))</span>
 
-model <span style="color: #b751b6;">&lt;-</span> glm(status~deciles, family=<span style="color: #50a14f;">"binomial"</span>, data=samples)
+model <span style="color: #8f3f71;">&lt;-</span> glm(status~deciles, family=<span style="color: #79740e;">"binomial"</span>, data=samples)
 summary(model)
 </pre>
 </div>
 
-<pre class="example" id="orgb37c222">
+<pre class="example" id="orgef2a36c">
 
 Call:
 glm(formula = status ~ deciles, family = "binomial", data = samples)
@@ -1747,36 +1731,35 @@ Number of Fisher Scoring iterations: 4
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-R">my_sum_data <span style="color: #b751b6;">&lt;-</span> as.data.frame(cbind(
-  exp(confint(model, level=.90)[<span style="color: #da8548; font-weight: bold;">2</span>:<span style="color: #da8548; font-weight: bold;">10</span>,]),
-  <span style="color: #50a14f;">"Odds ratio"</span>=round(exp(coef(model)[<span style="color: #da8548; font-weight: bold;">2</span>:<span style="color: #da8548; font-weight: bold;">10</span>]), <span style="color: #da8548; font-weight: bold;">2</span>),
-  <span style="color: #50a14f;">"P value"</span>=summary(model)$coefficients[<span style="color: #da8548; font-weight: bold;">2</span>:<span style="color: #da8548; font-weight: bold;">10</span>, <span style="color: #50a14f;">'Pr(&gt;|z|)'</span>]
+<pre class="src src-R">my_sum_data <span style="color: #8f3f71;">&lt;-</span> as.data.frame(cbind(
+  exp(confint(model, level=.90)[<span style="color: #8f3f71; font-weight: bold;">2</span>:<span style="color: #8f3f71; font-weight: bold;">10</span>,]),
+  <span style="color: #79740e;">"Odds ratio"</span>=round(exp(coef(model)[<span style="color: #8f3f71; font-weight: bold;">2</span>:<span style="color: #8f3f71; font-weight: bold;">10</span>]), <span style="color: #8f3f71; font-weight: bold;">2</span>),
+  <span style="color: #79740e;">"P value"</span>=summary(model)$coefficients[<span style="color: #8f3f71; font-weight: bold;">2</span>:<span style="color: #8f3f71; font-weight: bold;">10</span>, <span style="color: #79740e;">'Pr(&gt;|z|)'</span>]
 ))
-colnames(my_sum_data) <span style="color: #b751b6;">&lt;-</span> c(
-  <span style="color: #50a14f;">"lower"</span>,
-  <span style="color: #50a14f;">"upper"</span>,
-  <span style="color: #50a14f;">"odds_ratio"</span>,
-  <span style="color: #50a14f;">"p_val"</span>
+colnames(my_sum_data) <span style="color: #8f3f71;">&lt;-</span> c(
+  <span style="color: #79740e;">"lower"</span>,
+  <span style="color: #79740e;">"upper"</span>,
+  <span style="color: #79740e;">"odds_ratio"</span>,
+  <span style="color: #79740e;">"p_val"</span>
 )
-my_sum_data <span style="color: #b751b6;">&lt;-</span> rbind(my_sum_data, c(<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">1</span>))
-my_sum_data$decile <span style="color: #b751b6;">&lt;-</span> factor(c(<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">2</span>,<span style="color: #da8548; font-weight: bold;">3</span>,<span style="color: #da8548; font-weight: bold;">4</span>,<span style="color: #da8548; font-weight: bold;">6</span>,<span style="color: #da8548; font-weight: bold;">7</span>,<span style="color: #da8548; font-weight: bold;">8</span>,<span style="color: #da8548; font-weight: bold;">9</span>,<span style="color: #da8548; font-weight: bold;">10</span>,<span style="color: #da8548; font-weight: bold;">5</span>))
+my_sum_data <span style="color: #8f3f71;">&lt;-</span> rbind(my_sum_data, c(<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">1</span>))
+my_sum_data$decile <span style="color: #8f3f71;">&lt;-</span> factor(c(<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">2</span>,<span style="color: #8f3f71; font-weight: bold;">3</span>,<span style="color: #8f3f71; font-weight: bold;">4</span>,<span style="color: #8f3f71; font-weight: bold;">6</span>,<span style="color: #8f3f71; font-weight: bold;">7</span>,<span style="color: #8f3f71; font-weight: bold;">8</span>,<span style="color: #8f3f71; font-weight: bold;">9</span>,<span style="color: #8f3f71; font-weight: bold;">10</span>,<span style="color: #8f3f71; font-weight: bold;">5</span>))
 
 ggplot(my_sum_data, aes(decile, odds_ratio)) +
   geom_errorbar(aes(ymin = lower, ymax = upper), width=.2) +
-  geom_hline(yintercept = <span style="color: #da8548; font-weight: bold;">1</span>, linetype = <span style="color: #50a14f;">"dashed"</span>, color = <span style="color: #50a14f;">"grey"</span>) +
-  geom_point(shape=<span style="color: #da8548; font-weight: bold;">22</span>, size=<span style="color: #da8548; font-weight: bold;">6</span>, color=<span style="color: #50a14f;">"black"</span>, fill=<span style="color: #50a14f;">"orange"</span>, stroke=.8)
+  geom_hline(yintercept = <span style="color: #8f3f71; font-weight: bold;">1</span>, linetype = <span style="color: #79740e;">"dashed"</span>, color = <span style="color: #79740e;">"grey"</span>) +
+  geom_point(shape=<span style="color: #8f3f71; font-weight: bold;">22</span>, size=<span style="color: #8f3f71; font-weight: bold;">6</span>, color=<span style="color: #79740e;">"black"</span>, fill=<span style="color: #79740e;">"orange"</span>, stroke=.8)
 </pre>
 </div>
 
 
-<div id="org88a63be" class="figure">
+<div id="org8622106" class="figure">
 <p><img src="PRS-decile.svg" alt="PRS-decile.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
 </div>
-
 <div id="outline-container-orge31bc1b" class="outline-2">
 <h2 id="orge31bc1b"><span class="section-number-2">3.</span> Conclusion</h2>
 <div class="outline-text-2" id="text-3">
@@ -1800,7 +1783,6 @@ This post also never goes into more finickier subjects like population stratific
 </p>
 </div>
 </div>
-
 <div id="outline-container-orgc1bfbb9" class="outline-2">
 <h2 id="orgc1bfbb9"><span class="section-number-2">4.</span> References</h2>
 <div class="outline-text-2" id="text-4">
@@ -1825,7 +1807,6 @@ This post also never goes into more finickier subjects like population stratific
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgda94d6b" class="outline-2">
 <h2 id="orgda94d6b"><span class="section-number-2">5.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-5">
@@ -1854,7 +1835,6 @@ This post also never goes into more finickier subjects like population stratific
 </p>
 </div>
 </div>
-
 <div id="outline-container-org800b6bb" class="outline-2">
 <h2 id="org800b6bb"><span class="section-number-2">6.</span> Glossary</h2>
 <div class="outline-text-2" id="text-6">
@@ -1895,8 +1875,6 @@ This post also never goes into more finickier subjects like population stratific
 </p>
 </div>
 </div>
-
-
 <div id="outline-container-org091f733" class="outline-2">
 <h2 id="org091f733">Comments</h2>
 <div class="outline-text-2" id="text-org091f733">

@@ -147,10 +147,10 @@ ul#navbar li.preferences {
 
 /* org-publish */
 .src {
-  background: var(--bg_h);
+  background: var(--body-bg-color);
 }
 .example {
-  background: var(--bg_s);
+  background: var(--pre-bg-color);
   max-height: 30vh; overflow-y:auto;
 }
 .org-center {
@@ -158,4 +158,18 @@ ul#navbar li.preferences {
 }
 img.latex-fragment-block {
   display: inline;
+}
+.linenr {
+  margin-right: 1em;
+  user-select: none;
+  color: var(--body-color);
+  background: var(--sidenote-target-border-color);
+  box-shadow: 0em 1em var(--sidenote-target-border-color),
+              -2em 0em var(--sidenote-target-border-color),
+              -2em 1em var(--sidenote-target-border-color);
+}
+
+.dateauthor {
+  font-size: small;
+  color: var(--footnotes-border-color);
 }

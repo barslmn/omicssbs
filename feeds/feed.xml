@@ -69,4 +69,15 @@
     </author>
   </entry>
 
+  <entry>
+    <title>NGS oneliner</title>
+    <id>https://omics.sbs/blog/NGSoneliner/NGSoneliner.html</id>
+    <link href="https://omics.sbs/blog/NGSoneliner/NGSoneliner.html" />
+    <updated>2023-10-22:30:02Z</updated>
+    <summary>A oneliner for sequence data.</summary>
+    <author>
+      <name>Barış Salman</name>
+      <email>barslmn@gmail.com</email>
+    </author>
+  </entry>
 </feed>

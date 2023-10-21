@@ -3,10 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:18 -->
+<!-- 2023-10-22 Sun 02:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
+<meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
 <style>
   #content { max-width: 60em; margin: auto; }
@@ -280,7 +281,7 @@ else {
 <li><a href="#orge65e4d3">2.1.1. Creating Sequences</a></li>
 <li><a href="#org93821ea">2.1.2. Creating motifs</a></li>
 <li><a href="#orgb03d08a">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#org37eef31">2.1.4. Putting it all together</a></li>
+<li><a href="#org081dbe9">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org9bda147">2.2. Finding the motif</a>
@@ -289,7 +290,7 @@ else {
 <li><a href="#orgd2b03a2">2.2.2. Weighted Model Matrix</a></li>
 <li><a href="#org946470b">2.2.3. Calculate probability</a></li>
 <li><a href="#org4926b31">2.2.4. Sliding window</a></li>
-<li><a href="#org081dbe9">2.2.5. Putting it all together</a></li>
+<li><a href="#orgaf75a08">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#orgccafe06">2.3. Parameters affecting the results</a></li>
@@ -300,7 +301,7 @@ else {
 </ul>
 </div>
 </div>
-<div class="abstract" id="orgff4e813">
+<div class="abstract" id="org4745925">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -308,13 +309,12 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 </p>
 
 </div>
-
 <div id="outline-container-orgd42421d" class="outline-2">
 <h2 id="orgd42421d"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org256ba45">
+<div class="sidenote" id="orgb012b27">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -331,7 +331,7 @@ Below code sets up the virtual environment.
 <div class="org-src-container">
 <pre class="src src-shell">virtualenv venv
 . venv/bin/activate
-pip install -u matplotlib pandas
+pip install -U matplotlib pandas
 </pre>
 </div>
 
@@ -339,13 +339,13 @@ pip install -u matplotlib pandas
 The newest function in use probably is random.choices which is implemented in python 3.6 so this code should work any version after python 3.6 (at least up to 3.10).
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">import</span> sys
-<span style="color: #e45649;">import</span> pandas <span style="color: #e45649;">as</span> pd
-<span style="color: #e45649;">import</span> matplotlib <span style="color: #e45649;">as</span> pyplot
+<pre class="src src-python"><span style="color: #9d0006;">import</span> sys
+<span style="color: #9d0006;">import</span> pandas <span style="color: #9d0006;">as</span> pd
+<span style="color: #9d0006;">import</span> matplotlib <span style="color: #9d0006;">as</span> pyplot
 
-<span style="color: #a626a4;">print</span>(<span style="color: #50a14f;">"python"</span>, sys.version)
-<span style="color: #a626a4;">print</span>(<span style="color: #50a14f;">"pandas"</span>, pd.__version__)
-<span style="color: #a626a4;">print</span>(<span style="color: #50a14f;">"matplotlib"</span>, pyplot.__version__)
+<span style="color: #af3a03;">print</span>(<span style="color: #79740e;">"python"</span>, sys.version)
+<span style="color: #af3a03;">print</span>(<span style="color: #79740e;">"pandas"</span>, pd.__version__)
+<span style="color: #af3a03;">print</span>(<span style="color: #79740e;">"matplotlib"</span>, pyplot.__version__)
 </pre>
 </div>
 
@@ -356,7 +356,6 @@ matplotlib 3.6.2
 </pre>
 </div>
 </div>
-
 <div id="outline-container-orge25810b" class="outline-2">
 <h2 id="orge25810b"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
@@ -379,9 +378,9 @@ First lets create some sequences. For this we need 4 variables:
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">60</span>
+<pre class="src src-python"><span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">60</span>
 </pre>
 </div>
 
@@ -392,17 +391,17 @@ Lets create 10 random sequences.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">import</span> random
+<pre class="src src-python"><span style="color: #9d0006;">import</span> random
 
-<span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #da8548; font-weight: bold;">10</span>):
-    <span style="color: #6a1868;">seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #8f3f71; font-weight: bold;">10</span>):
+    <span style="color: #076678;">seq</span> = <span style="color: #79740e;">""</span>.join(
         random.choices(population=alphabet, weights=seq_weights, k=seq_length)
     )
-    <span style="color: #a626a4;">print</span>(seq)
+    <span style="color: #af3a03;">print</span>(seq)
 </pre>
 </div>
 
-<pre class="example" id="orgb03fb33">
+<pre class="example" id="orgf5436fd">
 TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGG
 TGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
 GCCTAATAAATTACACAGCAGAATACGTTAGTAGTCCGCACCGGCCTCGAGCACATCCCT
@@ -416,7 +415,6 @@ CCAAAAACGGACGACCTACCGCACCTTCGGTCCTCACTACGCAAGGACTGGAGCGTATCT
 </pre>
 </div>
 </div>
-
 <div id="outline-container-org93821ea" class="outline-4">
 <h4 id="org93821ea"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
 <div class="outline-text-4" id="text-2-1-2">
@@ -430,22 +428,22 @@ In order the create a motif I want to enter a motif logo that is represented by 
 We can represent the UIPAC codes in our program as a simple dictionary.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">IUPACcodes</span> = {
-    <span style="color: #50a14f;">"A"</span>: [<span style="color: #50a14f;">"A"</span>],
-    <span style="color: #50a14f;">"C"</span>: [<span style="color: #50a14f;">"C"</span>],
-    <span style="color: #50a14f;">"G"</span>: [<span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"T"</span>: [<span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"M"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>],
-    <span style="color: #50a14f;">"R"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"W"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"S"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"Y"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"K"</span>: [<span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"V"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"H"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"D"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"G"</span>,
-    <span style="color: #50a14f;">"B"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"N"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
+<pre class="src src-python"><span style="color: #076678;">IUPACcodes</span> = {
+    <span style="color: #79740e;">"A"</span>: [<span style="color: #79740e;">"A"</span>],
+    <span style="color: #79740e;">"C"</span>: [<span style="color: #79740e;">"C"</span>],
+    <span style="color: #79740e;">"G"</span>: [<span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"T"</span>: [<span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"M"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>],
+    <span style="color: #79740e;">"R"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"W"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"S"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"Y"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"K"</span>: [<span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"V"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"H"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"D"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"G"</span>,
+    <span style="color: #79740e;">"B"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"N"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
 }
 </pre>
 </div>
@@ -464,15 +462,15 @@ Second list of <code>[0.8, 0.2]</code> corresponds to code <code>K</code> which 
 or T. Here 0.8 is weight of the base G and 0.2 is weight of the base T.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">motif_logo</span> = <span style="color: #50a14f;">'AKCYTSG'</span>
-<span style="color: #6a1868;">motif_weights</span> = [
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
+<pre class="src src-python"><span style="color: #076678;">motif_logo</span> = <span style="color: #79740e;">'AKCYTSG'</span>
+<span style="color: #076678;">motif_weights</span> = [
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
 ]
 </pre>
 </div>
@@ -483,21 +481,21 @@ logo translate them to the bases and pick one of the bases with given weights
 using random.choices.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">def</span> <span style="color: #a626a4;">generate_motif</span>(logo, weights):
-    <span style="color: #84888b; font-style: italic;">"""</span>
-<span style="color: #84888b; font-style: italic;">    Create a random motif from motif logo.</span>
-<span style="color: #84888b; font-style: italic;">    """</span>
-    <span style="color: #6a1868;">motif</span> = <span style="color: #50a14f;">""</span>
-    <span style="color: #e45649;">for</span> index, code <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(logo):
-        <span style="color: #6a1868;">bases</span> = IUPACcodes[code]
-        <span style="color: #6a1868;">motif</span> = <span style="color: #50a14f;">""</span>.join(
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">generate_motif</span>(logo, weights):
+    <span style="color: #79740e; font-style: italic;">"""</span>
+<span style="color: #79740e; font-style: italic;">    Create a random motif from motif logo.</span>
+<span style="color: #79740e; font-style: italic;">    """</span>
+    <span style="color: #076678;">motif</span> = <span style="color: #79740e;">""</span>
+    <span style="color: #9d0006;">for</span> index, code <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(logo):
+        <span style="color: #076678;">bases</span> = IUPACcodes[code]
+        <span style="color: #076678;">motif</span> = <span style="color: #79740e;">""</span>.join(
             (
                 motif[:index],
-                random.choices(bases, weights[index])[<span style="color: #da8548; font-weight: bold;">0</span>],
-                motif[index + <span style="color: #da8548; font-weight: bold;">1</span> :],
+                random.choices(bases, weights[index])[<span style="color: #8f3f71; font-weight: bold;">0</span>],
+                motif[index + <span style="color: #8f3f71; font-weight: bold;">1</span> :],
             )
         )
-    <span style="color: #e45649;">return</span> motif
+    <span style="color: #9d0006;">return</span> motif
 
 </pre>
 </div>
@@ -506,13 +504,13 @@ using random.choices.
 Lets create 10 logos.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #da8548; font-weight: bold;">10</span>):
-    <span style="color: #6a1868;">motif</span> = generate_motif(motif_logo, motif_weights)
-    <span style="color: #a626a4;">print</span>(motif)
+<pre class="src src-python"><span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #8f3f71; font-weight: bold;">10</span>):
+    <span style="color: #076678;">motif</span> = generate_motif(motif_logo, motif_weights)
+    <span style="color: #af3a03;">print</span>(motif)
 </pre>
 </div>
 
-<pre class="example" id="org55faaec">
+<pre class="example" id="org65adf41">
 AGCCTGG
 AGCCTCG
 AGCCTCG
@@ -526,8 +524,6 @@ AGCCTGG
 </pre>
 </div>
 </div>
-
-
 <div id="outline-container-orgb03d08a" class="outline-4">
 <h4 id="orgb03d08a"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
 <div class="outline-text-4" id="text-2-1-3">
@@ -536,21 +532,19 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">def</span> <span style="color: #a626a4;">insert_motif</span>(sequence, motif):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Replace a random part of the given sequence with the given motif sequence</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #6a1868;">insert_ind</span> = random.randrange(<span style="color: #a626a4;">len</span>(sequence) - <span style="color: #a626a4;">len</span>(motif))
-    <span style="color: #6a1868;">sequence</span> = <span style="color: #50a14f;">''</span>.join((sequence[:insert_ind], motif, sequence[insert_ind + <span style="color: #a626a4;">len</span>(motif):]))
-    <span style="color: #e45649;">return</span> insert_ind, sequence
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">insert_motif</span>(sequence, motif):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Replace a random part of the given sequence with the given motif sequence</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #076678;">insert_ind</span> = random.randrange(<span style="color: #af3a03;">len</span>(sequence) - <span style="color: #af3a03;">len</span>(motif))
+    <span style="color: #076678;">sequence</span> = <span style="color: #79740e;">''</span>.join((sequence[:insert_ind], motif, sequence[insert_ind + <span style="color: #af3a03;">len</span>(motif):]))
+    <span style="color: #9d0006;">return</span> insert_ind, sequence
 </pre>
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org37eef31" class="outline-4">
-<h4 id="org37eef31"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org081dbe9" class="outline-4">
+<h4 id="org081dbe9"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -560,87 +554,87 @@ same sequences with same motifs inserted in the same positions.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">import</span> random
-random.seed(<span style="color: #da8548; font-weight: bold;">0</span>)
+<pre class="src src-python"><span style="color: #9d0006;">import</span> random
+random.seed(<span style="color: #8f3f71; font-weight: bold;">0</span>)
 
-<span style="color: #50a14f;">"""</span>
-<span style="color: #50a14f;">Takes IUPAC code returns a list of possible bases.</span>
-<span style="color: #50a14f;">"""</span>
-<span style="color: #6a1868;">IUPACcodes</span> = {
-    <span style="color: #50a14f;">"A"</span>: [<span style="color: #50a14f;">"A"</span>],
-    <span style="color: #50a14f;">"C"</span>: [<span style="color: #50a14f;">"C"</span>],
-    <span style="color: #50a14f;">"G"</span>: [<span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"T"</span>: [<span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"M"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>],
-    <span style="color: #50a14f;">"R"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"W"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"S"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"Y"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"K"</span>: [<span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"V"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>],
-    <span style="color: #50a14f;">"H"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"D"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"B"</span>: [<span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
-    <span style="color: #50a14f;">"N"</span>: [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>, <span style="color: #50a14f;">"T"</span>],
+<span style="color: #79740e;">"""</span>
+<span style="color: #79740e;">Takes IUPAC code returns a list of possible bases.</span>
+<span style="color: #79740e;">"""</span>
+<span style="color: #076678;">IUPACcodes</span> = {
+    <span style="color: #79740e;">"A"</span>: [<span style="color: #79740e;">"A"</span>],
+    <span style="color: #79740e;">"C"</span>: [<span style="color: #79740e;">"C"</span>],
+    <span style="color: #79740e;">"G"</span>: [<span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"T"</span>: [<span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"M"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>],
+    <span style="color: #79740e;">"R"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"W"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"S"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"Y"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"K"</span>: [<span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"V"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>],
+    <span style="color: #79740e;">"H"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"D"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"B"</span>: [<span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
+    <span style="color: #79740e;">"N"</span>: [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>, <span style="color: #79740e;">"T"</span>],
 }
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">generate_motif</span>(logo, weights):
-    <span style="color: #84888b; font-style: italic;">"""</span>
-<span style="color: #84888b; font-style: italic;">    Create a random motif from motif logo.</span>
-<span style="color: #84888b; font-style: italic;">    """</span>
-    <span style="color: #6a1868;">motif</span> = <span style="color: #50a14f;">""</span>
-    <span style="color: #e45649;">for</span> index, code <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(logo):
-        <span style="color: #6a1868;">bases</span> = IUPACcodes[code]
-        <span style="color: #6a1868;">motif</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">generate_motif</span>(logo, weights):
+    <span style="color: #79740e; font-style: italic;">"""</span>
+<span style="color: #79740e; font-style: italic;">    Create a random motif from motif logo.</span>
+<span style="color: #79740e; font-style: italic;">    """</span>
+    <span style="color: #076678;">motif</span> = <span style="color: #79740e;">""</span>
+    <span style="color: #9d0006;">for</span> index, code <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(logo):
+        <span style="color: #076678;">bases</span> = IUPACcodes[code]
+        <span style="color: #076678;">motif</span> = <span style="color: #79740e;">""</span>.join(
             (
                 motif[:index],
-                random.choices(bases, weights[index])[<span style="color: #da8548; font-weight: bold;">0</span>],
-                motif[index + <span style="color: #da8548; font-weight: bold;">1</span> :],
+                random.choices(bases, weights[index])[<span style="color: #8f3f71; font-weight: bold;">0</span>],
+                motif[index + <span style="color: #8f3f71; font-weight: bold;">1</span> :],
             )
         )
-    <span style="color: #e45649;">return</span> motif
+    <span style="color: #9d0006;">return</span> motif
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">insert_motif</span>(sequence, motif):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Replace a random part of the given sequence with the given motif sequence</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #6a1868;">insert_ind</span> = random.randrange(<span style="color: #a626a4;">len</span>(sequence) - <span style="color: #a626a4;">len</span>(motif))
-    <span style="color: #6a1868;">sequence</span> = <span style="color: #50a14f;">''</span>.join((sequence[:insert_ind], motif, sequence[insert_ind + <span style="color: #a626a4;">len</span>(motif):]))
-    <span style="color: #e45649;">return</span> insert_ind, sequence
-
-
-<span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">60</span>
-<span style="color: #6a1868;">num_seqs</span> = <span style="color: #da8548; font-weight: bold;">120</span>
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">insert_motif</span>(sequence, motif):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Replace a random part of the given sequence with the given motif sequence</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #076678;">insert_ind</span> = random.randrange(<span style="color: #af3a03;">len</span>(sequence) - <span style="color: #af3a03;">len</span>(motif))
+    <span style="color: #076678;">sequence</span> = <span style="color: #79740e;">''</span>.join((sequence[:insert_ind], motif, sequence[insert_ind + <span style="color: #af3a03;">len</span>(motif):]))
+    <span style="color: #9d0006;">return</span> insert_ind, sequence
 
 
-<span style="color: #6a1868;">motif_logo</span> = <span style="color: #50a14f;">'AKCYTSG'</span>
-<span style="color: #6a1868;">motif_weights</span> = [
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
+<span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">60</span>
+<span style="color: #076678;">num_seqs</span> = <span style="color: #8f3f71; font-weight: bold;">120</span>
+
+
+<span style="color: #076678;">motif_logo</span> = <span style="color: #79740e;">'AKCYTSG'</span>
+<span style="color: #076678;">motif_weights</span> = [
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
 ]
 
-<span style="color: #6a1868;">motif_seqs</span> = []
-<span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(num_seqs):
-    <span style="color: #6a1868;">seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #076678;">motif_seqs</span> = []
+<span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(num_seqs):
+    <span style="color: #076678;">seq</span> = <span style="color: #79740e;">""</span>.join(
         random.choices(population=alphabet, weights=seq_weights, k=seq_length)
     )
-    <span style="color: #6a1868;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
+    <span style="color: #076678;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
     motif_seqs.append(insert_motif(seq, motif_seq))
 
-<span style="color: #a626a4;">print</span>(<span style="color: #a626a4;">len</span>(motif_seqs[<span style="color: #da8548; font-weight: bold;">0</span>][<span style="color: #da8548; font-weight: bold;">1</span>]) * <span style="color: #50a14f;">" "</span> + motif_logo)
-<span style="color: #e45649;">for</span> insert_ind, sequence <span style="color: #e45649;">in</span> motif_seqs[:<span style="color: #da8548; font-weight: bold;">10</span>]:
-    <span style="color: #a626a4;">print</span>((<span style="color: #a626a4;">len</span>(sequence) - insert_ind) * <span style="color: #50a14f;">" "</span> +sequence)
+<span style="color: #af3a03;">print</span>(<span style="color: #af3a03;">len</span>(motif_seqs[<span style="color: #8f3f71; font-weight: bold;">0</span>][<span style="color: #8f3f71; font-weight: bold;">1</span>]) * <span style="color: #79740e;">" "</span> + motif_logo)
+<span style="color: #9d0006;">for</span> insert_ind, sequence <span style="color: #9d0006;">in</span> motif_seqs[:<span style="color: #8f3f71; font-weight: bold;">10</span>]:
+    <span style="color: #af3a03;">print</span>((<span style="color: #af3a03;">len</span>(sequence) - insert_ind) * <span style="color: #79740e;">" "</span> +sequence)
 </pre>
 </div>
 
-<pre class="example" id="org7264acb">
+<pre class="example" id="org46c3477">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -656,7 +650,6 @@ random.seed(<span style="color: #da8548; font-weight: bold;">0</span>)
 </div>
 </div>
 </div>
-
 <div id="outline-container-org9bda147" class="outline-3">
 <h3 id="org9bda147"><span class="section-number-3">2.2.</span> Finding the motif</h3>
 <div class="outline-text-3" id="text-2-2">
@@ -752,33 +745,32 @@ We return the wmm and the max<sub>indices</sub> as a result.
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">def</span> <span style="color: #a626a4;">find_motif</span>(query_seqs, motif_length):
-    <span style="color: #6a1868;">max_indices</span> = [<span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(query_seqs))]
-    <span style="color: #6a1868;">max_scores</span> = [<span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(query_seqs))]
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">find_motif</span>(query_seqs, motif_length):
+    <span style="color: #076678;">max_indices</span> = [<span style="color: #8f3f71; font-weight: bold;">0</span> <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(query_seqs))]
+    <span style="color: #076678;">max_scores</span> = [<span style="color: #8f3f71; font-weight: bold;">0</span> <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(query_seqs))]
 
-    <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #da8548; font-weight: bold;">100</span>): <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">this can be a while True</span>
-        <span style="color: #6a1868;">max_indices_previous</span> = max_indices.copy()
-        <span style="color: #e45649;">for</span> i, query_seq <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(query_seqs):
-            <span style="color: #e45649;">if</span> i == <span style="color: #a626a4;">len</span>(query_seqs):
-                <span style="color: #e45649;">break</span>
-            <span style="color: #6a1868;">sample_indices</span> = max_indices[:i] + [random.randrange(<span style="color: #a626a4;">len</span>(sequence) - motif_length) <span style="color: #e45649;">for</span> sequence <span style="color: #e45649;">in</span> query_seqs[i:]]
-            <span style="color: #6a1868;">samples</span> = [seq[j:j + motif_length] <span style="color: #e45649;">for</span> j, seq <span style="color: #e45649;">in</span> <span style="color: #a626a4;">zip</span>(sample_indices, query_seqs[:i] + query_seqs[i + <span style="color: #da8548; font-weight: bold;">1</span>:])]
-            <span style="color: #6a1868;">wmm</span> = pspm(samples)
-            <span style="color: #6a1868;">slice_scores</span> = calculate_probability(query_seq, wmm)
-            <span style="color: #6a1868;">max_ind</span>, <span style="color: #6a1868;">max_score</span> = <span style="color: #a626a4;">max</span>(slice_scores.items(), key=operator.itemgetter(<span style="color: #da8548; font-weight: bold;">1</span>))
-            <span style="color: #e45649;">if</span> max_score &gt; max_scores[i]:
-                <span style="color: #6a1868;">max_indices</span>[i] = max_ind
-                <span style="color: #6a1868;">max_scores</span>[i] = max_score
-        <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Check for convergence</span>
-        <span style="color: #e45649;">if</span> max_indices_previous == max_indices:
-            <span style="color: #a626a4;">print</span>(<span style="color: #50a14f;">"No new indices!"</span>)
-            <span style="color: #e45649;">break</span>
-    <span style="color: #e45649;">return</span> wmm, max_indices
+    <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #8f3f71; font-weight: bold;">100</span>): <span style="color: #a89984;"># </span><span style="color: #a89984;">this can be a while True</span>
+        <span style="color: #076678;">max_indices_previous</span> = max_indices.copy()
+        <span style="color: #9d0006;">for</span> i, query_seq <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(query_seqs):
+            <span style="color: #9d0006;">if</span> i == <span style="color: #af3a03;">len</span>(query_seqs):
+                <span style="color: #9d0006;">break</span>
+            <span style="color: #076678;">sample_indices</span> = max_indices[:i] + [random.randrange(<span style="color: #af3a03;">len</span>(sequence) - motif_length) <span style="color: #9d0006;">for</span> sequence <span style="color: #9d0006;">in</span> query_seqs[i:]]
+            <span style="color: #076678;">samples</span> = [seq[j:j + motif_length] <span style="color: #9d0006;">for</span> j, seq <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">zip</span>(sample_indices, query_seqs[:i] + query_seqs[i + <span style="color: #8f3f71; font-weight: bold;">1</span>:])]
+            <span style="color: #076678;">wmm</span> = pspm(samples)
+            <span style="color: #076678;">slice_scores</span> = calculate_probability(query_seq, wmm)
+            <span style="color: #076678;">max_ind</span>, <span style="color: #076678;">max_score</span> = <span style="color: #af3a03;">max</span>(slice_scores.items(), key=operator.itemgetter(<span style="color: #8f3f71; font-weight: bold;">1</span>))
+            <span style="color: #9d0006;">if</span> max_score &gt; max_scores[i]:
+                <span style="color: #076678;">max_indices</span>[i] = max_ind
+                <span style="color: #076678;">max_scores</span>[i] = max_score
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">Check for convergence</span>
+        <span style="color: #9d0006;">if</span> max_indices_previous == max_indices:
+            <span style="color: #af3a03;">print</span>(<span style="color: #79740e;">"No new indices!"</span>)
+            <span style="color: #9d0006;">break</span>
+    <span style="color: #9d0006;">return</span> wmm, max_indices
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgd2b03a2" class="outline-4">
 <h4 id="orgd2b03a2"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
 <div class="outline-text-4" id="text-2-2-2">
@@ -791,30 +783,29 @@ frequeny of bases in each location.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> collections <span style="color: #e45649;">import</span> Counter
+<pre class="src src-python"><span style="color: #9d0006;">from</span> collections <span style="color: #9d0006;">import</span> Counter
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">pspm</span>(seqs):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Position Specific Probabilty Model.</span>
-<span style="color: #84888b; font-style: italic;">    Takes a set of same length sequences,</span>
-<span style="color: #84888b; font-style: italic;">    returns a list of dictionaries for each positions</span>
-<span style="color: #84888b; font-style: italic;">    invidual probabilities.</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #6a1868;">pos_prob_model</span> = []
-    <span style="color: #e45649;">for</span> pos <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(seqs[<span style="color: #da8548; font-weight: bold;">0</span>])):
-        <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">pos_elems = [] # Gives key error when the base not in the samples.</span>
-        <span style="color: #6a1868;">pos_elems</span> = [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"T"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>] <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Maybe get the alphabet here somehow?</span>
-        <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> seqs:
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">pspm</span>(seqs):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Position Specific Probabilty Model.</span>
+<span style="color: #79740e; font-style: italic;">    Takes a set of same length sequences,</span>
+<span style="color: #79740e; font-style: italic;">    returns a list of dictionaries for each positions</span>
+<span style="color: #79740e; font-style: italic;">    invidual probabilities.</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #076678;">pos_prob_model</span> = []
+    <span style="color: #9d0006;">for</span> pos <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(seqs[<span style="color: #8f3f71; font-weight: bold;">0</span>])):
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">pos_elems = [] # Gives key error when the base not in the samples.</span>
+        <span style="color: #076678;">pos_elems</span> = [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"T"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>] <span style="color: #a89984;"># </span><span style="color: #a89984;">Maybe get the alphabet here somehow?</span>
+        <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> seqs:
             pos_elems.append(seq[pos])
-        <span style="color: #6a1868;">counter</span> = Counter(pos_elems)
-        <span style="color: #6a1868;">total_letter</span> = (<span style="color: #a626a4;">sum</span>(counter.values()))
-        pos_prob_model.append({k: <span style="color: #a626a4;">round</span>(v / total_letter, <span style="color: #da8548; font-weight: bold;">2</span>) <span style="color: #e45649;">for</span> k, v <span style="color: #e45649;">in</span> counter.items()})
-    <span style="color: #e45649;">return</span> pos_prob_model
+        <span style="color: #076678;">counter</span> = Counter(pos_elems)
+        <span style="color: #076678;">total_letter</span> = (<span style="color: #af3a03;">sum</span>(counter.values()))
+        pos_prob_model.append({k: <span style="color: #af3a03;">round</span>(v / total_letter, <span style="color: #8f3f71; font-weight: bold;">2</span>) <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> counter.items()})
+    <span style="color: #9d0006;">return</span> pos_prob_model
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-org946470b" class="outline-4">
 <h4 id="org946470b"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
 <div class="outline-text-4" id="text-2-2-3">
@@ -827,29 +818,28 @@ probability of seeing given base in wmm to probability of seeing in background.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">def</span> <span style="color: #a626a4;">calculate_probability</span>(sequence, wmm):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Calculate probability for each position for given sequence using weigth model matrix</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">calculate the background bias</span>
-    <span style="color: #6a1868;">counter</span> = Counter(<span style="color: #50a14f;">''</span>.join(sequence))
-    <span style="color: #6a1868;">total_letter</span> = <span style="color: #a626a4;">sum</span>(counter.values())
-    <span style="color: #6a1868;">bg_bias</span> = {k: v / total_letter <span style="color: #e45649;">for</span> k, v <span style="color: #e45649;">in</span> counter.items()}
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">calculate_probability</span>(sequence, wmm):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Calculate probability for each position for given sequence using weigth model matrix</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">calculate the background bias</span>
+    <span style="color: #076678;">counter</span> = Counter(<span style="color: #79740e;">''</span>.join(sequence))
+    <span style="color: #076678;">total_letter</span> = <span style="color: #af3a03;">sum</span>(counter.values())
+    <span style="color: #076678;">bg_bias</span> = {k: v / total_letter <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> counter.items()}
 
-    <span style="color: #6a1868;">slice_score</span> = {}
-    <span style="color: #e45649;">for</span> seq_ind ,seq_slice <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(sequence_slice(sequence, <span style="color: #a626a4;">len</span>(wmm))):
-        <span style="color: #6a1868;">position_score</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">bg_score</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">for</span> index, position <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(seq_slice):
-            <span style="color: #6a1868;">position_score</span> *= wmm[index][position]
-            <span style="color: #6a1868;">bg_score</span> *= bg_bias[position]
-        <span style="color: #6a1868;">slice_score</span>[seq_ind] = position_score / bg_score
-    <span style="color: #e45649;">return</span> slice_score
+    <span style="color: #076678;">slice_score</span> = {}
+    <span style="color: #9d0006;">for</span> seq_ind ,seq_slice <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(sequence_slice(sequence, <span style="color: #af3a03;">len</span>(wmm))):
+        <span style="color: #076678;">position_score</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">bg_score</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">for</span> index, position <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(seq_slice):
+            <span style="color: #076678;">position_score</span> *= wmm[index][position]
+            <span style="color: #076678;">bg_score</span> *= bg_bias[position]
+        <span style="color: #076678;">slice_score</span>[seq_ind] = position_score / bg_score
+    <span style="color: #9d0006;">return</span> slice_score
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-org4926b31" class="outline-4">
 <h4 id="org4926b31"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
 <div class="outline-text-4" id="text-2-2-4">
@@ -858,90 +848,89 @@ This function returns part of that sequence in motif length.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">def</span> <span style="color: #a626a4;">sequence_slice</span>(sequence, motif_length):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Takes a sequence and returns list of substrings with sliding index up to sequence length - motif length</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #e45649;">return</span> [sequence[position : position + motif_length] <span style="color: #e45649;">for</span> position <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(sequence) - motif_length + <span style="color: #da8548; font-weight: bold;">1</span>)]
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">sequence_slice</span>(sequence, motif_length):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Takes a sequence and returns list of substrings with sliding index up to sequence length - motif length</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #9d0006;">return</span> [sequence[position : position + motif_length] <span style="color: #9d0006;">for</span> position <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(sequence) - motif_length + <span style="color: #8f3f71; font-weight: bold;">1</span>)]
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org081dbe9" class="outline-4">
-<h4 id="org081dbe9"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-orgaf75a08" class="outline-4">
+<h4 id="orgaf75a08"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> collections <span style="color: #e45649;">import</span> Counter
-<span style="color: #e45649;">import</span> operator
+<pre class="src src-python"><span style="color: #9d0006;">from</span> collections <span style="color: #9d0006;">import</span> Counter
+<span style="color: #9d0006;">import</span> operator
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">pspm</span>(seqs):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Position Specific Probabilty Model.</span>
-<span style="color: #84888b; font-style: italic;">    Takes a set of same length sequences,</span>
-<span style="color: #84888b; font-style: italic;">    returns a list of dictionaries for each positions</span>
-<span style="color: #84888b; font-style: italic;">    invidual probabilities.</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #6a1868;">pos_prob_model</span> = []
-    <span style="color: #e45649;">for</span> pos <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(seqs[<span style="color: #da8548; font-weight: bold;">0</span>])):
-        <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">pos_elems = [] # Gives key error when the base not in the samples.</span>
-        <span style="color: #6a1868;">pos_elems</span> = [<span style="color: #50a14f;">"A"</span>, <span style="color: #50a14f;">"T"</span>, <span style="color: #50a14f;">"C"</span>, <span style="color: #50a14f;">"G"</span>] <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Maybe get the alphabet here somehow?</span>
-        <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> seqs:
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">pspm</span>(seqs):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Position Specific Probabilty Model.</span>
+<span style="color: #79740e; font-style: italic;">    Takes a set of same length sequences,</span>
+<span style="color: #79740e; font-style: italic;">    returns a list of dictionaries for each positions</span>
+<span style="color: #79740e; font-style: italic;">    invidual probabilities.</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #076678;">pos_prob_model</span> = []
+    <span style="color: #9d0006;">for</span> pos <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(seqs[<span style="color: #8f3f71; font-weight: bold;">0</span>])):
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">pos_elems = [] # Gives key error when the base not in the samples.</span>
+        <span style="color: #076678;">pos_elems</span> = [<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"T"</span>, <span style="color: #79740e;">"C"</span>, <span style="color: #79740e;">"G"</span>] <span style="color: #a89984;"># </span><span style="color: #a89984;">Maybe get the alphabet here somehow?</span>
+        <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> seqs:
             pos_elems.append(seq[pos])
-        <span style="color: #6a1868;">counter</span> = Counter(pos_elems)
-        <span style="color: #6a1868;">total_letter</span> = (<span style="color: #a626a4;">sum</span>(counter.values()))
-        pos_prob_model.append({k: <span style="color: #a626a4;">round</span>(v / total_letter, <span style="color: #da8548; font-weight: bold;">2</span>) <span style="color: #e45649;">for</span> k, v <span style="color: #e45649;">in</span> counter.items()})
-    <span style="color: #e45649;">return</span> pos_prob_model
+        <span style="color: #076678;">counter</span> = Counter(pos_elems)
+        <span style="color: #076678;">total_letter</span> = (<span style="color: #af3a03;">sum</span>(counter.values()))
+        pos_prob_model.append({k: <span style="color: #af3a03;">round</span>(v / total_letter, <span style="color: #8f3f71; font-weight: bold;">2</span>) <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> counter.items()})
+    <span style="color: #9d0006;">return</span> pos_prob_model
 
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">sequence_slice</span>(sequence, motif_length):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Takes a sequence and returns list of substrings with sliding index up to sequence length - motif length</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #e45649;">return</span> [sequence[position : position + motif_length] <span style="color: #e45649;">for</span> position <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(sequence) - motif_length + <span style="color: #da8548; font-weight: bold;">1</span>)]
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">sequence_slice</span>(sequence, motif_length):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Takes a sequence and returns list of substrings with sliding index up to sequence length - motif length</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #9d0006;">return</span> [sequence[position : position + motif_length] <span style="color: #9d0006;">for</span> position <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(sequence) - motif_length + <span style="color: #8f3f71; font-weight: bold;">1</span>)]
 
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">calculate_probability</span>(sequence, wmm):
-    <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">    Calculate probability for each position for given sequence using weigth model matrix</span>
-<span style="color: #84888b; font-style: italic;">    '''</span>
-    <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">calculate the background bias</span>
-    <span style="color: #6a1868;">counter</span> = Counter(<span style="color: #50a14f;">''</span>.join(sequence))
-    <span style="color: #6a1868;">total_letter</span> = <span style="color: #a626a4;">sum</span>(counter.values())
-    <span style="color: #6a1868;">bg_bias</span> = {k: v / total_letter <span style="color: #e45649;">for</span> k, v <span style="color: #e45649;">in</span> counter.items()}
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">calculate_probability</span>(sequence, wmm):
+    <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">    Calculate probability for each position for given sequence using weigth model matrix</span>
+<span style="color: #79740e; font-style: italic;">    '''</span>
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">calculate the background bias</span>
+    <span style="color: #076678;">counter</span> = Counter(<span style="color: #79740e;">''</span>.join(sequence))
+    <span style="color: #076678;">total_letter</span> = <span style="color: #af3a03;">sum</span>(counter.values())
+    <span style="color: #076678;">bg_bias</span> = {k: v / total_letter <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> counter.items()}
 
-    <span style="color: #6a1868;">slice_score</span> = {}
-    <span style="color: #e45649;">for</span> seq_ind ,seq_slice <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(sequence_slice(sequence, <span style="color: #a626a4;">len</span>(wmm))):
-        <span style="color: #6a1868;">position_score</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">bg_score</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">for</span> index, position <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(seq_slice):
-            <span style="color: #6a1868;">position_score</span> *= wmm[index][position]
-            <span style="color: #6a1868;">bg_score</span> *= bg_bias[position]
-        <span style="color: #6a1868;">slice_score</span>[seq_ind] = position_score / bg_score
-    <span style="color: #e45649;">return</span> slice_score
+    <span style="color: #076678;">slice_score</span> = {}
+    <span style="color: #9d0006;">for</span> seq_ind ,seq_slice <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(sequence_slice(sequence, <span style="color: #af3a03;">len</span>(wmm))):
+        <span style="color: #076678;">position_score</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">bg_score</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">for</span> index, position <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(seq_slice):
+            <span style="color: #076678;">position_score</span> *= wmm[index][position]
+            <span style="color: #076678;">bg_score</span> *= bg_bias[position]
+        <span style="color: #076678;">slice_score</span>[seq_ind] = position_score / bg_score
+    <span style="color: #9d0006;">return</span> slice_score
 
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">find_motif</span>(query_seqs, motif_length):
-    <span style="color: #6a1868;">max_indices</span> = [<span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(query_seqs))]
-    <span style="color: #6a1868;">max_scores</span> = [<span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(query_seqs))]
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">find_motif</span>(query_seqs, motif_length):
+    <span style="color: #076678;">max_indices</span> = [<span style="color: #8f3f71; font-weight: bold;">0</span> <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(query_seqs))]
+    <span style="color: #076678;">max_scores</span> = [<span style="color: #8f3f71; font-weight: bold;">0</span> <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(query_seqs))]
 
-    <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #da8548; font-weight: bold;">100</span>): <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">this can be a while True</span>
-        <span style="color: #6a1868;">max_indices_previous</span> = max_indices.copy()
-        <span style="color: #e45649;">for</span> i, query_seq <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(query_seqs):
-            <span style="color: #e45649;">if</span> i == <span style="color: #a626a4;">len</span>(query_seqs):
-                <span style="color: #e45649;">break</span>
-            <span style="color: #6a1868;">sample_indices</span> = max_indices[:i] + [random.randrange(<span style="color: #a626a4;">len</span>(sequence) - motif_length) <span style="color: #e45649;">for</span> sequence <span style="color: #e45649;">in</span> query_seqs[i:]]
-            <span style="color: #6a1868;">samples</span> = [seq[j:j + motif_length] <span style="color: #e45649;">for</span> j, seq <span style="color: #e45649;">in</span> <span style="color: #a626a4;">zip</span>(sample_indices, query_seqs[:i] + query_seqs[i + <span style="color: #da8548; font-weight: bold;">1</span>:])]
-            <span style="color: #6a1868;">wmm</span> = pspm(samples)
-            <span style="color: #6a1868;">slice_scores</span> = calculate_probability(query_seq, wmm)
-            <span style="color: #6a1868;">max_ind</span>, <span style="color: #6a1868;">max_score</span> = <span style="color: #a626a4;">max</span>(slice_scores.items(), key=operator.itemgetter(<span style="color: #da8548; font-weight: bold;">1</span>))
-            <span style="color: #e45649;">if</span> max_score &gt; max_scores[i]:
-                <span style="color: #6a1868;">max_indices</span>[i] = max_ind
-                <span style="color: #6a1868;">max_scores</span>[i] = max_score
-        <span style="color: #e45649;">if</span> max_indices_previous == max_indices:
-            <span style="color: #a626a4;">print</span>(<span style="color: #50a14f;">"No new indices!"</span>)
-            <span style="color: #e45649;">break</span>
-    <span style="color: #e45649;">return</span> wmm, max_indices
+    <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #8f3f71; font-weight: bold;">100</span>): <span style="color: #a89984;"># </span><span style="color: #a89984;">this can be a while True</span>
+        <span style="color: #076678;">max_indices_previous</span> = max_indices.copy()
+        <span style="color: #9d0006;">for</span> i, query_seq <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(query_seqs):
+            <span style="color: #9d0006;">if</span> i == <span style="color: #af3a03;">len</span>(query_seqs):
+                <span style="color: #9d0006;">break</span>
+            <span style="color: #076678;">sample_indices</span> = max_indices[:i] + [random.randrange(<span style="color: #af3a03;">len</span>(sequence) - motif_length) <span style="color: #9d0006;">for</span> sequence <span style="color: #9d0006;">in</span> query_seqs[i:]]
+            <span style="color: #076678;">samples</span> = [seq[j:j + motif_length] <span style="color: #9d0006;">for</span> j, seq <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">zip</span>(sample_indices, query_seqs[:i] + query_seqs[i + <span style="color: #8f3f71; font-weight: bold;">1</span>:])]
+            <span style="color: #076678;">wmm</span> = pspm(samples)
+            <span style="color: #076678;">slice_scores</span> = calculate_probability(query_seq, wmm)
+            <span style="color: #076678;">max_ind</span>, <span style="color: #076678;">max_score</span> = <span style="color: #af3a03;">max</span>(slice_scores.items(), key=operator.itemgetter(<span style="color: #8f3f71; font-weight: bold;">1</span>))
+            <span style="color: #9d0006;">if</span> max_score &gt; max_scores[i]:
+                <span style="color: #076678;">max_indices</span>[i] = max_ind
+                <span style="color: #076678;">max_scores</span>[i] = max_score
+        <span style="color: #9d0006;">if</span> max_indices_previous == max_indices:
+            <span style="color: #af3a03;">print</span>(<span style="color: #79740e;">"No new indices!"</span>)
+            <span style="color: #9d0006;">break</span>
+    <span style="color: #9d0006;">return</span> wmm, max_indices
 
 </pre>
 </div>
@@ -958,11 +947,11 @@ Because initial sampling is random results will be different every time.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">query_seqs</span> = [seq[<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> motif_seqs]
-<span style="color: #6a1868;">wmm</span> = find_motif(query_seqs, <span style="color: #a626a4;">len</span>(motif_logo))[<span style="color: #da8548; font-weight: bold;">0</span>]
-<span style="color: #a626a4;">print</span>(motif_logo)
-<span style="color: #e45649;">for</span> row <span style="color: #e45649;">in</span> wmm:
-    <span style="color: #a626a4;">print</span>(row)
+<pre class="src src-python"><span style="color: #076678;">query_seqs</span> = [seq[<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> motif_seqs]
+<span style="color: #076678;">wmm</span> = find_motif(query_seqs, <span style="color: #af3a03;">len</span>(motif_logo))[<span style="color: #8f3f71; font-weight: bold;">0</span>]
+<span style="color: #af3a03;">print</span>(motif_logo)
+<span style="color: #9d0006;">for</span> row <span style="color: #9d0006;">in</span> wmm:
+    <span style="color: #af3a03;">print</span>(row)
 </pre>
 </div>
 
@@ -980,42 +969,41 @@ AKCYTSG
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">import</span> pandas <span style="color: #e45649;">as</span> pd
-<span style="color: #e45649;">import</span> matplotlib
-<span style="color: #e45649;">import</span> matplotlib.pyplot <span style="color: #e45649;">as</span> plt
+<pre class="src src-python"><span style="color: #9d0006;">import</span> pandas <span style="color: #9d0006;">as</span> pd
+<span style="color: #9d0006;">import</span> matplotlib
+<span style="color: #9d0006;">import</span> matplotlib.pyplot <span style="color: #9d0006;">as</span> plt
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">plot_logo</span>(wmm, file_name):
-    <span style="color: #6a1868;">A</span> = []
-    <span style="color: #6a1868;">C</span> = []
-    <span style="color: #6a1868;">G</span> = []
-    <span style="color: #6a1868;">T</span> = []
-    <span style="color: #e45649;">for</span> pos <span style="color: #e45649;">in</span> wmm:
-        A.append(pos[<span style="color: #50a14f;">'A'</span>])
-        C.append(pos[<span style="color: #50a14f;">'C'</span>])
-        G.append(pos[<span style="color: #50a14f;">'G'</span>])
-        T.append(pos[<span style="color: #50a14f;">'T'</span>])
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">plot_logo</span>(wmm, file_name):
+    <span style="color: #076678;">A</span> = []
+    <span style="color: #076678;">C</span> = []
+    <span style="color: #076678;">G</span> = []
+    <span style="color: #076678;">T</span> = []
+    <span style="color: #9d0006;">for</span> pos <span style="color: #9d0006;">in</span> wmm:
+        A.append(pos[<span style="color: #79740e;">'A'</span>])
+        C.append(pos[<span style="color: #79740e;">'C'</span>])
+        G.append(pos[<span style="color: #79740e;">'G'</span>])
+        T.append(pos[<span style="color: #79740e;">'T'</span>])
 
-    <span style="color: #6a1868;">df</span> = pd.DataFrame({<span style="color: #50a14f;">'A'</span>:A, <span style="color: #50a14f;">'C'</span>:C, <span style="color: #50a14f;">'G'</span>:G, <span style="color: #50a14f;">'T'</span>:T})
-    df.plot(kind=<span style="color: #50a14f;">'bar'</span>, stacked=<span style="color: #b751b6;">True</span>, color={<span style="color: #50a14f;">'A'</span>: <span style="color: #50a14f;">'#98cc1a'</span>, <span style="color: #50a14f;">'C'</span>: <span style="color: #50a14f;">'#4585cc'</span>, <span style="color: #50a14f;">'G'</span>: <span style="color: #50a14f;">'#1d2021'</span>, <span style="color: #50a14f;">'T'</span>: <span style="color: #50a14f;">'#cc2412'</span> })
+    <span style="color: #076678;">df</span> = pd.DataFrame({<span style="color: #79740e;">'A'</span>:A, <span style="color: #79740e;">'C'</span>:C, <span style="color: #79740e;">'G'</span>:G, <span style="color: #79740e;">'T'</span>:T})
+    df.plot(kind=<span style="color: #79740e;">'bar'</span>, stacked=<span style="color: #8f3f71;">True</span>, color={<span style="color: #79740e;">'A'</span>: <span style="color: #79740e;">'#98cc1a'</span>, <span style="color: #79740e;">'C'</span>: <span style="color: #79740e;">'#4585cc'</span>, <span style="color: #79740e;">'G'</span>: <span style="color: #79740e;">'#1d2021'</span>, <span style="color: #79740e;">'T'</span>: <span style="color: #79740e;">'#cc2412'</span> })
 
-    plt.ylabel(<span style="color: #50a14f;">'Scores'</span>)
-    plt.xlabel(<span style="color: #50a14f;">'Position'</span>)
-    plt.title(<span style="color: #50a14f;">'Motif Logo'</span>)
+    plt.ylabel(<span style="color: #79740e;">'Scores'</span>)
+    plt.xlabel(<span style="color: #79740e;">'Position'</span>)
+    plt.title(<span style="color: #79740e;">'Motif Logo'</span>)
 
     plt.savefig(file_name)
-plot_logo(wmm, <span style="color: #50a14f;">'motif_logo.png'</span>)
+plot_logo(wmm, <span style="color: #79740e;">'motif_logo.png'</span>)
 </pre>
 </div>
 
 
-<div id="org54d0958" class="figure">
+<div id="org1d91d6b" class="figure">
 <p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgccafe06" class="outline-3">
 <h3 id="orgccafe06"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
 <div class="outline-text-3" id="text-2-3">
@@ -1030,46 +1018,46 @@ There are few variables that affect the results. Which we can test by tweaking p
 Here we have a motif with double the size.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">60</span>
-<span style="color: #6a1868;">num_seqs</span> = <span style="color: #da8548; font-weight: bold;">120</span>
+<pre class="src src-python"><span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">60</span>
+<span style="color: #076678;">num_seqs</span> = <span style="color: #8f3f71; font-weight: bold;">120</span>
 
 
-<span style="color: #6a1868;">motif_logo</span> = <span style="color: #50a14f;">'AKCYTSG'</span> * <span style="color: #da8548; font-weight: bold;">2</span>
-<span style="color: #6a1868;">motif_weights</span> = [
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
+<span style="color: #076678;">motif_logo</span> = <span style="color: #79740e;">'AKCYTSG'</span> * <span style="color: #8f3f71; font-weight: bold;">2</span>
+<span style="color: #076678;">motif_weights</span> = [
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
 ]
 
-<span style="color: #6a1868;">motif_seqs</span> = []
-<span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(num_seqs):
-    <span style="color: #6a1868;">seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #076678;">motif_seqs</span> = []
+<span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(num_seqs):
+    <span style="color: #076678;">seq</span> = <span style="color: #79740e;">""</span>.join(
         random.choices(population=alphabet, weights=seq_weights, k=seq_length)
     )
-    <span style="color: #6a1868;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
+    <span style="color: #076678;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
     motif_seqs.append(insert_motif(seq, motif_seq))
 
-<span style="color: #6a1868;">query_seqs</span> = [seq[<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> motif_seqs]
-<span style="color: #6a1868;">wmm</span> = find_motif(query_seqs, <span style="color: #a626a4;">len</span>(motif_logo))[<span style="color: #da8548; font-weight: bold;">0</span>]
-plot_logo(wmm, <span style="color: #50a14f;">"motif_longer_logo.png"</span>)
+<span style="color: #076678;">query_seqs</span> = [seq[<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> motif_seqs]
+<span style="color: #076678;">wmm</span> = find_motif(query_seqs, <span style="color: #af3a03;">len</span>(motif_logo))[<span style="color: #8f3f71; font-weight: bold;">0</span>]
+plot_logo(wmm, <span style="color: #79740e;">"motif_longer_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="org3386ec3" class="figure">
+<div id="orga9af801" class="figure">
 <p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1082,38 +1070,38 @@ plot_logo(wmm, <span style="color: #50a14f;">"motif_longer_logo.png"</span>)
 Here we have a motif with lower entropy. Because we change the motif weights to 1, our motif is <code>AGCCTCG</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">60</span>
-<span style="color: #6a1868;">num_seqs</span> = <span style="color: #da8548; font-weight: bold;">120</span>
+<pre class="src src-python"><span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">60</span>
+<span style="color: #076678;">num_seqs</span> = <span style="color: #8f3f71; font-weight: bold;">120</span>
 
-<span style="color: #6a1868;">motif_logo</span> = <span style="color: #50a14f;">'AKCYTSG'</span>
-<span style="color: #6a1868;">motif_weights</span> = [
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">0</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
+<span style="color: #076678;">motif_logo</span> = <span style="color: #79740e;">'AKCYTSG'</span>
+<span style="color: #076678;">motif_weights</span> = [
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
 ]
 
-<span style="color: #6a1868;">motif_seqs</span> = []
-<span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(num_seqs):
-    <span style="color: #6a1868;">seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #076678;">motif_seqs</span> = []
+<span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(num_seqs):
+    <span style="color: #076678;">seq</span> = <span style="color: #79740e;">""</span>.join(
         random.choices(population=alphabet, weights=seq_weights, k=seq_length)
     )
-    <span style="color: #6a1868;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
+    <span style="color: #076678;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
     motif_seqs.append(insert_motif(seq, motif_seq))
 
-<span style="color: #6a1868;">query_seqs</span> = [seq[<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> motif_seqs]
-<span style="color: #6a1868;">wmm</span> = find_motif(query_seqs, <span style="color: #a626a4;">len</span>(motif_logo))[<span style="color: #da8548; font-weight: bold;">0</span>]
-plot_logo(wmm, <span style="color: #50a14f;">"motif_lowentropy_logo.png"</span>)
+<span style="color: #076678;">query_seqs</span> = [seq[<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> motif_seqs]
+<span style="color: #076678;">wmm</span> = find_motif(query_seqs, <span style="color: #af3a03;">len</span>(motif_logo))[<span style="color: #8f3f71; font-weight: bold;">0</span>]
+plot_logo(wmm, <span style="color: #79740e;">"motif_lowentropy_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="org58f4ab5" class="figure">
+<div id="org5a53306" class="figure">
 <p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1126,43 +1114,42 @@ plot_logo(wmm, <span style="color: #50a14f;">"motif_lowentropy_logo.png"</span>)
 Here we have GC rich sequences with AT rich motifs. Even though our motif is shorther it is much easier to find.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">1</span>, .<span style="color: #da8548; font-weight: bold;">4</span>, .<span style="color: #da8548; font-weight: bold;">4</span>, .<span style="color: #da8548; font-weight: bold;">1</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">60</span>
-<span style="color: #6a1868;">num_seqs</span> = <span style="color: #da8548; font-weight: bold;">120</span>
+<pre class="src src-python"><span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">1</span>, .<span style="color: #8f3f71; font-weight: bold;">4</span>, .<span style="color: #8f3f71; font-weight: bold;">4</span>, .<span style="color: #8f3f71; font-weight: bold;">1</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">60</span>
+<span style="color: #076678;">num_seqs</span> = <span style="color: #8f3f71; font-weight: bold;">120</span>
 
 
-<span style="color: #6a1868;">motif_logo</span> = <span style="color: #50a14f;">'AWWT'</span>
-<span style="color: #6a1868;">motif_weights</span> = [
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">0.8</span>, <span style="color: #da8548; font-weight: bold;">0.2</span>],
-    [<span style="color: #da8548; font-weight: bold;">1</span>],
+<span style="color: #076678;">motif_logo</span> = <span style="color: #79740e;">'AWWT'</span>
+<span style="color: #076678;">motif_weights</span> = [
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">0.8</span>, <span style="color: #8f3f71; font-weight: bold;">0.2</span>],
+    [<span style="color: #8f3f71; font-weight: bold;">1</span>],
 ]
 
-<span style="color: #6a1868;">motif_seqs</span> = []
-<span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(num_seqs):
-    <span style="color: #6a1868;">seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #076678;">motif_seqs</span> = []
+<span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(num_seqs):
+    <span style="color: #076678;">seq</span> = <span style="color: #79740e;">""</span>.join(
         random.choices(population=alphabet, weights=seq_weights, k=seq_length)
     )
-    <span style="color: #6a1868;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
+    <span style="color: #076678;">motif_seq</span> = generate_motif(motif_logo, motif_weights)
     motif_seqs.append(insert_motif(seq, motif_seq))
 
-<span style="color: #6a1868;">query_seqs</span> = [seq[<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> motif_seqs]
-<span style="color: #6a1868;">wmm</span> = find_motif(query_seqs, <span style="color: #a626a4;">len</span>(motif_logo))[<span style="color: #da8548; font-weight: bold;">0</span>]
-plot_logo(wmm, <span style="color: #50a14f;">"motif_bgcontrast_logo.png"</span>)
+<span style="color: #076678;">query_seqs</span> = [seq[<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> motif_seqs]
+<span style="color: #076678;">wmm</span> = find_motif(query_seqs, <span style="color: #af3a03;">len</span>(motif_logo))[<span style="color: #8f3f71; font-weight: bold;">0</span>]
+plot_logo(wmm, <span style="color: #79740e;">"motif_bgcontrast_logo.png"</span>)
 </pre>
 </div>
 
 
-<div id="orgeed77b6" class="figure">
+<div id="orga2b95b9" class="figure">
 <p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgb2df730" class="outline-2">
 <h2 id="orgb2df730"><span class="section-number-2">3.</span> Trying it out with real data</h2>
 <div class="outline-text-2" id="text-3">
@@ -1192,7 +1179,7 @@ Easiest way to achieve is with a shell script like below:
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-shell">zcat GCA_009914755.4_genes.gff3.gz | <span style="color: #986801;">grep</span> -v <span style="color: #50a14f;">'^#'</span> | <span style="color: #986801;">grep</span> <span style="color: #50a14f;">"ENSP"</span> | awk -F<span style="color: #50a14f;">"\t"</span> <span style="color: #50a14f;">'{if ($3 = "exon" &amp;&amp; $7 == "+") {print $1, $5}}'</span> | sort -s -k1,1 -k2,2n -u | shuf | awk <span style="color: #50a14f;">'{printf  "chr%s:%s-%s\n", $1, $2-10, $2+49}'</span> | head -n <span style="color: #da8548; font-weight: bold;">1000</span> &gt; sample_positions.txt
+<pre class="src src-shell">zcat GCA_009914755.4_genes.gff3.gz | <span style="color: #8f3f71;">grep</span> -v <span style="color: #79740e;">'^#'</span> | <span style="color: #8f3f71;">grep</span> <span style="color: #79740e;">"ENSP"</span> | awk -F<span style="color: #79740e;">"\t"</span> <span style="color: #79740e;">'{if ($3 = "exon" &amp;&amp; $7 == "+") {print $1, $5}}'</span> | sort -s -k1,1 -k2,2n -u | shuf | awk <span style="color: #79740e;">'{printf  "chr%s:%s-%s\n", $1, $2-10, $2+49}'</span> | head -n <span style="color: #8f3f71; font-weight: bold;">1000</span> &gt; sample_positions.txt
 </pre>
 </div>
 
@@ -1212,10 +1199,10 @@ We need to read the fasta file.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">with</span> <span style="color: #a626a4;">open</span>(<span style="color: #50a14f;">"sample.fa"</span>) <span style="color: #e45649;">as</span> f:
-    <span style="color: #6a1868;">query_seqs</span> = [<span style="color: #50a14f;">""</span>.join(entry.splitlines()[<span style="color: #da8548; font-weight: bold;">1</span>:]).upper() <span style="color: #e45649;">for</span> entry <span style="color: #e45649;">in</span> f.read().split(<span style="color: #50a14f;">'&gt;'</span>)[<span style="color: #da8548; font-weight: bold;">1</span>:]]
-    <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">query_seqs = [line for line f.read().splitlines() if not line.startswith("&gt;")]</span>
-<span style="color: #a626a4;">print</span>(query_seqs[:<span style="color: #da8548; font-weight: bold;">12</span>])
+<pre class="src src-python"><span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(<span style="color: #79740e;">"sample.fa"</span>) <span style="color: #9d0006;">as</span> f:
+    <span style="color: #076678;">query_seqs</span> = [<span style="color: #79740e;">""</span>.join(entry.splitlines()[<span style="color: #8f3f71; font-weight: bold;">1</span>:]).upper() <span style="color: #9d0006;">for</span> entry <span style="color: #9d0006;">in</span> f.read().split(<span style="color: #79740e;">'&gt;'</span>)[<span style="color: #8f3f71; font-weight: bold;">1</span>:]]
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">query_seqs = [line for line f.read().splitlines() if not line.startswith("&gt;")]</span>
+<span style="color: #af3a03;">print</span>(query_seqs[:<span style="color: #8f3f71; font-weight: bold;">12</span>])
 </pre>
 </div>
 
@@ -1228,13 +1215,13 @@ We need to read the fasta file.
 We can just pass the sequences to our function. For the motif size lets pick 8.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">wmm</span>, <span style="color: #6a1868;">max_indices</span> = find_motif(random.choices(query_seqs, k=<span style="color: #da8548; font-weight: bold;">100</span>), <span style="color: #da8548; font-weight: bold;">8</span>)
-plot_logo(wmm, <span style="color: #50a14f;">"5prime_splice_site.png"</span>)
+<pre class="src src-python"><span style="color: #076678;">wmm</span>, <span style="color: #076678;">max_indices</span> = find_motif(random.choices(query_seqs, k=<span style="color: #8f3f71; font-weight: bold;">100</span>), <span style="color: #8f3f71; font-weight: bold;">8</span>)
+plot_logo(wmm, <span style="color: #79740e;">"5prime_splice_site.png"</span>)
 </pre>
 </div>
 
 
-<div id="orgf5436fd" class="figure">
+<div id="orgc2fb19f" class="figure">
 <p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>
@@ -1244,7 +1231,6 @@ Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki
 </p>
 </div>
 </div>
-
 <div id="outline-container-orgd9eec32" class="outline-2">
 <h2 id="orgd9eec32">Comments</h2>
 <div class="outline-text-2" id="text-orgd9eec32">
