@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-12-30 Sat 19:23 -->
+<!-- 2023-12-30 Sat 19:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blog</title>
+<title>Updating a Debian Package</title>
 <meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -267,17 +267,166 @@ else {
     </ul>
 </div>
 <div id="content" class="content">
-<h1 class="title">Blog</h1>
+<h1 class="title">Updating a Debian Package</h1>
+<div class="dateauthor" id="orgc06d3f5">
+<p>
+30 December 2023 — Barış Salman
+</p>
+
+<p>
+Links
+</p>
 <ul class="org-ul">
-<li><a href="updating_a_debian_package.html">Updating a debian package</a></li>
-<li><a href="NGSoneliner/NGSoneliner.html">NGSoneliner</a></li>
-<li><a href="prs/prs_calculation.html">Polygenic Risk Score Calculation</a></li>
-<li><a href="turkishvariome2vcf.html">Converting Turkish Variome data from TSV to VCF</a></li>
-<li><a href="theindex.html">Index</a></li>
-<li><a href="cv/cv.html"> Barış Salman</a></li>
-<li><a href="bwa/bwa.html">Sequence Alignment from Scratch with BWA</a></li>
-<li><a href="seqmotif/seqmotif.html">Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</a></li>
+<li><a href="https://salsa.debian.org/yangfl-guest/scrcpy">https://salsa.debian.org/yangfl-guest/scrcpy</a></li>
+<li><a href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a></li>
 </ul>
+
+</div>
+
+<p>
+Debian is known for being a stable distribution with the cost of older packages.
+However, Debian has branches with newer packages that can be more suitable for personal computing.
+One is <code>testing</code> where packages are tested before they’re settled as the <code>stable</code> release and the other is <code>unstable/sid</code> where it is more like a rolling distribution.
+</p>
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="org930ce7f">
+<p>
+I have never added any third-party repositories.
+</p>
+
+</div>
+<p>
+I have been using unstable for four years now and it has been rock solid in my case.
+</p>
+
+
+<p>
+Sometimes I come across something that has been updated in the upstream but the Debian package haven&rsquo;t caught up.
+In that case, we can either compile the package from the source or build a deb package by pulling from the upstream.
+I was checking the scrcpy and added the camera mirroring which I wanted.
+I was doing the camera mirroring with scrcpy by opening the <a href="https://opencamera.org.uk/">open camera</a> app on my phone and hiding the UI.
+</p>
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="orgc03488a">
+<p>
+I performed all of these in a virtual machine, because I don&rsquo;t wanna install build dependencies to my system and VM is a more sterile environment.
+</p>
+
+</div>
+
+<p>
+First, we need the Debian package source.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #8f3f71;">git</span> clone https://salsa.debian.org/yangfl-guest/scrcpy
+</pre>
+</div>
+
+<p>
+Second, we are going to add the upstream.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #8f3f71;">git</span> remote add upstream https://github.com/Genymobile/scrcpy
+<span style="color: #8f3f71;">git</span> fetch upstream
+</pre>
+</div>
+
+<p>
+Third we are going to merge the upstream to Debian.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #8f3f71;">git</span> merge origin/upstream
+</pre>
+</div>
+
+<p>
+Here is the main issue why I think this repo is not building.
+Debian packages Android sdk files but it got stuck at version 23.
+It installs them under /usr/lib/android-sdk.
+We need to update these too.
+For this, we need the sdkmanager from the <a href="https://developer.android.com/tools">cmd tools</a> from android studio.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">./sdkmanager --sdk_root=/usr/lib/android-sdk <span style="color: #79740e;">"platforms;android-34"</span> <span style="color: #79740e;">"build-tools;34.0.0"</span> <span style="color: #79740e;">"extras;google;m2repository"</span> <span style="color: #79740e;">"extras;android;m2repository"</span>
+</pre>
+</div>
+
+<p>
+We also need to point to the updated libraries from the debian/rules file.
+We bump the version number too.
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #8f3f71;">find</span> debian/ -type f -exec sed -i <span style="color: #79740e;">"s/2\.1\.1/2\.3\.1/g"</span> <span style="color: #076678;">{}</span> <span style="color: #79740e;">\;</span>
+</pre>
+</div>
+
+<pre class="example" id="org8c39be7">
+bar@debiantestin:~/scrcpy$ git diff
+diff --git a/debian/changelog b/debian/changelog
+index 9ab8307b..31946e07 100644
+--- a/debian/changelog
++++ b/debian/changelog
+@@ -1,4 +1,4 @@
+-scrcpy (2.1.1-1) unstable; urgency=medium
++scrcpy (2.3.1-1) unstable; urgency=medium
+
+   * New upstream release (Closes: #1042468)
+
+diff --git a/debian/rules b/debian/rules
+index 5be351c7..5d46e280 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -38,7 +38,7 @@ override_dh_auto_configure-arch:
+        dh_auto_configure -a -- -Dcompile_server=false
+
+ override_dh_auto_build-indep:
+;-       BUILD_DIR=build_manual ANDROID_PLATFORM=23 ANDROID_BUILD_TOOLS=debian server/build_without_gradle.sh
+;+       BUILD_DIR=build_manual ANDROID_PLATFORM=34 ANDROID_BUILD_TOOLS=34.0.0 server/build_without_gradle.sh
+        # dirty hack for reproducible jar build
+        cd build_manual; \
+                unzip scrcpy-server; \
+</pre>
+
+
+<p>
+Lastly, we built the Debian package as instructed <a href="https://wiki.debian.org/HowToPackageForDebian">in the wiki</a>.
+</p>
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="org329f3f6">
+<p>
+debuild command is part of the devscripts package.
+Besides installing dependencies with build-dep command I also needed the <code>android-libboringssl</code> package.
+</p>
+
+</div>
+
+
+
+<div class="org-src-container">
+<pre class="src src-nil">sudo apt-get build-dep scrcpy
+debuild -i -us -uc -b
+</pre>
+</div>
+
+
+<p>
+We can now install our package with apt and share our findings with the maintainer.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #8f3f71;">sudo</span> apt install ./scrcpy-server_2.3.1-1_all.deb
+<span style="color: #8f3f71;">sudo</span> apt install ./scrcpy_2.3.1-1_amd64.deb
+</pre>
+</div>
 </div>
 <div id="postamble" class="status">
 
