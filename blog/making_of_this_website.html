@@ -1,0 +1,1072 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-21 Wed 23:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Making of this website</title>
+<meta name="author" content="Barış Salman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+
+<script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
+<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
+<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
+<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
+<script>
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+
+<script>
+if (localStorage.darkMode == "true") {
+  document.body.classList.add("latex-dark");
+}
+else {
+  document.body.classList.remove("latex-dark");
+}
+if (localStorage.typeface == "Libertinus") {
+    document.body.classList.add("libertinus")
+}
+else {
+    document.body.classList.remove("libertinus")
+}
+</script>
+
+    <ul id="navbar">
+        <li>
+            <a href="https://omics.sbs/">Home</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/blog">Blog</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/notes">Notes</a>
+        </li>
+        <li>
+            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
+        </li>
+        <li class="preferences">
+            <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
+                title="Toggle color mode">
+                <div class="sun">
+                </div>
+                <div class="moon">
+                    <div class="star"></div>
+                    <div class="star small"></div>
+                </div>
+            </button>
+        </li>
+        <li class="preferences">
+            <input type="button" id="typeface-toggle" title="" value="Aa">
+        </li>
+    </ul>
+</div>
+<div id="content" class="content">
+<h1 class="title">Making of this website</h1>
+<div class="post-tag" id="org97fa029">
+<p>
+21 Feb 2024 — Barış Salman
+</p>
+
+</div>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8516043">1. schema</a></li>
+<li><a href="#org5c6ec58">2. Blogging with org mode</a>
+<ul>
+<li><a href="#orgb00a845">2.1. styling</a></li>
+<li><a href="#orgb5927ad">2.2. org mode can add latex figures to HTML</a></li>
+<li><a href="#org77d3049">2.3. sidenotes</a></li>
+<li><a href="#orgf62854f">2.4. noweb blocks</a></li>
+<li><a href="#orgd5db0c4">2.5. bibliography</a></li>
+<li><a href="#orgb8c285b">2.6. indexing</a></li>
+<li><a href="#org104ff18">2.7. tables</a></li>
+<li><a href="#org62d31b8">2.8. tag noexport</a></li>
+<li><a href="#org0324526">2.9. header argument :eval no-export</a></li>
+<li><a href="#org5d58e10">2.10. appendices</a></li>
+<li><a href="#org21dd67d">2.11. comments section</a></li>
+<li><a href="#org4a871d4">2.12. date and author signature at the begining</a></li>
+<li><a href="#orgf0e34e4">2.13. org-publish configuration</a></li>
+<li><a href="#orgd886de5">2.14. org-glossary</a></li>
+<li><a href="#orgb113da9">2.15. making plots</a></li>
+</ul>
+</li>
+<li><a href="#orga74fe94">Server software components</a>
+<ul>
+<li><a href="#org4908365">Nginx</a></li>
+<li><a href="#org189390b">Django</a></li>
+<li><a href="#org5bc2842">Cron</a></li>
+<li><a href="#org985a7fe">Isso</a></li>
+<li><a href="#org8b4f057">Git</a></li>
+<li><a href="#orgfa95d24">systemd</a></li>
+</ul>
+</li>
+<li><a href="#orgd086a6c">Comments</a></li>
+</ul>
+</div>
+</div>
+
+<p>
+I have started learning programming with python.
+That&rsquo;s why my first entry to web development has been with Django.
+Django is an opinionated framework which works for me as a geneticist who don&rsquo;t really have much of an opinion on how a website should be organized.
+</p>
+
+<label for="sn-symbol" class="sidenote-toggle">⊕</label>
+<input type="checkbox" id="sn-symbol" class="sidenote-toggle">
+<div class="sidenote" id="orgddd9eb8">
+<p>
+At this time I was also starting with Doomemacs.
+I had use vim/neovim for over 5 years before switching Emacs.
+I still have Astrovim installed but I mainly do everything on Emacs.
+</p>
+
+</div>
+
+<p>
+After the initial setup I started looking for blogging solutions.
+After seeing what org mode is capable of doing I looked no further for blogging.
+</p>
+<div id="outline-container-org8516043" class="outline-2">
+<h2 id="org8516043"><span class="section-number-2">1.</span> schema</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>org-publish-all</code> command exports the blog under the <code>omicssbs/</code> directory and changes are uploaded the website and github with <code>git push</code>.
+<a href="#orgc6dcdbd">Git hooks</a> on server automatically deploy the changes and restart required services.
+</p>
+
+
+<div id="org6a4df2a" class="figure">
+<p><img src="./omicssbs_schema.svg" alt="omicssbs_schema.svg" class="org-svg" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5c6ec58" class="outline-2">
+<h2 id="org5c6ec58"><span class="section-number-2">2.</span> Blogging with org mode</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+There are a lot of features I use from org mode or org related plugins one tends to forget some of them.
+Tracking the features and options used in org mode and having a reference document to look back to were the main reasons for writing this post.
+</p>
+</div>
+<div id="outline-container-orgb00a845" class="outline-3">
+<h3 id="orgb00a845"><span class="section-number-3">2.1.</span> styling</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<a href="https://latex.vercel.app/">Style</a> I use for the website called <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="latex-fragment-block" />.css is based on <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="latex-fragment-block" /> which works really well with the org-mode exported HTML files.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb5927ad" class="outline-3">
+<h3 id="orgb5927ad"><span class="section-number-3">2.2.</span> org mode can add latex figures to HTML</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Orgmode compiles latex fragments as SVG figures and can add them to HTML files.
+I haven&rsquo;t tried to create a tikz image yet but chemfig images like below displayed as expected.
+</p>
+
+<pre class="example" id="org25f0124">
+$$
+\chemname{\chemfig{[:150]@{C2}N*6(-(-N([:0]-@{C1}H)([:120]-H))=N-=-(=@{C3}O)-)}}{Cytosine} \qquad %
+\chemname{\chemfig{N([:180]-@{G2}H)*6(-(-N([:180]-@{G3}H)([:-60]-H))=N-*5(-N-=N-)=-(=@{G1}O)-[,,,2])}}{Guanine} %
+%\chemmove{ %
+%\draw[-,dash pattern=on 2pt off 2pt] (C1)--(G1); %
+%\draw[-,dash pattern=on 2pt off 2pt] (C2)--(G2); %
+%\draw[-,dash pattern=on 2pt off 2pt] (C3)--(G3);
+%}
+$$
+</pre>
+</div>
+</div>
+<div id="outline-container-org77d3049" class="outline-3">
+<h3 id="org77d3049"><span class="section-number-3">2.3.</span> sidenotes</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="latex-fragment-block" />.css has support for sidenotes which can be used like this in an org file.
+</p>
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #79740e;">html:&lt;label for="sn-symbol" class="sidenote-toggle"&gt;&#8853;&lt;/label&gt;</span>
+<span style="color: #79740e;">html:&lt;input type="checkbox" id="sn-symbol" class="sidenote-toggle"&gt;</span>
+<span style="background-color: #d5c4a1; font-size: 80%;">sidenote</span>
+At this time I was also starting with Doomemacs.
+I had use vim/neovim for over 5 years before switching Emacs.
+I still have Astrovim installed, but I mainly do everything on Emacs.
+<span style="background-color: #d5c4a1; font-size: 80%;">sidenote</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf62854f" class="outline-3">
+<h3 id="orgf62854f"><span class="section-number-3">2.4.</span> noweb blocks</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+I define variables in noweb blocks under a no-export header.
+I use noweb blocks in other blocks as well as in text itself with in like code. This way I can have text and code synchronized.
+</p>
+
+<pre class="example" id="org35bca03">
+;* Variables :noexport:
+These are the variables used both in text and the code. This way both the code and the text are in sync.
+#+NAME: gwas_control_number
+#+begin_src R :exports none
+50000
+#+end_src
+
+Let's say we have found src_R[:noweb yes :eval yes]{&lt;&lt;snp_number&gt;&gt;} {{{results(=10=)}}} SNPs significant in a study with src_R[:noweb yes :eval yes]{&lt;&lt;gwas_case_number&gt;&gt;} {{{results(=50000=)}}} cases and src_R[:noweb yes :eval yes]{&lt;&lt;gwas_control_number&gt;&gt;} {{{results(=50000=)}}} controls.
+</pre>
+</div>
+</div>
+<div id="outline-container-orgd5db0c4" class="outline-3">
+<h3 id="orgd5db0c4"><span class="section-number-3">2.5.</span> bibliography</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Doomemacs <code>biblio</code> module includes citar and required packages. I export my bibliography from Zotero with <code>better-bibtex</code> plugin.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #79740e;">bibliography: /home/bar/org/lib.bib</span>
+
+;* References
+<span style="color: #79740e;">print_bibliography:</span>
+
+<span style="color: #79740e;">print_glossary: :type glossary acronym index :level 0 :consume no :all no :only-contents no</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb8c285b" class="outline-3">
+<h3 id="orgb8c285b"><span class="section-number-3">2.6.</span> indexing</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Orgmode publish function creates the index page based on index attributes in the individual files.
+</p>
+
+<pre class="example" id="org36f4b78">
+#+INDEX: emacs
+#+INDEX: org mode
+#+INDEX: blog
+#+INDEX: django
+</pre>
+</div>
+</div>
+<div id="outline-container-org104ff18" class="outline-3">
+<h3 id="org104ff18"><span class="section-number-3">2.7.</span> tables</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Orgmode has <a href="https://orgmode.org/manual/Advanced-features.html">extendable tables.</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="font-size: 10%; text-decoration: overline;">|-</span><span style="color: #076678; font-size: 10%; text-decoration: overline;">--+---------+---------------+----------------+-------|</span>
+|<span style="color: #076678;">   | cons    | react         | volume (&#956;l) 1&#10799; |   7&#10799; |</span>
+|<span style="color: #076678; font-size: 10%; text-decoration: overline;">---+---------+---------------+----------------+-------|</span>
+|<span style="color: #b57614;"> ! |         |               |             x1 |    x7 |</span>
+|<span style="color: #b57614;"> / |         |               |              &gt; |       |</span>
+|<span style="color: #076678;">   | 10&#956;M    | Pf            |              1 |     7 |</span>
+|<span style="color: #076678;">   | 10&#956;M    | Pr            |              1 |     7 |</span>
+|<span style="color: #076678;">   |         | dH2O          |           1.68 | 11.76 |</span>
+|<span style="color: #076678;">   |         | 2X Master Mix |           12.5 |  87.5 |</span>
+|<span style="color: #076678;">   | 5M      | Betaine       |            6.5 |  45.5 |</span>
+|<span style="color: #076678;">   |         | DMSO          |           0.32 |  2.24 |</span>
+|<span style="color: #076678; font-size: 10%; text-decoration: overline;">---+---------+---------------+----------------+-------|</span>
+|<span style="color: #076678;">   |         | aliquot       |            23. |       |</span>
+|<span style="color: #b57614;"> ^ |         |               |        aliquot |       |</span>
+|<span style="color: #076678;">   | 50ng/&#956;l | DNA           |              2 |       |</span>
+|<span style="color: #b57614;"> ^ |         |               |            DNA |       |</span>
+|<span style="color: #076678; font-size: 10%; text-decoration: overline;">---+---------+---------------+----------------+-------|</span>
+|<span style="color: #076678;">   |         | Total         |            25. |       |</span>
+|<span style="color: #b57614;"> ^ |         |               |          total |       |</span>
+|<span style="color: #076678; font-size: 10%; text-decoration: overline;">---+---------+---------------+----------------+-------|</span>
+<span style="color: #79740e;">TBLFM: @4$5..@9$5=$x1 * 7</span>
+<span style="color: #79740e;">TBLFM: $aliquot=vsum(@4..@-1)</span>
+<span style="color: #79740e;">TBLFM: $total=$aliquot+$DNA</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org62d31b8" class="outline-3">
+<h3 id="org62d31b8"><span class="section-number-3">2.8.</span> tag noexport</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+Anything under the heading with the tag <code>noexport</code> will not be exported to the final document.
+</p>
+
+<pre class="example" id="org3f08f5e">
+#+EXCLUDE_TAGS: noexport
+
+;* My_heading :noexport:
+</pre>
+</div>
+</div>
+<div id="outline-container-org0324526" class="outline-3">
+<h3 id="org0324526"><span class="section-number-3">2.9.</span> header argument :eval no-export</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+This way code blocks are not evaluated when exporting to html.
+</p>
+
+<pre class="example" id="org8bd8e4f">
+#+PROPERTY: HEADER-ARGS+ :eval no-export
+</pre>
+</div>
+</div>
+<div id="outline-container-org5d58e10" class="outline-3">
+<h3 id="org5d58e10"><span class="section-number-3">2.10.</span> appendices</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+Appendices or any other unnumbered heading can be achieved like this.
+</p>
+
+<pre class="example" id="orgea57179">
+;* Comments
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+</pre>
+</div>
+</div>
+<div id="outline-container-org21dd67d" class="outline-3">
+<h3 id="org21dd67d"><span class="section-number-3">2.11.</span> comments section</h3>
+<div class="outline-text-3" id="text-2-11">
+<p>
+Comment section are added at the end of every blog post with following block.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">;* Comments
+<span style="color: #b57614;">:PROPERTIES:</span>
+<span style="color: #79740e;">:UNNUMBERED:</span> <span style="color: #79740e;">t</span>
+<span style="color: #b57614;">:END:</span>
+<span style="color: #79740e;">HTML_HEAD_EXTRA: &lt;script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"&gt;&lt;/script&gt;</span>
+<span style="background-color: #d5c4a1; font-size: 80%;">EXPORT</span><span style="background-color: #d5c4a1;"> html</span>
+&lt;section id="isso-thread"&gt;
+    &lt;noscript&gt;Javascript needs to <span style="text-decoration: underline;">be activated</span> to view comments.&lt;/noscript&gt;
+&lt;/section&gt;
+<span style="background-color: #d5c4a1; font-size: 80%;">EXPORT</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4a871d4" class="outline-3">
+<h3 id="org4a871d4"><span class="section-number-3">2.12.</span> date and author signature at the begining</h3>
+<div class="outline-text-3" id="text-2-12">
+<p>
+There is a special block named post-tag which has a custom css. I just have the date and some summary links at this block.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="background-color: #d5c4a1; font-size: 80%;">post-tag</span>
+30 December 2023 &#8212; Bar&#305;&#351; Salman
+
+Links
+&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #689d6a; text-decoration: underline;"><a href="https://salsa.debian.org/yangfl-guest/scrcpy">https://salsa.debian.org/yangfl-guest/scrcpy</a></span>
+&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #689d6a; text-decoration: underline;"><a href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a></span>
+<span style="background-color: #d5c4a1; font-size: 80%;">post-tag</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf0e34e4" class="outline-3">
+<h3 id="orgf0e34e4"><span class="section-number-3">2.13.</span> org-publish configuration</h3>
+<div class="outline-text-3" id="text-2-13">
+<p>
+This configuration publishes to the blog directory under my Django project. So when I push both of them together. There is a preamble and head parts which makes it fit with the rest of the website. Any additional style or script I want in the blog pages I write to base app in the Django project. This way same style is applied everywhere (except notes which is a different app in itself).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #a89984;">;; </span><span style="color: #a89984;">Blog Configuration</span>
+<span style="color: #076678;">(</span><span style="color: #8f3f71;">require</span> <span style="color: #076678;">'</span><span style="color: #8f3f71;">ox-publish</span><span style="color: #076678;">)</span>
+<span style="color: #a89984;">;; </span><span style="color: #a89984;">Define the publishing project</span>
+
+<span style="color: #076678;">(</span><span style="color: #9d0006;">setq</span> <span style="color: #076678;">org-publish-project-alist</span>
+      <span style="color: #076678;">'</span><span style="color: #b16286;">(</span><span style="color: #8ec07c;">(</span><span style="color: #79740e;">"posts"</span>
+         <span style="color: #af3a03;">:recursive</span> t
+         <span style="color: #af3a03;">:base-directory</span> <span style="color: #79740e;">"~/org/roam/blog"</span>
+         <span style="color: #af3a03;">:publishing-function</span> org-html-publish-to-html
+         <span style="color: #af3a03;">:publishing-directory</span> <span style="color: #79740e;">"~/Desktop/Workbench/omicssbs/blog"</span>
+         <span style="color: #af3a03;">:section-numbers</span> t
+         <span style="color: #af3a03;">:with-toc</span> t
+         <span style="color: #af3a03;">:with-author</span> t
+         <span style="color: #af3a03;">:with-creator</span> t
+         <span style="color: #af3a03;">:with-date</span> t
+         <span style="color: #af3a03;">:time-stamp-file</span> t
+         <span style="color: #af3a03;">:exclude-tags</span> <span style="color: #d65d0e;">(</span><span style="color: #79740e;">"draft"</span><span style="color: #d65d0e;">)</span>
+
+         <span style="color: #af3a03;">:makeindex</span> t
+         <span style="color: #a89984;">; </span><span style="color: #a89984;">sitemap configuration</span>
+         <span style="color: #af3a03;">:auto-sitemap</span> t
+         <span style="color: #af3a03;">:sitemap-title</span> <span style="color: #79740e;">"Blog"</span>
+         <span style="color: #af3a03;">:sitemap-sort-files</span> anti-chronologically
+         <span style="color: #af3a03;">:sitemap-style</span> list
+         <span style="color: #af3a03;">:sitemap-sort-folders</span> ignore
+         <span style="color: #af3a03;">:sitemap-date-format</span> <span style="color: #79740e;">"%A %d %B %Y %H:%M"</span>
+         <span style="color: #af3a03;">:sitemap-file-entry-format</span> <span style="color: #79740e;">"%t %d"</span>
+
+         <span style="color: #a89984;">; </span><span style="color: #a89984;">html configuration</span>
+         <span style="color: #af3a03;">:html-html5-fancy</span> t
+         <span style="color: #af3a03;">:html-head</span> <span style="color: #79740e;">"</span>
+<span style="color: #79740e;">&lt;script async src=\"https://analytics.umami.is/script.js\" data-website-id=\"c0d0b77c-5c98-4814-9721-bb72437e9467\"&gt;&lt;/script&gt;</span>
+<span style="color: #79740e;">&lt;link rel=\"shortcut icon\" href=\"https://omics.sbs/static/base/img/fav.ico\" /&gt;</span>
+<span style="color: #79740e;">&lt;link rel=\"stylesheet\" href=\"https://omics.sbs/static/base/css/latex.css\" /&gt;</span>
+<span style="color: #79740e;">&lt;link rel=\"stylesheet\" href=\"https://omics.sbs/static/base/css/style.css\" /&gt;"</span>
+
+         <span style="color: #af3a03;">:html-postamble</span> <span style="color: #79740e;">"</span>
+<span style="color: #79740e;">&lt;script src=\"https://omics.sbs/static/base/js/script.js\"&gt;&lt;/script&gt;</span>
+<span style="color: #79740e;">"</span>
+         <span style="color: #af3a03;">:html-preamble</span> <span style="color: #79740e;">"</span>
+<span style="color: #79740e;">&lt;script&gt;</span>
+<span style="color: #79740e;">if (localStorage.darkMode == \"true\") {</span>
+<span style="color: #79740e;">  document.body.classList.add(\"latex-dark\");</span>
+<span style="color: #79740e;">}</span>
+<span style="color: #79740e;">else {</span>
+<span style="color: #79740e;">  document.body.classList.remove(\"latex-dark\");</span>
+<span style="color: #79740e;">}</span>
+<span style="color: #79740e;">if (localStorage.typeface == \"Libertinus\") {</span>
+<span style="color: #79740e;">    document.body.classList.add(\"libertinus\")</span>
+<span style="color: #79740e;">}</span>
+<span style="color: #79740e;">else {</span>
+<span style="color: #79740e;">    document.body.classList.remove(\"libertinus\")</span>
+<span style="color: #79740e;">}</span>
+<span style="color: #79740e;">&lt;/script&gt;</span>
+
+<span style="color: #79740e;">    &lt;ul id=\"navbar\"&gt;</span>
+<span style="color: #79740e;">        &lt;li&gt;</span>
+<span style="color: #79740e;">            &lt;a href=\"https://omics.sbs/\"&gt;Home&lt;/a&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">        &lt;li&gt;</span>
+<span style="color: #79740e;">            &lt;a href=\"https://omics.sbs/blog\"&gt;Blog&lt;/a&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">        &lt;li&gt;</span>
+<span style="color: #79740e;">            &lt;a href=\"https://omics.sbs/notes\"&gt;Notes&lt;/a&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">        &lt;li&gt;</span>
+<span style="color: #79740e;">            &lt;a href=\"https://omics.sbs/bioscripts\"&gt;Bioscripts&lt;/a&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">        &lt;li class=\"preferences\"&gt;</span>
+<span style="color: #79740e;">            &lt;button class=\"dark-mode-button\" id=\"dark-mode-toggle\" aria-label=\"Toggle color mode\"</span>
+<span style="color: #79740e;">                title=\"Toggle color mode\"&gt;</span>
+<span style="color: #79740e;">                &lt;div class=\"sun\"&gt;</span>
+<span style="color: #79740e;">                &lt;/div&gt;</span>
+<span style="color: #79740e;">                &lt;div class=\"moon\"&gt;</span>
+<span style="color: #79740e;">                    &lt;div class=\"star\"&gt;&lt;/div&gt;</span>
+<span style="color: #79740e;">                    &lt;div class=\"star small\"&gt;&lt;/div&gt;</span>
+<span style="color: #79740e;">                &lt;/div&gt;</span>
+<span style="color: #79740e;">            &lt;/button&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">        &lt;li class=\"preferences\"&gt;</span>
+<span style="color: #79740e;">            &lt;input type=\"button\" id=\"typeface-toggle\" title=\"\" value=\"Aa\"&gt;</span>
+<span style="color: #79740e;">        &lt;/li&gt;</span>
+<span style="color: #79740e;">    &lt;/ul&gt;</span>
+<span style="color: #79740e;">"</span>
+         <span style="color: #8ec07c;">)</span>
+        <span style="color: #8ec07c;">(</span><span style="color: #79740e;">"static"</span>
+         <span style="color: #af3a03;">:recursive</span> t
+         <span style="color: #af3a03;">:base-directory</span> <span style="color: #79740e;">"~/org/roam/blog"</span>
+         <span style="color: #af3a03;">:base-extension</span> <span style="color: #79740e;">"css</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">js</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">png</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">jpg</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">jpeg</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">svg</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">gif</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">pdf</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">mp3</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">ogg</span><span style="color: #076678; font-weight: bold;">\\</span><span style="color: #076678; font-weight: bold;">|</span><span style="color: #79740e;">swf"</span>
+         <span style="color: #af3a03;">:publishing-directory</span> <span style="color: #79740e;">"~/Desktop/Workbench/omicssbs/blog"</span>
+         <span style="color: #af3a03;">:recursive</span> t
+         <span style="color: #af3a03;">:publishing-function</span> org-publish-attachment
+         <span style="color: #8ec07c;">)</span>
+        <span style="color: #b16286;">)</span>
+      <span style="color: #076678;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd886de5" class="outline-3">
+<h3 id="orgd886de5"><span class="section-number-3">2.14.</span> org-glossary</h3>
+<div class="outline-text-3" id="text-2-14">
+<p>
+<code>org-glossary</code> find the headers named glossary and acronyms and uses the definitions under them to create links to them when used in text.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">;* Glossary
+&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #a89984;">allele ::</span> One of the alternatives of a genomic locus. Human autosomal chromosomes have two alleles for every locus each inherited from a parent
+;* Acronyms
+&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #a89984;">PRS ::</span> Polygenic Risk Score
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb113da9" class="outline-3">
+<h3 id="orgb113da9"><span class="section-number-3">2.15.</span> making plots</h3>
+<div class="outline-text-3" id="text-2-15">
+<p>
+In code blocks graphics file can be given as the output argument. Orgmode links this file into buffer which Emacs can display.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #79740e;">HEADER: :file PRS2.svg</span>
+<span style="color: #79740e;">HEADER: :R-dev-args bg="transparent"</span>
+<span style="font-size: 80%;">src</span> R -r :results output graphics file :session R-session :exports both
+ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -1, color=status)) +
+  geom_point(shape = "|", position = position_jitter(w = 0.5, h = 0)) +
+  geom_hline(yintercept = c(0,1), linetype = "dashed", color = "grey") +
+  scale_y_discrete(name ="Status", labels=c("Control","Case"), limits=c(0,1))
+;#+end_src
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orga74fe94" class="outline-2">
+<h2 id="orga74fe94">Server software components</h2>
+<div class="outline-text-2" id="text-orga74fe94">
+</div>
+<div id="outline-container-org4908365" class="outline-3">
+<h3 id="org4908365">Nginx</h3>
+<div class="outline-text-3" id="text-org4908365">
+<p>
+Nginx is the door to the internet.
+It serves the blog and note pages and acts as a reverse proxy for Django and Isso.
+The directive /<sub>next</sub> hosts the static files for the notes and /static hosts the static files for the Django app as well as the blog.
+There also some redirect directive which makes it easier to share other socials.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ini">    server_name omics.sbs;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/bar/omicssbs;
+    }
+
+    location / {
+      include proxy_params;
+      proxy_pass http://unix:/run/gunicorn.sock;
+      proxy_buffering off;
+      proxy_request_buffering off;
+    }
+
+    location /blog {
+        root /home/bar/omicssbs;
+        index sitemap.html;
+    }
+    location /orui {
+        root /home/bar/omicssbs;
+        index index.html;
+    }
+    location /_next {
+        root /home/bar/omicssbs/orui;
+    }
+
+    location /feeds {
+        root /home/bar/omicssbs;
+    }
+
+    location /linkedin {
+      return 301 https://www.linkedin.com/in/baris-salman/;
+    }
+    location /biostars {
+      return 301 https://www.biostars.org/u/36413/;
+    }
+    location /orcid {
+      return 301 https://orcid.org/0000-0002-7657-8576;
+    }
+    location /github {
+      return 301 https://github.com/barslmn/;
+    }
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org189390b" class="outline-3">
+<h3 id="org189390b">Django</h3>
+<div class="outline-text-3" id="text-org189390b">
+<p>
+Django is the web framework that serves the landing page and bioscripts apps. Its biggest use is making bioscripts front-end pages.
+</p>
+</div>
+<div id="outline-container-orgc7c42f3" class="outline-4">
+<h4 id="orgc7c42f3">var2texshade</h4>
+<div class="outline-text-4" id="text-orgc7c42f3">
+<p>
+This is composed of two functions. First, acts like an api, just takes in the hgvsp id returns the pdf file.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">var2texshade_api</span>(request, hgvsp):
+    <span style="color: #076678;">module_path</span> = settings.BASE_DIR.parent.joinpath(<span style="color: #79740e;">"bioscripts/modules/var2texshade/"</span>)
+    <span style="color: #9d0006;">try</span>:
+        <span style="color: #076678;">result</span> = subprocess.check_output(f<span style="color: #79740e;">"tsp -fn </span>{module_path.joinpath('var2texshade.sh')}<span style="color: #79740e;"> </span>{hgvsp}<span style="color: #79740e;">"</span>, shell=<span style="color: #8f3f71;">True</span>)
+    <span style="color: #9d0006;">except</span> subprocess.CalledProcessError <span style="color: #9d0006;">as</span> E:
+        <span style="color: #9d0006;">return</span> render(request,
+                      <span style="color: #79740e;">'bioscripts/var2texshade.html'</span>,
+                      {<span style="color: #79740e;">"error"</span>: f<span style="color: #79740e;">"Error: </span>{E.output.decode('utf-8')}<span style="color: #79740e;">"</span>})
+    <span style="color: #9d0006;">return</span> FileResponse(<span style="color: #af3a03;">open</span>(result.decode(<span style="color: #79740e;">'utf-8'</span>).strip(), <span style="color: #79740e;">'rb'</span>), as_attachment=<span style="color: #8f3f71;">True</span>, filename=f<span style="color: #79740e;">'</span>{hgvsp}<span style="color: #79740e;">.pdf'</span>)
+</pre>
+</div>
+
+<p>
+Second function just renders the form the user sees gets the hgvsp id from the form and makes the api call above.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">var2texshade</span>(request):
+    <span style="color: #9d0006;">if</span> request.method == <span style="color: #79740e;">'POST'</span>:
+        <span style="color: #076678;">form</span> = Var2TexShadeForm(request.POST)
+        <span style="color: #9d0006;">if</span> form.is_valid():
+            <span style="color: #076678;">hgvsp</span> = form.cleaned_data[<span style="color: #79740e;">'hgvsp'</span>]
+            <span style="color: #9d0006;">return</span> redirect(<span style="color: #79740e;">"bioscripts:var2texshade_api"</span>, hgvsp=hgvsp)
+
+    <span style="color: #9d0006;">else</span>:
+        <span style="color: #076678;">form</span> = Var2TexShadeForm()
+
+    <span style="color: #9d0006;">return</span> render(request, <span style="color: #79740e;">'bioscripts/var2texshade.html'</span>, {<span style="color: #79740e;">'form'</span>: form})
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4d7f71a" class="outline-4">
+<h4 id="org4d7f71a">cross-symbol-checker</h4>
+<div class="outline-text-4" id="text-org4d7f71a">
+<p>
+Because this process takes longer, I had a different approach to this one.
+There is again two functions.
+First one renders the form gets the required entries and starts the process with task-spooler (queue tool on Linux). We create a 6 character token and use that as a label in task-spooler job and pass this token to result view which is handled in the second function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">crosssymbolchecker</span>(request):
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">if this is a POST request we need to process the form data</span>
+    <span style="color: #9d0006;">if</span> request.method == <span style="color: #79740e;">'POST'</span>:
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">create a form instance and populate it with data from the request:</span>
+        <span style="color: #076678;">form</span> = CrossSymbolCheckerForm(request.POST)
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">check whether it's valid:</span>
+        <span style="color: #9d0006;">if</span> form.is_valid():
+            <span style="color: #a89984;"># </span><span style="color: #a89984;">process the data in form.cleaned_data as required</span>
+            <span style="color: #076678;">symbols</span> = form.cleaned_data[<span style="color: #79740e;">'symbols'</span>]
+            <span style="color: #076678;">assembly</span> = form.cleaned_data[<span style="color: #79740e;">'assembly'</span>]
+            <span style="color: #076678;">source</span> = form.cleaned_data[<span style="color: #79740e;">'source'</span>]
+            <span style="color: #076678;">symbols</span> = symbols.replace(<span style="color: #79740e;">"</span><span style="color: #8f3f71;">\r\n</span><span style="color: #79740e;">"</span>, <span style="color: #79740e;">" "</span>)
+
+            <span style="color: #a89984;"># </span><span style="color: #a89984;">Process</span>
+            <span style="color: #076678;">module_path</span> = settings.BASE_DIR.parent.joinpath(<span style="color: #79740e;">"bioscripts/modules/cross-symbol-checker/"</span>)
+            <span style="color: #076678;">label</span> = secrets.token_urlsafe(<span style="color: #8f3f71; font-weight: bold;">6</span>)
+            subprocess.run(f<span style="color: #79740e;">"tsp -L </span>{label}<span style="color: #79740e;"> </span>{module_path.joinpath('check-geneset.sh')}<span style="color: #79740e;"> -s </span>{source}<span style="color: #79740e;"> -a </span>{assembly}<span style="color: #79740e;"> </span>{symbols}<span style="color: #79740e;">"</span>, shell=<span style="color: #8f3f71;">True</span>)
+            <span style="color: #9d0006;">return</span> redirect(<span style="color: #79740e;">"bioscripts:crosssymbolchecker_result"</span>, label=label)
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">if a GET (or any other method) we'll create a blank form</span>
+    <span style="color: #9d0006;">else</span>:
+        <span style="color: #076678;">form</span> = CrossSymbolCheckerForm(initial={<span style="color: #79740e;">'symbols'</span>: <span style="color: #79740e;">'ADA2</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">LOC102724070</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">MDR1</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">SHFM6</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">GSTT1</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">FAM126A'</span>})
+
+    <span style="color: #9d0006;">return</span> render(request, <span style="color: #79740e;">'bioscripts/crosssymbolchecker.html'</span>, {<span style="color: #79740e;">'form'</span>: form})
+</pre>
+</div>
+
+<p>
+In the second function, we grep for the 6 character token in task-spooler jobs. By default task-spooler writes the outputs to a temp file. When the process is finished we serve the file.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">crosssymbolchecker_result</span>(request, label):
+    <span style="color: #9d0006;">try</span>:
+        <span style="color: #076678;">status</span>, <span style="color: #076678;">filename</span> = subprocess.check_output(f<span style="color: #79740e;">"tsp -l | grep </span>{label}<span style="color: #79740e;"> | awk '{{print $2\" \"$3}}'"</span>, shell=<span style="color: #8f3f71;">True</span>).decode(<span style="color: #79740e;">'utf-8'</span>).split()
+    <span style="color: #9d0006;">except</span> <span style="color: #8f3f71;">ValueError</span>:
+        <span style="color: #9d0006;">return</span> render(request,
+                    <span style="color: #79740e;">'bioscripts/crosssymbolchecker_result.html'</span>,
+                    {<span style="color: #79740e;">"label"</span>: label, <span style="color: #79740e;">"status"</span>: <span style="color: #79740e;">"error"</span>})
+    <span style="color: #9d0006;">if</span> request.method == <span style="color: #79740e;">'POST'</span>:
+        <span style="color: #9d0006;">try</span>:
+            <span style="color: #9d0006;">return</span> StreamingHttpResponse(
+                (line <span style="color: #9d0006;">for</span> line <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">open</span>(filename).read()),
+                content_type=<span style="color: #79740e;">"text/plain"</span>,
+                headers={<span style="color: #79740e;">'Content-Disposition'</span>: f<span style="color: #79740e;">'attachment; filename="omicssbs_genesetchecker_</span>{label}<span style="color: #79740e;">.txt"'</span>},
+            )
+        <span style="color: #9d0006;">except</span> <span style="color: #8f3f71;">FileNotFoundError</span>:
+            <span style="color: #9d0006;">return</span> render(request,
+                        <span style="color: #79740e;">'bioscripts/crosssymbolchecker_result.html'</span>,
+                          {<span style="color: #79740e;">"label"</span>: label, <span style="color: #79740e;">"status"</span>: <span style="color: #79740e;">"error"</span>})
+    <span style="color: #9d0006;">return</span> render(request,
+                <span style="color: #79740e;">'bioscripts/crosssymbolchecker_result.html'</span>,
+                    {<span style="color: #79740e;">"status"</span>: status, <span style="color: #79740e;">"label"</span>: label})
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5bc2842" class="outline-3">
+<h3 id="org5bc2842">Cron</h3>
+<div class="outline-text-3" id="text-org5bc2842">
+<p>
+There is one user cron for creating a JSON RSS feed from the university&rsquo;s announcement page. This runs every 4 hours in work hours from 6:00 AM to 6:00 PM.
+</p>
+
+<pre class="example" id="org6b1c63c">
+0 6-18/4 * * * /home/bar/omicssbs/feeds/duyuru.py
+</pre>
+
+
+<p>
+There is also two root jobs. One for keeping everything updated and one for auto-renewing the SSL certificate managed by the autocertbot.
+</p>
+
+<pre class="example" id="org5448ccf">
+0 0 * * * sudo apt autoremove -y ; sudo apt autoclean -y; sudo apt update -y; sudo apt upgrade -y
+
+15 0 * * * "/opt/acmesh/.acme.sh"/acme.sh --cron --home "/opt/acmesh/.acme.sh" &gt; /dev/null
+</pre>
+</div>
+</div>
+<div id="outline-container-org985a7fe" class="outline-3">
+<h3 id="org985a7fe">Isso</h3>
+<div class="outline-text-3" id="text-org985a7fe">
+<p>
+Isso is the standalone commenting app. Initially, I looked for a Django package for this, but I couldn&rsquo;t find anything to my liking. I later experimented with Commento but settled upon Isso.
+It has moderation and threads and easy to set up which was the main things I was looking for.
+</p>
+</div>
+</div>
+<div id="outline-container-org8b4f057" class="outline-3">
+<h3 id="org8b4f057">Git</h3>
+<div class="outline-text-3" id="text-org8b4f057">
+<p>
+Git handles how I upload new stuff to the servers.
+Both of the repositories on my laptop have and additional push URL besides Github.
+This URL is just a file path to server like so <code>pushurl = bar@omics.sbs:/home/bar/omicssbs.git</code>.
+They&rsquo;re bare repositories meaning they just have the git objects and not the actual files.
+They do have scripts under them that runs when I pushed main branch.
+</p>
+</div>
+<div id="outline-container-orgc6dcdbd" class="outline-4">
+<h4 id="orgc6dcdbd">git post-receive hooks</h4>
+<div class="outline-text-4" id="text-orgc6dcdbd">
+<p>
+These files live under the hook directory of the bare git repositories on the server. Any time a push is made to the main branch they are run. This script just puts the new files to a directory.
+</p>
+</div>
+<ul class="org-ul">
+<li><a id="orgcc7e5ff"></a>bioscripts<br />
+<div class="outline-text-5" id="text-orgcc7e5ff">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #a89984;">#</span><span style="color: #a89984;">!/bin/</span><span style="color: #9d0006;">sh</span>
+<span style="color: #076678;">WORK_TREE</span>=<span style="color: #79740e;">"/home/bar/bioscripts"</span>
+<span style="color: #076678;">GIT_DIR</span>=<span style="color: #79740e;">"/home/bar/bioscripts.git"</span>
+
+<span style="color: #9d0006;">while </span><span style="color: #af3a03;">read</span> oldrev newrev ref; <span style="color: #9d0006;">do</span>
+        <span style="color: #9d0006;">if</span> <span style="color: #076678;">[</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">{ref##*/}</span><span style="color: #79740e;">"</span> = <span style="color: #79740e;">"master"</span> <span style="color: #076678;">]</span>; <span style="color: #9d0006;">then</span>
+                <span style="color: #8f3f71;">echo</span> <span style="color: #79740e;">"Master ref received.  Deploying master branch to production..."</span>
+                <span style="color: #8f3f71;">git</span> --work-tree=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span> --git-dir=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">GIT_DIR</span><span style="color: #79740e;">"</span> checkout -f
+                <span style="color: #076678;">CWD</span>=$<span style="color: #076678;">(</span><span style="color: #8f3f71;">pwd</span><span style="color: #076678;">)</span>
+                <span style="color: #8f3f71;">cd</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>
+                <span style="color: #8f3f71;">git</span> --work-tree=. --git-dir=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">GIT_DIR</span><span style="color: #79740e;">"</span> submodule update
+                <span style="color: #8f3f71;">cd</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">CWD</span><span style="color: #79740e;">"</span>
+        <span style="color: #9d0006;">else</span>
+                <span style="color: #8f3f71;">echo</span> <span style="color: #79740e;">"Ref </span><span style="color: #8f3f71;">$</span><span style="color: #076678;">ref</span><span style="color: #79740e;"> successfully received.  Doing nothing: only the master branch may be deployed on this server."</span>
+        <span style="color: #9d0006;">fi</span>
+<span style="color: #9d0006;">done</span>
+
+</pre>
+</div>
+</div>
+</li>
+<li><a id="org8c4e8c6"></a>omicssbs<br />
+<div class="outline-text-5" id="text-org8c4e8c6">
+<p>
+This script, in addition to bioscripts hook, does django related things and restarts the gunicorn service. 
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #a89984;">#</span><span style="color: #a89984;">!/bin/</span><span style="color: #9d0006;">sh</span>
+<span style="color: #076678;">WORK_TREE</span>=<span style="color: #79740e;">"/home/bar/omicssbs"</span>
+<span style="color: #076678;">GIT_DIR</span>=<span style="color: #79740e;">"/home/bar/omicssbs.git"</span>
+
+<span style="color: #9d0006;">while </span><span style="color: #af3a03;">read</span> oldrev newrev ref; <span style="color: #9d0006;">do</span>
+        <span style="color: #9d0006;">if</span> <span style="color: #076678;">[</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">{ref##*/}</span><span style="color: #79740e;">"</span> = <span style="color: #79740e;">"master"</span> <span style="color: #076678;">]</span>; <span style="color: #9d0006;">then</span>
+                <span style="color: #8f3f71;">echo</span> <span style="color: #79740e;">"Master ref received.  Deploying master branch to production..."</span>
+                <span style="color: #8f3f71;">git</span> --work-tree=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span> --git-dir=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">GIT_DIR</span><span style="color: #79740e;">"</span> checkout -f
+                <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/venv/bin/python <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/manage.py collectstatic --noinput
+                <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/venv/bin/python <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/manage.py makemigrations
+                <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/venv/bin/python <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/manage.py migrate
+                <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/venv/bin/pip install -r <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">WORK_TREE</span><span style="color: #79740e;">"</span>/requirements.txt
+                <span style="color: #8f3f71;">sudo</span> systemctl restart gunicorn.service
+        <span style="color: #9d0006;">else</span>
+                <span style="color: #8f3f71;">echo</span> <span style="color: #79740e;">"Ref </span><span style="color: #8f3f71;">$</span><span style="color: #076678;">ref</span><span style="color: #79740e;"> successfully received.  Doing nothing: only the master branch may be deployed on this server."</span>
+        <span style="color: #9d0006;">fi</span>
+<span style="color: #9d0006;">done</span>
+</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgfa95d24" class="outline-3">
+<h3 id="orgfa95d24">systemd</h3>
+<div class="outline-text-3" id="text-orgfa95d24">
+<p>
+Systemd manages starting/stoping the gunicorn and isso apps.
+</p>
+</div>
+<div id="outline-container-org942d025" class="outline-4">
+<h4 id="org942d025">gunicorn</h4>
+<div class="outline-text-4" id="text-org942d025">
+<div class="org-src-container">
+<pre class="src src-ini">[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=bar
+Group=www-data
+WorkingDirectory=/home/bar/omicssbs
+ExecStart=/home/bar/omicssbs/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --timeout 600 \
+          --bind unix:/run/gunicorn.sock \
+          omicssbs.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc06802d" class="outline-4">
+<h4 id="orgc06802d">isso</h4>
+<div class="outline-text-4" id="text-orgc06802d">
+<div class="org-src-container">
+<pre class="src src-ini">[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=bar
+Group=www-data
+WorkingDirectory=/home/bar/omicssbs
+ExecStart=/home/bar/omicssbs/venv/bin/isso \
+          -c /home/bar/omicssbs/isso.conf
+
+
+[Install]
+WantedBy=multi-user.target
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd086a6c" class="outline-2">
+<h2 id="orgd086a6c">Comments</h2>
+<div class="outline-text-2" id="text-orgd086a6c">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+
+<script src="https://omics.sbs/static/base/js/script.js"></script>
+</div>
+</body>
+</html>

@@ -3,10 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-13 Sun 17:18 -->
+<!-- 2024-02-21 Wed 22:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
+<meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
 <style>
   #content { max-width: 60em; margin: auto; }
@@ -304,38 +305,38 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd30fbff">1. Intro</a></li>
-<li><a href="#org93dff9d">2. Implementation</a>
+<li><a href="#orgf8df416">1. Intro</a></li>
+<li><a href="#orgd3f2c1e">2. Implementation</a>
 <ul>
-<li><a href="#org30dc87d">2.1. What is Burrows Wheeler Transform</a></li>
-<li><a href="#org756f075">2.2. What is FM-index</a></li>
-<li><a href="#org2f3c473">2.3. Last to First Mapping</a></li>
-<li><a href="#orgd1032b8">2.4. Building a class</a></li>
-<li><a href="#org4a09c61">2.5. Mapping</a>
+<li><a href="#orgcab6a00">2.1. What is Burrows Wheeler Transform</a></li>
+<li><a href="#orgcaf997a">2.2. What is FM-index</a></li>
+<li><a href="#orgb4d5c0e">2.3. Last to First Mapping</a></li>
+<li><a href="#org45720d3">2.4. Building a class</a></li>
+<li><a href="#orgf210bb7">2.5. Mapping</a>
 <ul>
-<li><a href="#org0f96bf4">2.5.1. Exact Matching</a></li>
-<li><a href="#orgff801a4">2.5.2. Inexact Matching</a></li>
+<li><a href="#org668749d">2.5.1. Exact Matching</a></li>
+<li><a href="#orgcebc9c0">2.5.2. Inexact Matching</a></li>
 </ul>
 </li>
-<li><a href="#org7f6be7d">2.6. Putting it all together</a></li>
-<li><a href="#orgd10f402">2.7. Trying out with dummy data</a>
+<li><a href="#orgc089a6f">2.6. Putting it all together</a></li>
+<li><a href="#org61f2a82">2.7. Trying out with dummy data</a>
 <ul>
-<li><a href="#org76d0f31">2.7.1. Sequence generation</a></li>
-<li><a href="#orge55d247">2.7.2. Mutating the sequence</a></li>
-<li><a href="#orgfa310c0">2.7.3. Getting the reads</a></li>
-<li><a href="#org9bfb0f0">2.7.4. Performing the alignment</a></li>
-<li><a href="#org981b992">2.7.5. Outputing to SAM</a></li>
-<li><a href="#org0d4b416">2.7.6. Visualizing our alignments with IGV</a></li>
+<li><a href="#orgc0f0362">2.7.1. Sequence generation</a></li>
+<li><a href="#orgb67465e">2.7.2. Mutating the sequence</a></li>
+<li><a href="#org1763646">2.7.3. Getting the reads</a></li>
+<li><a href="#org98b5cc7">2.7.4. Performing the alignment</a></li>
+<li><a href="#org74e8844">2.7.5. Outputing to SAM</a></li>
+<li><a href="#orgd5e8fcc">2.7.6. Visualizing our alignments with IGV</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org727d3b4">3. References</a></li>
-<li><a href="#org61563ab">Comments</a></li>
+<li><a href="#orga0eb223">3. References</a></li>
+<li><a href="#org75b21dc">Comments</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="orgef5a886">
+<div class="abstract" id="org40e5b52">
 <p>
 The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
 Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
@@ -343,13 +344,12 @@ We can use this aligned data to discover small or structural variations in clini
 </p>
 
 </div>
-
-<div id="outline-container-orgd30fbff" class="outline-2">
-<h2 id="orgd30fbff"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-orgf8df416" class="outline-2">
+<h2 id="orgf8df416"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org28d683f">
+<div class="sidenote" id="org7aa6679">
 <p>
 Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
@@ -365,17 +365,16 @@ Burrows-Wheeler Transform makes it possible to put these pieces to their place d
 </p>
 </div>
 </div>
-
-<div id="outline-container-org93dff9d" class="outline-2">
-<h2 id="org93dff9d"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-orgd3f2c1e" class="outline-2">
+<h2 id="orgd3f2c1e"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org30dc87d" class="outline-3">
-<h3 id="org30dc87d"><span class="section-number-3">2.1.</span> What is Burrows Wheeler Transform</h3>
+<div id="outline-container-orgcab6a00" class="outline-3">
+<h3 id="orgcab6a00"><span class="section-number-3">2.1.</span> What is Burrows Wheeler Transform</h3>
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org56398f9">
+<div class="sidenote" id="org8676ad6">
 <p>
 Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
@@ -388,7 +387,7 @@ Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd08aced">
+<div class="sidenote" id="org004bdef">
 <p>
 We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
 </p>
@@ -397,11 +396,11 @@ We loop over the length of the string and for every loop we add slices of the st
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> pprint <span style="color: #e45649;">import</span> pprint
+<pre class="src src-python"><span style="color: #9d0006;">from</span> pprint <span style="color: #9d0006;">import</span> pprint
 
-<span style="color: #6a1868;">example_seq</span> = <span style="color: #50a14f;">"OMICSSBS$"</span>
-<span style="color: #6a1868;">sequence_rotations</span> = []
-<span style="color: #e45649;">for</span> index <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(example_seq)):
+<span style="color: #076678;">example_seq</span> = <span style="color: #79740e;">"OMICSSBS$"</span>
+<span style="color: #076678;">sequence_rotations</span> = []
+<span style="color: #9d0006;">for</span> index <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(example_seq)):
     sequence_rotations.append(example_seq[index:] + example_seq[:index])
 pprint(sequence_rotations)
 </pre>
@@ -425,7 +424,7 @@ pprint(sequence_rotations)
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">sorted_sequence_rotations</span> = <span style="color: #a626a4;">sorted</span>(sequence_rotations)
+<pre class="src src-python"><span style="color: #076678;">sorted_sequence_rotations</span> = <span style="color: #af3a03;">sorted</span>(sequence_rotations)
 pprint(sorted_sequence_rotations)
 </pre>
 </div>
@@ -448,8 +447,8 @@ pprint(sorted_sequence_rotations)
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">for</span> sequence <span style="color: #e45649;">in</span> sorted_sequence_rotations:
-    pprint(sequence[-<span style="color: #da8548; font-weight: bold;">1</span>])
+<pre class="src src-python"><span style="color: #9d0006;">for</span> sequence <span style="color: #9d0006;">in</span> sorted_sequence_rotations:
+    pprint(sequence[-<span style="color: #8f3f71; font-weight: bold;">1</span>])
 </pre>
 </div>
 
@@ -467,24 +466,27 @@ pprint(sorted_sequence_rotations)
 
 
 <p>
-And that&rsquo;s it. We done the BWT. To utilize this let&rsquo;s move to next step creating the FM-index.
+And that&rsquo;s it.
+We done the BWT.
+To utilize this let&rsquo;s move to next step creating the FM-index.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org756f075" class="outline-3">
-<h3 id="org756f075"><span class="section-number-3">2.2.</span> What is FM-index</h3>
+<div id="outline-container-orgcaf997a" class="outline-3">
+<h3 id="orgcaf997a"><span class="section-number-3">2.2.</span> What is FM-index</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-To utilize BWT we need to keep a bit more information. This information is the initial order of the sequences before sorting. Here we use the itemgetter to sort the enumerated rotations by the sequences themselves.
+To utilize BWT we need to keep a bit more information.
+This information is the initial order of the sequences before sorting.
+Here we use the itemgetter to sort the enumerated rotations by the sequences themselves.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> operator <span style="color: #e45649;">import</span> itemgetter
-<span style="color: #6a1868;">initial_indices</span>, <span style="color: #6a1868;">sorted_sequence_rotations</span> = <span style="color: #a626a4;">zip</span>(*<span style="color: #a626a4;">sorted</span>(<span style="color: #a626a4;">enumerate</span>(sequence_rotations), key=itemgetter(<span style="color: #da8548; font-weight: bold;">1</span>)))
+<pre class="src src-python"><span style="color: #9d0006;">from</span> operator <span style="color: #9d0006;">import</span> itemgetter
+<span style="color: #076678;">initial_indices</span>, <span style="color: #076678;">sorted_sequence_rotations</span> = <span style="color: #af3a03;">zip</span>(*<span style="color: #af3a03;">sorted</span>(<span style="color: #af3a03;">enumerate</span>(sequence_rotations), key=itemgetter(<span style="color: #8f3f71; font-weight: bold;">1</span>)))
 
-<span style="color: #e45649;">for</span> index, sequence <span style="color: #e45649;">in</span> <span style="color: #a626a4;">zip</span>(initial_indices, sorted_sequence_rotations):
-    <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"Initial index: </span>{index}<span style="color: #50a14f;"> of the: </span>{sequence[-1]}<span style="color: #50a14f;">"</span>)
+<span style="color: #9d0006;">for</span> index, sequence <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">zip</span>(initial_indices, sorted_sequence_rotations):
+    <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"Initial index: </span>{index}<span style="color: #79740e;"> of the: </span>{sequence[-1]}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
@@ -504,14 +506,14 @@ Initial index: 4 of the: C
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org94638d4">
+<div class="sidenote" id="orgd6aec5b">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">for</span> index, sequence <span style="color: #e45649;">in</span> <span style="color: #a626a4;">zip</span>(initial_indices, sorted_sequence_rotations):
-    <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"Initial index: </span>{index}<span style="color: #50a14f;"> of the sequence: </span>{sequence.split('$')[0]}<span style="color: #50a14f;">"</span>)
+<pre class="src src-python"><span style="color: #9d0006;">for</span> index, sequence <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">zip</span>(initial_indices, sorted_sequence_rotations):
+    <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"Initial index: </span>{index}<span style="color: #79740e;"> of the sequence: </span>{sequence.split('$')[0]}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
@@ -533,10 +535,10 @@ Initial index: 4 of the sequence: SSBS
 We can keep the last column in a sequence.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">last_column</span> = <span style="color: #50a14f;">""</span>
-<span style="color: #e45649;">for</span> sequence <span style="color: #e45649;">in</span> sorted_sequence_rotations:
-    <span style="color: #6a1868;">last_column</span> += sequence[-<span style="color: #da8548; font-weight: bold;">1</span>]
-<span style="color: #a626a4;">print</span>(last_column)
+<pre class="src src-python"><span style="color: #076678;">last_column</span> = <span style="color: #79740e;">""</span>
+<span style="color: #9d0006;">for</span> sequence <span style="color: #9d0006;">in</span> sorted_sequence_rotations:
+    <span style="color: #076678;">last_column</span> += sequence[-<span style="color: #8f3f71; font-weight: bold;">1</span>]
+<span style="color: #af3a03;">print</span>(last_column)
 </pre>
 </div>
 
@@ -546,25 +548,30 @@ SSIMO$BSC
 
 
 <p>
-This transformation is reversible and we can get our original sequence back by back tracking the characters in the sequence. To make this back tracking work we need a function that maps the character in last back to first. This is possible because index of an <i>occurrence</i> of a character in the first column will be the same in the last column. e.g. We have three <code>S</code> characters in our string <code>OMICSSBS</code> where the first occurrence of the string <code>S</code> in last column is the same <code>S</code> in the first column. We can keep track of the occurrences of <code>S</code> like below. You can watch the index beside the <code>S</code> characters and confirm they&rsquo;re the same by the whole sequence besides them.
+This transformation is reversible and we can get our original sequence back by back tracking the characters in the sequence.
+To make this back tracking work we need a function that maps the character in last back to first.
+This is possible because index of an <i>occurrence</i> of a character in the first column will be the same in the last column.
+e.g. We have three <code>S</code> characters in our string <code>OMICSSBS</code> where the first occurrence of the string <code>S</code> in last column is the same <code>S</code> in the first column.
+We can keep track of the occurrences of <code>S</code> like below.
+You can watch the index beside the <code>S</code> characters and confirm they&rsquo;re the same by the whole sequence besides them.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">occurrence_of_s_in_first_column</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #6a1868;">occurrence_of_s_in_last_column</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #e45649;">for</span> index, sequence <span style="color: #e45649;">in</span> <span style="color: #a626a4;">zip</span>(initial_indices, sorted_sequence_rotations):
-    <span style="color: #e45649;">if</span> sequence[<span style="color: #da8548; font-weight: bold;">0</span>] == <span style="color: #50a14f;">'S'</span> <span style="color: #e45649;">and</span> sequence[-<span style="color: #da8548; font-weight: bold;">1</span>] == <span style="color: #50a14f;">'S'</span>:
-        <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{index=}<span style="color: #50a14f;"> sequence: </span>{sequence}<span style="color: #50a14f;"> first: </span>{sequence[0]}<span style="color: #50a14f;"> </span>{occurrence_of_s_in_first_column}<span style="color: #50a14f;"> last: </span>{sequence[-1]}<span style="color: #50a14f;"> </span>{occurrence_of_s_in_last_column}<span style="color: #50a14f;">"</span>)
-        <span style="color: #6a1868;">occurrence_of_s_in_first_column</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">occurrence_of_s_in_last_column</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #e45649;">elif</span> sequence[<span style="color: #da8548; font-weight: bold;">0</span>] == <span style="color: #50a14f;">'S'</span>:
-        <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{index=}<span style="color: #50a14f;"> sequence: </span>{sequence}<span style="color: #50a14f;"> first: </span>{sequence[0]}<span style="color: #50a14f;"> </span>{occurrence_of_s_in_first_column}<span style="color: #50a14f;"> last: </span>{sequence[-1]}<span style="color: #50a14f;"> 0"</span>)
-        <span style="color: #6a1868;">occurrence_of_s_in_first_column</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #e45649;">elif</span> sequence[-<span style="color: #da8548; font-weight: bold;">1</span>] == <span style="color: #50a14f;">'S'</span>:
-        <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{index=}<span style="color: #50a14f;"> sequence: </span>{sequence}<span style="color: #50a14f;"> first: </span>{sequence[0]}<span style="color: #50a14f;"> 0 last: </span>{sequence[-1]}<span style="color: #50a14f;"> </span>{occurrence_of_s_in_last_column}<span style="color: #50a14f;">"</span>)
-        <span style="color: #6a1868;">occurrence_of_s_in_last_column</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #e45649;">else</span>:
-        <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{index=}<span style="color: #50a14f;"> sequence: </span>{sequence}<span style="color: #50a14f;"> first: </span>{sequence[0]}<span style="color: #50a14f;"> 0 last: </span>{sequence[-1]}<span style="color: #50a14f;"> 0"</span>)
+<pre class="src src-python"><span style="color: #076678;">occurrence_of_s_in_first_column</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #076678;">occurrence_of_s_in_last_column</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #9d0006;">for</span> index, sequence <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">zip</span>(initial_indices, sorted_sequence_rotations):
+    <span style="color: #9d0006;">if</span> sequence[<span style="color: #8f3f71; font-weight: bold;">0</span>] == <span style="color: #79740e;">'S'</span> <span style="color: #9d0006;">and</span> sequence[-<span style="color: #8f3f71; font-weight: bold;">1</span>] == <span style="color: #79740e;">'S'</span>:
+        <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{index=}<span style="color: #79740e;"> sequence: </span>{sequence}<span style="color: #79740e;"> first: </span>{sequence[0]}<span style="color: #79740e;"> </span>{occurrence_of_s_in_first_column}<span style="color: #79740e;"> last: </span>{sequence[-1]}<span style="color: #79740e;"> </span>{occurrence_of_s_in_last_column}<span style="color: #79740e;">"</span>)
+        <span style="color: #076678;">occurrence_of_s_in_first_column</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">occurrence_of_s_in_last_column</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">elif</span> sequence[<span style="color: #8f3f71; font-weight: bold;">0</span>] == <span style="color: #79740e;">'S'</span>:
+        <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{index=}<span style="color: #79740e;"> sequence: </span>{sequence}<span style="color: #79740e;"> first: </span>{sequence[0]}<span style="color: #79740e;"> </span>{occurrence_of_s_in_first_column}<span style="color: #79740e;"> last: </span>{sequence[-1]}<span style="color: #79740e;"> 0"</span>)
+        <span style="color: #076678;">occurrence_of_s_in_first_column</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">elif</span> sequence[-<span style="color: #8f3f71; font-weight: bold;">1</span>] == <span style="color: #79740e;">'S'</span>:
+        <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{index=}<span style="color: #79740e;"> sequence: </span>{sequence}<span style="color: #79740e;"> first: </span>{sequence[0]}<span style="color: #79740e;"> 0 last: </span>{sequence[-1]}<span style="color: #79740e;"> </span>{occurrence_of_s_in_last_column}<span style="color: #79740e;">"</span>)
+        <span style="color: #076678;">occurrence_of_s_in_last_column</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">else</span>:
+        <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{index=}<span style="color: #79740e;"> sequence: </span>{sequence}<span style="color: #79740e;"> first: </span>{sequence[0]}<span style="color: #79740e;"> 0 last: </span>{sequence[-1]}<span style="color: #79740e;"> 0"</span>)
 </pre>
 </div>
 
@@ -582,22 +589,23 @@ index=4 sequence: SSBS$OMIC first: S 2 last: C 0
 
 
 <p>
-Instead of counting them characters one by one like above lets count all the characters and keep it in a lookup index using the last column. The <code>totals</code> is how many times we see a character in total and <code>tallymatrix</code> is how many we saw up to a given point.
+Instead of counting them characters one by one like above lets count all the characters and keep it in a lookup index using the last column.
+The <code>totals</code> is how many times we see a character in total and <code>tallymatrix</code> is how many we saw up to a given point.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">totals</span> = {k: <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> <span style="color: #50a14f;">""</span>.join(<span style="color: #a626a4;">set</span>(last_column))}
-<span style="color: #6a1868;">tallymatrix</span> = {k: [] <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> <span style="color: #50a14f;">""</span>.join(<span style="color: #a626a4;">set</span>(last_column))}
-<span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> last_column:
-    <span style="color: #6a1868;">totals</span>[c] += <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> tallymatrix.keys():
-        <span style="color: #e45649;">if</span> k != c <span style="color: #e45649;">and</span> tallymatrix[k]:
-            tallymatrix[k].append(tallymatrix[k][-<span style="color: #da8548; font-weight: bold;">1</span>])
-        <span style="color: #e45649;">elif</span> k == c:
+<pre class="src src-python"><span style="color: #076678;">totals</span> = {k: <span style="color: #8f3f71; font-weight: bold;">0</span> <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> <span style="color: #79740e;">""</span>.join(<span style="color: #af3a03;">set</span>(last_column))}
+<span style="color: #076678;">tallymatrix</span> = {k: [] <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> <span style="color: #79740e;">""</span>.join(<span style="color: #af3a03;">set</span>(last_column))}
+<span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> last_column:
+    <span style="color: #076678;">totals</span>[c] += <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> tallymatrix.keys():
+        <span style="color: #9d0006;">if</span> k != c <span style="color: #9d0006;">and</span> tallymatrix[k]:
+            tallymatrix[k].append(tallymatrix[k][-<span style="color: #8f3f71; font-weight: bold;">1</span>])
+        <span style="color: #9d0006;">elif</span> k == c:
             tallymatrix[k].append(totals[c])
-        <span style="color: #e45649;">else</span>:
-            tallymatrix[k].append(<span style="color: #da8548; font-weight: bold;">0</span>)
-<span style="color: #a626a4;">print</span>(totals)
-<span style="color: #a626a4;">print</span>(tallymatrix)
+        <span style="color: #9d0006;">else</span>:
+            tallymatrix[k].append(<span style="color: #8f3f71; font-weight: bold;">0</span>)
+<span style="color: #af3a03;">print</span>(totals)
+<span style="color: #af3a03;">print</span>(tallymatrix)
 </pre>
 </div>
 
@@ -611,12 +619,12 @@ Instead of counting them characters one by one like above lets count all the cha
 Using this we can rebuild a index of where we start and stop seeing the characters in the first column.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">first</span> = {}
-<span style="color: #6a1868;">totc</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #e45649;">for</span> c, count <span style="color: #e45649;">in</span> <span style="color: #a626a4;">sorted</span>(totals.items()):
-    <span style="color: #6a1868;">first</span>[c] = (totc, totc + count)
-    <span style="color: #6a1868;">totc</span> += count
-<span style="color: #a626a4;">print</span>(first)
+<pre class="src src-python"><span style="color: #076678;">first</span> = {}
+<span style="color: #076678;">totc</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #9d0006;">for</span> c, count <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">sorted</span>(totals.items()):
+    <span style="color: #076678;">first</span>[c] = (totc, totc + count)
+    <span style="color: #076678;">totc</span> += count
+<span style="color: #af3a03;">print</span>(first)
 </pre>
 </div>
 
@@ -630,16 +638,16 @@ Using this we can rebuild a index of where we start and stop seeing the characte
 </p>
 </div>
 </div>
-
-<div id="outline-container-org2f3c473" class="outline-3">
-<h3 id="org2f3c473"><span class="section-number-3">2.3.</span> Last to First Mapping</h3>
+<div id="outline-container-orgb4d5c0e" class="outline-3">
+<h3 id="orgb4d5c0e"><span class="section-number-3">2.3.</span> Last to First Mapping</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-Using the we can map a given character with an index <code>i</code> back to first column. e.g <code>S</code> with second occurrence should map to row with initial index 4 witch is the 8th row.
+Using the we can map a given character with an index <code>i</code> back to first column.
+e.g <code>S</code> with second occurrence should map to row with initial index 4 witch is the 8th row.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #a626a4;">print</span>(first[<span style="color: #50a14f;">"S"</span>][<span style="color: #da8548; font-weight: bold;">0</span>] + tallymatrix[<span style="color: #50a14f;">"S"</span>][<span style="color: #da8548; font-weight: bold;">2</span>])
+<pre class="src src-python"><span style="color: #af3a03;">print</span>(first[<span style="color: #79740e;">"S"</span>][<span style="color: #8f3f71; font-weight: bold;">0</span>] + tallymatrix[<span style="color: #79740e;">"S"</span>][<span style="color: #8f3f71; font-weight: bold;">2</span>])
 </pre>
 </div>
 
@@ -649,16 +657,17 @@ Using the we can map a given character with an index <code>i</code> back to firs
 
 
 <p>
-We can than reverse our transformation to build back our initial sequence. We remove one from the counts so we can use it as an index.
+We can than reverse our transformation to build back our initial sequence.
+We remove one from the counts so we can use it as an index.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #6a1868;">t</span> = <span style="color: #50a14f;">"$"</span>
-<span style="color: #e45649;">while</span> last_column[i] != <span style="color: #50a14f;">"$"</span>:
-    <span style="color: #6a1868;">c</span> = last_column[i]
-    <span style="color: #6a1868;">t</span> = c + t
-    <span style="color: #6a1868;">i</span> = first[c][<span style="color: #da8548; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #da8548; font-weight: bold;">1</span>
-<span style="color: #a626a4;">print</span>(t)
+<pre class="src src-python"><span style="color: #076678;">i</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #076678;">t</span> = <span style="color: #79740e;">"$"</span>
+<span style="color: #9d0006;">while</span> last_column[i] != <span style="color: #79740e;">"$"</span>:
+    <span style="color: #076678;">c</span> = last_column[i]
+    <span style="color: #076678;">t</span> = c + t
+    <span style="color: #076678;">i</span> = first[c][<span style="color: #8f3f71; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #8f3f71; font-weight: bold;">1</span>
+<span style="color: #af3a03;">print</span>(t)
 </pre>
 </div>
 
@@ -671,20 +680,20 @@ OMICSSBS$
 To get a better grasp of whats happening lets track the index jumps too.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #6a1868;">t</span> = <span style="color: #50a14f;">"$"</span>
-<span style="color: #6a1868;">j</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"loop</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">loopindex</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">index</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">initial_ind</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">first_column</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">last_column</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">c</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">t</span><span style="color: #b751b6;">\n</span><span style="color: #50a14f;">"</span>)
-<span style="color: #e45649;">while</span> last_column[i] != <span style="color: #50a14f;">"$"</span>:
-    <span style="color: #6a1868;">c</span> = last_column[i]
-    <span style="color: #6a1868;">t</span> = c + t
-    <span style="color: #6a1868;">i</span> = first[c][<span style="color: #da8548; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #6a1868;">j</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-    <span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"END</span>{j:13}<span style="color: #50a14f;"> </span>{i:8}<span style="color: #50a14f;"> </span>{initial_indices[j]:8}{' '*14}{[seq[0] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> sorted_sequence_rotations][j]:12}<span style="color: #50a14f;"> </span>{[seq[-1] <span style="color: #e45649;">for</span> seq <span style="color: #e45649;">in</span> sorted_sequence_rotations][j]:14}<span style="color: #50a14f;"> </span>{c:3}<span style="color: #50a14f;"> </span>{t}<span style="color: #50a14f;">"</span>)
+<pre class="src src-python"><span style="color: #076678;">i</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #076678;">t</span> = <span style="color: #79740e;">"$"</span>
+<span style="color: #076678;">j</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"loop</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">loopindex</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">index</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">initial_ind</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">first_column</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">last_column</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">c</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">t</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">"</span>)
+<span style="color: #9d0006;">while</span> last_column[i] != <span style="color: #79740e;">"$"</span>:
+    <span style="color: #076678;">c</span> = last_column[i]
+    <span style="color: #076678;">t</span> = c + t
+    <span style="color: #076678;">i</span> = first[c][<span style="color: #8f3f71; font-weight: bold;">0</span>] + tallymatrix[c][i] - <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #076678;">j</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+    <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"END</span>{j:13}<span style="color: #79740e;"> </span>{i:8}<span style="color: #79740e;"> </span>{initial_indices[j]:8}{' '*14}{[seq[0] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> sorted_sequence_rotations][j]:12}<span style="color: #79740e;"> </span>{[seq[-1] <span style="color: #9d0006;">for</span> seq <span style="color: #9d0006;">in</span> sorted_sequence_rotations][j]:14}<span style="color: #79740e;"> </span>{c:3}<span style="color: #79740e;"> </span>{t}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
-<pre class="example" id="org9971b7a">
+<pre class="example" id="org83629c5">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
 END          1          6          6                B               S           S       S$
@@ -698,16 +707,18 @@ END          8          5          4                S               C           
 </pre>
 
 <p>
-Here we are building up the initial sequence backwards. Observe below the &ldquo;index&rdquo;, &ldquo;last​_column&rdquo; and &ldquo;c&rdquo; columns. We initiate the <code>index​=0</code> which points us to character <code>S</code> in the last column, this <code>S</code> in turn with its <code>index​=6</code> points to preceding character <code>B</code>.
+Here we are building up the initial sequence backwards.
+Observe below the &ldquo;index&rdquo;, &ldquo;last​_column&rdquo; and &ldquo;c&rdquo; columns.
+We initiate the <code>index​=0</code> which points us to character <code>S</code> in the last column, this <code>S</code> in turn with its <code>index​=6</code> points to preceding character <code>B</code>.
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgd1032b8" class="outline-3">
-<h3 id="orgd1032b8"><span class="section-number-3">2.4.</span> Building a class</h3>
+<div id="outline-container-org45720d3" class="outline-3">
+<h3 id="org45720d3"><span class="section-number-3">2.4.</span> Building a class</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
-Keeping track of the intermediately data and passing them through functions can become confusing to keep all this in one place lets put them in a <code>class</code>. Classes are a way of bundling data and functionality in python.
+Keeping track of the intermediately data and passing them through functions can become confusing to keep all this in one place lets put them in a <code>class</code>.
+Classes are a way of bundling data and functionality in python.
 </p>
 
 <p>
@@ -715,74 +726,74 @@ Our class aptly named <code>BWA</code> takes a reference sequence and creates th
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> operator <span style="color: #e45649;">import</span> itemgetter
+<pre class="src src-python"><span style="color: #9d0006;">from</span> operator <span style="color: #9d0006;">import</span> itemgetter
 
 
-<span style="color: #e45649;">class</span> <span style="color: #986801;">BWA</span>:
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">__init__</span>(<span style="color: #e45649;">self</span>, ref):
-        <span style="color: #84888b; font-style: italic;">"""</span><span style="color: #986801; font-weight: bold; font-style: italic;">TODO:</span><span style="color: #84888b; font-style: italic;"> to be defined1."""</span>
-        <span style="color: #e45649;">self</span>.<span style="color: #6a1868;">ref</span> = ref + <span style="color: #50a14f;">"$"</span>
+<span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">BWA</span>:
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">__init__</span>(<span style="color: #9d0006;">self</span>, ref):
+        <span style="color: #79740e; font-style: italic;">"""</span><span style="color: #af3a03; font-weight: bold; font-style: italic;">TODO:</span><span style="color: #79740e; font-style: italic;"> to be defined1."""</span>
+        <span style="color: #9d0006;">self</span>.<span style="color: #076678;">ref</span> = ref + <span style="color: #79740e;">"$"</span>
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">last</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        Get all the rotations of given sequence, sort them alphabetically and</span>
-<span style="color: #84888b; font-style: italic;">        return the last character from each rotation</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">sa</span> = [<span style="color: #e45649;">self</span>.ref[i:] + <span style="color: #e45649;">self</span>.ref[:i] <span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.ref))]
-        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">""</span>.join(i[-<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">sorted</span>(sa))
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">last</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        Get all the rotations of given sequence, sort them alphabetically and</span>
+<span style="color: #79740e; font-style: italic;">        return the last character from each rotation</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">sa</span> = [<span style="color: #9d0006;">self</span>.ref[i:] + <span style="color: #9d0006;">self</span>.ref[:i] <span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.ref))]
+        <span style="color: #9d0006;">return</span> <span style="color: #79740e;">""</span>.join(i[-<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">sorted</span>(sa))
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">occ</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        Get the occurrences and total counts for each character in bwt</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">totals</span> = {}
-        <span style="color: #6a1868;">tallymatrix</span> = {k: [] <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> <span style="color: #50a14f;">""</span>.join(<span style="color: #a626a4;">set</span>(<span style="color: #e45649;">self</span>.last))}
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> <span style="color: #e45649;">self</span>.last:
-            <span style="color: #e45649;">if</span> c <span style="color: #e45649;">not</span> <span style="color: #e45649;">in</span> totals:
-                <span style="color: #6a1868;">totals</span>[c] = <span style="color: #da8548; font-weight: bold;">0</span>
-            <span style="color: #6a1868;">totals</span>[c] += <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> tallymatrix.keys():
-                <span style="color: #e45649;">if</span> k != c <span style="color: #e45649;">and</span> tallymatrix[k]:
-                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #da8548; font-weight: bold;">1</span>])
-                <span style="color: #e45649;">elif</span> k == c:
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">occ</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        Get the occurrences and total counts for each character in bwt</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">totals</span> = {}
+        <span style="color: #076678;">tallymatrix</span> = {k: [] <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> <span style="color: #79740e;">""</span>.join(<span style="color: #af3a03;">set</span>(<span style="color: #9d0006;">self</span>.last))}
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> <span style="color: #9d0006;">self</span>.last:
+            <span style="color: #9d0006;">if</span> c <span style="color: #9d0006;">not</span> <span style="color: #9d0006;">in</span> totals:
+                <span style="color: #076678;">totals</span>[c] = <span style="color: #8f3f71; font-weight: bold;">0</span>
+            <span style="color: #076678;">totals</span>[c] += <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> tallymatrix.keys():
+                <span style="color: #9d0006;">if</span> k != c <span style="color: #9d0006;">and</span> tallymatrix[k]:
+                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #8f3f71; font-weight: bold;">1</span>])
+                <span style="color: #9d0006;">elif</span> k == c:
                     tallymatrix[k].append(totals[c])
-                <span style="color: #e45649;">else</span>:
-                    tallymatrix[k].append(<span style="color: #da8548; font-weight: bold;">0</span>)
-        <span style="color: #e45649;">return</span> tallymatrix, totals
+                <span style="color: #9d0006;">else</span>:
+                    tallymatrix[k].append(<span style="color: #8f3f71; font-weight: bold;">0</span>)
+        <span style="color: #9d0006;">return</span> tallymatrix, totals
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">first</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        Get the lexicographical order of the characters</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">first</span> = {}
-        <span style="color: #6a1868;">totc</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #e45649;">for</span> c, count <span style="color: #e45649;">in</span> <span style="color: #a626a4;">sorted</span>(<span style="color: #e45649;">self</span>.occ[<span style="color: #da8548; font-weight: bold;">1</span>].items()):
-            <span style="color: #6a1868;">first</span>[c] = totc
-            <span style="color: #6a1868;">totc</span> += count
-        <span style="color: #e45649;">return</span> first
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">first</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        Get the lexicographical order of the characters</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">first</span> = {}
+        <span style="color: #076678;">totc</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #9d0006;">for</span> c, count <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">sorted</span>(<span style="color: #9d0006;">self</span>.occ[<span style="color: #8f3f71; font-weight: bold;">1</span>].items()):
+            <span style="color: #076678;">first</span>[c] = totc
+            <span style="color: #076678;">totc</span> += count
+        <span style="color: #9d0006;">return</span> first
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">lf</span>(<span style="color: #e45649;">self</span>, c, i):
-        <span style="color: #84888b; font-style: italic;">"""</span>
-<span style="color: #84888b; font-style: italic;">        The i-th occurrence of character &#8216;c&#8217; in last is the same text character</span>
-<span style="color: #84888b; font-style: italic;">        as the i-th occurrence of &#8216;c&#8217; in the first</span>
-<span style="color: #84888b; font-style: italic;">        """</span>
-        <span style="color: #e45649;">return</span> <span style="color: #e45649;">self</span>.first[c] + <span style="color: #e45649;">self</span>.occ[<span style="color: #da8548; font-weight: bold;">0</span>][c][i] - <span style="color: #da8548; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">lf</span>(<span style="color: #9d0006;">self</span>, c, i):
+        <span style="color: #79740e; font-style: italic;">"""</span>
+<span style="color: #79740e; font-style: italic;">        The i-th occurrence of character &#8216;c&#8217; in last is the same text character</span>
+<span style="color: #79740e; font-style: italic;">        as the i-th occurrence of &#8216;c&#8217; in the first</span>
+<span style="color: #79740e; font-style: italic;">        """</span>
+        <span style="color: #9d0006;">return</span> <span style="color: #9d0006;">self</span>.first[c] + <span style="color: #9d0006;">self</span>.occ[<span style="color: #8f3f71; font-weight: bold;">0</span>][c][i] - <span style="color: #8f3f71; font-weight: bold;">1</span>
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">rebwt</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        rebuild the original sequence</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #6a1868;">t</span> = <span style="color: #50a14f;">"$"</span>
-        <span style="color: #e45649;">while</span> <span style="color: #e45649;">self</span>.last[i] != <span style="color: #50a14f;">"$"</span>:
-            <span style="color: #6a1868;">c</span> = <span style="color: #e45649;">self</span>.last[i]
-            <span style="color: #6a1868;">t</span> = c + t
-            <span style="color: #6a1868;">i</span> = <span style="color: #e45649;">self</span>.lf(c, i)
-        <span style="color: #e45649;">return</span> t[:-<span style="color: #da8548; font-weight: bold;">1</span>]
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">rebwt</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        rebuild the original sequence</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">i</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #076678;">t</span> = <span style="color: #79740e;">"$"</span>
+        <span style="color: #9d0006;">while</span> <span style="color: #9d0006;">self</span>.last[i] != <span style="color: #79740e;">"$"</span>:
+            <span style="color: #076678;">c</span> = <span style="color: #9d0006;">self</span>.last[i]
+            <span style="color: #076678;">t</span> = c + t
+            <span style="color: #076678;">i</span> = <span style="color: #9d0006;">self</span>.lf(c, i)
+        <span style="color: #9d0006;">return</span> t[:-<span style="color: #8f3f71; font-weight: bold;">1</span>]
 </pre>
 </div>
 
@@ -790,12 +801,12 @@ Our class aptly named <code>BWA</code> takes a reference sequence and creates th
 We can initialize our function with our reference and access the BWT and FM-index as its properties.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">example_seq</span> = <span style="color: #50a14f;">"OMICSSBS"</span>
-<span style="color: #6a1868;">bwa</span> = BWA(example_seq)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{bwa.last=}<span style="color: #50a14f;">"</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{bwa.first=}<span style="color: #50a14f;">"</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{bwa.occ=}<span style="color: #50a14f;">"</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{bwa.rebwt=}<span style="color: #50a14f;">"</span>)
+<pre class="src src-python"><span style="color: #076678;">example_seq</span> = <span style="color: #79740e;">"OMICSSBS"</span>
+<span style="color: #076678;">bwa</span> = BWA(example_seq)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{bwa.last=}<span style="color: #79740e;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{bwa.first=}<span style="color: #79740e;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{bwa.occ=}<span style="color: #79740e;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{bwa.rebwt=}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
@@ -807,27 +818,30 @@ bwa.rebwt='OMICSSBS'
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org4a09c61" class="outline-3">
-<h3 id="org4a09c61"><span class="section-number-3">2.5.</span> Mapping</h3>
+<div id="outline-container-orgf210bb7" class="outline-3">
+<h3 id="orgf210bb7"><span class="section-number-3">2.5.</span> Mapping</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-org0f96bf4" class="outline-4">
-<h4 id="org0f96bf4"><span class="section-number-4">2.5.1.</span> Exact Matching</h4>
+<div id="outline-container-org668749d" class="outline-4">
+<h4 id="org668749d"><span class="section-number-4">2.5.1.</span> Exact Matching</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
-We want to align the small sequences back to references. If we have a <code>read</code> sequence with no variations. We can do a backward search to match a substring. We start by getting the minimum and maximum indices of the last character. Than we map these using our <code>lf</code> function in a loop.
+We want to align the small sequences back to references.
+If we have a <code>read</code> sequence with no variations.
+We can do a backward search to match a substring.
+We start by getting the minimum and maximum indices of the last character.
+Than we map these using our <code>lf</code> function in a loop.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].find(read[-<span style="color: #da8548; font-weight: bold;">1</span>]), <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].rfind(read[-<span style="color: #da8548; font-weight: bold;">1</span>])
+<pre class="src src-python"><span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].find(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>]), <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].rfind(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>])
 
-<span style="color: #6a1868;">i</span> = <span style="color: #a626a4;">len</span>(read) - <span style="color: #da8548; font-weight: bold;">1</span>
-<span style="color: #e45649;">while</span> low &lt;= high <span style="color: #e45649;">and</span> i &gt;= <span style="color: #da8548; font-weight: bold;">0</span>:
-    <span style="color: #6a1868;">low</span> = <span style="color: #e45649;">self</span>.lf(read[i], low)
-    <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.lf(read[i], high)
-    <span style="color: #6a1868;">i</span> -= <span style="color: #da8548; font-weight: bold;">1</span>
-<span style="color: #e45649;">return</span> low, high
+<span style="color: #076678;">i</span> = <span style="color: #af3a03;">len</span>(read) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+<span style="color: #9d0006;">while</span> low &lt;= high <span style="color: #9d0006;">and</span> i &gt;= <span style="color: #8f3f71; font-weight: bold;">0</span>:
+    <span style="color: #076678;">low</span> = <span style="color: #9d0006;">self</span>.lf(read[i], low)
+    <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.lf(read[i], high)
+    <span style="color: #076678;">i</span> -= <span style="color: #8f3f71; font-weight: bold;">1</span>
+<span style="color: #9d0006;">return</span> low, high
 </pre>
 </div>
 
@@ -836,133 +850,134 @@ Let&rsquo;s add this to our class too.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> operator <span style="color: #e45649;">import</span> itemgetter
+<pre class="src src-python"><span style="color: #9d0006;">from</span> operator <span style="color: #9d0006;">import</span> itemgetter
 
 
-<span style="color: #e45649;">class</span> <span style="color: #986801;">BWA</span>:
+<span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">BWA</span>:
     .
     .
     .
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">exact_match</span>(<span style="color: #e45649;">self</span>, read):
-        <span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].find(read[-<span style="color: #da8548; font-weight: bold;">1</span>]), <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].rfind(read[-<span style="color: #da8548; font-weight: bold;">1</span>])
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">exact_match</span>(<span style="color: #9d0006;">self</span>, read):
+        <span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].find(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>]), <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].rfind(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>])
 
-        <span style="color: #6a1868;">i</span> = <span style="color: #a626a4;">len</span>(read) - <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">while</span> low &lt;= high <span style="color: #e45649;">and</span> i &gt;= <span style="color: #da8548; font-weight: bold;">0</span>:
-            <span style="color: #6a1868;">low</span> = <span style="color: #e45649;">self</span>.lf(read[i], low)
-            <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.lf(read[i], high)
-            <span style="color: #6a1868;">i</span> -= <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">return</span> low, high
+        <span style="color: #076678;">i</span> = <span style="color: #af3a03;">len</span>(read) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">while</span> low &lt;= high <span style="color: #9d0006;">and</span> i &gt;= <span style="color: #8f3f71; font-weight: bold;">0</span>:
+            <span style="color: #076678;">low</span> = <span style="color: #9d0006;">self</span>.lf(read[i], low)
+            <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.lf(read[i], high)
+            <span style="color: #076678;">i</span> -= <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">return</span> low, high
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">read</span> = <span style="color: #50a14f;">"OMI"</span>
-<span style="color: #6a1868;">bwa</span> = BWA(example_seq)
-<span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = bwa.exact_match(read)
-<span style="color: #6a1868;">initial_ind</span> = bwa.last[<span style="color: #da8548; font-weight: bold;">1</span>][low]
-<span style="color: #a626a4;">print</span>(low, high)
-<span style="color: #a626a4;">print</span>(initial_ind)
-<span style="color: #a626a4;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #a626a4;">len</span>(read)])
+<pre class="src src-python"><span style="color: #076678;">read</span> = <span style="color: #79740e;">"OMI"</span>
+<span style="color: #076678;">bwa</span> = BWA(example_seq)
+<span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = bwa.exact_match(read)
+<span style="color: #076678;">initial_ind</span> = bwa.last[<span style="color: #8f3f71; font-weight: bold;">1</span>][low]
+<span style="color: #af3a03;">print</span>(low, high)
+<span style="color: #af3a03;">print</span>(initial_ind)
+<span style="color: #af3a03;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #af3a03;">len</span>(read)])
 </pre>
 </div>
 
-<pre class="example" id="orgef163a6">
+<pre class="example" id="orgd767981">
 5 5
 0
 OMI
 </pre>
 </div>
 </div>
-
-<div id="outline-container-orgff801a4" class="outline-4">
-<h4 id="orgff801a4"><span class="section-number-4">2.5.2.</span> Inexact Matching</h4>
+<div id="outline-container-orgcebc9c0" class="outline-4">
+<h4 id="orgcebc9c0"><span class="section-number-4">2.5.2.</span> Inexact Matching</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
-Most crucial part is of course matching the reads with variations. Backtracking algorithm described by (<a href="#citeproc_bib_item_1">Li and Durbin 2009</a>) accounts for insertions, deletions and mismatches.
+Most crucial part is of course matching the reads with variations.
+Backtracking algorithm described by (<a href="#citeproc_bib_item_1">Li and Durbin 2009</a>) accounts for insertions, deletions and mismatches.
 </p>
 
 
-<div id="org3c1fc7a" class="figure">
+<div id="orge0bb8b9" class="figure">
 <p><img src="./fig3.jpeg" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
 
 <p>
 Inexact search calls the function <code>calculate_diff</code> initially which calculates the lower bound of differences for each character in the read string.
-Then we call the <code>inexact_match</code> which in turns calls itself <a href="https://www.google.com/search?q=recursion">recursively</a>. This function has two stop conditions either we reach the end of the string or we run out of allowed differences.
+Then we call the <code>inexact_match</code> which in turns calls itself <a href="https://www.google.com/search?q=recursion">recursively</a>.
+This function has two stop conditions either we reach the end of the string or we run out of allowed differences.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">class</span> <span style="color: #986801;">BWA</span>:
+<pre class="src src-python"><span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">BWA</span>:
     .
     .
     .
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">inexact_search</span>(<span style="color: #e45649;">self</span>, read, z):
-        <span style="color: #e45649;">self</span>.calculate_diff(read)
-        <span style="color: #e45649;">return</span> <span style="color: #e45649;">self</span>.inexact_match(read, <span style="color: #a626a4;">len</span>(read) - <span style="color: #da8548; font-weight: bold;">1</span>, z, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>)
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">inexact_search</span>(<span style="color: #9d0006;">self</span>, read, z):
+        <span style="color: #9d0006;">self</span>.calculate_diff(read)
+        <span style="color: #9d0006;">return</span> <span style="color: #9d0006;">self</span>.inexact_match(read, <span style="color: #af3a03;">len</span>(read) - <span style="color: #8f3f71; font-weight: bold;">1</span>, z, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>)
 
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">calculate_diff</span>(<span style="color: #e45649;">self</span>, read):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        Estimate the lower bound of allowed z for every character.</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">low</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">high</span> = <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">diffs</span> = []
-        <span style="color: #6a1868;">z</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> read:
-            <span style="color: #6a1868;">low</span> = <span style="color: #e45649;">self</span>.lf(c, low - <span style="color: #da8548; font-weight: bold;">1</span>) + <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.lf(c, high)
-            <span style="color: #e45649;">if</span> low &gt; high:
-                <span style="color: #6a1868;">low</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-                <span style="color: #6a1868;">high</span> = <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>
-                <span style="color: #6a1868;">z</span> +=  <span style="color: #da8548; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">calculate_diff</span>(<span style="color: #9d0006;">self</span>, read):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        Estimate the lower bound of allowed z for every character.</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">low</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">high</span> = <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">diffs</span> = []
+        <span style="color: #076678;">z</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> read:
+            <span style="color: #076678;">low</span> = <span style="color: #9d0006;">self</span>.lf(c, low - <span style="color: #8f3f71; font-weight: bold;">1</span>) + <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.lf(c, high)
+            <span style="color: #9d0006;">if</span> low &gt; high:
+                <span style="color: #076678;">low</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+                <span style="color: #076678;">high</span> = <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+                <span style="color: #076678;">z</span> +=  <span style="color: #8f3f71; font-weight: bold;">1</span>
             diffs.append(z)
-        <span style="color: #e45649;">self</span>.<span style="color: #6a1868;">diffs</span> = diffs
+        <span style="color: #9d0006;">self</span>.<span style="color: #076678;">diffs</span> = diffs
 
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">inexact_match</span>(<span style="color: #e45649;">self</span>, read, i, z, low, high):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        This function has two stop condition. Either we run out of the allowed</span>
-<span style="color: #84888b; font-style: italic;">        differences or we find a match.</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #e45649;">if</span> z &lt; <span style="color: #e45649;">self</span>.diffs[i]:
-            <span style="color: #e45649;">return</span> []
-        <span style="color: #e45649;">if</span> i &lt; <span style="color: #da8548; font-weight: bold;">0</span>:
-            <span style="color: #e45649;">return</span> [[low,high]]
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">inexact_match</span>(<span style="color: #9d0006;">self</span>, read, i, z, low, high):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        This function has two stop condition. Either we run out of the allowed</span>
+<span style="color: #79740e; font-style: italic;">        differences or we find a match.</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #9d0006;">if</span> z &lt; <span style="color: #9d0006;">self</span>.diffs[i]:
+            <span style="color: #9d0006;">return</span> []
+        <span style="color: #9d0006;">if</span> i &lt; <span style="color: #8f3f71; font-weight: bold;">0</span>:
+            <span style="color: #9d0006;">return</span> [[low,high]]
 
-        <span style="color: #6a1868;">matches</span> = []
-        matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z - <span style="color: #da8548; font-weight: bold;">1</span>, low, high)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Insertion</span>
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> <span style="color: #a626a4;">set</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]):
-            <span style="color: #6a1868;">low_</span> = <span style="color: #e45649;">self</span>.lf(c, low - <span style="color: #da8548; font-weight: bold;">1</span>) + <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #6a1868;">high_</span> = <span style="color: #e45649;">self</span>.lf(c, high)
-            <span style="color: #e45649;">if</span> low &lt;= high:
-                matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i, z - <span style="color: #da8548; font-weight: bold;">1</span>, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Deletion</span>
-                <span style="color: #e45649;">if</span> c == read[i]:
-                    matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Match</span>
-                <span style="color: #e45649;">else</span>:
-                    matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z - <span style="color: #da8548; font-weight: bold;">1</span>, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Mismatch</span>
-        <span style="color: #e45649;">return</span> matches
+        <span style="color: #076678;">matches</span> = []
+        matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low, high)) <span style="color: #a89984;"># </span><span style="color: #a89984;">Insertion</span>
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">set</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]):
+            <span style="color: #076678;">low_</span> = <span style="color: #9d0006;">self</span>.lf(c, low - <span style="color: #8f3f71; font-weight: bold;">1</span>) + <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #076678;">high_</span> = <span style="color: #9d0006;">self</span>.lf(c, high)
+            <span style="color: #9d0006;">if</span> low &lt;= high:
+                matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">Deletion</span>
+                <span style="color: #9d0006;">if</span> c == read[i]:
+                    matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">Match</span>
+                <span style="color: #9d0006;">else</span>:
+                    matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">Mismatch</span>
+        <span style="color: #9d0006;">return</span> matches
 
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">example_seq</span>=<span style="color: #50a14f;">"OMICSSBS"</span>
-<span style="color: #6a1868;">bwa</span> = BWA(example_seq)
-<span style="color: #6a1868;">read</span> = <span style="color: #50a14f;">"OMC"</span>
+<pre class="src src-python"><span style="color: #076678;">example_seq</span>=<span style="color: #79740e;">"OMICSSBS"</span>
+<span style="color: #076678;">bwa</span> = BWA(example_seq)
+<span style="color: #076678;">read</span> = <span style="color: #79740e;">"OMC"</span>
 
-<span style="color: #6a1868;">matches</span> = bwa.inexact_search(read, <span style="color: #da8548; font-weight: bold;">2</span>)
-<span style="color: #a626a4;">print</span>( matches)
-<span style="color: #e45649;">for</span> <span style="color: #e45649;">match</span> <span style="color: #e45649;">in</span> matches:
-    <span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">match</span>
-    <span style="color: #6a1868;">initial_ind</span> = bwa.last[<span style="color: #da8548; font-weight: bold;">1</span>][low]
-    <span style="color: #a626a4;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #a626a4;">len</span>(read)])
+<span style="color: #076678;">matches</span> = bwa.inexact_search(read, <span style="color: #8f3f71; font-weight: bold;">2</span>)
+<span style="color: #af3a03;">print</span>( matches)
+<span style="color: #9d0006;">for</span> <span style="color: #9d0006;">match</span> <span style="color: #9d0006;">in</span> matches:
+    <span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = <span style="color: #9d0006;">match</span>
+    <span style="color: #076678;">initial_ind</span> = bwa.last[<span style="color: #8f3f71; font-weight: bold;">1</span>][low]
+    <span style="color: #af3a03;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #af3a03;">len</span>(read)])
 </pre>
 </div>
 
-<pre class="example" id="org056046c">
+<pre class="example" id="org6d3d03d">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -975,7 +990,7 @@ OMI
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgaabeda9">
+<div class="sidenote" id="org7a291d5">
 <p>
 <b>Visualizing the recursion</b>
 </p>
@@ -985,13 +1000,13 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">class</span> <span style="color: #986801;">BWA</span>:
+<pre class="src src-python"><span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">BWA</span>:
     .
     .
     .
 
-    <span style="color: #986801;">@recviz</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">inexact_match</span>(<span style="color: #e45649;">self</span>, read, i, z, low, high):
+    <span style="color: #8f3f71;">@recviz</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">inexact_match</span>(<span style="color: #9d0006;">self</span>, read, i, z, low, high):
         .
         .
         .
@@ -1000,20 +1015,20 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">example_seq</span>=<span style="color: #50a14f;">"OMICSSBS"</span>
-<span style="color: #6a1868;">bwa</span> = BWA(example_seq)
-<span style="color: #6a1868;">read</span> = <span style="color: #50a14f;">"OMC"</span>
+<pre class="src src-python"><span style="color: #076678;">example_seq</span>=<span style="color: #79740e;">"OMICSSBS"</span>
+<span style="color: #076678;">bwa</span> = BWA(example_seq)
+<span style="color: #076678;">read</span> = <span style="color: #79740e;">"OMC"</span>
 
-<span style="color: #6a1868;">matches</span> = bwa.inexact_search(read, <span style="color: #da8548; font-weight: bold;">2</span>)
-<span style="color: #a626a4;">print</span>( matches)
-<span style="color: #e45649;">for</span> <span style="color: #e45649;">match</span> <span style="color: #e45649;">in</span> matches:
-    <span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">match</span>
-    <span style="color: #6a1868;">initial_ind</span> = bwa.last[<span style="color: #da8548; font-weight: bold;">1</span>][low]
-    <span style="color: #a626a4;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #a626a4;">len</span>(read)])
+<span style="color: #076678;">matches</span> = bwa.inexact_search(read, <span style="color: #8f3f71; font-weight: bold;">2</span>)
+<span style="color: #af3a03;">print</span>( matches)
+<span style="color: #9d0006;">for</span> <span style="color: #9d0006;">match</span> <span style="color: #9d0006;">in</span> matches:
+    <span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = <span style="color: #9d0006;">match</span>
+    <span style="color: #076678;">initial_ind</span> = bwa.last[<span style="color: #8f3f71; font-weight: bold;">1</span>][low]
+    <span style="color: #af3a03;">print</span>(example_seq[initial_ind:initial_ind + <span style="color: #af3a03;">len</span>(read)])
 </pre>
 </div>
 
-<pre class="example" id="orgb0cc2e3">
+<pre class="example" id="org5b0f2c3">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -2715,162 +2730,162 @@ MIC ins
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org7f6be7d" class="outline-3">
-<h3 id="org7f6be7d"><span class="section-number-3">2.6.</span> Putting it all together</h3>
+<div id="outline-container-orgc089a6f" class="outline-3">
+<h3 id="orgc089a6f"><span class="section-number-3">2.6.</span> Putting it all together</h3>
 <div class="outline-text-3" id="text-2-6">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">from</span> operator <span style="color: #e45649;">import</span> itemgetter
+<pre class="src src-python"><span style="color: #9d0006;">from</span> operator <span style="color: #9d0006;">import</span> itemgetter
 
 
-<span style="color: #e45649;">class</span> <span style="color: #986801;">BWA</span>:
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">__init__</span>(<span style="color: #e45649;">self</span>, ref):
-        <span style="color: #84888b; font-style: italic;">"""todo: to be defined1."""</span>
-        <span style="color: #e45649;">self</span>.<span style="color: #6a1868;">ref</span> = ref + <span style="color: #50a14f;">"$"</span>
+<span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">BWA</span>:
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">__init__</span>(<span style="color: #9d0006;">self</span>, ref):
+        <span style="color: #79740e; font-style: italic;">"""todo: to be defined1."""</span>
+        <span style="color: #9d0006;">self</span>.<span style="color: #076678;">ref</span> = ref + <span style="color: #79740e;">"$"</span>
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">last</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #6a1868;">sa</span> = [<span style="color: #e45649;">self</span>.ref[i:] + <span style="color: #e45649;">self</span>.ref[:i] <span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(<span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.ref))]
-        <span style="color: #6a1868;">idx</span>, <span style="color: #6a1868;">sa</span> = <span style="color: #a626a4;">zip</span>(*<span style="color: #a626a4;">sorted</span>(<span style="color: #a626a4;">enumerate</span>(sa), key=itemgetter(<span style="color: #da8548; font-weight: bold;">1</span>)))
-        <span style="color: #e45649;">return</span> <span style="color: #50a14f;">""</span>.join(i[-<span style="color: #da8548; font-weight: bold;">1</span>] <span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> sa), idx, sa
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">last</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #076678;">sa</span> = [<span style="color: #9d0006;">self</span>.ref[i:] + <span style="color: #9d0006;">self</span>.ref[:i] <span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(<span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.ref))]
+        <span style="color: #076678;">idx</span>, <span style="color: #076678;">sa</span> = <span style="color: #af3a03;">zip</span>(*<span style="color: #af3a03;">sorted</span>(<span style="color: #af3a03;">enumerate</span>(sa), key=itemgetter(<span style="color: #8f3f71; font-weight: bold;">1</span>)))
+        <span style="color: #9d0006;">return</span> <span style="color: #79740e;">""</span>.join(i[-<span style="color: #8f3f71; font-weight: bold;">1</span>] <span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> sa), idx, sa
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">occ</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        get the occurrences and total counts for each character in bwt</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">totals</span> = {}
-        <span style="color: #6a1868;">tallymatrix</span> = {k: [] <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> <span style="color: #50a14f;">""</span>.join(<span style="color: #a626a4;">set</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]))}
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]:
-            <span style="color: #e45649;">if</span> c <span style="color: #e45649;">not</span> <span style="color: #e45649;">in</span> totals:
-                <span style="color: #6a1868;">totals</span>[c] = <span style="color: #da8548; font-weight: bold;">0</span>
-            <span style="color: #6a1868;">totals</span>[c] += <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #e45649;">for</span> k <span style="color: #e45649;">in</span> tallymatrix.keys():
-                <span style="color: #e45649;">if</span> k != c <span style="color: #e45649;">and</span> tallymatrix[k]:
-                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #da8548; font-weight: bold;">1</span>])
-                <span style="color: #e45649;">elif</span> k == c:
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">occ</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        get the occurrences and total counts for each character in bwt</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">totals</span> = {}
+        <span style="color: #076678;">tallymatrix</span> = {k: [] <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> <span style="color: #79740e;">""</span>.join(<span style="color: #af3a03;">set</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]))}
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]:
+            <span style="color: #9d0006;">if</span> c <span style="color: #9d0006;">not</span> <span style="color: #9d0006;">in</span> totals:
+                <span style="color: #076678;">totals</span>[c] = <span style="color: #8f3f71; font-weight: bold;">0</span>
+            <span style="color: #076678;">totals</span>[c] += <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #9d0006;">for</span> k <span style="color: #9d0006;">in</span> tallymatrix.keys():
+                <span style="color: #9d0006;">if</span> k != c <span style="color: #9d0006;">and</span> tallymatrix[k]:
+                    tallymatrix[k].append(tallymatrix[k][-<span style="color: #8f3f71; font-weight: bold;">1</span>])
+                <span style="color: #9d0006;">elif</span> k == c:
                     tallymatrix[k].append(totals[c])
-                <span style="color: #e45649;">else</span>:
-                    tallymatrix[k].append(<span style="color: #da8548; font-weight: bold;">0</span>)
-        <span style="color: #e45649;">return</span> tallymatrix, totals
+                <span style="color: #9d0006;">else</span>:
+                    tallymatrix[k].append(<span style="color: #8f3f71; font-weight: bold;">0</span>)
+        <span style="color: #9d0006;">return</span> tallymatrix, totals
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">first</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        because first column is alphabetically sorted</span>
-<span style="color: #84888b; font-style: italic;">        its enough to just to get start and end position for each character.</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">first</span> = {}
-        <span style="color: #6a1868;">totc</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #e45649;">for</span> c, count <span style="color: #e45649;">in</span> <span style="color: #a626a4;">sorted</span>(<span style="color: #e45649;">self</span>.occ[<span style="color: #da8548; font-weight: bold;">1</span>].items()):
-            <span style="color: #6a1868;">first</span>[c] = (totc, totc + count - <span style="color: #da8548; font-weight: bold;">1</span>)
-            <span style="color: #6a1868;">totc</span> += count
-        <span style="color: #e45649;">return</span> first
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">first</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        because first column is alphabetically sorted</span>
+<span style="color: #79740e; font-style: italic;">        its enough to just to get start and end position for each character.</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">first</span> = {}
+        <span style="color: #076678;">totc</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #9d0006;">for</span> c, count <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">sorted</span>(<span style="color: #9d0006;">self</span>.occ[<span style="color: #8f3f71; font-weight: bold;">1</span>].items()):
+            <span style="color: #076678;">first</span>[c] = (totc, totc + count - <span style="color: #8f3f71; font-weight: bold;">1</span>)
+            <span style="color: #076678;">totc</span> += count
+        <span style="color: #9d0006;">return</span> first
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">lf</span>(<span style="color: #e45649;">self</span>, c, i):
-        <span style="color: #84888b; font-style: italic;">"""</span>
-<span style="color: #84888b; font-style: italic;">        the i-th occurrence of character &#8216;c&#8217; in last</span>
-<span style="color: #84888b; font-style: italic;">        column is the same text character as the i-th</span>
-<span style="color: #84888b; font-style: italic;">        occurrence of &#8216;c&#8217; in the first column</span>
-<span style="color: #84888b; font-style: italic;">        """</span>
-        <span style="color: #e45649;">return</span> <span style="color: #e45649;">self</span>.first[c][<span style="color: #da8548; font-weight: bold;">0</span>] + <span style="color: #e45649;">self</span>.occ[<span style="color: #da8548; font-weight: bold;">0</span>][c][i] - <span style="color: #da8548; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">lf</span>(<span style="color: #9d0006;">self</span>, c, i):
+        <span style="color: #79740e; font-style: italic;">"""</span>
+<span style="color: #79740e; font-style: italic;">        the i-th occurrence of character &#8216;c&#8217; in last</span>
+<span style="color: #79740e; font-style: italic;">        column is the same text character as the i-th</span>
+<span style="color: #79740e; font-style: italic;">        occurrence of &#8216;c&#8217; in the first column</span>
+<span style="color: #79740e; font-style: italic;">        """</span>
+        <span style="color: #9d0006;">return</span> <span style="color: #9d0006;">self</span>.first[c][<span style="color: #8f3f71; font-weight: bold;">0</span>] + <span style="color: #9d0006;">self</span>.occ[<span style="color: #8f3f71; font-weight: bold;">0</span>][c][i] - <span style="color: #8f3f71; font-weight: bold;">1</span>
 
-    @<span style="color: #a626a4;">property</span>
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">rebwt</span>(<span style="color: #e45649;">self</span>):
-        <span style="color: #6a1868;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #6a1868;">t</span> = <span style="color: #50a14f;">"$"</span>
-        <span style="color: #e45649;">while</span> <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>][i] != <span style="color: #50a14f;">"$"</span>:
-            <span style="color: #6a1868;">c</span> = <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>][i]
-            <span style="color: #6a1868;">t</span> = c + t
-            <span style="color: #6a1868;">i</span> = <span style="color: #e45649;">self</span>.lf(c, i)
-        <span style="color: #e45649;">return</span> t[:-<span style="color: #da8548; font-weight: bold;">1</span>]
+    @<span style="color: #af3a03;">property</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">rebwt</span>(<span style="color: #9d0006;">self</span>):
+        <span style="color: #076678;">i</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #076678;">t</span> = <span style="color: #79740e;">"$"</span>
+        <span style="color: #9d0006;">while</span> <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>][i] != <span style="color: #79740e;">"$"</span>:
+            <span style="color: #076678;">c</span> = <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>][i]
+            <span style="color: #076678;">t</span> = c + t
+            <span style="color: #076678;">i</span> = <span style="color: #9d0006;">self</span>.lf(c, i)
+        <span style="color: #9d0006;">return</span> t[:-<span style="color: #8f3f71; font-weight: bold;">1</span>]
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">exact_match</span>(<span style="color: #e45649;">self</span>, read):
-        <span style="color: #6a1868;">low</span>, <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].find(read[-<span style="color: #da8548; font-weight: bold;">1</span>]), <span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>].rfind(read[-<span style="color: #da8548; font-weight: bold;">1</span>])
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">exact_match</span>(<span style="color: #9d0006;">self</span>, read):
+        <span style="color: #076678;">low</span>, <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].find(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>]), <span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>].rfind(read[-<span style="color: #8f3f71; font-weight: bold;">1</span>])
 
-        <span style="color: #6a1868;">i</span> = <span style="color: #a626a4;">len</span>(read) - <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">while</span> low &lt;= high <span style="color: #e45649;">and</span> i &gt;= <span style="color: #da8548; font-weight: bold;">0</span>:
-            <span style="color: #6a1868;">low</span> = <span style="color: #e45649;">self</span>.lf(read[i], low - <span style="color: #da8548; font-weight: bold;">1</span>) + <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.lf(read[i], high)
-            <span style="color: #6a1868;">i</span> -= <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #e45649;">return</span> low, high
-
-
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">inexact_search</span>(<span style="color: #e45649;">self</span>, read, z):
-        <span style="color: #e45649;">self</span>.calculate_diff(read)
-        <span style="color: #e45649;">return</span> <span style="color: #e45649;">self</span>.inexact_match(read, <span style="color: #a626a4;">len</span>(read) - <span style="color: #da8548; font-weight: bold;">1</span>, z, <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>)
+        <span style="color: #076678;">i</span> = <span style="color: #af3a03;">len</span>(read) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">while</span> low &lt;= high <span style="color: #9d0006;">and</span> i &gt;= <span style="color: #8f3f71; font-weight: bold;">0</span>:
+            <span style="color: #076678;">low</span> = <span style="color: #9d0006;">self</span>.lf(read[i], low - <span style="color: #8f3f71; font-weight: bold;">1</span>) + <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.lf(read[i], high)
+            <span style="color: #076678;">i</span> -= <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #9d0006;">return</span> low, high
 
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">calculate_diff</span>(<span style="color: #e45649;">self</span>, read):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        estimate the lower bound of allowed z for every character.</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #6a1868;">low</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">high</span> = <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>
-        <span style="color: #6a1868;">diffs</span> = []
-        <span style="color: #6a1868;">z</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> read:
-            <span style="color: #6a1868;">low</span> = <span style="color: #e45649;">self</span>.lf(c, low - <span style="color: #da8548; font-weight: bold;">1</span>) + <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #6a1868;">high</span> = <span style="color: #e45649;">self</span>.lf(c, high)
-            <span style="color: #e45649;">if</span> low &gt; high:
-                <span style="color: #6a1868;">low</span> = <span style="color: #da8548; font-weight: bold;">1</span>
-                <span style="color: #6a1868;">high</span> = <span style="color: #a626a4;">len</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]) - <span style="color: #da8548; font-weight: bold;">1</span>
-                <span style="color: #6a1868;">z</span> +=  <span style="color: #da8548; font-weight: bold;">1</span>
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">inexact_search</span>(<span style="color: #9d0006;">self</span>, read, z):
+        <span style="color: #9d0006;">self</span>.calculate_diff(read)
+        <span style="color: #9d0006;">return</span> <span style="color: #9d0006;">self</span>.inexact_match(read, <span style="color: #af3a03;">len</span>(read) - <span style="color: #8f3f71; font-weight: bold;">1</span>, z, <span style="color: #8f3f71; font-weight: bold;">1</span>, <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>)
+
+
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">calculate_diff</span>(<span style="color: #9d0006;">self</span>, read):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        estimate the lower bound of allowed z for every character.</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #076678;">low</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">high</span> = <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+        <span style="color: #076678;">diffs</span> = []
+        <span style="color: #076678;">z</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> read:
+            <span style="color: #076678;">low</span> = <span style="color: #9d0006;">self</span>.lf(c, low - <span style="color: #8f3f71; font-weight: bold;">1</span>) + <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #076678;">high</span> = <span style="color: #9d0006;">self</span>.lf(c, high)
+            <span style="color: #9d0006;">if</span> low &gt; high:
+                <span style="color: #076678;">low</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+                <span style="color: #076678;">high</span> = <span style="color: #af3a03;">len</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]) - <span style="color: #8f3f71; font-weight: bold;">1</span>
+                <span style="color: #076678;">z</span> +=  <span style="color: #8f3f71; font-weight: bold;">1</span>
             diffs.append(z)
-        <span style="color: #e45649;">self</span>.<span style="color: #6a1868;">diffs</span> = diffs
+        <span style="color: #9d0006;">self</span>.<span style="color: #076678;">diffs</span> = diffs
 
 
-    <span style="color: #e45649;">def</span> <span style="color: #a626a4;">inexact_match</span>(<span style="color: #e45649;">self</span>, read, i, z, low, high):
-        <span style="color: #84888b; font-style: italic;">'''</span>
-<span style="color: #84888b; font-style: italic;">        this function has two stop condition. either we run out of the allowed</span>
-<span style="color: #84888b; font-style: italic;">        differences or we find a match.</span>
-<span style="color: #84888b; font-style: italic;">        '''</span>
-        <span style="color: #e45649;">if</span> z &lt; <span style="color: #e45649;">self</span>.diffs[i]:
-            <span style="color: #e45649;">return</span> []
-        <span style="color: #e45649;">if</span> i &lt; <span style="color: #da8548; font-weight: bold;">0</span>:
-            <span style="color: #e45649;">return</span> [[low, high]]
+    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">inexact_match</span>(<span style="color: #9d0006;">self</span>, read, i, z, low, high):
+        <span style="color: #79740e; font-style: italic;">'''</span>
+<span style="color: #79740e; font-style: italic;">        this function has two stop condition. either we run out of the allowed</span>
+<span style="color: #79740e; font-style: italic;">        differences or we find a match.</span>
+<span style="color: #79740e; font-style: italic;">        '''</span>
+        <span style="color: #9d0006;">if</span> z &lt; <span style="color: #9d0006;">self</span>.diffs[i]:
+            <span style="color: #9d0006;">return</span> []
+        <span style="color: #9d0006;">if</span> i &lt; <span style="color: #8f3f71; font-weight: bold;">0</span>:
+            <span style="color: #9d0006;">return</span> [[low, high]]
 
-        <span style="color: #6a1868;">matches</span> = []
-        matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z - <span style="color: #da8548; font-weight: bold;">1</span>, low, high)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">insertion</span>
-        <span style="color: #e45649;">for</span> c <span style="color: #e45649;">in</span> <span style="color: #a626a4;">set</span>(<span style="color: #e45649;">self</span>.last[<span style="color: #da8548; font-weight: bold;">0</span>]):
-            <span style="color: #6a1868;">low_</span> = <span style="color: #e45649;">self</span>.lf(c, low - <span style="color: #da8548; font-weight: bold;">1</span>) + <span style="color: #da8548; font-weight: bold;">1</span>
-            <span style="color: #6a1868;">high_</span> = <span style="color: #e45649;">self</span>.lf(c, high)
-            <span style="color: #e45649;">if</span> low &lt;= high:
-                matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i, z - <span style="color: #da8548; font-weight: bold;">1</span>, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">deletion</span>
-                <span style="color: #e45649;">if</span> c == read[i]:
-                    matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">match</span>
-                <span style="color: #e45649;">else</span>:
-                    matches.extend(<span style="color: #e45649;">self</span>.inexact_match(read, i - <span style="color: #da8548; font-weight: bold;">1</span>, z - <span style="color: #da8548; font-weight: bold;">1</span>, low_, high_)) <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">mismatch</span>
-        <span style="color: #e45649;">return</span> matches
+        <span style="color: #076678;">matches</span> = []
+        matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low, high)) <span style="color: #a89984;"># </span><span style="color: #a89984;">insertion</span>
+        <span style="color: #9d0006;">for</span> c <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">set</span>(<span style="color: #9d0006;">self</span>.last[<span style="color: #8f3f71; font-weight: bold;">0</span>]):
+            <span style="color: #076678;">low_</span> = <span style="color: #9d0006;">self</span>.lf(c, low - <span style="color: #8f3f71; font-weight: bold;">1</span>) + <span style="color: #8f3f71; font-weight: bold;">1</span>
+            <span style="color: #076678;">high_</span> = <span style="color: #9d0006;">self</span>.lf(c, high)
+            <span style="color: #9d0006;">if</span> low &lt;= high:
+                matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">deletion</span>
+                <span style="color: #9d0006;">if</span> c == read[i]:
+                    matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">match</span>
+                <span style="color: #9d0006;">else</span>:
+                    matches.extend(<span style="color: #9d0006;">self</span>.inexact_match(read, i - <span style="color: #8f3f71; font-weight: bold;">1</span>, z - <span style="color: #8f3f71; font-weight: bold;">1</span>, low_, high_)) <span style="color: #a89984;"># </span><span style="color: #a89984;">mismatch</span>
+        <span style="color: #9d0006;">return</span> matches
 
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgd10f402" class="outline-3">
-<h3 id="orgd10f402"><span class="section-number-3">2.7.</span> Trying out with dummy data</h3>
+<div id="outline-container-org61f2a82" class="outline-3">
+<h3 id="org61f2a82"><span class="section-number-3">2.7.</span> Trying out with dummy data</h3>
 <div class="outline-text-3" id="text-2-7">
 </div>
-<div id="outline-container-org76d0f31" class="outline-4">
-<h4 id="org76d0f31"><span class="section-number-4">2.7.1.</span> Sequence generation</h4>
+<div id="outline-container-orgc0f0362" class="outline-4">
+<h4 id="orgc0f0362"><span class="section-number-4">2.7.1.</span> Sequence generation</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <p>
-Lets generate our reference genome first. We are going to use the same approach as we did in <a href="https:https://omics.sbs/blog/seqmotif.html">motif finding post</a>. We are going to create our reference sequence with length <code>1200</code> with same probability of <code>.25</code> for all the bases. We add <code>$</code> character at the end to denote the end of the string which will be useful when we do the burrows wheeler below.
+Lets generate our reference genome first.
+We are going to use the same approach as we did in <a href="https:https://omics.sbs/blog/seqmotif.html">motif finding post</a>.
+We are going to create our reference sequence with length <code>1200</code> with same probability of <code>.25</code> for all the bases.
+We add <code>$</code> character at the end to denote the end of the string which will be useful when we do the burrows wheeler below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">import</span> random
-random.seed(<span style="color: #da8548; font-weight: bold;">0</span>)
-<span style="color: #6a1868;">alphabet</span> = [<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>, <span style="color: #50a14f;">'T'</span>]
-<span style="color: #6a1868;">seq_weights</span> = [.<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>, .<span style="color: #da8548; font-weight: bold;">25</span>]
-<span style="color: #6a1868;">seq_length</span> = <span style="color: #da8548; font-weight: bold;">120</span>
+<pre class="src src-python"><span style="color: #9d0006;">import</span> random
+random.seed(<span style="color: #8f3f71; font-weight: bold;">0</span>)
+<span style="color: #076678;">alphabet</span> = [<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>, <span style="color: #79740e;">'T'</span>]
+<span style="color: #076678;">seq_weights</span> = [.<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>, .<span style="color: #8f3f71; font-weight: bold;">25</span>]
+<span style="color: #076678;">seq_length</span> = <span style="color: #8f3f71; font-weight: bold;">120</span>
 
-<span style="color: #6a1868;">ref_seq</span> = <span style="color: #50a14f;">""</span>.join(
+<span style="color: #076678;">ref_seq</span> = <span style="color: #79740e;">""</span>.join(
     random.choices(population=alphabet, weights=seq_weights, k=seq_length)
 )
-<span style="color: #a626a4;">print</span>(ref_seq)
+<span style="color: #af3a03;">print</span>(ref_seq)
 </pre>
 </div>
 
@@ -2879,51 +2894,52 @@ TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCAAGGCATTTT
 </pre>
 </div>
 </div>
-
-<div id="outline-container-orge55d247" class="outline-4">
-<h4 id="orge55d247"><span class="section-number-4">2.7.2.</span> Mutating the sequence</h4>
+<div id="outline-container-orgb67465e" class="outline-4">
+<h4 id="orgb67465e"><span class="section-number-4">2.7.2.</span> Mutating the sequence</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
-We want our reads to be different from our reference so, before sampling our samples we are going to create a mutated sequence first. Here with the <code>mutated</code> function we decide if mutation occurs with the given percentage and if it does type of the mutation. With the <code>mutate_read</code> function we either insert a single base, substitute a base or remove a base.
+We want our reads to be different from our reference so, before sampling our samples we are going to create a mutated sequence first.
+Here with the <code>mutated</code> function we decide if mutation occurs with the given percentage and if it does type of the mutation.
+With the <code>mutate_read</code> function we either insert a single base, substitute a base or remove a base.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-python">
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">mutated</span>(mutation_rate):
-    <span style="color: #6a1868;">r</span> = random.randint(<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">100</span>)
-    <span style="color: #e45649;">if</span> r &lt;= mutation_rate:
-        <span style="color: #6a1868;">r</span> = random.randint(<span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">100</span>)
-        <span style="color: #e45649;">if</span> r &lt;= <span style="color: #da8548; font-weight: bold;">25</span>:
-            <span style="color: #e45649;">return</span> <span style="color: #50a14f;">'del'</span>
-        <span style="color: #e45649;">elif</span> <span style="color: #da8548; font-weight: bold;">25</span> &lt; r &lt;= <span style="color: #da8548; font-weight: bold;">50</span>:
-            <span style="color: #e45649;">return</span> <span style="color: #50a14f;">'ins'</span>
-        <span style="color: #e45649;">else</span>:
-            <span style="color: #e45649;">return</span> <span style="color: #50a14f;">'sub'</span>
-    <span style="color: #e45649;">else</span>:
-        <span style="color: #e45649;">return</span> <span style="color: #b751b6;">False</span>
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">mutated</span>(mutation_rate):
+    <span style="color: #076678;">r</span> = random.randint(<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">100</span>)
+    <span style="color: #9d0006;">if</span> r &lt;= mutation_rate:
+        <span style="color: #076678;">r</span> = random.randint(<span style="color: #8f3f71; font-weight: bold;">1</span>,<span style="color: #8f3f71; font-weight: bold;">100</span>)
+        <span style="color: #9d0006;">if</span> r &lt;= <span style="color: #8f3f71; font-weight: bold;">25</span>:
+            <span style="color: #9d0006;">return</span> <span style="color: #79740e;">'del'</span>
+        <span style="color: #9d0006;">elif</span> <span style="color: #8f3f71; font-weight: bold;">25</span> &lt; r &lt;= <span style="color: #8f3f71; font-weight: bold;">50</span>:
+            <span style="color: #9d0006;">return</span> <span style="color: #79740e;">'ins'</span>
+        <span style="color: #9d0006;">else</span>:
+            <span style="color: #9d0006;">return</span> <span style="color: #79740e;">'sub'</span>
+    <span style="color: #9d0006;">else</span>:
+        <span style="color: #9d0006;">return</span> <span style="color: #8f3f71;">False</span>
 
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">mutate</span>(sequence, mutation_rate):
-    <span style="color: #6a1868;">mutated_seq</span> = <span style="color: #50a14f;">''</span>
-    <span style="color: #6a1868;">mutated_once</span> = <span style="color: #b751b6;">False</span>
-    <span style="color: #e45649;">for</span> base <span style="color: #e45649;">in</span> sequence:
-        <span style="color: #6a1868;">mutatition_type</span> = mutated(mutation_rate)
-        <span style="color: #e45649;">match</span> mutatition_type:
-            <span style="color: #e45649;">case</span> <span style="color: #50a14f;">'del'</span>:
-                <span style="color: #e45649;">pass</span>
-            <span style="color: #e45649;">case</span> <span style="color: #50a14f;">'ins'</span>:
-                <span style="color: #6a1868;">possible_mutations</span> = <span style="color: #50a14f;">""</span>.join([<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'T'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>])
-                <span style="color: #6a1868;">mutantion</span> = random.choice(possible_mutations)
-                <span style="color: #6a1868;">mutated_seq</span> += base
-                <span style="color: #6a1868;">mutated_seq</span> += mutantion
-            <span style="color: #e45649;">case</span> <span style="color: #50a14f;">'sub'</span>:
-                <span style="color: #6a1868;">possible_mutations</span> = <span style="color: #50a14f;">""</span>.join([<span style="color: #50a14f;">'A'</span>, <span style="color: #50a14f;">'T'</span>, <span style="color: #50a14f;">'C'</span>, <span style="color: #50a14f;">'G'</span>])
-                <span style="color: #6a1868;">possible_mutations</span> = possible_mutations.replace(base, <span style="color: #50a14f;">''</span>)
-                <span style="color: #6a1868;">mutantion</span> = random.choice(possible_mutations)
-                <span style="color: #6a1868;">mutated_seq</span> += mutantion
-            <span style="color: #e45649;">case</span> _:
-                <span style="color: #6a1868;">mutated_seq</span> += base
-    <span style="color: #e45649;">return</span> mutated_seq
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">mutate</span>(sequence, mutation_rate):
+    <span style="color: #076678;">mutated_seq</span> = <span style="color: #79740e;">''</span>
+    <span style="color: #076678;">mutated_once</span> = <span style="color: #8f3f71;">False</span>
+    <span style="color: #9d0006;">for</span> base <span style="color: #9d0006;">in</span> sequence:
+        <span style="color: #076678;">mutatition_type</span> = mutated(mutation_rate)
+        <span style="color: #9d0006;">match</span> mutatition_type:
+            <span style="color: #9d0006;">case</span> <span style="color: #79740e;">'del'</span>:
+                <span style="color: #9d0006;">pass</span>
+            <span style="color: #9d0006;">case</span> <span style="color: #79740e;">'ins'</span>:
+                <span style="color: #076678;">possible_mutations</span> = <span style="color: #79740e;">""</span>.join([<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'T'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>])
+                <span style="color: #076678;">mutantion</span> = random.choice(possible_mutations)
+                <span style="color: #076678;">mutated_seq</span> += base
+                <span style="color: #076678;">mutated_seq</span> += mutantion
+            <span style="color: #9d0006;">case</span> <span style="color: #79740e;">'sub'</span>:
+                <span style="color: #076678;">possible_mutations</span> = <span style="color: #79740e;">""</span>.join([<span style="color: #79740e;">'A'</span>, <span style="color: #79740e;">'T'</span>, <span style="color: #79740e;">'C'</span>, <span style="color: #79740e;">'G'</span>])
+                <span style="color: #076678;">possible_mutations</span> = possible_mutations.replace(base, <span style="color: #79740e;">''</span>)
+                <span style="color: #076678;">mutantion</span> = random.choice(possible_mutations)
+                <span style="color: #076678;">mutated_seq</span> += mutantion
+            <span style="color: #9d0006;">case</span> _:
+                <span style="color: #076678;">mutated_seq</span> += base
+    <span style="color: #9d0006;">return</span> mutated_seq
 </pre>
 </div>
 
@@ -2932,9 +2948,9 @@ After mutation with rate .5 we got our new mutated string some indels and substi
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">mt_seq</span> = mutate(ref_seq, <span style="color: #da8548; font-weight: bold;">5</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{ref_seq=}<span style="color: #50a14f;">"</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">" </span>{mt_seq=}<span style="color: #50a14f;">"</span>)
+<pre class="src src-python"><span style="color: #076678;">mt_seq</span> = mutate(ref_seq, <span style="color: #8f3f71; font-weight: bold;">5</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{ref_seq=}<span style="color: #79740e;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">" </span>{mt_seq=}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
@@ -2944,20 +2960,19 @@ ref_seq='TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCA
 </pre>
 </div>
 </div>
-
-<div id="outline-container-orgfa310c0" class="outline-4">
-<h4 id="orgfa310c0"><span class="section-number-4">2.7.3.</span> Getting the reads</h4>
+<div id="outline-container-org1763646" class="outline-4">
+<h4 id="org1763646"><span class="section-number-4">2.7.3.</span> Getting the reads</h4>
 <div class="outline-text-4" id="text-2-7-3">
 <p>
 Lets randomly sample 600 reads with length 6 from our mutated sequence.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">number_of_reads</span> = <span style="color: #da8548; font-weight: bold;">600</span>
-<span style="color: #6a1868;">read_length</span> = <span style="color: #da8548; font-weight: bold;">6</span>
-<span style="color: #6a1868;">random_indices</span> = [random.randrange(<span style="color: #a626a4;">len</span>(mt_seq) - read_length) <span style="color: #e45649;">for</span> _ <span style="color: #e45649;">in</span> <span style="color: #a626a4;">range</span>(number_of_reads)]
-<span style="color: #6a1868;">mt_reads</span> = [mt_seq[i:i + read_length] <span style="color: #e45649;">for</span> i <span style="color: #e45649;">in</span> random_indices]
-<span style="color: #a626a4;">print</span>(mt_reads[:<span style="color: #da8548; font-weight: bold;">20</span>])
+<pre class="src src-python"><span style="color: #076678;">number_of_reads</span> = <span style="color: #8f3f71; font-weight: bold;">600</span>
+<span style="color: #076678;">read_length</span> = <span style="color: #8f3f71; font-weight: bold;">6</span>
+<span style="color: #076678;">random_indices</span> = [random.randrange(<span style="color: #af3a03;">len</span>(mt_seq) - read_length) <span style="color: #9d0006;">for</span> _ <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">range</span>(number_of_reads)]
+<span style="color: #076678;">mt_reads</span> = [mt_seq[i:i + read_length] <span style="color: #9d0006;">for</span> i <span style="color: #9d0006;">in</span> random_indices]
+<span style="color: #af3a03;">print</span>(mt_reads[:<span style="color: #8f3f71; font-weight: bold;">20</span>])
 </pre>
 </div>
 
@@ -2967,58 +2982,60 @@ Lets randomly sample 600 reads with length 6 from our mutated sequence.
 
 
 <p>
-We can now try to align our reads from the <code>mutated_sequence</code> back to the our reference. Since BWA returns many matches we are just gonna get the most common one using the <a href="https://stackoverflow.com/a/1520716/7141527">snippet here.</a>
+We can now try to align our reads from the <code>mutated_sequence</code> back to the our reference.
+Since BWA returns many matches we are just gonna get the most common one using the <a href="https://stackoverflow.com/a/1520716/7141527">snippet here.</a>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Code from: https://stackoverflow.com/a/1520716/7141527</span>
-<span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">Get the most common match</span>
-<span style="color: #e45649;">import</span> itertools
-<span style="color: #e45649;">import</span> operator
+<pre class="src src-python"><span style="color: #a89984;"># </span><span style="color: #a89984;">Code from: https://stackoverflow.com/a/1520716/7141527</span>
+<span style="color: #a89984;"># </span><span style="color: #a89984;">Get the most common match</span>
+<span style="color: #9d0006;">import</span> itertools
+<span style="color: #9d0006;">import</span> operator
 
-<span style="color: #e45649;">def</span> <span style="color: #a626a4;">most_common</span>(L):
-  <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">get an iterable of (item, iterable) pairs</span>
-  <span style="color: #6a1868;">SL</span> = <span style="color: #a626a4;">sorted</span>((x, i) <span style="color: #e45649;">for</span> i, x <span style="color: #e45649;">in</span> <span style="color: #a626a4;">enumerate</span>(L))
-  <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">print 'SL:', SL</span>
-  <span style="color: #6a1868;">groups</span> = itertools.groupby(SL, key=operator.itemgetter(<span style="color: #da8548; font-weight: bold;">0</span>))
-  <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">auxiliary function to get "quality" for an item</span>
-  <span style="color: #e45649;">def</span> <span style="color: #a626a4;">_auxfun</span>(g):
-    <span style="color: #6a1868;">item</span>, <span style="color: #6a1868;">iterable</span> = g
-    <span style="color: #6a1868;">count</span> = <span style="color: #da8548; font-weight: bold;">0</span>
-    <span style="color: #6a1868;">min_index</span> = <span style="color: #a626a4;">len</span>(L)
-    <span style="color: #e45649;">for</span> _, where <span style="color: #e45649;">in</span> iterable:
-      <span style="color: #6a1868;">count</span> += <span style="color: #da8548; font-weight: bold;">1</span>
-      <span style="color: #6a1868;">min_index</span> = <span style="color: #a626a4;">min</span>(min_index, where)
-    <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">print 'item %r, count %r, minind %r' % (item, count, min_index)</span>
-    <span style="color: #e45649;">return</span> count, -min_index
-  <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">pick the highest-count/earliest item</span>
-  <span style="color: #e45649;">return</span> <span style="color: #a626a4;">max</span>(groups, key=_auxfun)[<span style="color: #da8548; font-weight: bold;">0</span>]
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">most_common</span>(L):
+  <span style="color: #a89984;"># </span><span style="color: #a89984;">get an iterable of (item, iterable) pairs</span>
+  <span style="color: #076678;">SL</span> = <span style="color: #af3a03;">sorted</span>((x, i) <span style="color: #9d0006;">for</span> i, x <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">enumerate</span>(L))
+  <span style="color: #a89984;"># </span><span style="color: #a89984;">print 'SL:', SL</span>
+  <span style="color: #076678;">groups</span> = itertools.groupby(SL, key=operator.itemgetter(<span style="color: #8f3f71; font-weight: bold;">0</span>))
+  <span style="color: #a89984;"># </span><span style="color: #a89984;">auxiliary function to get "quality" for an item</span>
+  <span style="color: #9d0006;">def</span> <span style="color: #b57614;">_auxfun</span>(g):
+    <span style="color: #076678;">item</span>, <span style="color: #076678;">iterable</span> = g
+    <span style="color: #076678;">count</span> = <span style="color: #8f3f71; font-weight: bold;">0</span>
+    <span style="color: #076678;">min_index</span> = <span style="color: #af3a03;">len</span>(L)
+    <span style="color: #9d0006;">for</span> _, where <span style="color: #9d0006;">in</span> iterable:
+      <span style="color: #076678;">count</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+      <span style="color: #076678;">min_index</span> = <span style="color: #af3a03;">min</span>(min_index, where)
+    <span style="color: #a89984;"># </span><span style="color: #a89984;">print 'item %r, count %r, minind %r' % (item, count, min_index)</span>
+    <span style="color: #9d0006;">return</span> count, -min_index
+  <span style="color: #a89984;"># </span><span style="color: #a89984;">pick the highest-count/earliest item</span>
+  <span style="color: #9d0006;">return</span> <span style="color: #af3a03;">max</span>(groups, key=_auxfun)[<span style="color: #8f3f71; font-weight: bold;">0</span>]
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org9bfb0f0" class="outline-4">
-<h4 id="org9bfb0f0"><span class="section-number-4">2.7.4.</span> Performing the alignment</h4>
+<div id="outline-container-org98b5cc7" class="outline-4">
+<h4 id="org98b5cc7"><span class="section-number-4">2.7.4.</span> Performing the alignment</h4>
 <div class="outline-text-4" id="text-2-7-4">
 <p>
-First lets initialize our BWA class with the <code>ref_seq</code>. Then we are going to align our mutated reads and keep track of the most common matches. Then we are going the get the <code>initial_ind</code> from <code>bwa.last[1]</code> using the <code>low</code> value.
+First lets initialize our BWA class with the <code>ref_seq</code>.
+Then we are going to align our mutated reads and keep track of the most common matches.
+Then we are going the get the <code>initial_ind</code> from <code>bwa.last[1]</code> using the <code>low</code> value.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">bwa</span> = BWA(ref_seq)
-<span style="color: #6a1868;">alignment_indices</span> = []
-<span style="color: #e45649;">for</span> mt_read <span style="color: #e45649;">in</span> mt_reads:
-    <span style="color: #6a1868;">matches</span>=bwa.inexact_search(mt_read, <span style="color: #da8548; font-weight: bold;">2</span>)
-    <span style="color: #e45649;">if</span> matches:
-        <span style="color: #9ca0a4;"># </span><span style="color: #9ca0a4;">match = most_common(matches)</span>
-        <span style="color: #e45649;">match</span> = matches[<span style="color: #da8548; font-weight: bold;">0</span>]
-        alignment_indices.append(bwa.last[<span style="color: #da8548; font-weight: bold;">1</span>][<span style="color: #e45649;">match</span>[<span style="color: #da8548; font-weight: bold;">0</span>]])
-    <span style="color: #e45649;">else</span>:
-        alignment_indices.append(<span style="color: #da8548; font-weight: bold;">0</span>)
+<pre class="src src-python"><span style="color: #076678;">bwa</span> = BWA(ref_seq)
+<span style="color: #076678;">alignment_indices</span> = []
+<span style="color: #9d0006;">for</span> mt_read <span style="color: #9d0006;">in</span> mt_reads:
+    <span style="color: #076678;">matches</span>=bwa.inexact_search(mt_read, <span style="color: #8f3f71; font-weight: bold;">2</span>)
+    <span style="color: #9d0006;">if</span> matches:
+        <span style="color: #a89984;"># </span><span style="color: #a89984;">match = most_common(matches)</span>
+        <span style="color: #9d0006;">match</span> = matches[<span style="color: #8f3f71; font-weight: bold;">0</span>]
+        alignment_indices.append(bwa.last[<span style="color: #8f3f71; font-weight: bold;">1</span>][<span style="color: #9d0006;">match</span>[<span style="color: #8f3f71; font-weight: bold;">0</span>]])
+    <span style="color: #9d0006;">else</span>:
+        alignment_indices.append(<span style="color: #8f3f71; font-weight: bold;">0</span>)
 
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{   random_indices[:20]=}<span style="color: #50a14f;">"</span>)
-<span style="color: #a626a4;">print</span>(f<span style="color: #50a14f;">"</span>{alignment_indices[:20]=}<span style="color: #50a14f;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{   random_indices[:20]=}<span style="color: #79740e;">"</span>)
+<span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{alignment_indices[:20]=}<span style="color: #79740e;">"</span>)
 </pre>
 </div>
 
@@ -3028,12 +3045,13 @@ alignment_indices[20:]=[57, 12, 80, 39, 32, 69, 98, 109, 78, 18, 39, 12, 79, 9, 
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org981b992" class="outline-4">
-<h4 id="org981b992"><span class="section-number-4">2.7.5.</span> Outputing to SAM</h4>
+<div id="outline-container-org74e8844" class="outline-4">
+<h4 id="org74e8844"><span class="section-number-4">2.7.5.</span> Outputing to SAM</h4>
 <div class="outline-text-4" id="text-2-7-5">
 <p>
-Lets output our alignmets as Sequence Alignment/Map (SAM) format. SAM has header lines starting with `@´ and 11 fields denoting various alignment properties. We are going to fill in just the QNAME, POS, TLEN and SEQ fields.
+Lets output our alignmets as Sequence Alignment/Map (SAM) format.
+SAM has header lines starting with `@´ and 11 fields denoting various alignment properties.
+We are going to fill in just the QNAME, POS, TLEN and SEQ fields.
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -3160,23 +3178,23 @@ everything is matched.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #6a1868;">sam_contents</span> = <span style="color: #50a14f;">""</span>
-<span style="color: #6a1868;">sam_header</span> = f<span style="color: #50a14f;">"@HD</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">VN:1.6</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">SO:coordinate</span><span style="color: #b751b6;">\n</span><span style="color: #50a14f;">@SQ</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">SN:REF</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">LN:</span>{<span style="color: #a626a4;">len</span>(ref_seq)}<span style="color: #b751b6;">\n</span><span style="color: #50a14f;">"</span>
-<span style="color: #6a1868;">sam_contents</span> += sam_header
+<pre class="src src-python"><span style="color: #076678;">sam_contents</span> = <span style="color: #79740e;">""</span>
+<span style="color: #076678;">sam_header</span> = f<span style="color: #79740e;">"@HD</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">VN:1.6</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">SO:coordinate</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">@SQ</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">SN:REF</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">LN:</span>{<span style="color: #af3a03;">len</span>(ref_seq)}<span style="color: #8f3f71;">\n</span><span style="color: #79740e;">"</span>
+<span style="color: #076678;">sam_contents</span> += sam_header
 
-<span style="color: #6a1868;">mapped_reads</span> = {i: read <span style="color: #e45649;">for</span> i, read <span style="color: #e45649;">in</span> <span style="color: #a626a4;">sorted</span>(<span style="color: #a626a4;">zip</span>(alignment_indices, mt_reads))}
-<span style="color: #e45649;">for</span> i, read <span style="color: #e45649;">in</span> mapped_reads.items():
-    <span style="color: #9ca0a4;">#                </span><span style="color: #9ca0a4;">QNAME  FLAG RNAME POS MAPQ CIGAR RNEXT PNEXT TLEN SEQ     QUAL</span>
-    <span style="color: #e45649;">if</span> i == <span style="color: #da8548; font-weight: bold;">0</span>:
-        <span style="color: #e45649;">continue</span>
-    <span style="color: #e45649;">else</span>:
-        <span style="color: #6a1868;">sam_contents</span> += f<span style="color: #50a14f;">"read</span>{i}<span style="color: #b751b6;">\t</span><span style="color: #50a14f;">0</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">REF</span><span style="color: #b751b6;">\t</span>{i+1}<span style="color: #b751b6;">\t</span><span style="color: #50a14f;">30</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">6M</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">*</span><span style="color: #b751b6;">\t</span><span style="color: #50a14f;">0</span><span style="color: #b751b6;">\t</span>{<span style="color: #a626a4;">len</span>(read)}<span style="color: #b751b6;">\t</span>{read}<span style="color: #b751b6;">\t</span>{'K'*<span style="color: #a626a4;">len</span>(read)}<span style="color: #b751b6;">\n</span><span style="color: #50a14f;">"</span>
+<span style="color: #076678;">mapped_reads</span> = {i: read <span style="color: #9d0006;">for</span> i, read <span style="color: #9d0006;">in</span> <span style="color: #af3a03;">sorted</span>(<span style="color: #af3a03;">zip</span>(alignment_indices, mt_reads))}
+<span style="color: #9d0006;">for</span> i, read <span style="color: #9d0006;">in</span> mapped_reads.items():
+    <span style="color: #a89984;">#                </span><span style="color: #a89984;">QNAME  FLAG RNAME POS MAPQ CIGAR RNEXT PNEXT TLEN SEQ     QUAL</span>
+    <span style="color: #9d0006;">if</span> i == <span style="color: #8f3f71; font-weight: bold;">0</span>:
+        <span style="color: #9d0006;">continue</span>
+    <span style="color: #9d0006;">else</span>:
+        <span style="color: #076678;">sam_contents</span> += f<span style="color: #79740e;">"read</span>{i}<span style="color: #8f3f71;">\t</span><span style="color: #79740e;">0</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">REF</span><span style="color: #8f3f71;">\t</span>{i+1}<span style="color: #8f3f71;">\t</span><span style="color: #79740e;">30</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">6M</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">*</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">0</span><span style="color: #8f3f71;">\t</span>{<span style="color: #af3a03;">len</span>(read)}<span style="color: #8f3f71;">\t</span>{read}<span style="color: #8f3f71;">\t</span>{'K'*<span style="color: #af3a03;">len</span>(read)}<span style="color: #8f3f71;">\n</span><span style="color: #79740e;">"</span>
 
-<span style="color: #a626a4;">print</span>(sam_contents)
+<span style="color: #af3a03;">print</span>(sam_contents)
 </pre>
 </div>
 
-<pre class="example" id="org83629c5">
+<pre class="example" id="orge5bdfc0">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3275,18 +3293,17 @@ Lets write our alignments to a file as well as our reference sequence.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #e45649;">with</span> <span style="color: #a626a4;">open</span>(<span style="color: #50a14f;">'myalignments.sam'</span>, <span style="color: #50a14f;">'w'</span>) <span style="color: #e45649;">as</span> f:
+<pre class="src src-python"><span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(<span style="color: #79740e;">'myalignments.sam'</span>, <span style="color: #79740e;">'w'</span>) <span style="color: #9d0006;">as</span> f:
     f.write(sam_contents)
-<span style="color: #e45649;">with</span> <span style="color: #a626a4;">open</span>(<span style="color: #50a14f;">'ref.fasta'</span>, <span style="color: #50a14f;">'w'</span>) <span style="color: #e45649;">as</span> f:
-    f.write(<span style="color: #50a14f;">'&gt;REF</span><span style="color: #b751b6;">\n</span><span style="color: #50a14f;">'</span>)
+<span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(<span style="color: #79740e;">'ref.fasta'</span>, <span style="color: #79740e;">'w'</span>) <span style="color: #9d0006;">as</span> f:
+    f.write(<span style="color: #79740e;">'&gt;REF</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">'</span>)
     f.write(ref_seq)
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org0d4b416" class="outline-4">
-<h4 id="org0d4b416"><span class="section-number-4">2.7.6.</span> Visualizing our alignments with IGV</h4>
+<div id="outline-container-orgd5e8fcc" class="outline-4">
+<h4 id="orgd5e8fcc"><span class="section-number-4">2.7.6.</span> Visualizing our alignments with IGV</h4>
 <div class="outline-text-4" id="text-2-7-6">
 <p>
 With SAM and FASTA files we can visualize our alignmets with IGV. We can convert our SAM to BAM and index both BAM and FASTA files with samtools.
@@ -3300,7 +3317,7 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="org36890cc" class="figure">
+<div id="org439c3e8" class="figure">
 <p><img src="./igv.svg" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>
@@ -3308,19 +3325,17 @@ samtools faidx ./ref.fasta
 </div>
 </div>
 </div>
-
-<div id="outline-container-org727d3b4" class="outline-2">
-<h2 id="org727d3b4"><span class="section-number-2">3.</span> References</h2>
+<div id="outline-container-orga0eb223" class="outline-2">
+<h2 id="orga0eb223"><span class="section-number-2">3.</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Li, Heng, and Richard Durbin. 2009. “Fast and Accurate Short Read Alignment with Burrows-Wheeler Transform.” <i>Bioinformatics (Oxford, England)</i> 25 (14): 1754–60. <a href="https://doi.org/10.1093/bioinformatics/btp324">https://doi.org/10.1093/bioinformatics/btp324</a>.</div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org61563ab" class="outline-2">
-<h2 id="org61563ab">Comments</h2>
-<div class="outline-text-2" id="text-org61563ab">
+<div id="outline-container-org75b21dc" class="outline-2">
+<h2 id="org75b21dc">Comments</h2>
+<div class="outline-text-2" id="text-org75b21dc">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>

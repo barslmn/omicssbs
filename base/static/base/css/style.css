@@ -169,7 +169,7 @@ img.latex-fragment-block {
               -2em 1em var(--sidenote-target-border-color);
 }
 
-.dateauthor {
+.post-tag {
   font-size: small;
   color: var(--footnotes-border-color);
 }
