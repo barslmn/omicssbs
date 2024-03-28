@@ -1,0 +1,442 @@
+{% extends "bioscripts/base.html" %}
+{% block content %}
+
+<script type="text/javascript">
+ function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          b.classList.add("autocomplete-item")
+          /*make the matching letters bold:*/
+          b.innerHTML = "<span class='gene-symbol'><strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += "</span>";
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+</script>
+
+<script src="https://d3js.org/d3.v6.js"></script>
+
+<!--Make sure the form has the autocomplete function switched off:-->
+
+<form style="position:absolute;" autocomplete="off" action="/action_page.php">
+  <div class="autocomplete fancy" style="width:300px;">
+    <input id="id_symbol" type="text" name="id_symbol" placeholder="Enter a HGNC gene symbol">
+  </div>
+</form>
+
+<div id="heatmap"></div>
+
+<script>
+var hgnc_lookup={{ hgnc_lookup|safe }};
+var symbol_input = document.getElementById("id_symbol");
+autocomplete(symbol_input, Object.keys(hgnc_lookup));
+
+document.addEventListener("click", function(event) {
+   if (event.target.classList.contains("autocomplete-item")) {
+     document.getElementById("heatmap").innerHTML = "";
+     drawheatmap(hgnc_lookup[symbol_input.value], symbol_input.value)
+     document.getElementById("heatmap").scrollIntoView({ behavior: 'smooth', block: 'center' });
+     symbol_input.parentElement.classList.add("fancy");
+   }
+ });
+
+
+symbol_input.addEventListener("click", function(event) {
+   event.target.parentElement.classList.remove("fancy")
+});
+
+</script>
+
+
+<script>
+// set the dimensions and margins of the graph
+function drawheatmap(hgnc_id, hgnc_symbol) {
+  const margin = {top: 0, right: 20, bottom: 80, left: 400},
+    width = 1050 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  const svg = d3.select("#heatmap")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+
+  const myGroups = [
+    "2021-03-01", "2021-04-01", "2021-05-01", "2021-06-01", "2021-07-01",
+    "2021-08-01", "2021-09-01", "2021-10-01", "2021-11-01", "2021-12-01",
+    "2022-01-01", "2022-03-01", "2022-04-01", "2022-05-01", "2022-06-01",
+    "2022-07-01", "2022-09-01", "2022-10-01", "2023-01-01", "2023-03-02",
+    "2023-04-01", "2023-05-01", "2023-06-01", "2023-07-01", "2023-08-01",
+    "2023-09-01", "2023-10-01", "2023-11-01", "2023-12-01", "2024-01-01",
+    "2024-02-01", "2024-03-01",
+  ]
+  //Read the data
+  heatmap_data_url="/bioscripts/hgnc_version/heatmap_data/".concat(hgnc_id)
+  d3.csv(heatmap_data_url).then( function(data) {
+
+    // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
+    // const myGroups = Array.from(new Set(data.map(d => d.group))).sort((a, b) => new Date(a) - new Date(b));
+    const myVars = Array.from(new Set(data.map(d => d.variable)))
+
+
+    // Build X scales and axis:
+    const x = d3.scaleBand()
+      .range([ 0, width ])
+      .domain(myGroups)
+      .padding(0.05);
+    svg.append("g")
+      .style("font-size", 15)
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x).tickSize(0))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end")
+      .select(".domain").remove()
+
+    // Build Y scales and axis:
+    const y = d3.scaleBand()
+      .range([ height, 0 ])
+      .domain(myVars)
+      .padding(0.05);
+    svg.append("g")
+      .style("font-size", 15)
+      .call(d3.axisLeft(y).tickSize(0))
+      .selectAll("text")
+      .attr("transform", "rotate(-30)")
+      .style("text-anchor", "end")
+      .select(".domain").remove()
+
+    // Build color scale
+  const myColor = d3.scaleOrdinal()
+    .domain(["M", "A"]) // Values in your data
+    .range(d3.schemeCategory10);
+
+    // create a tooltip
+    const tooltip = d3.select("#heatmap")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+    .style("position", "absolute")  // Set the position to absolute
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px")
+      .style("background-color", "var(--body-bg-color)")
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    const mouseover = function(event,d) {
+      tooltip
+        .style("opacity", 1)
+      d3.select(this)
+        .style("stroke", "black")
+        .style("opacity", 1)
+    }
+    const mousemove = function(event,d) {
+      tooltip
+        .html("Diff:" + d.diff)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY) + "px")
+    }
+    const mouseleave = function(event,d) {
+      tooltip
+        .style("opacity", 0)
+      d3.select(this)
+        .style("stroke", "none")
+        .style("opacity", 0.8)
+    }
+
+    const filteredData = data.filter(d => d.diff !== "");
+    console.log(data)
+    console.log(filteredData)
+    // add the squares
+    svg.selectAll()
+      .data(filteredData, function(d) {return d.group+':'+d.variable;})
+      .join("rect")
+        .attr("x", function(d) { return x(d.group) })
+        .attr("y", function(d) { return y(d.variable) })
+        .attr("rx", 4)
+        .attr("ry", 4)
+        .attr("width", x.bandwidth() )
+        .attr("height", y.bandwidth() )
+        .style("fill", function(d) { return myColor(d.value)} )
+        .style("stroke-width", 4)
+        .style("stroke", "none")
+        .style("opacity", 0.8)
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+
+// Define legend data
+const legendData = ["Modified", "Added"];
+
+// Define legend dimensions
+const legendWidth = 100; // Adjust width as needed
+const legendHeight = 30 * legendData.length; // Assuming each legend item has a height of 30
+
+// Append a group element for the legend
+const legend = svg.append("g")
+    .attr("class", "legend")
+    .attr("transform", `translate(${margin.left}, ${height + margin.top})`); // Position the legend at the bottom left
+
+const rectRadius = 7; // Adjust the radius of the rounded corners as needed
+const rectHeight = 20; // Height of each legend item rectangle
+const gap = 5; // Gap between legend items
+// Append rectangles and text for each legend item
+const legendItems = legend.selectAll(".legend-item")
+    .data(legendData)
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr("transform", (d, i) => `translate(0, ${i * (rectHeight + gap)})`); // Adjusted vertical positioning with gap
+
+legendItems.append("rect")
+    .attr("x", -margin.left - 330)
+    .attr("y", -120)
+    .attr("width", 20)
+    .attr("height", rectHeight)
+    .attr("rx", rectRadius) // Set the horizontal radius for rounded corners
+    .attr("ry", rectRadius) // Set the vertical radius for rounded corners
+    .style("fill", d => myColor(d[0])); // Get the color based on the first character of the legend item
+
+legendItems.append("text")
+    .attr("x", -margin.left - 300)
+    .attr("y", -100)
+    .style("font-size", "12px")
+    .style("font-family", "sans-serif") // Set font family to sans-serif
+    .style("fill", d => myColor(d[0])) // Get the color based on the first character of the legend item
+    .text(d => d);
+
+  })
+
+  // Add title to graph
+  svg.append("foreignObject")
+      .attr("x", -margin.left)
+      .attr("y", +180)
+      .attr("width", width)
+      .attr("height", 150)
+    .append("xhtml:div")
+      .style("font-size", "1.2em")
+      .html(`Changes for <span class="gene-symbol">${hgnc_symbol}</span> </br> from ${myGroups[0]} </br> to ${myGroups[myGroups.length -1]}`);
+   // Add subtitle to graph
+   svg.append("foreignObject")
+      .attr("x", -margin.left)
+      .attr("y", +350)
+      .attr("width", width)
+      .attr("height", 150)
+      .append("xhtml:div")
+      .style("font-size", ".8em")
+      .style("fill", "grey")
+      .style("max-width", 400)
+      .html(`<a href="${heatmap_data_url}">Download the diff table.</a> </br> <a href="https://www.genenames.org/download/archive/">View the column definitions</a>`);
+}
+</script>
+
+
+<style type="text/css" media="screen">
+
+.gene-symbol {
+  font-style: italic;
+}
+
+* { box-sizing: border-box; }
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  background: var(--body-bg-color);
+  color: var(--body-color);
+  border: none;
+  border-radius: 1em;
+  padding: .2em;
+  font-style: italic;
+}
+input[type=text] {
+  background: var(--body-bg-color);
+  width: 100%;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid var(--body-color);
+  border-radius: 1em;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: auto;
+  max-height: 24vh;
+  overflow: auto;
+}
+.autocomplete-items div {
+  padding: .2em;
+  cursor: pointer;
+  background-color: var(--body-bg-color);
+  border-bottom: 0px solid var(--footnotes-border-color);
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: var(--sidenote-target-border-color);
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: var(--link-focus-outline) !important;
+  color: var(--body-color);
+}
+</style>
+
+
+<style type="text/css" media="screen">
+.fancy {
+    --offset: 3px;
+    background: var(--body-bg-color);
+    border-radius: 50px;
+    position: relative;
+    height: 75px;
+    width: 400px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Conic gradient */
+.fancy::before {
+    content: '';
+    background: conic-gradient(transparent 270deg, var(--link-focus-outline), transparent);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
+    width: 100%;
+    animation: rotate 2s linear infinite;
+}
+
+/* Overlay */
+.fancy::after {
+    content: '';
+    background: inherit;
+    border-radius: inherit;
+    position: absolute;
+    inset: var(--offset);
+    height: calc(100% - 2 * var(--offset));
+    width: calc(100% - 2 * var(--offset));
+}
+
+.fancy input {
+    background: transparent;
+    color: var(--body-color);
+    font-size: 1em;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    padding: .8em;
+}
+
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) scale(1.4) rotate(0turn);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1.4) rotate(1turn);
+    }
+}
+</style>
+
+{% endblock %}
