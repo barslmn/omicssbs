@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-02-21 Wed 23:07 -->
+<!-- 2024-06-22 Sat 13:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Polygenic Risk Score Calculation</title>
 <meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -269,7 +269,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Polygenic Risk Score Calculation</h1>
-<div class="post-tag" id="org5cbadad">
+<div class="post-tag" id="orgd7adf14">
 <p>
 08 August 2023 — Barış Salman
 </p>
@@ -287,46 +287,47 @@ Links
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf25b050">1. Intro</a>
+<li><a href="#org8df16ff">1. Intro</a>
 <ul>
-<li><a href="#org89e3f27">1.1. Polygenic</a></li>
-<li><a href="#org76c6a42">1.2. Risk</a></li>
-<li><a href="#orgb579082">1.3. Score</a></li>
+<li><a href="#orga69d4a9">1.1. Polygenic</a></li>
+<li><a href="#org63bfee5">1.2. Risk</a></li>
+<li><a href="#org5b934b4">1.3. Score</a></li>
 </ul>
 </li>
-<li><a href="#org0264213">2. Calculating Polygenic Risk Scores</a>
+<li><a href="#orga1ddced">2. Calculating Polygenic Risk Scores</a>
 <ul>
-<li><a href="#orge4f14bf">2.1. Genome-wide Association Studies</a></li>
-<li><a href="#org715eb41">2.2. Toy dataset</a></li>
-<li><a href="#org7a98914">2.3. Calculate the PRS</a></li>
-<li><a href="#org826391d">2.4. Ploting the normal curves</a></li>
-<li><a href="#orgc30ac36">2.5. Logistic regression</a></li>
-<li><a href="#orgbf7e2d8">2.6. Plotting the regression curve</a></li>
-<li><a href="#org21b3b13">2.7. Measuring goodness of fit</a></li>
-<li><a href="#orgb00bf17">2.8. Enrichment in the highest PRS burden percentiles</a></li>
-<li><a href="#org941479b">2.9. PRS deciles</a></li>
+<li><a href="#org0e0caf9">2.1. Genome-wide Association Studies</a></li>
+<li><a href="#orga18e903">2.2. Toy dataset</a></li>
+<li><a href="#org4bf175d">2.3. Calculate the PRS</a></li>
+<li><a href="#org6ed20ae">2.4. Ploting the normal curves</a></li>
+<li><a href="#org1a15dde">2.5. Logistic regression</a></li>
+<li><a href="#org2314e2f">2.6. Plotting the regression curve</a></li>
+<li><a href="#orgf0147ac">2.7. Measuring goodness of fit</a></li>
+<li><a href="#org6b9dbf6">2.8. Enrichment in the highest PRS burden percentiles</a></li>
+<li><a href="#orgbb5ca42">2.9. PRS deciles</a></li>
 </ul>
 </li>
-<li><a href="#orgdeabed6">3. Conclusion</a></li>
-<li><a href="#org4831211">4. References</a></li>
-<li><a href="#orgb8b2cc3">5. Acronyms</a></li>
-<li><a href="#org8ec64c1">6. Glossary</a></li>
-<li><a href="#org96e9a80">Comments</a></li>
+<li><a href="#orgf6976b4">3. Conclusion</a></li>
+<li><a href="#org11bc4d4">4. References</a></li>
+<li><a href="#org64e8e89">5. Acronyms</a></li>
+<li><a href="#orgdd1bc6f">6. Glossary</a></li>
+<li><a href="#org2fc96f4">Comments</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf25b050" class="outline-2">
-<h2 id="orgf25b050"><span class="section-number-2">1.</span> Intro</h2>
+
+<div id="outline-container-org8df16ff" class="outline-2">
+<h2 id="org8df16ff"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org11515d6">
+<div class="sidenote" id="org7d7dada">
 <p>
 
 </p>
 
 <p>
-<img src="ltximg/prs_calculation_12ba9425fe6bcc4ed9c1890e7039d01bb3a48ee1.svg" alt="$$
+<img src="ltximg/prs_calculation_03a8a76772f30b1fadf082b6ee7dc87041b276fa.svg" alt="$$
 \chemname{\chemfig{[:150]@{C2}N*6(-(-N([:0]-@{C1}H)([:120]-H))=N-=-(=@{C3}O)-)}}{Cytosine} \qquad %
 \chemname{\chemfig{N([:180]-@{G2}H)*6(-(-N([:180]-@{G3}H)([:-60]-H))=N-*5(-N-=N-)=-(=@{G1}O)-[,,,2])}}{Guanine} %
 %\chemmove{ %
@@ -338,7 +339,7 @@ $$" class="latex-fragment-block" />
 </p>
 
 <p>
-<img src="ltximg/prs_calculation_5fafac11bc5f426f19722a6d2880e6fdc2ca1b9b.svg" alt="$$\chemname{\chemfig{[:-30]*6(-N=-@{A2}N=(-N([:0]-@{A1}H)([:120]-H))-*5(-N-=N-)=)}}{Adenine} \qquad %
+<img src="ltximg/prs_calculation_087ca89ca967f219b898e17b5934ef3db82edd5e.svg" alt="$$\chemname{\chemfig{[:-30]*6(-N=-@{A2}N=(-N([:0]-@{A1}H)([:120]-H))-*5(-N-=N-)=)}}{Adenine} \qquad %
 \chemname{\chemfig{N([:180]-@{T2}H)*6(-(=O)-N-=(-CH_3)-(=@{T1}O)-)}}{Tymine} %
 %\chemmove{ %
 %\draw[-,dash pattern=on 2pt off 2pt] (A1)--(T1); %
@@ -366,12 +367,13 @@ For some locations in the genome, multiple versions of these changes will be pre
 Some of these variations have a high enough impact to project their effect on phenotype by themself.
 Some of the variations affect the phenotype in concert with each other showing their effect in an <b>additive way</b>.
 We model this additive effect of multiple variations on a given phenotype with a Polygenic Risk Score
- (<a class="org-gls" href="#gls.11" id="glsr.11.1">PRS</a>).
-This writing aims to give a basic understanding of <a class="org-gls" href="#gls.11" id="glsr.11.2">PRS</a> and some concepts related to it in literature.
+ (<a class="org-gls" href="#gls.29" id="glsr.29.1">PRS</a>).
+This writing aims to give a basic understanding of <a class="org-gls" href="#gls.29" id="glsr.29.2">PRS</a> and some concepts related to it in literature.
 </p>
 </div>
-<div id="outline-container-org89e3f27" class="outline-3">
-<h3 id="org89e3f27"><span class="section-number-3">1.1.</span> Polygenic</h3>
+
+<div id="outline-container-orga69d4a9" class="outline-3">
+<h3 id="orga69d4a9"><span class="section-number-3">1.1.</span> Polygenic</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Polygenic means multiple genes are involved in the emergence of the given phenotype.
@@ -385,7 +387,7 @@ Since association studies show correlations and not causation a variant like rs1
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgf0c2bed">
+<div class="sidenote" id="org8271e00">
 <p>
 You can create this ideogram at: <a href="https://www.ncbi.nlm.nih.gov/genome/tools/gdp">https://www.ncbi.nlm.nih.gov/genome/tools/gdp</a>
 </p>
@@ -476,15 +478,16 @@ With the following intervals:
 </div>
 
 
-<div id="orga77fd49" class="figure">
+<div id="org6518034" class="figure">
 <p><img src="./ideogram.svg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Variations are marked with pink circles.</p>
 </div>
 </div>
 </div>
-<div id="outline-container-org76c6a42" class="outline-3">
-<h3 id="org76c6a42"><span class="section-number-3">1.2.</span> Risk</h3>
+
+<div id="outline-container-org63bfee5" class="outline-3">
+<h3 id="org63bfee5"><span class="section-number-3">1.2.</span> Risk</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Oxford English Dictionary defines risk as:
@@ -500,27 +503,28 @@ In statistics, there exist two types of risk. (<a href="#citeproc_bib_item_17">�
 </p>
 <ul class="org-ul">
 <li>Absolute Risk
- (<a class="org-gls" href="#gls.14" id="glsr.14.1">AR</a>) ratio of the events to the total number in a given group</li>
+ (<a class="org-gls" href="#gls.32" id="glsr.32.1">AR</a>) ratio of the events to the total number in a given group</li>
 <li>Relative Risk
- (<a class="org-gls" href="#gls.15" id="glsr.15.1">RR</a>) ratio of the event happening in the case group to an event happening in the control group.</li>
+ (<a class="org-gls" href="#gls.33" id="glsr.33.1">RR</a>) ratio of the event happening in the case group to an event happening in the control group.</li>
 </ul>
 
 <p>
 Here the term <code>risk</code> refers to a relative risk since we are comparing the case group with the control group. (<a href="#citeproc_bib_item_14">“Polygenic Risk Scores” n.d.</a>)
-<a class="org-gls" href="#gls.15" id="glsr.15.2">RR</a> should be evaluated with absolute risk on an individual basis. (<a href="#citeproc_bib_item_1">Andrade 2015</a>)
+<a class="org-gls" href="#gls.33" id="glsr.33.2">RR</a> should be evaluated with absolute risk on an individual basis. (<a href="#citeproc_bib_item_1">Andrade 2015</a>)
 </p>
 </div>
 </div>
-<div id="outline-container-orgb579082" class="outline-3">
-<h3 id="orgb579082"><span class="section-number-3">1.3.</span> Score</h3>
+
+<div id="outline-container-org5b934b4" class="outline-3">
+<h3 id="org5b934b4"><span class="section-number-3">1.3.</span> Score</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-We can look at two different equations that calculate <a class="org-gls" href="#gls.11" id="glsr.11.3">PRS</a>.
-They both calculate <img src="ltximg/prs_calculation_4b764c2004ba166016c19166d4be341cd316f8d6.svg" alt="$PRS_j$" class="latex-fragment-block" /> by summing the <a class="org-gls" href="#gls.3" id="glsr.3.1">effect size</a> (denoted as <img src="ltximg/prs_calculation_f6f441cbb69dfdf3d91726ec28d9ec1ab42c9bc7.svg" alt="$\beta_i$" class="latex-fragment-block" /> in Collister et al. and <img src="ltximg/prs_calculation_a9b44fb2513755c9f7666a24df6f6f13861692e2.svg" alt="$S_i$" class="latex-fragment-block" /> in PLINK formula) and  <a class="org-gls" href="#gls.5" id="glsr.5.1">dosage</a> (denoted as <img src="ltximg/prs_calculation_6c3a4a3f97aac16e2e632cf4cd96a9150d641031.svg" alt="$dosage_{ij}$" class="latex-fragment-block" /> in Collister et al. and <img src="ltximg/prs_calculation_d643a619e0164a451b383c7339897bb3b7034f32.svg" alt="$G_{ij}$" class="latex-fragment-block" /> in PLINK formula) of the <a class="org-gls" href="#gls.1" id="glsr.1.1">alleles</a>.
-Differently, the PLINK formula has <img src="ltximg/prs_calculation_cbd4338a423866ca5fa3a1fd61a04a69ef9f7f05.svg" alt="$P \times M_j$" class="latex-fragment-block" /> in the denominator.
-Where <img src="ltximg/prs_calculation_43d3674afb7b19ac30f6a8dcfa7be1d3b093b0af.svg" alt="$P$" class="latex-fragment-block" /> is the ploidy and <img src="ltximg/prs_calculation_f3e5dffd8db1ace1531bfab50b5bbe84be1c81c2.svg" alt="$M_j$" class="latex-fragment-block" /> is the number of non-missing Single Nucleotide Polymorphisms (<a class="org-gls" href="#gls.12" id="glsr.12.1">SNPs</a>).
-If a sample missing <a class="org-gls" href="#gls.12" id="glsr.12.2">SNPs</a> their score would be lower than samples with full genotypes.
-Dividing by  non-missing number of <a class="org-gls" href="#gls.12" id="glsr.12.3">SNPs</a>  and ploidy makes the score comparable between individuals with missing genotypes.
+We can look at two different equations that calculate <a class="org-gls" href="#gls.29" id="glsr.29.3">PRS</a>.
+They both calculate <img src="ltximg/prs_calculation_65d342c91f967fef4daacf2d9913ed4ca4815617.svg" alt="$PRS_j$" class="latex-fragment-block" /> by summing the <a class="org-gls" href="#gls.21" id="glsr.21.1">effect size</a> (denoted as <img src="ltximg/prs_calculation_a9cbf3e6cef8e9c13cb4e139fa27ed124c662326.svg" alt="$\beta_i$" class="latex-fragment-block" /> in Collister et al. and <img src="ltximg/prs_calculation_510b5ee73effa8776fc2fd2888714a1851b55c3b.svg" alt="$S_i$" class="latex-fragment-block" /> in PLINK formula) and  <a class="org-gls" href="#gls.23" id="glsr.23.1">dosage</a> (denoted as <img src="ltximg/prs_calculation_d41ed14fd34d69da841bdc1e27663fb4f16d1523.svg" alt="$dosage_{ij}$" class="latex-fragment-block" /> in Collister et al. and <img src="ltximg/prs_calculation_1eaa5ed825f1319827e5ce6ce21c62e5c99154da.svg" alt="$G_{ij}$" class="latex-fragment-block" /> in PLINK formula) of the <a class="org-gls" href="#gls.19" id="glsr.19.1">alleles</a>.
+Differently, the PLINK formula has <img src="ltximg/prs_calculation_9a499ad92bf47d3ae24a63b592418fc8f8805d70.svg" alt="$P \times M_j$" class="latex-fragment-block" /> in the denominator.
+Where <img src="ltximg/prs_calculation_6c76c3f618515b3a79c09014eac048ec26898386.svg" alt="$P$" class="latex-fragment-block" /> is the ploidy and <img src="ltximg/prs_calculation_2a4bb77dd4feea4726abb386c8c878cadcf7a3cd.svg" alt="$M_j$" class="latex-fragment-block" /> is the number of non-missing Single Nucleotide Polymorphisms (<a class="org-gls" href="#gls.30" id="glsr.30.1">SNPs</a>).
+If a sample missing <a class="org-gls" href="#gls.30" id="glsr.30.2">SNPs</a> their score would be lower than samples with full genotypes.
+Dividing by  non-missing number of <a class="org-gls" href="#gls.30" id="glsr.30.3">SNPs</a>  and ploidy makes the score comparable between individuals with missing genotypes.
 (<a href="#citeproc_bib_item_7">Collister, Liu, and Clifton 2022</a>)
 With enough samples, these scores would approach a normal distribution.
 </p>
@@ -528,9 +532,9 @@ With enough samples, these scores would approach a normal distribution.
 <div style="column-rule-style: none nil;column-count: 2;">
 
 
-<div id="org7df3abb" class="equation-container">
+<div id="org844c8ff" class="equation-container">
 <span class="equation">
-<img src="ltximg/prs_calculation_882ff3cc20a3e4ead47fa5bf11d23ea5aeae1f31.svg" alt="\begin{equation*}
+<img src="ltximg/prs_calculation_a725f7f3ce97bdaade420a8abc4e4fd27de16617.svg" alt="\begin{equation*}
 PRS_j = \sum_{i}^{N} \beta_i \times dosage_{ij}
 \end{equation*}
 " class="org-svg" />
@@ -544,9 +548,9 @@ PRS_j = \sum_{i}^{N} \beta_i \times dosage_{ij}
 </p>
 
 
-<div id="orgd6d46d9" class="equation-container">
+<div id="org238fa56" class="equation-container">
 <span class="equation">
-<img src="ltximg/prs_calculation_b219762884227afccc44cf30c946569b614805c4.svg" alt="\begin{equation*}
+<img src="ltximg/prs_calculation_cb7836e845fc466b48ee5fceb322481628c0b9d0.svg" alt="\begin{equation*}
 PRS_j = \frac{\sum_{i}^{N} S_i \times G_{ij}}{P \times M_j}
 \end{equation*}
 " class="org-svg" />
@@ -564,23 +568,25 @@ PRS_j = \frac{\sum_{i}^{N} S_i \times G_{ij}}{P \times M_j}
 </div>
 </div>
 </div>
-<div id="outline-container-org0264213" class="outline-2">
-<h2 id="org0264213"><span class="section-number-2">2.</span> Calculating Polygenic Risk Scores</h2>
+
+<div id="outline-container-orga1ddced" class="outline-2">
+<h2 id="orga1ddced"><span class="section-number-2">2.</span> Calculating Polygenic Risk Scores</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We are going to mock a Genome-Wide Association
- (<a class="org-gls" href="#gls.13" id="glsr.13.1">GWAS</a>) results and create a mock study of our own.
-We are going to use the summary statistics from the <a class="org-gls" href="#gls.13" id="glsr.13.2">GWAS</a> data.
-The idea here is that most of the time we don&rsquo;t have access to every genotype from a <a class="org-gls" href="#gls.13" id="glsr.13.3">GWAS</a>.
+ (<a class="org-gls" href="#gls.31" id="glsr.31.1">GWAS</a>) results and create a mock study of our own.
+We are going to use the summary statistics from the <a class="org-gls" href="#gls.31" id="glsr.31.2">GWAS</a> data.
+The idea here is that most of the time we don&rsquo;t have access to every genotype from a <a class="org-gls" href="#gls.31" id="glsr.31.3">GWAS</a>.
 Instead, we use the most significant variation and investigate their effect in our cohort.
 </p>
 </div>
-<div id="outline-container-orge4f14bf" class="outline-3">
-<h3 id="orge4f14bf"><span class="section-number-3">2.1.</span> Genome-wide Association Studies</h3>
+
+<div id="outline-container-org0e0caf9" class="outline-3">
+<h3 id="org0e0caf9"><span class="section-number-3">2.1.</span> Genome-wide Association Studies</h3>
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orge7a1c24">
+<div class="sidenote" id="org9fa1e14">
 <p>
 A great resource for viewing studies and their results is the <a href="https://www.ebi.ac.uk/gwas/">GWAS catalog</a>.
 A more hands-on example can be found at <a href="https://hail.is/docs/0.2/tutorials/01-genome-wide-association-study.html">Hail&rsquo;s site</a>.
@@ -589,18 +595,18 @@ A more hands-on example can be found at <a href="https://hail.is/docs/0.2/tutori
 </div>
 
 <p>
-<a class="org-gls" href="#gls.13" id="glsr.13.4">GWAS</a> performs statistical tests on thousands of  genomic loci in thousands of genomes to see if any of those  regions are associated with the given trait.
+<a class="org-gls" href="#gls.31" id="glsr.31.4">GWAS</a> performs statistical tests on thousands of  genomic loci in thousands of genomes to see if any of those  regions are associated with the given trait.
 (<a href="#citeproc_bib_item_16">Uffelmann et al. 2021</a>)
-As a result, we get p-values for how significant that association is and the <a class="org-gls" href="#gls.3" id="glsr.3.2">effect size</a> of the variation.
+As a result, we get p-values for how significant that association is and the <a class="org-gls" href="#gls.21" id="glsr.21.2">effect size</a> of the variation.
 </p>
 
 <p>
-Let&rsquo;s say we have found <code>10</code> <a class="org-gls" href="#gls.12" id="glsr.12.4">SNPs</a> significant in a study with <code>50000</code> cases and <code>50000</code> controls.
-First, let&rsquo;s go over the <a class="org-gls" href="#gls.12" id="glsr.12.5">SNPs</a>.
+Let&rsquo;s say we have found <code>10</code> <a class="org-gls" href="#gls.30" id="glsr.30.4">SNPs</a> significant in a study with <code>50000</code> cases and <code>50000</code> controls.
+First, let&rsquo;s go over the <a class="org-gls" href="#gls.30" id="glsr.30.5">SNPs</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org8675b50">snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
+<pre class="src src-R" id="orgaa059da">snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
 
 gwas <span style="color: #8f3f71;">&lt;-</span> data.frame(
   SNP_id = paste(<span style="color: #79740e;">"SNP"</span>, seq(snp_number), sep=<span style="color: #79740e;">""</span>)
@@ -678,7 +684,7 @@ However, we don&rsquo;t need to know the <code>non-effect allele</code> and <cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org82f01ec">gwas$non_effect_allele = <span style="color: #79740e;">"A"</span>
+<pre class="src src-R" id="orgb740c96">gwas$non_effect_allele = <span style="color: #79740e;">"A"</span>
 gwas$effect_allele = <span style="color: #79740e;">"B"</span>
 print(rbind(head(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>), tail(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>)))
 </pre>
@@ -747,7 +753,7 @@ We are going to use the log of <a href="https://en.wikipedia.org/wiki/Odds_ratio
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgb6cd598">
+<div class="sidenote" id="org858ea79">
 <p>
 I want to set it up so every <code>SNP</code> is observed <code>2</code> % more incrementally.
 The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-step_case');" onmouseout="CodeHighlightOff(this, 'coderef-step_case');"><code>step_case</code></a> and <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');"><code>obs_case</code></a> just generalize this instead of hard-coding so it applies to any number of <code>SNPs</code> and sample size.
@@ -756,7 +762,7 @@ The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHig
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="orgf9eff95">gwas_control_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
+<pre class="src src-R" id="orgbe482cf">gwas_control_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
 gwas_case_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
 increment_percent = <span style="color: #8f3f71; font-weight: bold;">0.02</span>
 gwas_sample_number = gwas_control_number + gwas_case_number
@@ -868,24 +874,25 @@ We get <code>effect sizes</code>
 for the first genotype and
 for the last genotype.
 A <code>BB</code> genotype would have score of
- <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="latex-fragment-block" /> 
+ <img src="ltximg/prs_calculation_d6b0b7084e1e89b6e493e1ee1b5bae8dcee647c6.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_b7f7bfc8fa1ffd080a1790df5a95eaebe19af4a8.svg" alt="$=$" class="latex-fragment-block" /> <code>TRUE</code>
  for the first genotype and
- <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="latex-fragment-block" /> .
+ <img src="ltximg/prs_calculation_d6b0b7084e1e89b6e493e1ee1b5bae8dcee647c6.svg" alt="$2 \times$" class="latex-fragment-block" /> <img src="ltximg/prs_calculation_b7f7bfc8fa1ffd080a1790df5a95eaebe19af4a8.svg" alt="$=$" class="latex-fragment-block" /> .
 </p>
 </div>
 </div>
-<div id="outline-container-org715eb41" class="outline-3">
-<h3 id="org715eb41"><span class="section-number-3">2.2.</span> Toy dataset</h3>
+
+<div id="outline-container-orga18e903" class="outline-3">
+<h3 id="orga18e903"><span class="section-number-3">2.2.</span> Toy dataset</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 We are screening our population concerning a phenotype.
-We aim to determine risk scores using the <a href="#orgb41d33c">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.11" id="glsr.11.4">PRS</a> and phenotype.
-We have genotyped <a href="#org007a5e6">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
+We aim to determine risk scores using the <a href="#orgeb33e3e">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.29" id="glsr.29.4">PRS</a> and phenotype.
+We have genotyped <a href="#org2aa0b6a">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org3bbe299">
+<div class="sidenote" id="orgbead409">
 <p>
 The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-set_seed');" onmouseout="CodeHighlightOff(this, 'coderef-set_seed');"><code>set.seed()</code></a> in the first line ensure <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> randoms the same values every time.
 </p>
@@ -893,7 +900,7 @@ The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(thi
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org015b1b2"><span id="coderef-set_seed" class="coderef-off">set.seed(<span style="color: #8f3f71; font-weight: bold;">42</span>)</span>
+<pre class="src src-R" id="org7092e35"><span id="coderef-set_seed" class="coderef-off">set.seed(<span style="color: #8f3f71; font-weight: bold;">42</span>)</span>
 
 sample_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">2000</span>
 snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
@@ -1065,31 +1072,32 @@ print(rbind(head(samples, <span style="color: #8f3f71; font-weight: bold;">3</sp
 
 
 <p>
-We get random genotypes for controls for <a class="org-gls" href="#gls.1" id="glsr.1.2">alleles</a> <code>A</code>, and <code>B</code> with probabilities
+We get random genotypes for controls for <a class="org-gls" href="#gls.19" id="glsr.19.2">alleles</a> <code>A</code>, and <code>B</code> with probabilities
 <a href="#coderef-control_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-control_prob');" onmouseout="CodeHighlightOff(this, 'coderef-control_prob');"><code>0.55, 0.45</code></a>
 ;
-cases for <a class="org-gls" href="#gls.1" id="glsr.1.3">alleles</a> <code>A</code>, and <code>B</code>
+cases for <a class="org-gls" href="#gls.19" id="glsr.19.3">alleles</a> <code>A</code>, and <code>B</code>
 with probabilities
 <a href="#coderef-case_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-case_prob');" onmouseout="CodeHighlightOff(this, 'coderef-case_prob');"><code>0.45, 0.55</code></a>
-This way cases are more prone to having the <a class="org-gls" href="#gls.2" id="glsr.2.1">effect allele</a>.
+This way cases are more prone to having the <a class="org-gls" href="#gls.20" id="glsr.20.1">effect allele</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-org7a98914" class="outline-3">
-<h3 id="org7a98914"><span class="section-number-3">2.3.</span> Calculate the PRS</h3>
+
+<div id="outline-container-org4bf175d" class="outline-3">
+<h3 id="org4bf175d"><span class="section-number-3">2.3.</span> Calculate the PRS</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-We will be using the <a href="#org7df3abb">simpler version of the equations</a>.
+We will be using the <a href="#org844c8ff">simpler version of the equations</a>.
 Mainly because we don&rsquo;t have any missing genotypes and secondly because it&rsquo;s simpler.
 </p>
 
 <p>
-We <a href="#coderef-prs" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-prs');" onmouseout="CodeHighlightOff(this, 'coderef-prs');">implement the formula</a> by using an apply function to multiply <a class="org-gls" href="#gls.5" id="glsr.5.2">dosage</a> and the <a class="org-gls" href="#gls.3" id="glsr.3.3">effect size</a> then doing a row sum would give us the score.
+We <a href="#coderef-prs" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-prs');" onmouseout="CodeHighlightOff(this, 'coderef-prs');">implement the formula</a> by using an apply function to multiply <a class="org-gls" href="#gls.23" id="glsr.23.2">dosage</a> and the <a class="org-gls" href="#gls.21" id="glsr.21.3">effect size</a> then doing a row sum would give us the score.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgb5352ad">
+<div class="sidenote" id="org96d8b44">
 <p>
 We have both <code>AB</code> and <code>BA</code> genotypes in the <a href="#coderef-dosage_list" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-dosage_list');" onmouseout="CodeHighlightOff(this, 'coderef-dosage_list');">dosage list</a> because our <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> returns both of these. Since there are no haplotypes or variant phasing both <code>AB</code> and <code>BA</code> are the same.
 </p>
@@ -1256,8 +1264,10 @@ print(rbind(head(samples, <span style="color: #8f3f71; font-weight: bold;">3</sp
 </table>
 </div>
 </div>
-<div id="outline-container-org826391d" class="outline-3">
-<h3 id="org826391d"><span class="section-number-3">2.4.</span> Ploting the normal curves</h3>
+
+
+<div id="outline-container-org6ed20ae" class="outline-3">
+<h3 id="org6ed20ae"><span class="section-number-3">2.4.</span> Ploting the normal curves</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 What we will be seeing around in papers and around the web is a plot of normal distributions comparing cases to controls.
@@ -1276,7 +1286,7 @@ We <a href="#coderef-zero_shift" class="coderef" onmouseover="CodeHighlightOn(th
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org09e1c3d">
+<div class="sidenote" id="org36f1a1b">
 <p>
 We get the <a href="#coderef-mean_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-mean_case');" onmouseout="CodeHighlightOff(this, 'coderef-mean_case');">mean and standard deviations</a> to plot the curves with the <code>stat_function</code>.
 </p>
@@ -1308,18 +1318,20 @@ ggplot(samples, aes(x=PRS, color=status, fill=status)) +
 </div>
 
 
-<div id="org1629f9b" class="figure">
+<div id="org0d6867c" class="figure">
 <p><img src="PRS.svg" alt="PRS.svg" class="org-svg" />
 </p>
 </div>
 
 <p>
-When you visit <a href="https://www.pgscatalog.org">www.pgscatalog.org</a> or image search &ldquo;polygenic risk score&rdquo; you would be seeing the plot of these two peaks. Cases have more <a class="org-gls" href="#gls.2" id="glsr.2.2">effect alleles</a> with higher totals on average this is why their curve is slightly shifted to the right. The case curve also has a larger standard deviation because <a class="org-gls" href="#gls.2" id="glsr.2.3">effect alleles</a> have <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');">increasing effect sizes</a>.
+When you visit <a href="https://www.pgscatalog.org">www.pgscatalog.org</a> or image search &ldquo;polygenic risk score&rdquo; you would be seeing the plot of these two peaks. Cases have more <a class="org-gls" href="#gls.20" id="glsr.20.2">effect alleles</a> with higher totals on average this is why their curve is slightly shifted to the right. The case curve also has a larger standard deviation because <a class="org-gls" href="#gls.20" id="glsr.20.3">effect alleles</a> have <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');">increasing effect sizes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc30ac36" class="outline-3">
-<h3 id="orgc30ac36"><span class="section-number-3">2.5.</span> Logistic regression</h3>
+
+
+<div id="outline-container-org1a15dde" class="outline-3">
+<h3 id="org1a15dde"><span class="section-number-3">2.5.</span> Logistic regression</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Logistic regression is a model used in statistics that fit an S curve to data based on probabilities.
@@ -1329,13 +1341,13 @@ I would suggest <a href="https://www.youtube.com/playlist?list=PLblh5JKOoLUKxzEP
 
 <p>
 Logistic regressions are used for prediction.
-However, one thing I would note in context to <a class="org-gls" href="#gls.11" id="glsr.11.5">PRS</a> calculations is that, unlike this common use, it&rsquo;s not used for prediction in genetic studies.
+However, one thing I would note in context to <a class="org-gls" href="#gls.29" id="glsr.29.5">PRS</a> calculations is that, unlike this common use, it&rsquo;s not used for prediction in genetic studies.
 Because the scores and the risk calculated here are relative. The effect becomes tangible only in the tails of the curves but as the number of cases and controls drops the significance of the effect also drops.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org12fa20e">
+<div class="sidenote" id="org7e3bd2c">
 <ul class="org-ul">
 <li>Because most of the totals are the same they overlap and we plot only a few points as a result. <code>position_jitter</code> with <code>w=0.5</code> spreads the points around a bit allowing us the plot all of the points.</li>
 </ul>
@@ -1351,7 +1363,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 </div>
 
 
-<div id="org1378259" class="figure">
+<div id="org0b7f0dc" class="figure">
 <p><img src="PRS2.svg" alt="PRS2.svg" class="org-svg" />
 </p>
 </div>
@@ -1363,7 +1375,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="org3900026">
+<pre class="example" id="orgf4a9d3c">
 
 Call:
 glm(formula = status ~ PRS, family = "binomial", data = samples)
@@ -1395,30 +1407,30 @@ for the control group and
 <p>
 for the case group.
 We can write our equation as
-<img src="ltximg/prs_calculation_9382adbeae32a6f5ddf4d1d75149d58ff47af273.svg" alt="$status =$" class="latex-fragment-block" />
+<img src="ltximg/prs_calculation_a343c9e1a1c2f1db29580bfd9e694cfe546b7f30.svg" alt="$status =$" class="latex-fragment-block" />
 </p>
 <ul class="org-ul">
-<li><img src="ltximg/prs_calculation_287708b12fd2c9fbb814067bfc2ede158f99d43e.svg" alt="$\times PRS$" class="latex-fragment-block" />.</li>
+<li><img src="ltximg/prs_calculation_b79fc5b3263eba741e9e693ac3d69a5510cc194c.svg" alt="$\times PRS$" class="latex-fragment-block" />.</li>
 </ul>
 <p>
-Inserting the sample&rsquo;s score into this equation would give us the log <a class="org-gls" href="#gls.6" id="glsr.6.1">odds</a> of having the phenotype.
-One unit increase in the <img src="ltximg/prs_calculation_7c44be32e772d062a92638a98ab44c377d36e9c0.svg" alt="$PRS$" class="latex-fragment-block" /> would increase the log <a class="org-gls" href="#gls.6" id="glsr.6.2">odds</a> by
+Inserting the sample&rsquo;s score into this equation would give us the log <a class="org-gls" href="#gls.24" id="glsr.24.1">odds</a> of having the phenotype.
+One unit increase in the <img src="ltximg/prs_calculation_6a49b4c20195e3acddf175064cb5af4677bdb2ea.svg" alt="$PRS$" class="latex-fragment-block" /> would increase the log <a class="org-gls" href="#gls.24" id="glsr.24.2">odds</a> by
 units.
 </p>
 
 <p>
-We can translate the log of <a class="org-gls" href="#gls.6" id="glsr.6.3">odds</a> to probabilities.
-Because it&rsquo;s log we can turn them back to <a class="org-gls" href="#gls.6" id="glsr.6.4">odds</a> with exponential function.
-<a class="org-gls" href="#gls.6" id="glsr.6.5">Odds</a> are the event happening (let&rsquo;s say <img src="ltximg/prs_calculation_a5e295d1d7f1656701a081d7929acf38cf912697.svg" alt="$x$" class="latex-fragment-block" />) ratio to the event not happening (let&rsquo;s say <img src="ltximg/prs_calculation_f4f4084d2267047289e90fcffd23ce46635c7372.svg" alt="$y$" class="latex-fragment-block" />) which would be <img src="ltximg/prs_calculation_c8a0ecd2f92263dd176a4009b00ac1be771ea63e.svg" alt="$\frac{x}{y}$" class="latex-fragment-block" />.
-<img src="ltximg/prs_calculation_d0160bfdde2ab35b84ce34f8336dcce7f509d88b.svg" alt="${\beta_0+\beta_1X}$" class="latex-fragment-block" /> gives us the log of the <a class="org-gls" href="#gls.6" id="glsr.6.6">odds</a>; <img src="ltximg/prs_calculation_4b3d279c33ca4a6682e84dfedda0f0c6b86c30ef.svg" alt="$e^{\beta_0+\beta_1X}$" class="latex-fragment-block" /> gives us the <a class="org-gls" href="#gls.6" id="glsr.6.7">odds</a>.
-We can write the <a class="org-gls" href="#gls.6" id="glsr.6.8">odds</a> as <img src="ltximg/prs_calculation_8ba476cc1db610ea1b6b1c4c3390c35ddc9e37f8.svg" alt="$\frac{\frac{x}{y}}{1 + \frac{x}{y}}$" class="latex-fragment-block" />; this would be <img src="ltximg/prs_calculation_d1348a7b389c32025cd1a610684bc484a1665338.svg" alt="$\frac{x}{y} \times \frac{y}{x+y}$" class="latex-fragment-block" /> which would simplify to <img src="ltximg/prs_calculation_b3a7fb73c1cdec824a3f3c803294b35c2d31ab2f.svg" alt="$\frac{x}{x+y}$" class="latex-fragment-block" />.
+We can translate the log of <a class="org-gls" href="#gls.24" id="glsr.24.3">odds</a> to probabilities.
+Because it&rsquo;s log we can turn them back to <a class="org-gls" href="#gls.24" id="glsr.24.4">odds</a> with exponential function.
+<a class="org-gls" href="#gls.24" id="glsr.24.5">Odds</a> are the event happening (let&rsquo;s say <img src="ltximg/prs_calculation_bf278e6c60d3314e8e8fa7306c9f7cd29a68c485.svg" alt="$x$" class="latex-fragment-block" />) ratio to the event not happening (let&rsquo;s say <img src="ltximg/prs_calculation_5d2ba058ac78f68d8c5c9059f0f91bd9cfc499ed.svg" alt="$y$" class="latex-fragment-block" />) which would be <img src="ltximg/prs_calculation_fcb94f29bf48d855c30ad59aabefcb4904ff69f4.svg" alt="$\frac{x}{y}$" class="latex-fragment-block" />.
+<img src="ltximg/prs_calculation_caa75ff497466c40eb34aa98d621109fc2b20144.svg" alt="${\beta_0+\beta_1X}$" class="latex-fragment-block" /> gives us the log of the <a class="org-gls" href="#gls.24" id="glsr.24.6">odds</a>; <img src="ltximg/prs_calculation_c9fbff0364c80ef93803404c45c55a4c9c75847b.svg" alt="$e^{\beta_0+\beta_1X}$" class="latex-fragment-block" /> gives us the <a class="org-gls" href="#gls.24" id="glsr.24.7">odds</a>.
+We can write the <a class="org-gls" href="#gls.24" id="glsr.24.8">odds</a> as <img src="ltximg/prs_calculation_9f8551aa86732987870ac51ca14dda4286f70f4b.svg" alt="$\frac{\frac{x}{y}}{1 + \frac{x}{y}}$" class="latex-fragment-block" />; this would be <img src="ltximg/prs_calculation_b1b15c9d8f3a0a7e965b5a527b49022687870ff0.svg" alt="$\frac{x}{y} \times \frac{y}{x+y}$" class="latex-fragment-block" /> which would simplify to <img src="ltximg/prs_calculation_522f0da4081f3fc4e2393b5dd62e97200b2c4c6c.svg" alt="$\frac{x}{x+y}$" class="latex-fragment-block" />.
 It would give us the probability of the event happening over the total events.
 </p>
 
 
 <div class="equation-container">
 <span class="equation">
-<img src="ltximg/prs_calculation_2b23e5f7bda08e66569630f8125e772c071314fc.svg" alt="\begin{equation*}
+<img src="ltximg/prs_calculation_125d1d918f8e5edd147d0f0b0f1882dc50e5e703.svg" alt="\begin{equation*}
 p(X)= \frac{e^{\beta_0+\beta_1X}}{1 + e^{\beta_0+\beta_1X}}
 \end{equation*}
 " class="org-svg" />
@@ -1433,8 +1445,10 @@ p(X)= \frac{e^{\beta_0+\beta_1X}}{1 + e^{\beta_0+\beta_1X}}
 </p>
 </div>
 </div>
-<div id="outline-container-orgbf7e2d8" class="outline-3">
-<h3 id="orgbf7e2d8"><span class="section-number-3">2.6.</span> Plotting the regression curve</h3>
+
+
+<div id="outline-container-org2314e2f" class="outline-3">
+<h3 id="org2314e2f"><span class="section-number-3">2.6.</span> Plotting the regression curve</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 We can plot our model&rsquo;s S-shaped curve that shows the probabilities.
@@ -1452,28 +1466,29 @@ ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #8f
 </div>
 
 
-<div id="orgb3d93fb" class="figure">
+<div id="org89f2d7c" class="figure">
 <p><img src="PRS3.svg" alt="PRS3.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org21b3b13" class="outline-3">
-<h3 id="org21b3b13"><span class="section-number-3">2.7.</span> Measuring goodness of fit</h3>
+
+<div id="outline-container-orgf0147ac" class="outline-3">
+<h3 id="orgf0147ac"><span class="section-number-3">2.7.</span> Measuring goodness of fit</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
-One of the measures of how good or model is <img src="ltximg/prs_calculation_afaa2d8edb5c7ca6f2150c71fefde583d19e45b9.svg" alt="$pseudo-R^2$" class="latex-fragment-block" />.
-<a href="https://en.wikipedia.org/wiki/Coefficient_of_determination"><img src="ltximg/prs_calculation_643ee027005404cbb197915256eca20d9aab0b7f.svg" alt="$R^2$" class="latex-fragment-block" /></a> in linear regression is calculated using the sum of squares of residuals.
+One of the measures of how good or model is <img src="ltximg/prs_calculation_e6111ace9eb2bfa750b24ae889f04ae5765eb3f7.svg" alt="$pseudo-R^2$" class="latex-fragment-block" />.
+<a href="https://en.wikipedia.org/wiki/Coefficient_of_determination"><img src="ltximg/prs_calculation_17c6f4e3b8046174c8bd58d2456863fdac3446b1.svg" alt="$R^2$" class="latex-fragment-block" /></a> in linear regression is calculated using the sum of squares of residuals.
 This calculation does not apply to the logistic regression because we have a probability curve.
-There are several approaches to calculating <img src="ltximg/prs_calculation_afaa2d8edb5c7ca6f2150c71fefde583d19e45b9.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> and the most used one I have seen is the Nagelkerke method (also the most optimistic).
+There are several approaches to calculating <img src="ltximg/prs_calculation_e6111ace9eb2bfa750b24ae889f04ae5765eb3f7.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> and the most used one I have seen is the Nagelkerke method (also the most optimistic).
 The closer it gets to 1 better the fit.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org7a4360c">
+<div class="sidenote" id="org9061e90">
 <p>
-<code>rcompanion</code> has the <img src="ltximg/prs_calculation_afaa2d8edb5c7ca6f2150c71fefde583d19e45b9.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> calculations modules when the <code>Nagelkerke</code> function is called other methods results are also returned.
+<code>rcompanion</code> has the <img src="ltximg/prs_calculation_e6111ace9eb2bfa750b24ae889f04ae5765eb3f7.svg" alt="$pseudo-R^2$" class="latex-fragment-block" /> calculations modules when the <code>Nagelkerke</code> function is called other methods results are also returned.
 </p>
 
 </div>
@@ -1484,7 +1499,7 @@ nagelkerke(model)
 </pre>
 </div>
 
-<pre class="example" id="orgcf70e78">
+<pre class="example" id="orge83b39d">
 $Models
 
 Model: "glm, status ~ PRS, binomial, samples"
@@ -1513,8 +1528,9 @@ $Warnings
 </pre>
 </div>
 </div>
-<div id="outline-container-orgb00bf17" class="outline-3">
-<h3 id="orgb00bf17"><span class="section-number-3">2.8.</span> Enrichment in the highest PRS burden percentiles</h3>
+
+<div id="outline-container-org6b9dbf6" class="outline-3">
+<h3 id="org6b9dbf6"><span class="section-number-3">2.8.</span> Enrichment in the highest PRS burden percentiles</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 This is the table-2 from the paper (<a href="#citeproc_bib_item_11">Leu et al. 2019</a>).
@@ -1528,7 +1544,7 @@ Differently, we use the <a href="#coderef-confusionMatrix" class="coderef" onmou
 </p>
 
 <p>
-What we are looking at in this table is the increase in the <a class="org-gls" href="#gls.6" id="glsr.6.9">odds</a> in the more extreme <a href="#coderef-percents" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-percents');" onmouseout="CodeHighlightOff(this, 'coderef-percents');">percentages</a>. One odd thing I notice is that in my simulations sensitivity goes up and specificity goes down as we get to the edge of the tails where the opposite is seen in the paper.
+What we are looking at in this table is the increase in the <a class="org-gls" href="#gls.24" id="glsr.24.9">odds</a> in the more extreme <a href="#coderef-percents" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-percents');" onmouseout="CodeHighlightOff(this, 'coderef-percents');">percentages</a>. One odd thing I notice is that in my simulations sensitivity goes up and specificity goes down as we get to the edge of the tails where the opposite is seen in the paper.
 </p>
 
 <div class="org-src-container">
@@ -1687,8 +1703,9 @@ my_sum_table
 </table>
 </div>
 </div>
-<div id="outline-container-org941479b" class="outline-3">
-<h3 id="org941479b"><span class="section-number-3">2.9.</span> PRS deciles</h3>
+
+<div id="outline-container-orgbb5ca42" class="outline-3">
+<h3 id="orgbb5ca42"><span class="section-number-3">2.9.</span> PRS deciles</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 This graph is from the paper (<a href="#citeproc_bib_item_10">Kloeve-Mogensen et al. 2021</a>).
@@ -1696,7 +1713,7 @@ Here they compare scores from each decile.
 The fifth decile is used as the reference that&rsquo;s why we are seeing a stair pattern where the decile before the fifth gets closer and the deciles after go up incrementally.
 I have found this answer which sets the fifth decile as a reference differently. (<a href="#citeproc_bib_item_15">socialscientist 2022</a>)
 I just <a href="#coderef-fifthasref" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-fifthasref');" onmouseout="CodeHighlightOff(this, 'coderef-fifthasref');">set the levels</a> so the fifth is the first one which the generalized linear models
- (<a class="org-gls" href="#gls.17" id="glsr.17.1">glm</a>) uses as the reference. Resulting coefficients are considered as <a class="org-gls" href="#gls.7" id="glsr.7.1">odds ratio</a>.(<a href="#citeproc_bib_item_13">Noah 2018</a>)
+ (<a class="org-gls" href="#gls.35" id="glsr.35.1">glm</a>) uses as the reference. Resulting coefficients are considered as <a class="org-gls" href="#gls.25" id="glsr.25.1">odds ratio</a>.(<a href="#citeproc_bib_item_13">Noah 2018</a>)
 </p>
 
 <div class="org-src-container">
@@ -1710,7 +1727,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="org588d07e">
+<pre class="example" id="orgd40d740">
 
 Call:
 glm(formula = status ~ deciles, family = "binomial", data = samples)
@@ -1762,38 +1779,40 @@ ggplot(my_sum_data, aes(decile, odds_ratio)) +
 </div>
 
 
-<div id="orgeb5e64a" class="figure">
+<div id="orgdcb62ec" class="figure">
 <p><img src="PRS-decile.svg" alt="PRS-decile.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgdeabed6" class="outline-2">
-<h2 id="orgdeabed6"><span class="section-number-2">3.</span> Conclusion</h2>
+
+<div id="outline-container-orgf6976b4" class="outline-2">
+<h2 id="orgf6976b4"><span class="section-number-2">3.</span> Conclusion</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-<a class="org-gls" href="#gls.11" id="glsr.11.6">PRS</a> is a method for estimating the underlying genetic risk that common variation create for complex phenotypes.
+<a class="org-gls" href="#gls.29" id="glsr.29.6">PRS</a> is a method for estimating the underlying genetic risk that common variation create for complex phenotypes.
 As of pgscatalog.org hosts 3,688 calculations for 619 traits from 480 publications.
 Their interpretation in the diseases risk and their role in understanding disease etiology still needs further work but there are also some proposals for other uses.
 Lu et al. concludes that it can be useful for prioritizing patients with low scores for monogenic testing.
 (<a href="#citeproc_bib_item_12">Lu et al. 2022</a>)
-Campbell et al. suggests polygenic burden plays role in the severity and <a class="org-gls" href="#gls.8" id="glsr.8.1">penetrance</a> of the developmental epileptic  encephalopathies.
+Campbell et al. suggests polygenic burden plays role in the severity and <a class="org-gls" href="#gls.26" id="glsr.26.1">penetrance</a> of the developmental epileptic  encephalopathies.
 (<a href="#citeproc_bib_item_3">Campbell et al. 2022</a>)
-Another approach taken by Darst et al. and Hassanin et. al is to calculate cancer risk with <a class="org-gls" href="#gls.11" id="glsr.11.7">PRS</a> combined with rare variants.
+Another approach taken by Darst et al. and Hassanin et. al is to calculate cancer risk with <a class="org-gls" href="#gls.29" id="glsr.29.7">PRS</a> combined with rare variants.
 (<a href="#citeproc_bib_item_9">Hassanin et al. 2023</a>; <a href="#citeproc_bib_item_8">Darst et al. 2021</a>)
-Considering papers above, I think investigating <a class="org-gls" href="#gls.11" id="glsr.11.8">PRS</a> with <a class="org-gls" href="#gls.10" id="glsr.10.1">variant of unknown significance</a> with low <a class="org-gls" href="#gls.4" id="glsr.4.1">allele frequency</a> might give an insight to some of the complex diseases.
+Considering papers above, I think investigating <a class="org-gls" href="#gls.29" id="glsr.29.8">PRS</a> with <a class="org-gls" href="#gls.28" id="glsr.28.1">variant of unknown significance</a> with low <a class="org-gls" href="#gls.22" id="glsr.22.1">allele frequency</a> might give an insight to some of the complex diseases.
 </p>
 
 <p>
 This has been my introduction to polygenic risk scores and genetic burden.
 This is not a tutorial on how to perform the analyses but just to understand basic underlying concept.
-This post also never goes into more finickier subjects like population stratification, better <a class="org-gls" href="#gls.3" id="glsr.3.4">effect size</a> estimation, controlling linkage disequilibrium.
+This post also never goes into more finickier subjects like population stratification, better <a class="org-gls" href="#gls.21" id="glsr.21.4">effect size</a> estimation, controlling linkage disequilibrium.
 </p>
 </div>
 </div>
-<div id="outline-container-org4831211" class="outline-2">
-<h2 id="org4831211"><span class="section-number-2">4.</span> References</h2>
+
+<div id="outline-container-org11bc4d4" class="outline-2">
+<h2 id="org11bc4d4"><span class="section-number-2">4.</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Andrade, Chittaranjan. 2015. “Understanding Relative Risk, Odds Ratio, and Related Terms: As Simple as It Can Get.” <i>The Journal of Clinical Psychiatry</i> 76 (7): 21865. <a href="https://doi.org/10.4088/JCP.15f10150">https://doi.org/10.4088/JCP.15f10150</a>.</div>
@@ -1816,77 +1835,81 @@ This post also never goes into more finickier subjects like population stratific
 </div>
 </div>
 </div>
-<div id="outline-container-orgb8b2cc3" class="outline-2">
-<h2 id="orgb8b2cc3"><span class="section-number-2">5.</span> Acronyms</h2>
+
+<div id="outline-container-org64e8e89" class="outline-2">
+<h2 id="org64e8e89"><span class="section-number-2">5.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<b><span class="org-glsdef" id="gls.14">AR</span></b>&emsp;Absolute Risk&ensp;<a class="org-glsdef" href="#glsr.14.1">1</a>
+<b><span class="org-glsdef" id="gls.32">AR</span></b>&emsp;Absolute Risk&ensp;<a class="org-glsdef" href="#glsr.32.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.13">GWAS</span></b>&emsp;Genome-Wide Association&ensp;<a class="org-glsdef" href="#glsr.13.1">1</a>, <a class="org-glsdef" href="#glsr.13.2">2</a>, <a class="org-glsdef" href="#glsr.13.3">3</a>, <a class="org-glsdef" href="#glsr.13.4">4</a>
+<b><span class="org-glsdef" id="gls.31">GWAS</span></b>&emsp;Genome-Wide Association&ensp;<a class="org-glsdef" href="#glsr.31.1">1</a>, <a class="org-glsdef" href="#glsr.31.2">2</a>, <a class="org-glsdef" href="#glsr.31.3">3</a>, <a class="org-glsdef" href="#glsr.31.4">4</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.17">Glm</span></b>&emsp;generalized linear models&ensp;<a class="org-glsdef" href="#glsr.17.1">1</a>
+<b><span class="org-glsdef" id="gls.35">Glm</span></b>&emsp;generalized linear models&ensp;<a class="org-glsdef" href="#glsr.35.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.11">PRS</span></b>&emsp;Polygenic Risk Score&ensp;<a class="org-glsdef" href="#glsr.11.1">1</a>, <a class="org-glsdef" href="#glsr.11.2">2</a>, <a class="org-glsdef" href="#glsr.11.3">3</a>, <a class="org-glsdef" href="#glsr.11.4">4</a>, <a class="org-glsdef" href="#glsr.11.5">5</a>, <a class="org-glsdef" href="#glsr.11.6">6</a>, <a class="org-glsdef" href="#glsr.11.7">7</a>, <a class="org-glsdef" href="#glsr.11.8">8</a>
+<b><span class="org-glsdef" id="gls.29">PRS</span></b>&emsp;Polygenic Risk Score&ensp;<a class="org-glsdef" href="#glsr.29.1">1</a>, <a class="org-glsdef" href="#glsr.29.2">2</a>, <a class="org-glsdef" href="#glsr.29.3">3</a>, <a class="org-glsdef" href="#glsr.29.4">4</a>, <a class="org-glsdef" href="#glsr.29.5">5</a>, <a class="org-glsdef" href="#glsr.29.6">6</a>, <a class="org-glsdef" href="#glsr.29.7">7</a>, <a class="org-glsdef" href="#glsr.29.8">8</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.15">RR</span></b>&emsp;Relative Risk&ensp;<a class="org-glsdef" href="#glsr.15.1">1</a>, <a class="org-glsdef" href="#glsr.15.2">2</a>
+<b><span class="org-glsdef" id="gls.33">RR</span></b>&emsp;Relative Risk&ensp;<a class="org-glsdef" href="#glsr.33.1">1</a>, <a class="org-glsdef" href="#glsr.33.2">2</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.12">SNP</span></b>&emsp;Single Nucleotide Polymorphism&ensp;<a class="org-glsdef" href="#glsr.12.1">1</a>, <a class="org-glsdef" href="#glsr.12.2">2</a>, <a class="org-glsdef" href="#glsr.12.3">3</a>, <a class="org-glsdef" href="#glsr.12.4">4</a>, <a class="org-glsdef" href="#glsr.12.5">5</a>
+<b><span class="org-glsdef" id="gls.30">SNP</span></b>&emsp;Single Nucleotide Polymorphism&ensp;<a class="org-glsdef" href="#glsr.30.1">1</a>, <a class="org-glsdef" href="#glsr.30.2">2</a>, <a class="org-glsdef" href="#glsr.30.3">3</a>, <a class="org-glsdef" href="#glsr.30.4">4</a>, <a class="org-glsdef" href="#glsr.30.5">5</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org8ec64c1" class="outline-2">
-<h2 id="org8ec64c1"><span class="section-number-2">6.</span> Glossary</h2>
+
+<div id="outline-container-orgdd1bc6f" class="outline-2">
+<h2 id="orgdd1bc6f"><span class="section-number-2">6.</span> Glossary</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-<b><span class="org-glsdef" id="gls.4">Allele frequency</span></b>&emsp;The ratio of given allele to total number of alleles in a given population&ensp;<a class="org-glsdef" href="#glsr.4.1">1</a>
+<b><span class="org-glsdef" id="gls.22">Allele frequency</span></b>&emsp;The ratio of given allele to total number of alleles in a given population&ensp;<a class="org-glsdef" href="#glsr.22.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.1">Allele</span></b>&emsp;One of the alternatives of a genomic locus. Human autosomal chromosomes have two alleles for every locus each inherited from a parent&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>
+<b><span class="org-glsdef" id="gls.19">Allele</span></b>&emsp;One of the alternatives of a genomic locus. Human autosomal chromosomes have two alleles for every locus each inherited from a parent&ensp;<a class="org-glsdef" href="#glsr.19.1">1</a>, <a class="org-glsdef" href="#glsr.19.2">2</a>, <a class="org-glsdef" href="#glsr.19.3">3</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.5">Dosage</span></b>&emsp;Number of effect allele. It would be 0 if both alleles are non-effect; 1 if one allele is an effect allele; and 2 if both alleles are the effect allele&ensp;<a class="org-glsdef" href="#glsr.5.1">1</a>, <a class="org-glsdef" href="#glsr.5.2">2</a>
+<b><span class="org-glsdef" id="gls.23">Dosage</span></b>&emsp;Number of effect allele. It would be 0 if both alleles are non-effect; 1 if one allele is an effect allele; and 2 if both alleles are the effect allele&ensp;<a class="org-glsdef" href="#glsr.23.1">1</a>, <a class="org-glsdef" href="#glsr.23.2">2</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.3">Effect size</span></b>&emsp;Weight of the effect allele. It can be odds ratio, hazard ratio, allele frequency&ensp;<a class="org-glsdef" href="#glsr.3.1">1</a>, <a class="org-glsdef" href="#glsr.3.2">2</a>, <a class="org-glsdef" href="#glsr.3.3">3</a>, <a class="org-glsdef" href="#glsr.3.4">4</a>
+<b><span class="org-glsdef" id="gls.21">Effect size</span></b>&emsp;Weight of the effect allele. It can be odds ratio, hazard ratio, allele frequency&ensp;<a class="org-glsdef" href="#glsr.21.1">1</a>, <a class="org-glsdef" href="#glsr.21.2">2</a>, <a class="org-glsdef" href="#glsr.21.3">3</a>, <a class="org-glsdef" href="#glsr.21.4">4</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.2">Effect allele</span></b>&emsp;The alternative allele associated with the phenotype&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>, <a class="org-glsdef" href="#glsr.2.2">2</a>, <a class="org-glsdef" href="#glsr.2.3">3</a>
+<b><span class="org-glsdef" id="gls.20">Effect allele</span></b>&emsp;The alternative allele associated with the phenotype&ensp;<a class="org-glsdef" href="#glsr.20.1">1</a>, <a class="org-glsdef" href="#glsr.20.2">2</a>, <a class="org-glsdef" href="#glsr.20.3">3</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.7">Odds ratio</span></b>&emsp;ratio of the odds of the two events&ensp;<a class="org-glsdef" href="#glsr.7.1">1</a>
+<b><span class="org-glsdef" id="gls.25">Odds ratio</span></b>&emsp;ratio of the odds of the two events&ensp;<a class="org-glsdef" href="#glsr.25.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.6">Odds</span></b>&emsp;ratio of number of times event happening to event not happening&ensp;<a class="org-glsdef" href="#glsr.6.1">1</a>, <a class="org-glsdef" href="#glsr.6.2">2</a>, <a class="org-glsdef" href="#glsr.6.3">3</a>, <a class="org-glsdef" href="#glsr.6.4">4</a>, <a class="org-glsdef" href="#glsr.6.5">5</a>, <a class="org-glsdef" href="#glsr.6.6">6</a>, <a class="org-glsdef" href="#glsr.6.7">7</a>, <a class="org-glsdef" href="#glsr.6.8">8</a>, <a class="org-glsdef" href="#glsr.6.9">9</a>
+<b><span class="org-glsdef" id="gls.24">Odds</span></b>&emsp;ratio of number of times event happening to event not happening&ensp;<a class="org-glsdef" href="#glsr.24.1">1</a>, <a class="org-glsdef" href="#glsr.24.2">2</a>, <a class="org-glsdef" href="#glsr.24.3">3</a>, <a class="org-glsdef" href="#glsr.24.4">4</a>, <a class="org-glsdef" href="#glsr.24.5">5</a>, <a class="org-glsdef" href="#glsr.24.6">6</a>, <a class="org-glsdef" href="#glsr.24.7">7</a>, <a class="org-glsdef" href="#glsr.24.8">8</a>, <a class="org-glsdef" href="#glsr.24.9">9</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.8">Penetrance</span></b>&emsp;Probability of an variants effect is seen in the phenotype&ensp;<a class="org-glsdef" href="#glsr.8.1">1</a>
+<b><span class="org-glsdef" id="gls.26">Penetrance</span></b>&emsp;Probability of an variants effect is seen in the phenotype&ensp;<a class="org-glsdef" href="#glsr.26.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.10">Variant of unknown significance</span></b>&emsp;The variants we can&rsquo;t decide whether its pathogenic or benign&ensp;<a class="org-glsdef" href="#glsr.10.1">1</a>
+<b><span class="org-glsdef" id="gls.28">Variant of unknown significance</span></b>&emsp;The variants we can&rsquo;t decide whether its pathogenic or benign&ensp;<a class="org-glsdef" href="#glsr.28.1">1</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org96e9a80" class="outline-2">
-<h2 id="org96e9a80">Comments</h2>
-<div class="outline-text-2" id="text-org96e9a80">
+
+
+<div id="outline-container-org2fc96f4" class="outline-2">
+<h2 id="org2fc96f4">Comments</h2>
+<div class="outline-text-2" id="text-org2fc96f4">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>

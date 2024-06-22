@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-02-21 Wed 22:53 -->
+<!-- 2024-06-22 Sat 13:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
 <meta name="author" content="Barış Salman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -305,38 +305,38 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf8df416">1. Intro</a></li>
-<li><a href="#orgd3f2c1e">2. Implementation</a>
+<li><a href="#org9d0298b">1. Intro</a></li>
+<li><a href="#org391a8fa">2. Implementation</a>
 <ul>
-<li><a href="#orgcab6a00">2.1. What is Burrows Wheeler Transform</a></li>
-<li><a href="#orgcaf997a">2.2. What is FM-index</a></li>
-<li><a href="#orgb4d5c0e">2.3. Last to First Mapping</a></li>
-<li><a href="#org45720d3">2.4. Building a class</a></li>
-<li><a href="#orgf210bb7">2.5. Mapping</a>
+<li><a href="#org34255c8">2.1. What is Burrows Wheeler Transform</a></li>
+<li><a href="#org042a761">2.2. What is FM-index</a></li>
+<li><a href="#org5f53d59">2.3. Last to First Mapping</a></li>
+<li><a href="#orgd03424f">2.4. Building a class</a></li>
+<li><a href="#org0e7b699">2.5. Mapping</a>
 <ul>
-<li><a href="#org668749d">2.5.1. Exact Matching</a></li>
-<li><a href="#orgcebc9c0">2.5.2. Inexact Matching</a></li>
+<li><a href="#org656f597">2.5.1. Exact Matching</a></li>
+<li><a href="#org9ae6bfd">2.5.2. Inexact Matching</a></li>
 </ul>
 </li>
-<li><a href="#orgc089a6f">2.6. Putting it all together</a></li>
-<li><a href="#org61f2a82">2.7. Trying out with dummy data</a>
+<li><a href="#org7530034">2.6. Putting it all together</a></li>
+<li><a href="#org489fcb6">2.7. Trying out with dummy data</a>
 <ul>
-<li><a href="#orgc0f0362">2.7.1. Sequence generation</a></li>
-<li><a href="#orgb67465e">2.7.2. Mutating the sequence</a></li>
-<li><a href="#org1763646">2.7.3. Getting the reads</a></li>
-<li><a href="#org98b5cc7">2.7.4. Performing the alignment</a></li>
-<li><a href="#org74e8844">2.7.5. Outputing to SAM</a></li>
-<li><a href="#orgd5e8fcc">2.7.6. Visualizing our alignments with IGV</a></li>
+<li><a href="#orgd9c9fa9">2.7.1. Sequence generation</a></li>
+<li><a href="#org4bf07e8">2.7.2. Mutating the sequence</a></li>
+<li><a href="#org14835b8">2.7.3. Getting the reads</a></li>
+<li><a href="#orgdf07049">2.7.4. Performing the alignment</a></li>
+<li><a href="#org2b328c0">2.7.5. Outputing to SAM</a></li>
+<li><a href="#org045839e">2.7.6. Visualizing our alignments with IGV</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga0eb223">3. References</a></li>
-<li><a href="#org75b21dc">Comments</a></li>
+<li><a href="#orge9ab7d7">3. References</a></li>
+<li><a href="#org5f2ed80">Comments</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org40e5b52">
+<div class="abstract" id="org50492c5">
 <p>
 The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
 Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
@@ -344,12 +344,13 @@ We can use this aligned data to discover small or structural variations in clini
 </p>
 
 </div>
-<div id="outline-container-orgf8df416" class="outline-2">
-<h2 id="orgf8df416"><span class="section-number-2">1.</span> Intro</h2>
+
+<div id="outline-container-org9d0298b" class="outline-2">
+<h2 id="org9d0298b"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org7aa6679">
+<div class="sidenote" id="orgaaed550">
 <p>
 Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
@@ -365,16 +366,17 @@ Burrows-Wheeler Transform makes it possible to put these pieces to their place d
 </p>
 </div>
 </div>
-<div id="outline-container-orgd3f2c1e" class="outline-2">
-<h2 id="orgd3f2c1e"><span class="section-number-2">2.</span> Implementation</h2>
+
+<div id="outline-container-org391a8fa" class="outline-2">
+<h2 id="org391a8fa"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgcab6a00" class="outline-3">
-<h3 id="orgcab6a00"><span class="section-number-3">2.1.</span> What is Burrows Wheeler Transform</h3>
+<div id="outline-container-org34255c8" class="outline-3">
+<h3 id="org34255c8"><span class="section-number-3">2.1.</span> What is Burrows Wheeler Transform</h3>
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org8676ad6">
+<div class="sidenote" id="org533673f">
 <p>
 Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
@@ -387,7 +389,7 @@ Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org004bdef">
+<div class="sidenote" id="org6931729">
 <p>
 We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
 </p>
@@ -472,8 +474,9 @@ To utilize this let&rsquo;s move to next step creating the FM-index.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcaf997a" class="outline-3">
-<h3 id="orgcaf997a"><span class="section-number-3">2.2.</span> What is FM-index</h3>
+
+<div id="outline-container-org042a761" class="outline-3">
+<h3 id="org042a761"><span class="section-number-3">2.2.</span> What is FM-index</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 To utilize BWT we need to keep a bit more information.
@@ -506,7 +509,7 @@ Initial index: 4 of the: C
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd6aec5b">
+<div class="sidenote" id="orgd14ef08">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
@@ -638,8 +641,9 @@ Using this we can rebuild a index of where we start and stop seeing the characte
 </p>
 </div>
 </div>
-<div id="outline-container-orgb4d5c0e" class="outline-3">
-<h3 id="orgb4d5c0e"><span class="section-number-3">2.3.</span> Last to First Mapping</h3>
+
+<div id="outline-container-org5f53d59" class="outline-3">
+<h3 id="org5f53d59"><span class="section-number-3">2.3.</span> Last to First Mapping</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Using the we can map a given character with an index <code>i</code> back to first column.
@@ -693,7 +697,7 @@ To get a better grasp of whats happening lets track the index jumps too.
 </pre>
 </div>
 
-<pre class="example" id="org83629c5">
+<pre class="example" id="org6eb2954">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
 END          1          6          6                B               S           S       S$
@@ -713,8 +717,9 @@ We initiate the <code>index​=0</code> which points us to character <code>S</co
 </p>
 </div>
 </div>
-<div id="outline-container-org45720d3" class="outline-3">
-<h3 id="org45720d3"><span class="section-number-3">2.4.</span> Building a class</h3>
+
+<div id="outline-container-orgd03424f" class="outline-3">
+<h3 id="orgd03424f"><span class="section-number-3">2.4.</span> Building a class</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Keeping track of the intermediately data and passing them through functions can become confusing to keep all this in one place lets put them in a <code>class</code>.
@@ -818,12 +823,13 @@ bwa.rebwt='OMICSSBS'
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf210bb7" class="outline-3">
-<h3 id="orgf210bb7"><span class="section-number-3">2.5.</span> Mapping</h3>
+
+<div id="outline-container-org0e7b699" class="outline-3">
+<h3 id="org0e7b699"><span class="section-number-3">2.5.</span> Mapping</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-org668749d" class="outline-4">
-<h4 id="org668749d"><span class="section-number-4">2.5.1.</span> Exact Matching</h4>
+<div id="outline-container-org656f597" class="outline-4">
+<h4 id="org656f597"><span class="section-number-4">2.5.1.</span> Exact Matching</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 We want to align the small sequences back to references.
@@ -881,15 +887,16 @@ Let&rsquo;s add this to our class too.
 </pre>
 </div>
 
-<pre class="example" id="orgd767981">
+<pre class="example" id="org2a025e4">
 5 5
 0
 OMI
 </pre>
 </div>
 </div>
-<div id="outline-container-orgcebc9c0" class="outline-4">
-<h4 id="orgcebc9c0"><span class="section-number-4">2.5.2.</span> Inexact Matching</h4>
+
+<div id="outline-container-org9ae6bfd" class="outline-4">
+<h4 id="org9ae6bfd"><span class="section-number-4">2.5.2.</span> Inexact Matching</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 Most crucial part is of course matching the reads with variations.
@@ -897,7 +904,7 @@ Backtracking algorithm described by (<a href="#citeproc_bib_item_1">Li and Durbi
 </p>
 
 
-<div id="orge0bb8b9" class="figure">
+<div id="orgf00c713" class="figure">
 <p><img src="./fig3.jpeg" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
@@ -977,7 +984,7 @@ This function has two stop conditions either we reach the end of the string or w
 </pre>
 </div>
 
-<pre class="example" id="org6d3d03d">
+<pre class="example" id="orgf18082c">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -990,7 +997,7 @@ OMI
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org7a291d5">
+<div class="sidenote" id="org07d9d77">
 <p>
 <b>Visualizing the recursion</b>
 </p>
@@ -1028,7 +1035,7 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </pre>
 </div>
 
-<pre class="example" id="org5b0f2c3">
+<pre class="example" id="orgc66705c">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -2730,8 +2737,10 @@ MIC ins
 </div>
 </div>
 </div>
-<div id="outline-container-orgc089a6f" class="outline-3">
-<h3 id="orgc089a6f"><span class="section-number-3">2.6.</span> Putting it all together</h3>
+
+
+<div id="outline-container-org7530034" class="outline-3">
+<h3 id="org7530034"><span class="section-number-3">2.6.</span> Putting it all together</h3>
 <div class="outline-text-3" id="text-2-6">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #9d0006;">from</span> operator <span style="color: #9d0006;">import</span> itemgetter
@@ -2861,12 +2870,13 @@ MIC ins
 </div>
 </div>
 </div>
-<div id="outline-container-org61f2a82" class="outline-3">
-<h3 id="org61f2a82"><span class="section-number-3">2.7.</span> Trying out with dummy data</h3>
+
+<div id="outline-container-org489fcb6" class="outline-3">
+<h3 id="org489fcb6"><span class="section-number-3">2.7.</span> Trying out with dummy data</h3>
 <div class="outline-text-3" id="text-2-7">
 </div>
-<div id="outline-container-orgc0f0362" class="outline-4">
-<h4 id="orgc0f0362"><span class="section-number-4">2.7.1.</span> Sequence generation</h4>
+<div id="outline-container-orgd9c9fa9" class="outline-4">
+<h4 id="orgd9c9fa9"><span class="section-number-4">2.7.1.</span> Sequence generation</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <p>
 Lets generate our reference genome first.
@@ -2894,8 +2904,9 @@ TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCAAGGCATTTT
 </pre>
 </div>
 </div>
-<div id="outline-container-orgb67465e" class="outline-4">
-<h4 id="orgb67465e"><span class="section-number-4">2.7.2.</span> Mutating the sequence</h4>
+
+<div id="outline-container-org4bf07e8" class="outline-4">
+<h4 id="org4bf07e8"><span class="section-number-4">2.7.2.</span> Mutating the sequence</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
 We want our reads to be different from our reference so, before sampling our samples we are going to create a mutated sequence first.
@@ -2960,8 +2971,9 @@ ref_seq='TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGGTGTGGCGCGCA
 </pre>
 </div>
 </div>
-<div id="outline-container-org1763646" class="outline-4">
-<h4 id="org1763646"><span class="section-number-4">2.7.3.</span> Getting the reads</h4>
+
+<div id="outline-container-org14835b8" class="outline-4">
+<h4 id="org14835b8"><span class="section-number-4">2.7.3.</span> Getting the reads</h4>
 <div class="outline-text-4" id="text-2-7-3">
 <p>
 Lets randomly sample 600 reads with length 6 from our mutated sequence.
@@ -3013,8 +3025,9 @@ Since BWA returns many matches we are just gonna get the most common one using t
 </div>
 </div>
 </div>
-<div id="outline-container-org98b5cc7" class="outline-4">
-<h4 id="org98b5cc7"><span class="section-number-4">2.7.4.</span> Performing the alignment</h4>
+
+<div id="outline-container-orgdf07049" class="outline-4">
+<h4 id="orgdf07049"><span class="section-number-4">2.7.4.</span> Performing the alignment</h4>
 <div class="outline-text-4" id="text-2-7-4">
 <p>
 First lets initialize our BWA class with the <code>ref_seq</code>.
@@ -3045,8 +3058,9 @@ alignment_indices[20:]=[57, 12, 80, 39, 32, 69, 98, 109, 78, 18, 39, 12, 79, 9, 
 </pre>
 </div>
 </div>
-<div id="outline-container-org74e8844" class="outline-4">
-<h4 id="org74e8844"><span class="section-number-4">2.7.5.</span> Outputing to SAM</h4>
+
+<div id="outline-container-org2b328c0" class="outline-4">
+<h4 id="org2b328c0"><span class="section-number-4">2.7.5.</span> Outputing to SAM</h4>
 <div class="outline-text-4" id="text-2-7-5">
 <p>
 Lets output our alignmets as Sequence Alignment/Map (SAM) format.
@@ -3194,7 +3208,7 @@ everything is matched.
 </pre>
 </div>
 
-<pre class="example" id="orge5bdfc0">
+<pre class="example" id="org676ab81">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3302,8 +3316,9 @@ Lets write our alignments to a file as well as our reference sequence.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd5e8fcc" class="outline-4">
-<h4 id="orgd5e8fcc"><span class="section-number-4">2.7.6.</span> Visualizing our alignments with IGV</h4>
+
+<div id="outline-container-org045839e" class="outline-4">
+<h4 id="org045839e"><span class="section-number-4">2.7.6.</span> Visualizing our alignments with IGV</h4>
 <div class="outline-text-4" id="text-2-7-6">
 <p>
 With SAM and FASTA files we can visualize our alignmets with IGV. We can convert our SAM to BAM and index both BAM and FASTA files with samtools.
@@ -3317,7 +3332,7 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="org439c3e8" class="figure">
+<div id="orgbb0bcda" class="figure">
 <p><img src="./igv.svg" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>
@@ -3325,17 +3340,19 @@ samtools faidx ./ref.fasta
 </div>
 </div>
 </div>
-<div id="outline-container-orga0eb223" class="outline-2">
-<h2 id="orga0eb223"><span class="section-number-2">3.</span> References</h2>
+
+<div id="outline-container-orge9ab7d7" class="outline-2">
+<h2 id="orge9ab7d7"><span class="section-number-2">3.</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Li, Heng, and Richard Durbin. 2009. “Fast and Accurate Short Read Alignment with Burrows-Wheeler Transform.” <i>Bioinformatics (Oxford, England)</i> 25 (14): 1754–60. <a href="https://doi.org/10.1093/bioinformatics/btp324">https://doi.org/10.1093/bioinformatics/btp324</a>.</div>
 </div>
 </div>
 </div>
-<div id="outline-container-org75b21dc" class="outline-2">
-<h2 id="org75b21dc">Comments</h2>
-<div class="outline-text-2" id="text-org75b21dc">
+
+<div id="outline-container-org5f2ed80" class="outline-2">
+<h2 id="org5f2ed80">Comments</h2>
+<div class="outline-text-2" id="text-org5f2ed80">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>

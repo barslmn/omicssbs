@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-06-21 Fri 21:20 -->
+<!-- 2024-06-22 Sat 15:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Investigating male X heterozygosity in short read sequencing</title>
@@ -269,7 +269,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Investigating male X heterozygosity in short read sequencing</h1>
-<div class="dateauthor" id="org200c840">
+<div class="dateauthor" id="orge50b9a0">
 <p>
 19 Jan 2024 — Barış Salman
 </p>
@@ -293,7 +293,7 @@ Links
 <li><a href="#org0de6874">1.1. Calling variant from X chromosome in males</a></li>
 </ul>
 </li>
-<li><a href="#orgc4fbd7e">2. Material and Method</a>
+<li><a href="#orgb5b22a4">2. Materials and Methods</a>
 <ul>
 <li><a href="#org36ea8f6">2.1. VCF files from the 1000genome project</a></li>
 <li><a href="#org36f0c7a">2.2. Preamble</a></li>
@@ -328,7 +328,7 @@ Except for the <a class="org-gls" href="#gls.2" id="glsr.2.1">pseudoautosomal re
 This region shows homology between the chromosomes and males are &ldquo;homozygous&rdquo; for the regions.
 This homology makes it possible for chromosomes to pair during cell division and the only place where recombination can occur between X and Y. (NO_ITEM_DATA:raudseppPseudoautosomalRegionSex2012)
 However, the variants we are seeing are located outside of the Pseudoautosomal region
- (<a class="org-gls" href="#gls.10" id="glsr.10.1">PAR</a>) regions and are spread across chromosome X.
+ (<a class="org-gls" href="#gls.12" id="glsr.12.1">PAR</a>) regions and are spread across chromosome X.
 There have also been other groups who come across this and used it to check for sample sex as a form of quality control.(NO_ITEM_DATA:doExomeSequencingIdentifies2015)
 There have been a lot of questions about this around the web with no satisfying answers.
 </p>
@@ -357,20 +357,20 @@ Haplotypecaller has a parameter to give ploidy, but since the data we are dealin
 </div>
 </div>
 
-<div id="outline-container-orgc4fbd7e" class="outline-2">
-<h2 id="orgc4fbd7e"><span class="section-number-2">2.</span> Material and Method</h2>
+<div id="outline-container-orgb5b22a4" class="outline-2">
+<h2 id="orgb5b22a4"><span class="section-number-2">2.</span> Materials and Methods</h2>
 <div class="outline-text-2" id="text-2">
 
-<div id="org18ed54b" class="figure">
-<p><img src="file:///home/bar/org/.attach/bb/7e1236-15b4-4f3e-876f-6705cc2b83a5/_20240619_105304screenshot.png" alt="_20240619_105304screenshot.png" />
+<div id="org3a033b3" class="figure">
+<p><img src="_20240619_105304screenshot.png" alt="_20240619_105304screenshot.png" />
 </p>
 </div>
 
 <p>
 These are whole genome Variant Call Format
- (<a class="org-gls" href="#gls.17" id="glsr.17.1">VCF</a>) files and I can&rsquo;t download them all, luckily bcftools can query specific regions on them over the line which makes it both space and speed-efficient.
-The region we are going to query is the X chromosome without the <a class="org-gls" href="#gls.10" id="glsr.10.2">PAR</a> region.
-We are excluding the <a class="org-gls" href="#gls.10" id="glsr.10.3">PAR</a> since it&rsquo;s a diploid region.
+ (<a class="org-gls" href="#gls.10" id="glsr.10.1">VCF</a>) files and I can&rsquo;t download them all, luckily bcftools can query specific regions on them over the line which makes it both space and speed-efficient.
+The region we are going to query is the X chromosome without the <a class="org-gls" href="#gls.12" id="glsr.12.2">PAR</a> region.
+We are excluding the <a class="org-gls" href="#gls.12" id="glsr.12.3">PAR</a> since it&rsquo;s a diploid region.
 We are going to further filtrate the variants to be heterozygous and since this all started from ES we are just going to look at the exonic regions.
 To make things simpler we are going to look at SNVs since INDELs can be challenging to genotype.
 We also want to have a depth enough to decide the genotype and don&rsquo;t want anything not passing filters.
@@ -390,9 +390,9 @@ We are going to implement all this workflow in the nextflow.
 <h3 id="org36ea8f6"><span class="section-number-3">2.1.</span> VCF files from the 1000genome project</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-For this job we are going to use individual variant call files from the project since multi-sample <a class="org-gls" href="#gls.17" id="glsr.17.2">VCF</a> are phased.
+For this job we are going to use individual variant call files from the project since multi-sample <a class="org-gls" href="#gls.10" id="glsr.10.2">VCF</a> are phased.
 Looking at the individual variant calls there are New York Genome Center
- (<a class="org-gls" href="#gls.18" id="glsr.18.1">NYGC</a>) study from 2019.
+ (<a class="org-gls" href="#gls.11" id="glsr.11.1">NYGC</a>) study from 2019.
 There are two versions of these with one directory named raw<sub>calls</sub><sub>old</sub> and another directory named raw<sub>calls</sub><sub>updated</sub>.
 </p>
 
@@ -401,7 +401,7 @@ The updated directory has a note related to this study that says:
 </p>
 <blockquote>
 <p>
-Chromosome X: male samples were processed through HaplotypeCaller with “&#x2013;ploidy 1” parameter applied to non-<a class="org-gls" href="#gls.10" id="glsr.10.4">PAR</a> regions, and “&#x2013;ploidy 2” parameter applied to PAR1 and PAR2 regions, whereas female samples were processed using “&#x2013;ploidy 2”  parameter applied to the entire chrX (see table below for the exact coordinates and corresponding ploidy settings).
+Chromosome X: male samples were processed through HaplotypeCaller with “&#x2013;ploidy 1” parameter applied to non-<a class="org-gls" href="#gls.12" id="glsr.12.4">PAR</a> regions, and “&#x2013;ploidy 2” parameter applied to PAR1 and PAR2 regions, whereas female samples were processed using “&#x2013;ploidy 2”  parameter applied to the entire chrX (see table below for the exact coordinates and corresponding ploidy settings).
 </p>
 </blockquote>
 
@@ -460,7 +460,7 @@ Since we are only looking for the sex of the individuals we only need the fields
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgfd53bbf">
+<div class="sidenote" id="org4f5cd36">
 <p>
 The characters with preceding percent sign are encoded versions of characters like {, [, &ldquo;, ], }.
 Because only ASCII character are allowed in the URLs.
@@ -527,13 +527,13 @@ This is an awk command which cleans up the chromosome names and splits the info 
 <h3 id="orge84ad53"><span class="section-number-3">2.5.</span> Getting the VCF files</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
-For each of our samples, we create the URL for the <a class="org-gls" href="#gls.17" id="glsr.17.3">VCF</a> file and we pass it to bcftools where we perform the filtering and write it to a BCF file named after the sample.
+For each of our samples, we create the URL for the <a class="org-gls" href="#gls.10" id="glsr.10.3">VCF</a> file and we pass it to bcftools where we perform the filtering and write it to a BCF file named after the sample.
 </p>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orge40ce62">
+<div class="sidenote" id="org34c0273">
 <p>
-BCFs are more performant than <a class="org-gls" href="#gls.17" id="glsr.17.4">VCFs</a>.
+BCFs are more performant than <a class="org-gls" href="#gls.10" id="glsr.10.4">VCFs</a>.
 <a href="https://www.biostars.org/p/273673/">https://www.biostars.org/p/273673/</a>
 </p>
 
@@ -632,7 +632,7 @@ To count we are using awk, and printing them out in a bedGraph format.
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org355cdec">
+<div class="sidenote" id="org5a3e541">
 <p>
 <a href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a>
 </p>
@@ -1035,56 +1035,56 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 </table>
 
 
-<div id="orgf51e2af" class="figure">
-<p><img src="file:///home/bar/org/.attach/88/828ab4-bcc1-42c8-8dbe-33d40b1a8914/_20240619_182836screenshot.png" alt="_20240619_182836screenshot.png" />
+<div id="orgd3eaf66" class="figure">
+<p><img src="_20240619_182836screenshot.png" alt="_20240619_182836screenshot.png" />
 </p>
-<p><span class="figure-number">Figure 1: </span>Sum of genotype counts with close up to some genes. There are four tracks here. The first track shows the genotype counts along the whole chromosome X. Second track is the major regions in chromosome X (<a class="org-gls" href="#gls.10" id="glsr.10.5">PAR</a>, X-added region
- (<a class="org-gls" href="#gls.12" id="glsr.12.1">XAR</a>), X-conserved region
- (<a class="org-gls" href="#gls.11" id="glsr.11.1">XCR</a>), X-transposed region
- (<a class="org-gls" href="#gls.15" id="glsr.15.1">XTR</a>)). Below that is the low complexity and <a class="org-gls" href="#gls.9" id="glsr.9.1">ampliconic regions</a>. At the bottom top 20 genes with the highest heterozygous genotype counts sum. Close-up IGV screenshots of some genes and regions are also included to give a better sense.</p>
+<p><span class="figure-number">Figure 1: </span>Sum of genotype counts with close up to some genes. There are four tracks here. The first track shows the genotype counts along the whole chromosome X. Second track is the major regions in chromosome X (<a class="org-gls" href="#gls.12" id="glsr.12.5">PAR</a>, X-added region
+ (<a class="org-gls" href="#gls.14" id="glsr.14.1">XAR</a>), X-conserved region
+ (<a class="org-gls" href="#gls.13" id="glsr.13.1">XCR</a>), X-transposed region
+ (<a class="org-gls" href="#gls.17" id="glsr.17.1">XTR</a>)). Below that is the low complexity and <a class="org-gls" href="#gls.9" id="glsr.9.1">ampliconic regions</a>. At the bottom top 20 genes with the highest heterozygous genotype counts sum. Close-up IGV screenshots of some genes and regions are also included to give a better sense.</p>
 </div>
 
 <p>
 To further investigate I run the BLAT tool on IGV on some of the hits. The tracks with the gray bars show the BLAT matches.
 </p>
 
-<div id="org2f37098" class="figure">
+<div id="orga1d425f" class="figure">
 <p><img src="IGVscreenshots/SLC25A5.png" alt="SLC25A5.png" />
 </p>
 </div>
 
-<div id="org505d3e9" class="figure">
+<div id="orgab96f04" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr2.png" alt="SLC25A5_chr2.png" />
 </p>
 </div>
 
-<div id="org106c88b" class="figure">
+<div id="orgeb96773" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr7.png" alt="SLC25A5_chr7.png" />
 </p>
 </div>
 
-<div id="org8cab60c" class="figure">
+<div id="org763c596" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr9.png" alt="SLC25A5_chr9.png" />
 </p>
 </div>
 
-<div id="orgea902a8" class="figure">
+<div id="org71d4486" class="figure">
 <p><img src="IGVscreenshots/RBMX.png" alt="RBMX.png" />
 </p>
 </div>
 
-<div id="org005a68d" class="figure">
+<div id="org3b90db8" class="figure">
 <p><img src="IGVscreenshots/RLIM.png" alt="RLIM.png" />
 </p>
 </div>
 
 
-<div id="org0674bdf" class="figure">
+<div id="org1863ca1" class="figure">
 <p><img src="IGVscreenshots/RBMXL3.png" alt="RBMXL3.png" />
 </p>
 </div>
 
-<div id="org75e6549" class="figure">
+<div id="orgfc1ec7b" class="figure">
 <p><img src="IGVscreenshots/RBMXL3_chr11.png" alt="RBMXL3_chr11.png" />
 </p>
 </div>
@@ -1124,10 +1124,10 @@ We are just not looking because they&rsquo;re diploid regions and seeing heteroz
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org651c923">
+<div class="sidenote" id="org01ab492">
 
-<div id="org0e66cf7" class="figure">
-<p><img src="file:///home/bar/org/.attach/11/4a6516-76ef-40e9-9eb0-b25f4a390465/_20240620_012744screenshot.png" alt="_20240620_012744screenshot.png" />
+<div id="org9671f09" class="figure">
+<p><img src="_20240620_012744screenshot.png" alt="_20240620_012744screenshot.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span><a href="https://en.wikipedia.org/wiki/Thomas_Hunt_Morgan">Discovery of gene-chromosome relation</a></p>
 </div>
@@ -1166,27 +1166,27 @@ Studying sex chromosomes shows us a different view  because of their unique inhe
 <h2 id="org714a5be"><span class="section-number-2">7.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-7">
 <p>
-<b><span class="org-glsdef" id="gls.18">NYGC</span></b>&emsp;New York Genome Center&ensp;<a class="org-glsdef" href="#glsr.18.1">1</a>
+<b><span class="org-glsdef" id="gls.11">NYGC</span></b>&emsp;New York Genome Center&ensp;<a class="org-glsdef" href="#glsr.11.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.10">PAR</span></b>&emsp;Pseudoautosomal region&ensp;<a class="org-glsdef" href="#glsr.10.1">1</a>, <a class="org-glsdef" href="#glsr.10.2">2</a>, <a class="org-glsdef" href="#glsr.10.3">3</a>, <a class="org-glsdef" href="#glsr.10.4">4</a>, <a class="org-glsdef" href="#glsr.10.5">5</a>
+<b><span class="org-glsdef" id="gls.12">PAR</span></b>&emsp;Pseudoautosomal region&ensp;<a class="org-glsdef" href="#glsr.12.1">1</a>, <a class="org-glsdef" href="#glsr.12.2">2</a>, <a class="org-glsdef" href="#glsr.12.3">3</a>, <a class="org-glsdef" href="#glsr.12.4">4</a>, <a class="org-glsdef" href="#glsr.12.5">5</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.17">VCF</span></b>&emsp;Variant Call Format&ensp;<a class="org-glsdef" href="#glsr.17.1">1</a>, <a class="org-glsdef" href="#glsr.17.2">2</a>, <a class="org-glsdef" href="#glsr.17.3">3</a>, <a class="org-glsdef" href="#glsr.17.4">4</a>
+<b><span class="org-glsdef" id="gls.10">VCF</span></b>&emsp;Variant Call Format&ensp;<a class="org-glsdef" href="#glsr.10.1">1</a>, <a class="org-glsdef" href="#glsr.10.2">2</a>, <a class="org-glsdef" href="#glsr.10.3">3</a>, <a class="org-glsdef" href="#glsr.10.4">4</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.15">XTR</span></b>&emsp;X-transposed region&ensp;<a class="org-glsdef" href="#glsr.15.1">1</a>
+<b><span class="org-glsdef" id="gls.17">XTR</span></b>&emsp;X-transposed region&ensp;<a class="org-glsdef" href="#glsr.17.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.11">XCR</span></b>&emsp;X-conserved region&ensp;<a class="org-glsdef" href="#glsr.11.1">1</a>
+<b><span class="org-glsdef" id="gls.13">XCR</span></b>&emsp;X-conserved region&ensp;<a class="org-glsdef" href="#glsr.13.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.12">XAR</span></b>&emsp;X-added region&ensp;<a class="org-glsdef" href="#glsr.12.1">1</a>
+<b><span class="org-glsdef" id="gls.14">XAR</span></b>&emsp;X-added region&ensp;<a class="org-glsdef" href="#glsr.14.1">1</a>
 </p>
 </div>
 </div>
