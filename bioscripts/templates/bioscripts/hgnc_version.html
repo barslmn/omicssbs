@@ -236,12 +236,9 @@ function drawheatmap(hgnc_id, hgnc_symbol) {
         .style("opacity", 0.8)
     }
 
-    const filteredData = data.filter( d => (d.value == "A" && d.diff ) || d.value !== "A")
-    console.log(data)
-    console.log(filteredData)
     // add the squares
     svg.selectAll()
-      .data(filteredData, function(d) {return d.group+':'+d.variable;})
+      .data(data, function(d) {return d.group+':'+d.variable;})
       .join("rect")
         .attr("x", function(d) { return x(d.group) })
         .attr("y", function(d) { return y(d.variable) })

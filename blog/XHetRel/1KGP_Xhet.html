@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-06-22 Sat 15:51 -->
+<!-- 2024-06-23 Sun 14:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Investigating male X heterozygosity in short read sequencing</title>
@@ -198,6 +198,9 @@
 <link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
 <link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<style>img{max-width:100%}</style>
+<style>details{background-color:#fff !important}</style>
+<link href="https://cdn.jsdelivr.net/npm/zoom-vanilla.js/dist/zoom.css" rel="stylesheet">
 <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
@@ -269,7 +272,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Investigating male X heterozygosity in short read sequencing</h1>
-<div class="dateauthor" id="orge50b9a0">
+<div class="dateauthor" id="orgca0ec44">
 <p>
 19 Jan 2024 — Barış Salman
 </p>
@@ -326,16 +329,16 @@ During exome sequencing analyses, we encounter heterozygous variants on the X ch
 This is not an accurate representation of biological status as males carry only one X and are hemizygous for both sex chromosomes.
 Except for the <a class="org-gls" href="#gls.2" id="glsr.2.1">pseudoautosomal regions</a>, at the beginning and the end of both chromosomes X and Y span around 3Mb together.
 This region shows homology between the chromosomes and males are &ldquo;homozygous&rdquo; for the regions.
-This homology makes it possible for chromosomes to pair during cell division and the only place where recombination can occur between X and Y. (NO_ITEM_DATA:raudseppPseudoautosomalRegionSex2012)
+This homology makes it possible for chromosomes to pair during cell division and the only place where recombination can occur between X and Y. (<a href="#citeproc_bib_item_2">Raudsepp et al. 2012</a>)
 However, the variants we are seeing are located outside of the Pseudoautosomal region
- (<a class="org-gls" href="#gls.12" id="glsr.12.1">PAR</a>) regions and are spread across chromosome X.
-There have also been other groups who come across this and used it to check for sample sex as a form of quality control.(NO_ITEM_DATA:doExomeSequencingIdentifies2015)
+ (<a class="org-gls" href="#gls.12" id="glsr.12.1">PAR</a>) and are spread across chromosome X.
+There have also been other groups who come across this and used it to check for sample sex as a form of quality control.(<a href="#citeproc_bib_item_1">Do et al. 2015</a>)
 There have been a lot of questions about this around the web with no satisfying answers.
 </p>
 
 <p>
-My question was where do thee variants are originated?
-We will be making an empirical observation by looking at the 1000 genome data.
+My question was where do these variants are originated?
+We will be making an empirical observation by looking at the 1000 genome project.
 </p>
 </div>
 
@@ -347,11 +350,7 @@ Variant callers assume a diploid genome while calling variants.
 Males are haploid for the X chromosome meaning there is only one chromosome.
 Which doesn&rsquo;t fit the worldview of the variant callers.
 What makes it even harder is the highly repetitive regions and regions that show a high degree of homology to other loci in the X chromosome.
-Haplotypecaller has a parameter to give ploidy, but since the data we are dealing with doesn&rsquo;t represent a haploid chromosome fitting it into a hemizygous genotype calls might be a challenge.
-<a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360069340411-Why-does-sample-ploidy-ploidy-option-not-work-in-HaplotypeCaller-or-GenotypeGVCFs">https://gatk.broadinstitute.org/hc/en-us/community/posts/360069340411-Why-does-sample-ploidy-ploidy-option-not-work-in-HaplotypeCaller-or-GenotypeGVCFs</a>
-<a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/4407495732635-joint-call-samples-with-different-ploidy-on-chrX-chrY-males-vs-females">https://gatk.broadinstitute.org/hc/en-us/community/posts/4407495732635-joint-call-samples-with-different-ploidy-on-chrX-chrY-males-vs-females</a>
-<a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360057847692-Calling-variants-on-chromosome-Y">https://gatk.broadinstitute.org/hc/en-us/community/posts/360057847692-Calling-variants-on-chromosome-Y</a>
-<a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360077511272-CombineGVCF-on-chrX-and-chrY-hg38-running-for-ever">https://gatk.broadinstitute.org/hc/en-us/community/posts/360077511272-CombineGVCF-on-chrX-and-chrY-hg38-running-for-ever</a>
+Haplotypecaller has a parameter to give ploidy, but since the data we are dealing with doesn&rsquo;t represent a haploid chromosome fitting it into a hemizygous genotype calls might be a challenge. <a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360069340411-Why-does-sample-ploidy-ploidy-option-not-work-in-HaplotypeCaller-or-GenotypeGVCFs">1</a>, <a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/4407495732635-joint-call-samples-with-different-ploidy-on-chrX-chrY-males-vs-females">2</a>, <a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360057847692-Calling-variants-on-chromosome-Y">3</a>, <a href="https://gatk.broadinstitute.org/hc/en-us/community/posts/360077511272-CombineGVCF-on-chrX-and-chrY-hg38-running-for-ever">4</a>
 </p>
 </div>
 </div>
@@ -361,17 +360,18 @@ Haplotypecaller has a parameter to give ploidy, but since the data we are dealin
 <h2 id="orgb5b22a4"><span class="section-number-2">2.</span> Materials and Methods</h2>
 <div class="outline-text-2" id="text-2">
 
-<div id="org3a033b3" class="figure">
-<p><img src="_20240619_105304screenshot.png" alt="_20240619_105304screenshot.png" />
+<div id="org59bb481" class="figure">
+<p><img src="_20240619_105304screenshot.png" alt="_20240619_105304screenshot.png" data-action="zoom" />
 </p>
 </div>
 
 <p>
 These are whole genome Variant Call Format
  (<a class="org-gls" href="#gls.10" id="glsr.10.1">VCF</a>) files and I can&rsquo;t download them all, luckily bcftools can query specific regions on them over the line which makes it both space and speed-efficient.
-The region we are going to query is the X chromosome without the <a class="org-gls" href="#gls.12" id="glsr.12.2">PAR</a> region.
+The region we are going to query is the X chromosome without the <a class="org-gls" href="#gls.12" id="glsr.12.2">PAR</a>.
 We are excluding the <a class="org-gls" href="#gls.12" id="glsr.12.3">PAR</a> since it&rsquo;s a diploid region.
-We are going to further filtrate the variants to be heterozygous and since this all started from ES we are just going to look at the exonic regions.
+We are going to further filtrate the variants to be heterozygous and since this all started from Exome Sequencing
+ (<a class="org-gls" href="#gls.19" id="glsr.19.1">ES</a>) we are just going to look at the exonic regions.
 To make things simpler we are going to look at SNVs since INDELs can be challenging to genotype.
 We also want to have a depth enough to decide the genotype and don&rsquo;t want anything not passing filters.
 </p>
@@ -393,7 +393,7 @@ We are going to implement all this workflow in the nextflow.
 For this job we are going to use individual variant call files from the project since multi-sample <a class="org-gls" href="#gls.10" id="glsr.10.2">VCF</a> are phased.
 Looking at the individual variant calls there are New York Genome Center
  (<a class="org-gls" href="#gls.11" id="glsr.11.1">NYGC</a>) study from 2019.
-There are two versions of these with one directory named raw<sub>calls</sub><sub>old</sub> and another directory named raw<sub>calls</sub><sub>updated</sub>.
+There are two versions of these with one directory named raw​_calls​_old and another directory named raw​_calls​_updated.
 </p>
 
 <p>
@@ -420,6 +420,20 @@ I had these as a variable while writing the workflow but looking at it now they 
 But I am not gonna change them either since it does make what&rsquo;s being done a bit more transparent.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #af3a03;">nextflow</span>.enable.dsl=<span style="color: #8f3f71; font-weight: bold;">2</span>
 
@@ -440,9 +454,11 @@ But I am not gonna change them either since it does make what&rsquo;s being done
 
 </pre>
 </div>
-</div>
-</div>
 
+
+</details>
+</div>
+</div>
 
 <div id="outline-container-orgad00cf0" class="outline-3">
 <h3 id="orgad00cf0"><span class="section-number-3">2.3.</span> Getting the sample metadata</h3>
@@ -458,9 +474,23 @@ This link makes an API call to another link with the given columns and returns t
 Since we are only looking for the sex of the individuals we only need the fields name and sex but since they&rsquo;re under the population directories we are also going to need the population codes.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org4f5cd36">
+<div class="sidenote" id="orge6b578d">
 <p>
 The characters with preceding percent sign are encoded versions of characters like {, [, &ldquo;, ], }.
 Because only ASCII character are allowed in the URLs.
@@ -477,6 +507,9 @@ Because only ASCII character are allowed in the URLs.
 -o <span style="color: #79740e;">"igsr_samples.tsv"</span>
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -484,10 +517,24 @@ Because only ASCII character are allowed in the URLs.
 <h3 id="org26a07f8"><span class="section-number-3">2.4.</span> Getting the exon boundaries</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
-Since we are interested in getting the exons, we need to filter for them, and for that, we need the exon boundaries.
+Since we are interested in the exons, we need to filter for them, and for that, we need the exon boundaries.
 We can get it using the annotation file from the RefSeq.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">process</span> <span style="color: #b57614;">createbedfile</span> {
     <span style="color: #9d0006;">output</span>:
@@ -517,8 +564,11 @@ We can get it using the annotation file from the RefSeq.
 </pre>
 </div>
 
+
+</details>
+
 <p>
-This is an awk command which cleans up the chromosome names and splits the info column to write the exon id to fourth bed column.
+This is an AWK command which cleans up the chromosome names and splits the info column to write the exon id to fourth BED column.
 </p>
 </div>
 </div>
@@ -529,9 +579,24 @@ This is an awk command which cleans up the chromosome names and splits the info 
 <p>
 For each of our samples, we create the URL for the <a class="org-gls" href="#gls.10" id="glsr.10.3">VCF</a> file and we pass it to bcftools where we perform the filtering and write it to a BCF file named after the sample.
 </p>
+
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org34c0273">
+<div class="sidenote" id="org6a7ac37">
 <p>
 BCFs are more performant than <a class="org-gls" href="#gls.10" id="glsr.10.4">VCFs</a>.
 <a href="https://www.biostars.org/p/273673/">https://www.biostars.org/p/273673/</a>
@@ -567,12 +632,29 @@ BCFs are more performant than <a class="org-gls" href="#gls.10" id="glsr.10.4">V
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
 <div id="outline-container-orgdb192a8" class="outline-3">
 <h3 id="orgdb192a8"><span class="section-number-3">2.6.</span> Merging the BCF files</h3>
 <div class="outline-text-3" id="text-2-6">
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">process</span> <span style="color: #b57614;">mergebcf</span> {
     <span style="color: #9d0006;">input</span>:
@@ -591,6 +673,9 @@ BCFs are more performant than <a class="org-gls" href="#gls.10" id="glsr.10.4">V
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -600,6 +685,21 @@ BCFs are more performant than <a class="org-gls" href="#gls.10" id="glsr.10.4">V
 <p>
 Bcftools is the workhorse of this pipeline.
 </p>
+
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">process</span> <span style="color: #b57614;">getgenotypes</span> {
     <span style="color: #9d0006;">input</span>:
@@ -620,6 +720,9 @@ Bcftools is the workhorse of this pipeline.
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -630,9 +733,23 @@ Bcftools is the workhorse of this pipeline.
 To count we are using awk, and printing them out in a bedGraph format.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org5a3e541">
+<div class="sidenote" id="org0236e14">
 <p>
 <a href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a>
 </p>
@@ -665,6 +782,9 @@ To count we are using awk, and printing them out in a bedGraph format.
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -675,6 +795,20 @@ To count we are using awk, and printing them out in a bedGraph format.
 This is pretty much the same as <a href="#org26a07f8">what we did with the exons</a> but with the genes.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">process</span> <span style="color: #b57614;">creategenebed</span> {
     <span style="color: #9d0006;">output</span>:
@@ -702,6 +836,9 @@ This is pretty much the same as <a href="#org26a07f8">what we did with the exons
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -718,6 +855,20 @@ Two similar tasks are being performed here only difference between the commands 
 We perform the same operation for both of them by getting the top 20 and merging back the gene positions.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">process</span> <span style="color: #b57614;">getgenecounts</span> {
 
@@ -754,6 +905,9 @@ We perform the same operation for both of them by getting the top 20 and merging
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 
@@ -764,6 +918,20 @@ We perform the same operation for both of them by getting the top 20 and merging
 Here only notable parts are; that we are splitting the samplesheet and filtering by male and collecting the bcf files before passing to them to <code>mergebcf</code> process.
 </p>
 
+<details class="code-details"
+                 style ="padding: 1em;
+                          background-color: #e5f5e5;
+                          border-radius: 15px;
+                          color: hsl(157 75%);
+                          font-size: 0.9em;
+                          box-shadow: 0.05em 0.1em 5px 0.01em  #00000057;">
+                  <summary>
+                    <strong>
+                      <font face="Courier" size="3" color="green">
+                         Click to see the implementation
+                      </font>
+                    </strong>
+                  </summary>
 <div class="org-src-container">
 <pre class="src src-nextflow"><span style="color: #9d0006;">workflow</span> {
     getsamplesheet()
@@ -788,6 +956,9 @@ Here only notable parts are; that we are splitting the samplesheet and filtering
 }
 </pre>
 </div>
+
+
+</details>
 </div>
 </div>
 </div>
@@ -801,7 +972,13 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above"><span class="table-number">Table 1:</span> Sum of the heterozygous genotype counts in given gene.</caption>
+<caption class="t-above"><span class="table-number">Table 1:</span> First group shows the sum of the heterozygous genotype counts in given gene. Second group shows the count of heterozygous positions in given gene.</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
 
 <colgroup>
 <col  class="org-left" />
@@ -812,231 +989,156 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 <tr>
 <th scope="col" class="org-left">symbol</th>
 <th scope="col" class="org-right">sum of genotype counts</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">SLC25A5</td>
-<td class="org-right">30694</td>
-</tr>
-
-<tr>
-<td class="org-left">RLIM</td>
-<td class="org-right">10839</td>
-</tr>
-
-<tr>
-<td class="org-left">PABPC1P3</td>
-<td class="org-right">10824</td>
-</tr>
-
-<tr>
-<td class="org-left">RBMX</td>
-<td class="org-right">10370</td>
-</tr>
-
-<tr>
-<td class="org-left">XAGE3</td>
-<td class="org-right">3537</td>
-</tr>
-
-<tr>
-<td class="org-left">MAGEC1</td>
-<td class="org-right">2120</td>
-</tr>
-
-<tr>
-<td class="org-left">ZXDB</td>
-<td class="org-right">1135</td>
-</tr>
-
-<tr>
-<td class="org-left">CT45A3</td>
-<td class="org-right">937</td>
-</tr>
-
-<tr>
-<td class="org-left">GAGE2A</td>
-<td class="org-right">606</td>
-</tr>
-
-<tr>
-<td class="org-left">PTCHD1-AS</td>
-<td class="org-right">597</td>
-</tr>
-
-<tr>
-<td class="org-left">DDX53</td>
-<td class="org-right">596</td>
-</tr>
-
-<tr>
-<td class="org-left">SPANXB1</td>
-<td class="org-right">572</td>
-</tr>
-
-<tr>
-<td class="org-left">GAGE12B</td>
-<td class="org-right">564</td>
-</tr>
-
-<tr>
-<td class="org-left">PWWP4</td>
-<td class="org-right">517</td>
-</tr>
-
-<tr>
-<td class="org-left">SPANXD</td>
-<td class="org-right">493</td>
-</tr>
-
-<tr>
-<td class="org-left">VCX3B</td>
-<td class="org-right">436</td>
-</tr>
-
-<tr>
-<td class="org-left">GAGE13</td>
-<td class="org-right">393</td>
-</tr>
-
-<tr>
-<td class="org-left">VCX</td>
-<td class="org-right">338</td>
-</tr>
-
-<tr>
-<td class="org-left">GAGE10</td>
-<td class="org-right">310</td>
-</tr>
-
-<tr>
-<td class="org-left">LRCH2</td>
-<td class="org-right">290</td>
-</tr>
-</tbody>
-</table>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption class="t-above"><span class="table-number">Table 2:</span> Count of heterozygous positions in given gene.</caption>
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-right" />
-</colgroup>
-<thead>
-<tr>
 <th scope="col" class="org-left">symbol</th>
 <th scope="col" class="org-right">number of het positions</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left">LRCH2</td>
+<td class="org-left"><i>SLC25A5</i></td>
+<td class="org-right">30694</td>
+<td class="org-left"><i>LRCH2</i></td>
 <td class="org-right">169</td>
 </tr>
 
 <tr>
-<td class="org-left">RBMXL3</td>
+<td class="org-left"><i>RLIM</i></td>
+<td class="org-right">10839</td>
+<td class="org-left"><i>RBMXL3</i></td>
 <td class="org-right">162</td>
 </tr>
 
 <tr>
-<td class="org-left">PWWP4</td>
+<td class="org-left"><i>PABPC1P3</i></td>
+<td class="org-right">10824</td>
+<td class="org-left"><i>PWWP4</i></td>
 <td class="org-right">120</td>
 </tr>
 
 <tr>
-<td class="org-left">SLC25A5</td>
+<td class="org-left"><i>RBMX</i></td>
+<td class="org-right">10370</td>
+<td class="org-left"><i>SLC25A5</i></td>
 <td class="org-right">79</td>
 </tr>
 
 <tr>
-<td class="org-left">MAGEC1</td>
+<td class="org-left"><i>XAGE3</i></td>
+<td class="org-right">3537</td>
+<td class="org-left"><i>MAGEC1</i></td>
 <td class="org-right">72</td>
 </tr>
 
 <tr>
-<td class="org-left">ARMCX4</td>
+<td class="org-left"><i>MAGEC1</i></td>
+<td class="org-right">2120</td>
+<td class="org-left"><i>ARMCX4</i></td>
 <td class="org-right">63</td>
 </tr>
 
 <tr>
-<td class="org-left">VCX3A</td>
+<td class="org-left"><i>ZXDB</i></td>
+<td class="org-right">1135</td>
+<td class="org-left"><i>VCX3A</i></td>
 <td class="org-right">63</td>
 </tr>
 
 <tr>
-<td class="org-left">MAGEE1</td>
+<td class="org-left"><i>CT45A3</i></td>
+<td class="org-right">937</td>
+<td class="org-left"><i>MAGEE1</i></td>
 <td class="org-right">58</td>
 </tr>
 
 <tr>
-<td class="org-left">SPANXB1</td>
+<td class="org-left"><i>GAGE2A</i></td>
+<td class="org-right">606</td>
+<td class="org-left"><i>SPANXB1</i></td>
 <td class="org-right">56</td>
 </tr>
 
 <tr>
-<td class="org-left">FAM47C</td>
+<td class="org-left"><i>PTCHD1-AS</i></td>
+<td class="org-right">597</td>
+<td class="org-left"><i>FAM47C</i></td>
 <td class="org-right">48</td>
 </tr>
 
 <tr>
-<td class="org-left">RLIM</td>
+<td class="org-left"><i>DDX53</i></td>
+<td class="org-right">596</td>
+<td class="org-left"><i>RLIM</i></td>
 <td class="org-right">47</td>
 </tr>
 
 <tr>
-<td class="org-left">PABPC1P3</td>
+<td class="org-left"><i>SPANXB1</i></td>
+<td class="org-right">572</td>
+<td class="org-left"><i>PABPC1P3</i></td>
 <td class="org-right">41</td>
 </tr>
 
 <tr>
-<td class="org-left">NKAP</td>
+<td class="org-left"><i>GAGE12B</i></td>
+<td class="org-right">564</td>
+<td class="org-left"><i>NKAP</i></td>
 <td class="org-right">40</td>
 </tr>
 
 <tr>
-<td class="org-left">TEX13C</td>
+<td class="org-left"><i>PWWP4</i></td>
+<td class="org-right">517</td>
+<td class="org-left"><i>TEX13C</i></td>
 <td class="org-right">40</td>
 </tr>
 
 <tr>
-<td class="org-left">RBMX</td>
+<td class="org-left"><i>SPANXD</i></td>
+<td class="org-right">493</td>
+<td class="org-left"><i>RBMX</i></td>
 <td class="org-right">37</td>
 </tr>
 
 <tr>
-<td class="org-left">TRAPPC2</td>
+<td class="org-left"><i>VCX3B</i></td>
+<td class="org-right">436</td>
+<td class="org-left"><i>TRAPPC2</i></td>
 <td class="org-right">35</td>
 </tr>
 
 <tr>
-<td class="org-left">FGF13</td>
+<td class="org-left"><i>GAGE13</i></td>
+<td class="org-right">393</td>
+<td class="org-left"><i>FGF13</i></td>
 <td class="org-right">34</td>
 </tr>
 
 <tr>
-<td class="org-left">GAGE2A</td>
+<td class="org-left"><i>VCX</i></td>
+<td class="org-right">338</td>
+<td class="org-left"><i>GAGE2A</i></td>
 <td class="org-right">34</td>
 </tr>
 
 <tr>
-<td class="org-left">NR0B1</td>
+<td class="org-left"><i>GAGE10</i></td>
+<td class="org-right">310</td>
+<td class="org-left"><i>NR0B1</i></td>
 <td class="org-right">33</td>
 </tr>
 
 <tr>
-<td class="org-left">VCX</td>
+<td class="org-left"><i>LRCH2</i></td>
+<td class="org-right">290</td>
+<td class="org-left"><i>VCX</i></td>
 <td class="org-right">33</td>
 </tr>
 </tbody>
 </table>
 
 
-<div id="orgd3eaf66" class="figure">
-<p><img src="_20240619_182836screenshot.png" alt="_20240619_182836screenshot.png" />
+<div id="org4b28dcd" class="figure">
+<p><img src="_20240619_182836screenshot.png" alt="_20240619_182836screenshot.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Sum of genotype counts with close up to some genes. There are four tracks here. The first track shows the genotype counts along the whole chromosome X. Second track is the major regions in chromosome X (<a class="org-gls" href="#gls.12" id="glsr.12.5">PAR</a>, X-added region
  (<a class="org-gls" href="#gls.14" id="glsr.14.1">XAR</a>), X-conserved region
@@ -1048,45 +1150,59 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 To further investigate I run the BLAT tool on IGV on some of the hits. The tracks with the gray bars show the BLAT matches.
 </p>
 
-<div id="orga1d425f" class="figure">
-<p><img src="IGVscreenshots/SLC25A5.png" alt="SLC25A5.png" />
+<div id="orgaf43def" class="figure">
+<p><img src="IGVscreenshots/SLC25A5.png" alt="SLC25A5.png" data-action="zoom" />
 </p>
-</div>
-
-<div id="orgab96f04" class="figure">
-<p><img src="IGVscreenshots/SLC25A5_chr2.png" alt="SLC25A5_chr2.png" />
-</p>
-</div>
-
-<div id="orgeb96773" class="figure">
-<p><img src="IGVscreenshots/SLC25A5_chr7.png" alt="SLC25A5_chr7.png" />
-</p>
-</div>
-
-<div id="org763c596" class="figure">
-<p><img src="IGVscreenshots/SLC25A5_chr9.png" alt="SLC25A5_chr9.png" />
-</p>
-</div>
-
-<div id="org71d4486" class="figure">
-<p><img src="IGVscreenshots/RBMX.png" alt="RBMX.png" />
-</p>
-</div>
-
-<div id="org3b90db8" class="figure">
-<p><img src="IGVscreenshots/RLIM.png" alt="RLIM.png" />
-</p>
+<p><span class="figure-number">Figure 2: </span>BLAT query of <i>SLC25A5</i>  on chrX.</p>
 </div>
 
 
-<div id="org1863ca1" class="figure">
-<p><img src="IGVscreenshots/RBMXL3.png" alt="RBMXL3.png" />
+<div id="org44bf7c6" class="figure">
+<p><img src="IGVscreenshots/SLC25A5_chr2.png" alt="SLC25A5_chr2.png" data-action="zoom" />
 </p>
+<p><span class="figure-number">Figure 3: </span>BLAT query of <i>SLC25A5</i>  on chr2.</p>
 </div>
 
-<div id="orgfc1ec7b" class="figure">
-<p><img src="IGVscreenshots/RBMXL3_chr11.png" alt="RBMXL3_chr11.png" />
+
+<div id="org9f2f2db" class="figure">
+<p><img src="IGVscreenshots/SLC25A5_chr7.png" alt="SLC25A5_chr7.png" data-action="zoom" />
 </p>
+<p><span class="figure-number">Figure 4: </span>BLAT query of <i>SLC25A5</i>  on chr7.</p>
+</div>
+
+
+<div id="org9cfa52e" class="figure">
+<p><img src="IGVscreenshots/SLC25A5_chr9.png" alt="SLC25A5_chr9.png" data-action="zoom" />
+</p>
+<p><span class="figure-number">Figure 5: </span>BLAT query of <i>SLC25A5</i>  on chr9.</p>
+</div>
+
+
+<div id="org938d197" class="figure">
+<p><img src="IGVscreenshots/RBMX.png" alt="RBMX.png" data-action="zoom" />
+</p>
+<p><span class="figure-number">Figure 6: </span>BLAT query of <i>RBMX</i> on chrX.</p>
+</div>
+
+
+<div id="org0e82b03" class="figure">
+<p><img src="IGVscreenshots/RLIM.png" alt="RLIM.png" data-action="zoom" />
+</p>
+<p><span class="figure-number">Figure 7: </span>BLAT query of <i>RLIM</i> on chrX.</p>
+</div>
+
+
+<div id="orge2b4308" class="figure">
+<p><img src="IGVscreenshots/RBMXL3.png" alt="RBMXL3.png" data-action="zoom" />
+</p>
+<p><span class="figure-number">Figure 8: </span>BLAT query of <i>RBMXL3</i> on chrX.</p>
+</div>
+
+
+<div id="org2641cc8" class="figure">
+<p><img src="IGVscreenshots/RBMXL3_chr11.png" alt="RBMXL3_chr11.png" data-action="zoom" />
+</p>
+<p><span class="figure-number">Figure 9: </span>BLAT query of <i>RBMXL3</i> on chr11.</p>
 </div>
 </div>
 </div>
@@ -1124,12 +1240,12 @@ We are just not looking because they&rsquo;re diploid regions and seeing heteroz
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org01ab492">
+<div class="sidenote" id="orga199672">
 
-<div id="org9671f09" class="figure">
+<div id="org787f871" class="figure">
 <p><img src="_20240620_012744screenshot.png" alt="_20240620_012744screenshot.png" />
 </p>
-<p><span class="figure-number">Figure 2: </span><a href="https://en.wikipedia.org/wiki/Thomas_Hunt_Morgan">Discovery of gene-chromosome relation</a></p>
+<p><span class="figure-number">Figure 10: </span><a href="https://en.wikipedia.org/wiki/Thomas_Hunt_Morgan">Discovery of gene-chromosome relation</a></p>
 </div>
 
 </div>
@@ -1143,8 +1259,8 @@ Studying sex chromosomes shows us a different view  because of their unique inhe
 <h2 id="orgfb0f29a"><span class="section-number-2">5.</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
-  <div class="csl-entry">NO_ITEM_DATA:raudseppPseudoautosomalRegionSex2012</div>
-  <div class="csl-entry">NO_ITEM_DATA:doExomeSequencingIdentifies2015</div>
+  <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Do, Ron, Nathan O. Stitziel, Hong-Hee Won, Anders Berg Jørgensen, Stefano Duga, Pier Angelica Merlini, Adam Kiezun, et al. 2015. “Exome Sequencing Identifies Rare LDLR and APOA5 Alleles Conferring Risk for Myocardial Infarction.” <i>Nature</i> 518 (7537): 102–6. <a href="https://doi.org/10.1038/nature13917">https://doi.org/10.1038/nature13917</a>.</div>
+  <div class="csl-entry"><a id="citeproc_bib_item_2"></a>Raudsepp, T., P. J. Das, F. Avila, and B. P. Chowdhary. 2012. “The Pseudoautosomal Region and Sex Chromosome Aneuploidies in Domestic Species.” <i>Sexual Development: Genetics, Molecular Biology, Evolution, Endocrinology, Embryology, and Pathology of Sex Determination and Differentiation</i> 6 (1-3): 72–83. <a href="https://doi.org/10.1159/000330627">https://doi.org/10.1159/000330627</a>.</div>
 </div>
 </div>
 </div>
@@ -1165,6 +1281,10 @@ Studying sex chromosomes shows us a different view  because of their unique inhe
 <div id="outline-container-org714a5be" class="outline-2">
 <h2 id="org714a5be"><span class="section-number-2">7.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-7">
+<p>
+<b><span class="org-glsdef" id="gls.19">ES</span></b>&emsp;Exome Sequencing&ensp;<a class="org-glsdef" href="#glsr.19.1">1</a>
+</p>
+
 <p>
 <b><span class="org-glsdef" id="gls.11">NYGC</span></b>&emsp;New York Genome Center&ensp;<a class="org-glsdef" href="#glsr.11.1">1</a>
 </p>
@@ -1198,6 +1318,8 @@ Studying sex chromosomes shows us a different view  because of their unique inhe
 <section id="isso-thread">
 <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/zoom-vanilla.js/dist/zoom-vanilla.min.js" type="text/javascript"></script>
 </div>
 </div>
 </div>
