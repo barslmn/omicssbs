@@ -106,7 +106,7 @@ document.addEventListener("click", function (e) {
 
 <!--Make sure the form has the autocomplete function switched off:-->
 
-<form style="position:absolute;" autocomplete="off" action="/action_page.php">
+<form style="position:absolute;" autocomplete="off" action="">
   <div class="autocomplete fancy" style="width:300px;">
     <input id="id_symbol" type="text" name="id_symbol" placeholder="Enter a HGNC gene symbol">
   </div>
@@ -159,7 +159,7 @@ function drawheatmap(hgnc_id, hgnc_symbol) {
     "2022-07-01", "2022-09-01", "2022-10-01", "2023-01-01", "2023-03-02",
     "2023-04-01", "2023-05-01", "2023-06-01", "2023-07-01", "2023-08-01",
     "2023-09-01", "2023-10-01", "2023-11-01", "2023-12-01", "2024-01-01",
-    "2024-02-01", "2024-03-01",
+    "2024-02-01", "2024-03-01", "2024-04-01", "2024-06-04",
   ]
   //Read the data
   heatmap_data_url="/bioscripts/hgnc_version/heatmap_data/".concat(hgnc_id)
@@ -199,7 +199,7 @@ function drawheatmap(hgnc_id, hgnc_symbol) {
 
     // Build color scale
   const myColor = d3.scaleOrdinal()
-    .domain(["M", "A"]) // Values in your data
+    .domain(["M", "D", "A"]) // Values in your data
     .range(d3.schemeCategory10);
 
     // create a tooltip
@@ -236,7 +236,7 @@ function drawheatmap(hgnc_id, hgnc_symbol) {
         .style("opacity", 0.8)
     }
 
-    const filteredData = data.filter(d => d.diff !== "");
+    const filteredData = data.filter( d => (d.value == "A" && d.diff ) || d.value !== "A")
     console.log(data)
     console.log(filteredData)
     // add the squares
@@ -258,7 +258,7 @@ function drawheatmap(hgnc_id, hgnc_symbol) {
       .on("mouseleave", mouseleave)
 
 // Define legend data
-const legendData = ["Modified", "Added"];
+const legendData = ["Modified", "Deleted", "Added"];
 
 // Define legend dimensions
 const legendWidth = 100; // Adjust width as needed
