@@ -39,3 +39,41 @@ window.onload=function() {
   // }
   typeFaceToggle.title = localStorage.typeface || "Libertinus";
 };
+
+let processScroll = () => {
+	let docElem = document.documentElement,
+		docBody = document.body,
+		scrollTop = docElem['scrollTop'] || docBody['scrollTop'],
+    	scrollBottom = (docElem['scrollHeight'] || docBody['scrollHeight']) - window.innerHeight,
+		scrollPercent = scrollTop / scrollBottom * 100 + '%';
+
+	// console.log(scrollTop + ' / ' + scrollBottom + ' / ' + scrollPercent);
+
+    document.getElementById("progress-bar").style.setProperty("--scrollAmount", scrollPercent);
+}
+
+document.addEventListener('scroll', processScroll);
+
+// interactive TOC
+// const toc = document.getElementById("table-of-contents");
+// // skip first callback when first observing
+// let firstCallback = true;
+// const observer = new IntersectionObserver(entries => {
+//   if (!entries[0].isIntersecting) {
+//      if (firstCallback) {
+//        firstCallback = false;
+//      } else {
+//        console.log("Scrolled passed the TOC");
+
+//        side_toc = toc.cloneNode(true)
+//        side_toc.id = "side-toc"
+//        content = document.getElementById("content")
+//        content.appendChild(side_toc)
+//      }
+//   } else {
+//     console.log("TOC in view")
+//     side_toc = document.getElementById("side-toc")
+//     side_toc.remove()
+//   }
+// });
+// observer.observe(toc);
