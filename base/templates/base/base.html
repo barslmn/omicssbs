@@ -18,6 +18,8 @@
     <title>{% block title %}omics.sbs{% endblock %}</title>
     <script async src="https://analytics.umami.is/script.js"
         data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
+
+    {% block extra_head %} {% endblock %}
 </head>
 
 <body class="libertinus">
@@ -45,6 +47,9 @@
         </li>
         <li>
             <a href="{% url 'base:notes' %}">Notes</a>
+        </li>
+        <li>
+            <a href="{% url 'base:photos' %}">Photos</a>
         </li>
         <li>
             <a href="{% url 'bioscripts:index' %}">Bioscripts</a>

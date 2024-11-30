@@ -1,0 +1,62 @@
+{% extends "base/base.html" %} {% load static %} {% block extra_head %}
+<link
+  type="text/css"
+  rel="stylesheet"
+  href="{% static 'base/lg/css/lightgallery.css' %}"
+/>
+
+<!-- lightgallery plugins -->
+<link
+  type="text/css"
+  rel="stylesheet"
+  href="{% static 'base/lg/css/lg-zoom.css' %}"
+/>
+<link
+  type="text/css"
+  rel="stylesheet"
+  href="{% static 'base/lg/css/lg-thumbnail.css' %}"
+/>
+
+<script src="{% static 'base/lg/lightgallery.min.js' %}"></script>
+
+<!-- lightgallery plugins -->
+<script src="{% static 'base/lg/plugins/thumbnail/lg-thumbnail.umd.js' %}"></script>
+<script src="{% static 'base/lg/plugins/zoom/lg-zoom.umd.js' %}"></script>
+{% endblock %} {% block content %}
+
+<!-- <a href="https://omics.sbs/photos/">
+  <img alt="img1" src="https://omics.sbs/photos/" />
+</a> -->
+
+<div id="lightgallery">
+  <a href="https://omics.sbs/photos/_DSC0899.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/_DSC0899.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/DSC_2094.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/DSC_2094.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/DSC_2238.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/DSC_2238.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/_DSC4521.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/_DSC4521.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/_DSC4846.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/_DSC4846.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/_DSC4890.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/_DSC4890.JPG" />
+  </a>
+  <a href="https://omics.sbs/photos/_DSC5173.JPG">
+    <img alt="img1" src="https://omics.sbs/photos/_DSC5173.JPG" />
+  </a>
+</div>
+
+<script type="text/javascript">
+  lightGallery(document.getElementById("lightgallery"), {
+    plugins: [lgZoom, lgThumbnail],
+    speed: 500,
+  });
+</script>
+
+{% endblock %}
