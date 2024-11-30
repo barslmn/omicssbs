@@ -28,43 +28,63 @@
   <img alt="img1" src="https://omics.sbs/photos/" />
 </a> -->
 
-<div id="lightgallery">
+<div class="container" id="lightgallery">
   <a href="https://omics.sbs/photos_/_DSC0899.JPG">
-    <img alt="Asu" src="https://omics.sbs/photos_/_DSC0899.JPG" />
+    <img alt="Asu" src="https://omics.sbs/photos_/_DSC0899.thumb.JPG" />
   </a>
   <a href="https://omics.sbs/photos_/DSC_2094.JPG">
     <img
       alt="Iphiclides podalirius"
-      src="https://omics.sbs/photos_/DSC_2094.JPG"
+      src="https://omics.sbs/photos_/DSC_2094.thumb.JPG"
     />
   </a>
   <a href="https://omics.sbs/photos_/DSC_2238.JPG">
-    <img alt="Hoverfly" src="https://omics.sbs/photos_/DSC_2238.JPG" />
+    <img alt="Hoverfly" src="https://omics.sbs/photos_/DSC_2238.thumb.JPG" />
   </a>
   <a href="https://omics.sbs/photos_/_DSC4521.JPG">
-    <img alt="Corvus cornix" src="https://omics.sbs/photos_/_DSC4521.JPG" />
+    <img
+      alt="Corvus cornix"
+      src="https://omics.sbs/photos_/_DSC4521.thumb.JPG"
+    />
   </a>
   <a href="https://omics.sbs/photos_/_DSC4846.JPG">
     <img
       alt="Laodicea western theatre"
-      src="https://omics.sbs/photos_/_DSC4846.JPG"
+      src="https://omics.sbs/photos_/_DSC4846.thumb.JPG"
     />
   </a>
   <a href="https://omics.sbs/photos_/_DSC4890.JPG">
-    <img alt="Laodicea roosters" src="https://omics.sbs/photos_/_DSC4890.JPG" />
+    <img
+      alt="Laodicea roosters"
+      src="https://omics.sbs/photos_/_DSC4890.thumb.JPG"
+    />
   </a>
   <a href="https://omics.sbs/photos_/_DSC5173.JPG">
     <img
       alt="Basilica of St. John"
-      src="https://omics.sbs/photos_/_DSC5173.JPG"
+      src="https://omics.sbs/photos_/_DSC5173.thumb.JPG"
     />
   </a>
 </div>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px 12px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      ". . . ."
+      ". . . .";
+  }
+</style>
 
 <script type="text/javascript">
   lightGallery(document.getElementById("lightgallery"), {
     plugins: [lgZoom, lgThumbnail],
     speed: 500,
+    thumbnail: true,
   });
 </script>
 
