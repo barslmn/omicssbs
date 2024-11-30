@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-06-22 Sat 13:51 -->
+<!-- 2024-11-30 Sat 13:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Updating a Debian Package</title>
@@ -268,7 +268,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Updating a Debian Package</h1>
-<div class="post-tag" id="org19d85fe">
+<div class="post-tag" id="org71aa2d8">
 <p>
 30 December 2023 — Barış Salman
 </p>
@@ -291,7 +291,7 @@ One is <code>testing</code> where packages are tested before they’re settled a
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgc02eade">
+<div class="sidenote" id="orgf375846">
 <p>
 I have never added any third-party repositories.
 </p>
@@ -311,7 +311,7 @@ I was doing the camera mirroring with scrcpy by opening the <a href="https://ope
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org915c2bd">
+<div class="sidenote" id="org40caf64">
 <p>
 I performed all of these in a virtual machine, because I don&rsquo;t wanna install build dependencies to my system and VM is a more sterile environment.
 </p>
@@ -368,7 +368,7 @@ We bump the version number too.
 </pre>
 </div>
 
-<pre class="example" id="org07813b0">
+<pre class="example" id="org177c3ec">
 bar@debiantestin:~/scrcpy$ git diff
 diff --git a/debian/changelog b/debian/changelog
 index 9ab8307b..31946e07 100644
@@ -401,7 +401,7 @@ Lastly, we built the Debian package as instructed <a href="https://wiki.debian.o
 </p>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org83b17f9">
+<div class="sidenote" id="org3d66b56">
 <p>
 debuild command is part of the devscripts package.
 Besides installing dependencies with build-dep command I also needed the <code>android-libboringssl</code> package.
@@ -411,10 +411,11 @@ Besides installing dependencies with build-dep command I also needed the <code>a
 
 
 
-<pre class="example">
-sudo apt-get build-dep scrcpy
+<div class="org-src-container">
+<pre class="src src-nil">sudo apt-get build-dep scrcpy
 debuild -i -us -uc -b
 </pre>
+</div>
 
 
 <p>

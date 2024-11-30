@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-06-24 Mon 01:45 -->
+<!-- 2024-11-30 Sat 13:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HGNC Version Control</title>
@@ -272,7 +272,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">HGNC Version Control</h1>
-<div class="post-tag" id="orgd041a7b">
+<div class="post-tag" id="org4fa29b9">
 <p>
 24 Jun 2024 — Barış Salman
 </p>
@@ -292,38 +292,37 @@ Links
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8b6bec6">1. Introduction</a></li>
-<li><a href="#org12d6d73">2. Implementation</a>
+<li><a href="#orgbbe3959">1. Introduction</a></li>
+<li><a href="#org3827d6a">2. Implementation</a>
 <ul>
-<li><a href="#org1fa703b">2.1. Why git?</a></li>
-<li><a href="#org42cad90">2.2. Why not just diff the whole file?</a></li>
-<li><a href="#org61f7e36">2.3. Notes on storage</a></li>
+<li><a href="#org4e0bf3a">2.1. Why git?</a></li>
+<li><a href="#org3e53026">2.2. Why not just diff the whole file?</a></li>
+<li><a href="#org023fb17">2.3. Notes on storage</a></li>
 </ul>
 </li>
-<li><a href="#org6772302">3. App</a></li>
-<li><a href="#org346bcdc">Appendix</a>
+<li><a href="#orgb5c8597">3. App</a></li>
+<li><a href="#org11268d4">Appendix</a>
 <ul>
-<li><a href="#orga798a1a">HGNC parse and commit script</a></li>
-<li><a href="#org65b5079">Visualization frontend</a></li>
-<li><a href="#org5a4900f">Django backend</a></li>
+<li><a href="#orgd0729b8">HGNC parse and commit script</a></li>
+<li><a href="#orgad64509">Visualization frontend</a></li>
+<li><a href="#org231c2f8">Django backend</a></li>
 </ul>
 </li>
-<li><a href="#org296af6a">4. References</a></li>
-<li><a href="#orgfeb0f2b">5. Acronyms</a></li>
-<li><a href="#orgbf56257">Comments</a></li>
+<li><a href="#orga251a35">4. References</a></li>
+<li><a href="#org0962011">5. Acronyms</a></li>
+<li><a href="#orge3fdd9d">Comments</a></li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org8b6bec6" class="outline-2">
-<h2 id="org8b6bec6"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-orgbbe3959" class="outline-2">
+<h2 id="orgbbe3959"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This will be the start of a series of posts about tracking versions of the genetic concepts of gene symbols, transcripts, and variants.
 Gene is a hard-to-define concept.
 HUGO Gene Nomenclature Committee
- (<a class="org-gls" href="#gls.20" id="glsr.20.1">HGNC</a>) is the authority that curates the human gene symbols.
-The <a class="org-gls" href="#gls.20" id="glsr.20.2">HGNC</a> guidelines page summarizes genes in the following sections:
+ (<a class="org-gls" href="#gls.1" id="glsr.1.1">HGNC</a>) is the authority that curates the human gene symbols.
+The <a class="org-gls" href="#gls.1" id="glsr.1.2">HGNC</a> guidelines page summarizes genes in the following sections:
 </p>
 <ul class="org-ul">
 <li>Protein coding genes</li>
@@ -336,7 +335,7 @@ The <a class="org-gls" href="#gls.20" id="glsr.20.2">HGNC</a> guidelines page su
 <p>
 Gene symbols and their other annotations are not static and change.
 Especially with newer technologies like perturb-seq we are now discovering more of their biological functions and naming them accordingly. (<a href="#citeproc_bib_item_1">Replogle et al. 2022</a>)
-<a class="org-gls" href="#gls.20" id="glsr.20.3">HGNC</a> summarize the new gene and gene family entries, and what changed in their 2023 paper. (<a href="#citeproc_bib_item_2">Seal et al. 2022</a>)
+<a class="org-gls" href="#gls.1" id="glsr.1.3">HGNC</a> summarize the new gene and gene family entries, and what changed in their 2023 paper. (<a href="#citeproc_bib_item_2">Seal et al. 2022</a>)
 </p>
 
 <p>
@@ -346,9 +345,8 @@ I wanted something a bit more comprehensive than these monthly changes and the a
 </p>
 </div>
 </div>
-
-<div id="outline-container-org12d6d73" class="outline-2">
-<h2 id="org12d6d73"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org3827d6a" class="outline-2">
+<h2 id="org3827d6a"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 For this, I come up with the following:
@@ -357,7 +355,7 @@ For this, I come up with the following:
 <li>We create a git repository.</li>
 <li>We flatten the tables to the files:
 <ul class="org-ul">
-<li><a class="org-gls" href="#gls.20" id="glsr.20.4">HGNC</a> IDs as the subdirectories, columns as file names and the rows as the data in the files.</li>
+<li><a class="org-gls" href="#gls.1" id="glsr.1.4">HGNC</a> IDs as the subdirectories, columns as file names and the rows as the data in the files.</li>
 </ul></li>
 <li>We then commit and tag the month.</li>
 <li>Repeat steps 2 and 3 for every month.</li>
@@ -366,14 +364,13 @@ For this, I come up with the following:
 </ol>
 
 
-<div id="org4806b58" class="figure">
+<div id="orgceaaa2e" class="figure">
 <p><img src="_20240401_120126screenshot.png" alt="_20240401_120126screenshot.png" data-action="zoom" />
 </p>
 </div>
 </div>
-
-<div id="outline-container-org1fa703b" class="outline-3">
-<h3 id="org1fa703b"><span class="section-number-3">2.1.</span> Why git?</h3>
+<div id="outline-container-org4e0bf3a" class="outline-3">
+<h3 id="org4e0bf3a"><span class="section-number-3">2.1.</span> Why git?</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Git is the first thing that comes to mind when version control is concerned.
@@ -382,9 +379,8 @@ It may be more performant or easier to maintain in a database like dolt, or usin
 </p>
 </div>
 </div>
-
-<div id="outline-container-org42cad90" class="outline-3">
-<h3 id="org42cad90"><span class="section-number-3">2.2.</span> Why not just diff the whole file?</h3>
+<div id="outline-container-org3e53026" class="outline-3">
+<h3 id="org3e53026"><span class="section-number-3">2.2.</span> Why not just diff the whole file?</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 One concern here is the fact that we are flatting the contents of the file to a lot of files; 1005973 files to be exact.
@@ -392,13 +388,13 @@ It would be the number of rows &times; the number of columns which is 43903 &tim
 </p>
 
 <p>
-While flattening we use <a class="org-gls" href="#gls.20" id="glsr.20.5">HGNC</a> ids for the subdirectories.
+While flattening we use <a class="org-gls" href="#gls.1" id="glsr.1.5">HGNC</a> ids for the subdirectories.
 This way we can directly query the changes made to that id using the following command.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org2468899">
+<div class="sidenote" id="orgba62850">
 <p>
 Git syntax allows for directory-based query by giving a directory name after &ldquo;&#x2013;&rdquo;
 </p>
@@ -417,18 +413,17 @@ It takes around ~75 seconds to commit a single file.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org61f7e36" class="outline-3">
-<h3 id="org61f7e36"><span class="section-number-3">2.3.</span> Notes on storage</h3>
+<div id="outline-container-org023fb17" class="outline-3">
+<h3 id="org023fb17"><span class="section-number-3">2.3.</span> Notes on storage</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-The text files that <a class="org-gls" href="#gls.20" id="glsr.20.6">HGNC</a> stores take around 500Mb as of today.
+The text files that <a class="org-gls" href="#gls.1" id="glsr.1.6">HGNC</a> stores take around 500Mb as of today.
 Individual TXT files are about 16M, so it will increase linearly over the months at a rate of 16 M.
 </p>
 
 <p>
 Flatting out the separate files takes around 4.5G.
-Since we are just overwriting, this number should change in case <a class="org-gls" href="#gls.20" id="glsr.20.7">HGNC</a> adds or removes columns.
+Since we are just overwriting, this number should change in case <a class="org-gls" href="#gls.1" id="glsr.1.7">HGNC</a> adds or removes columns.
 </p>
 
 <p>
@@ -437,7 +432,7 @@ Every new commit is around 1M, so the increase rate is smaller compared to TXT f
 I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 </p>
 
-<pre class="example" id="org76cbd1c">
+<pre class="example" id="org4e3fb6a">
 ❯ du -hs txts
 518M    txts
 ❯ du -hs hgnc-data
@@ -448,12 +443,11 @@ I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 </div>
 </div>
 </div>
-
-<div id="outline-container-org6772302" class="outline-2">
-<h2 id="org6772302"><span class="section-number-2">3.</span> App</h2>
+<div id="outline-container-orgb5c8597" class="outline-2">
+<h2 id="orgb5c8597"><span class="section-number-2">3.</span> App</h2>
 <div class="outline-text-2" id="text-3">
 
-<div id="org0165ea5" class="figure">
+<div id="orga0ed36c" class="figure">
 <p><img src="_20240623_164437screenshot.png" alt="_20240623_164437screenshot.png" />
 </p>
 </div>
@@ -472,21 +466,19 @@ After the symbol is selected Django runs a subprocess and queries the repository
 
 <p>
 After a bit more parsing and merging the result of the two commands a simple Comma separated values
- (<a class="org-gls" href="#gls.21" id="glsr.21.1">CSV</a>), ready to be plotted, is returned to the frontend.
+ (<a class="org-gls" href="#gls.2" id="glsr.2.1">CSV</a>), ready to be plotted, is returned to the frontend.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org346bcdc" class="outline-2">
-<h2 id="org346bcdc">Appendix</h2>
-<div class="outline-text-2" id="text-org346bcdc">
+<div id="outline-container-org11268d4" class="outline-2">
+<h2 id="org11268d4">Appendix</h2>
+<div class="outline-text-2" id="text-org11268d4">
 </div>
-
-<div id="outline-container-orga798a1a" class="outline-3">
-<h3 id="orga798a1a">HGNC parse and commit script</h3>
-<div class="outline-text-3" id="text-orga798a1a">
+<div id="outline-container-orgd0729b8" class="outline-3">
+<h3 id="orgd0729b8">HGNC parse and commit script</h3>
+<div class="outline-text-3" id="text-orgd0729b8">
 <p>
-The Script parses and writes <a class="org-gls" href="#gls.20" id="glsr.20.8">HGNC</a> tables to the files.
+The Script parses and writes <a class="org-gls" href="#gls.1" id="glsr.1.8">HGNC</a> tables to the files.
 This script also tags and commits the changes.
 The git repository should be initialized before running the script.
 </p>
@@ -514,67 +506,67 @@ The git repository should be initialized before running the script.
 <span style="color: #9d0006;">import</span> subprocess
 
 <span style="color: #076678;">column_names</span> = [
-    <span style="color: #79740e;">"hgnc_id"</span>,
-    <span style="color: #79740e;">"symbol"</span>,
-    <span style="color: #79740e;">"name"</span>,
-    <span style="color: #79740e;">"locus_group"</span>,
-    <span style="color: #79740e;">"locus_type"</span>,
-    <span style="color: #79740e;">"status"</span>,
-    <span style="color: #79740e;">"location"</span>,
-    <span style="color: #79740e;">"location_sortable"</span>,
-    <span style="color: #79740e;">"alias_symbol"</span>,
-    <span style="color: #79740e;">"alias_name"</span>,
-    <span style="color: #79740e;">"prev_symbol"</span>,
-    <span style="color: #79740e;">"prev_name"</span>,
-    <span style="color: #79740e;">"gene_group"</span>,
-    <span style="color: #79740e;">"gene_group_id"</span>,
-    <span style="color: #79740e;">"date_approved_reserved"</span>,
-    <span style="color: #79740e;">"date_symbol_changed"</span>,
-    <span style="color: #79740e;">"date_name_changed"</span>,
-    <span style="color: #79740e;">"date_modified"</span>,
-    <span style="color: #79740e;">"entrez_id"</span>,
-    <span style="color: #79740e;">"ensembl_gene_id"</span>,
-    <span style="color: #79740e;">"vega_id"</span>,
-    <span style="color: #79740e;">"ucsc_id"</span>,
-    <span style="color: #79740e;">"ena"</span>,
-    <span style="color: #79740e;">"refseq_accession"</span>,
-    <span style="color: #79740e;">"ccds_id"</span>,
-    <span style="color: #79740e;">"uniprot_ids"</span>,
-    <span style="color: #79740e;">"pubmed_id"</span>,
-    <span style="color: #79740e;">"mgd_id"</span>,
-    <span style="color: #79740e;">"rgd_id"</span>,
-    <span style="color: #79740e;">"lsdb"</span>,
-    <span style="color: #79740e;">"cosmic"</span>,
-    <span style="color: #79740e;">"omim_id"</span>,
-    <span style="color: #79740e;">"mirbase"</span>,
-    <span style="color: #79740e;">"homeodb"</span>,
-    <span style="color: #79740e;">"snornabase"</span>,
-    <span style="color: #79740e;">"bioparadigms_slc"</span>,
-    <span style="color: #79740e;">"orphanet"</span>,
-    <span style="color: #79740e;">"pseudogene_org"</span>,
-    <span style="color: #79740e;">"horde_id"</span>,
-    <span style="color: #79740e;">"merops"</span>,
-    <span style="color: #79740e;">"imgt"</span>,
-    <span style="color: #79740e;">"iuphar"</span>,
-    <span style="color: #79740e;">"kznf_gene_catalog"</span>,
-    <span style="color: #79740e;">"mamit_trnadb"</span>,
-    <span style="color: #79740e;">"cd"</span>,
-    <span style="color: #79740e;">"lncrnadb"</span>,
-    <span style="color: #79740e;">"enzyme_id"</span>,
-    <span style="color: #79740e;">"intermediate_filament_db"</span>,
-    <span style="color: #79740e;">"rna_central_ids"</span>,
-    <span style="color: #79740e;">"lncipedia"</span>,
-    <span style="color: #79740e;">"gtrnadb"</span>,
-    <span style="color: #79740e;">"agr"</span>,
-    <span style="color: #79740e;">"mane_select"</span>,
-    <span style="color: #79740e;">"gencc"</span>,
+&#9474;   <span style="color: #79740e;">"hgnc_id"</span>,
+&#9474;   <span style="color: #79740e;">"symbol"</span>,
+&#9474;   <span style="color: #79740e;">"name"</span>,
+&#9474;   <span style="color: #79740e;">"locus_group"</span>,
+&#9474;   <span style="color: #79740e;">"locus_type"</span>,
+&#9474;   <span style="color: #79740e;">"status"</span>,
+&#9474;   <span style="color: #79740e;">"location"</span>,
+&#9474;   <span style="color: #79740e;">"location_sortable"</span>,
+&#9474;   <span style="color: #79740e;">"alias_symbol"</span>,
+&#9474;   <span style="color: #79740e;">"alias_name"</span>,
+&#9474;   <span style="color: #79740e;">"prev_symbol"</span>,
+&#9474;   <span style="color: #79740e;">"prev_name"</span>,
+&#9474;   <span style="color: #79740e;">"gene_group"</span>,
+&#9474;   <span style="color: #79740e;">"gene_group_id"</span>,
+&#9474;   <span style="color: #79740e;">"date_approved_reserved"</span>,
+&#9474;   <span style="color: #79740e;">"date_symbol_changed"</span>,
+&#9474;   <span style="color: #79740e;">"date_name_changed"</span>,
+&#9474;   <span style="color: #79740e;">"date_modified"</span>,
+&#9474;   <span style="color: #79740e;">"entrez_id"</span>,
+&#9474;   <span style="color: #79740e;">"ensembl_gene_id"</span>,
+&#9474;   <span style="color: #79740e;">"vega_id"</span>,
+&#9474;   <span style="color: #79740e;">"ucsc_id"</span>,
+&#9474;   <span style="color: #79740e;">"ena"</span>,
+&#9474;   <span style="color: #79740e;">"refseq_accession"</span>,
+&#9474;   <span style="color: #79740e;">"ccds_id"</span>,
+&#9474;   <span style="color: #79740e;">"uniprot_ids"</span>,
+&#9474;   <span style="color: #79740e;">"pubmed_id"</span>,
+&#9474;   <span style="color: #79740e;">"mgd_id"</span>,
+&#9474;   <span style="color: #79740e;">"rgd_id"</span>,
+&#9474;   <span style="color: #79740e;">"lsdb"</span>,
+&#9474;   <span style="color: #79740e;">"cosmic"</span>,
+&#9474;   <span style="color: #79740e;">"omim_id"</span>,
+&#9474;   <span style="color: #79740e;">"mirbase"</span>,
+&#9474;   <span style="color: #79740e;">"homeodb"</span>,
+&#9474;   <span style="color: #79740e;">"snornabase"</span>,
+&#9474;   <span style="color: #79740e;">"bioparadigms_slc"</span>,
+&#9474;   <span style="color: #79740e;">"orphanet"</span>,
+&#9474;   <span style="color: #79740e;">"pseudogene_org"</span>,
+&#9474;   <span style="color: #79740e;">"horde_id"</span>,
+&#9474;   <span style="color: #79740e;">"merops"</span>,
+&#9474;   <span style="color: #79740e;">"imgt"</span>,
+&#9474;   <span style="color: #79740e;">"iuphar"</span>,
+&#9474;   <span style="color: #79740e;">"kznf_gene_catalog"</span>,
+&#9474;   <span style="color: #79740e;">"mamit_trnadb"</span>,
+&#9474;   <span style="color: #79740e;">"cd"</span>,
+&#9474;   <span style="color: #79740e;">"lncrnadb"</span>,
+&#9474;   <span style="color: #79740e;">"enzyme_id"</span>,
+&#9474;   <span style="color: #79740e;">"intermediate_filament_db"</span>,
+&#9474;   <span style="color: #79740e;">"rna_central_ids"</span>,
+&#9474;   <span style="color: #79740e;">"lncipedia"</span>,
+&#9474;   <span style="color: #79740e;">"gtrnadb"</span>,
+&#9474;   <span style="color: #79740e;">"agr"</span>,
+&#9474;   <span style="color: #79740e;">"mane_select"</span>,
+&#9474;   <span style="color: #79740e;">"gencc"</span>,
 ]
 
 <span style="color: #076678;">date_column_names</span> = [
-    <span style="color: #79740e;">"date_approved_reserved"</span>,
-    <span style="color: #79740e;">"date_symbol_changed"</span>,
-    <span style="color: #79740e;">"date_name_changed"</span>,
-    <span style="color: #79740e;">"date_modified"</span>,
+&#9474;   <span style="color: #79740e;">"date_approved_reserved"</span>,
+&#9474;   <span style="color: #79740e;">"date_symbol_changed"</span>,
+&#9474;   <span style="color: #79740e;">"date_name_changed"</span>,
+&#9474;   <span style="color: #79740e;">"date_modified"</span>,
 ]
 
 
@@ -587,90 +579,90 @@ repo_path.mkdir(exist_ok=<span style="color: #8f3f71;">True</span>)
 
 
 <span style="color: #9d0006;">def</span> <span style="color: #b57614;">get_monthly_files</span>(hgnc_data_path):
-    <span style="color: #79740e; font-style: italic;">"""</span>
-<span style="color: #79740e; font-style: italic;">    The HGNC ftp directory has both tsv and txt for some files.</span>
-<span style="color: #79740e; font-style: italic;">    They are duplicates.</span>
-<span style="color: #79740e; font-style: italic;">    We are gonna just get the txt files.</span>
-<span style="color: #79740e; font-style: italic;">    """</span>
-    <span style="color: #076678;">hgnc_tsv_paths</span> = {
-        datetime.strptime(path.stem.split(<span style="color: #79740e;">"_"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>], <span style="color: #79740e;">"%Y-%m-%d"</span>): path
-        <span style="color: #9d0006;">for</span> path <span style="color: #9d0006;">in</span> hgnc_data_path.glob(<span style="color: #79740e;">"hgnc_complete_set*.txt"</span>)
-    }
-    <span style="color: #9d0006;">return</span> <span style="color: #af3a03;">dict</span>(<span style="color: #af3a03;">sorted</span>(hgnc_tsv_paths.items()))
-
-
+&#9474;   <span style="color: #79740e; font-style: italic;">"""</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   The HGNC ftp directory has both tsv and txt for some files.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   They are duplicates.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   We are gonna just get the txt files.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   """</span>
+&#9474;   <span style="color: #076678;">hgnc_tsv_paths</span> = {
+&#9474;   &#9474;   datetime.strptime(path.stem.split(<span style="color: #79740e;">"_"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>], <span style="color: #79740e;">"%Y-%m-%d"</span>): path
+&#9474;   &#9474;   <span style="color: #9d0006;">for</span> path <span style="color: #9d0006;">in</span> hgnc_data_path.glob(<span style="color: #79740e;">"hgnc_complete_set*.txt"</span>)
+&#9474;   }
+&#9474;   <span style="color: #9d0006;">return</span> <span style="color: #af3a03;">dict</span>(<span style="color: #af3a03;">sorted</span>(hgnc_tsv_paths.items()))
+&#9474;
+&#9474;
 <span style="color: #9d0006;">def</span> <span style="color: #b57614;">split_hgnc_tsv</span>(repo_path, hgnc_tsv_path):
-
-
-    <span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(hgnc_tsv_path, <span style="color: #79740e;">"r"</span>) <span style="color: #9d0006;">as</span> f:
-        <span style="color: #076678;">reader</span> = csv.DictReader(f, delimiter=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">"</span>)
-        <span style="color: #9d0006;">for</span> row <span style="color: #9d0006;">in</span> reader:
-            <span style="color: #79740e;">"""</span>
-<span style="color: #79740e;">            Puts None if value is empty string ''.</span>
-<span style="color: #79740e;">            This</span>
-<span style="color: #79740e;">            """</span>
-            <span style="color: #076678;">row</span> = {k: (v <span style="color: #9d0006;">if</span> v <span style="color: #9d0006;">else</span> <span style="color: #8f3f71;">None</span>) <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> row.items()}
-
-            <span style="color: #79740e; font-style: italic;">"""</span>
-<span style="color: #79740e; font-style: italic;">            I just copy pasted the column_names from the latest tsv.</span>
-<span style="color: #79740e; font-style: italic;">            Some of the column names don't exist in the older files.</span>
-<span style="color: #79740e; font-style: italic;">            Below section adds these keys with value None.</span>
-<span style="color: #79740e; font-style: italic;">            This way we are preventing KeyErrors down the road.</span>
-<span style="color: #79740e; font-style: italic;">            """</span>
-            <span style="color: #9d0006;">for</span> column_name <span style="color: #9d0006;">in</span> column_names:
-                <span style="color: #9d0006;">try</span>:
-                    row[column_name]
-                <span style="color: #9d0006;">except</span> <span style="color: #8f3f71;">KeyError</span>:
-                    <span style="color: #076678;">row</span>[column_name] = <span style="color: #8f3f71;">None</span>
-
-            <span style="color: #79740e; font-style: italic;">"""</span>
-<span style="color: #79740e; font-style: italic;">            ccds_ids are unsorted which create false diffs</span>
-<span style="color: #79740e; font-style: italic;">            That's why we are sorting them.</span>
-<span style="color: #79740e; font-style: italic;">            """</span>
-            <span style="color: #9d0006;">if</span> row[<span style="color: #79740e;">"ccds_id"</span>]:
-                <span style="color: #076678;">row</span>[<span style="color: #79740e;">"ccds_id"</span>] = <span style="color: #79740e;">"|"</span>.join(<span style="color: #af3a03;">sorted</span>(row[<span style="color: #79740e;">"ccds_id"</span>].split(<span style="color: #79740e;">"|"</span>)))
-
-            <span style="color: #79740e; font-style: italic;">"""</span>
-<span style="color: #79740e; font-style: italic;">            We create seperate directories for each gene</span>
-<span style="color: #79740e; font-style: italic;">            and write the values to seperate files.</span>
-<span style="color: #79740e; font-style: italic;">            """</span>
-            <span style="color: #076678;">entry_path</span> = repo_path.joinpath(row[<span style="color: #79740e;">"hgnc_id"</span>])
-            entry_path.mkdir(exist_ok=<span style="color: #8f3f71;">True</span>)
-            <span style="color: #9d0006;">for</span> column_name <span style="color: #9d0006;">in</span> column_names:
-                <span style="color: #9d0006;">if</span> row[column_name]:
-                    <span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(entry_path.joinpath(column_name), <span style="color: #79740e;">"w"</span>) <span style="color: #9d0006;">as</span> f:
-                            f.write(row[column_name])
-
-
+&#9474;
+&#9474;
+&#9474;   <span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(hgnc_tsv_path, <span style="color: #79740e;">"r"</span>) <span style="color: #9d0006;">as</span> f:
+&#9474;   &#9474;   <span style="color: #076678;">reader</span> = csv.DictReader(f, delimiter=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">\t</span><span style="color: #79740e;">"</span>)
+&#9474;   &#9474;   <span style="color: #9d0006;">for</span> row <span style="color: #9d0006;">in</span> reader:
+&#9474;   &#9474;   &#9474;   <span style="color: #79740e;">"""</span>
+&#9474;<span style="color: #79740e;">   &#9474;   &#9474;   Puts None if value is empty string ''.</span>
+&#9474;<span style="color: #79740e;">   &#9474;   &#9474;   This</span>
+&#9474;<span style="color: #79740e;">   &#9474;   &#9474;   """</span>
+&#9474;   &#9474;   &#9474;   <span style="color: #076678;">row</span> = {k: (v <span style="color: #9d0006;">if</span> v <span style="color: #9d0006;">else</span> <span style="color: #8f3f71;">None</span>) <span style="color: #9d0006;">for</span> k, v <span style="color: #9d0006;">in</span> row.items()}
+&#9474;   &#9474;   &#9474;
+&#9474;   &#9474;   &#9474;   <span style="color: #79740e; font-style: italic;">"""</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   I just copy pasted the column_names from the latest tsv.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   Some of the column names don't exist in the older files.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   Below section adds these keys with value None.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   This way we are preventing KeyErrors down the road.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   """</span>
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">for</span> column_name <span style="color: #9d0006;">in</span> column_names:
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">try</span>:
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   row[column_name]
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">except</span> <span style="color: #8f3f71;">KeyError</span>:
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">row</span>[column_name] = <span style="color: #8f3f71;">None</span>
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;
+&#9474;   &#9474;   &#9474;   <span style="color: #79740e; font-style: italic;">"""</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   ccds_ids are unsorted which create false diffs</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   That's why we are sorting them.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   """</span>
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">if</span> row[<span style="color: #79740e;">"ccds_id"</span>]:
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">row</span>[<span style="color: #79740e;">"ccds_id"</span>] = <span style="color: #79740e;">"|"</span>.join(<span style="color: #af3a03;">sorted</span>(row[<span style="color: #79740e;">"ccds_id"</span>].split(<span style="color: #79740e;">"|"</span>)))
+&#9474;   &#9474;   &#9474;   &#9474;
+&#9474;   &#9474;   &#9474;   <span style="color: #79740e; font-style: italic;">"""</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   We create seperate directories for each gene</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   and write the values to seperate files.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;   &#9474;   """</span>
+&#9474;   &#9474;   &#9474;   <span style="color: #076678;">entry_path</span> = repo_path.joinpath(row[<span style="color: #79740e;">"hgnc_id"</span>])
+&#9474;   &#9474;   &#9474;   entry_path.mkdir(exist_ok=<span style="color: #8f3f71;">True</span>)
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">for</span> column_name <span style="color: #9d0006;">in</span> column_names:
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">if</span> row[column_name]:
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">with</span> <span style="color: #af3a03;">open</span>(entry_path.joinpath(column_name), <span style="color: #79740e;">"w"</span>) <span style="color: #9d0006;">as</span> f:
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;   f.write(row[column_name])
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;
+&#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;   &#9474;
 <span style="color: #9d0006;">def</span> <span style="color: #b57614;">commit_and_tag</span>(repo_path, commit_msg, tag_name):
-    <span style="color: #076678;">git_add_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"add"</span>, <span style="color: #79740e;">"."</span>]
-    <span style="color: #076678;">git_commit_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"commit"</span>, <span style="color: #79740e;">"-m"</span>, commit_msg]
-    <span style="color: #076678;">git_tag_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"tag"</span>, tag_name]
-
-    subprocess.run(git_add_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
-    subprocess.run(git_commit_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
-    subprocess.run(git_tag_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
-
-
+&#9474;   <span style="color: #076678;">git_add_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"add"</span>, <span style="color: #79740e;">"."</span>]
+&#9474;   <span style="color: #076678;">git_commit_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"commit"</span>, <span style="color: #79740e;">"-m"</span>, commit_msg]
+&#9474;   <span style="color: #076678;">git_tag_cmd</span> = [<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"tag"</span>, tag_name]
+&#9474;
+&#9474;   subprocess.run(git_add_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
+&#9474;   subprocess.run(git_commit_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
+&#9474;   subprocess.run(git_tag_cmd, cwd=<span style="color: #af3a03;">str</span>(repo_path))
+&#9474;
+&#9474;
 <span style="color: #9d0006;">def</span> <span style="color: #b57614;">main</span>()      :
-    <span style="color: #076678;">hgnc_tsv_paths</span> = get_monthly_files(hgnc_data_path)
-    <span style="color: #af3a03;">print</span>(hgnc_data_path)
-    <span style="color: #af3a03;">print</span>(hgnc_tsv_paths)
-    <span style="color: #9d0006;">for</span> date, hgnc_tsv_path <span style="color: #9d0006;">in</span> hgnc_tsv_paths.items():
-        <span style="color: #af3a03;">print</span>(date.strftime(<span style="color: #79740e;">'"%Y-%m-%d",'</span>))
-        <span style="color: #076678;">commit_msg</span> = f<span style="color: #79740e;">'Added hgnc for date </span>{date.strftime("%Y-%m-%d")}<span style="color: #79740e;">'</span>
-        <span style="color: #076678;">tag_name</span> = f<span style="color: #79740e;">'</span>{date.strftime("%Y-%m-%d")}<span style="color: #79740e;">'</span>
-
-        subprocess.run(<span style="color: #79740e;">"rm -rf HGNC:*"</span>, cwd=<span style="color: #af3a03;">str</span>(repo_path), shell=<span style="color: #8f3f71;">True</span>)
-
-        split_hgnc_tsv(repo_path, hgnc_tsv_path)
-        commit_and_tag(repo_path, commit_msg, tag_name)
-
-    subprocess.run([<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"push"</span>, <span style="color: #79740e;">"--tags"</span>], cwd=<span style="color: #af3a03;">str</span>(repo_path))
-
-
+&#9474;   <span style="color: #076678;">hgnc_tsv_paths</span> = get_monthly_files(hgnc_data_path)
+&#9474;   <span style="color: #af3a03;">print</span>(hgnc_data_path)
+&#9474;   <span style="color: #af3a03;">print</span>(hgnc_tsv_paths)
+&#9474;   <span style="color: #9d0006;">for</span> date, hgnc_tsv_path <span style="color: #9d0006;">in</span> hgnc_tsv_paths.items():
+&#9474;   &#9474;   <span style="color: #af3a03;">print</span>(date.strftime(<span style="color: #79740e;">'"%Y-%m-%d",'</span>))
+&#9474;   &#9474;   <span style="color: #076678;">commit_msg</span> = f<span style="color: #79740e;">'Added hgnc for date </span>{date.strftime("%Y-%m-%d")}<span style="color: #79740e;">'</span>
+&#9474;   &#9474;   <span style="color: #076678;">tag_name</span> = f<span style="color: #79740e;">'</span>{date.strftime("%Y-%m-%d")}<span style="color: #79740e;">'</span>
+&#9474;   &#9474;
+&#9474;   &#9474;   subprocess.run(<span style="color: #79740e;">"rm -rf HGNC:*"</span>, cwd=<span style="color: #af3a03;">str</span>(repo_path), shell=<span style="color: #8f3f71;">True</span>)
+&#9474;   &#9474;
+&#9474;   &#9474;   split_hgnc_tsv(repo_path, hgnc_tsv_path)
+&#9474;   &#9474;   commit_and_tag(repo_path, commit_msg, tag_name)
+&#9474;   &#9474;
+&#9474;   subprocess.run([<span style="color: #79740e;">"git"</span>, <span style="color: #79740e;">"push"</span>, <span style="color: #79740e;">"--tags"</span>], cwd=<span style="color: #af3a03;">str</span>(repo_path))
+&#9474;
+&#9474;
 <span style="color: #9d0006;">if</span> <span style="color: #af3a03;">__name__</span> == <span style="color: #79740e;">"__main__"</span>:
-    main()
+&#9474;   main()
 </pre>
 </div>
 
@@ -678,10 +670,9 @@ repo_path.mkdir(exist_ok=<span style="color: #8f3f71;">True</span>)
 </details>
 </div>
 </div>
-
-<div id="outline-container-org65b5079" class="outline-3">
-<h3 id="org65b5079">Visualization frontend</h3>
-<div class="outline-text-3" id="text-org65b5079">
+<div id="outline-container-orgad64509" class="outline-3">
+<h3 id="orgad64509">Visualization frontend</h3>
+<div class="outline-text-3" id="text-orgad64509">
 <p>
 Heatmap is drawn with the d3.js.
 </p>
@@ -702,121 +693,121 @@ Heatmap is drawn with the d3.js.
                   </summary>
 <div class="org-src-container">
 <pre class="src src-javascript"><span style="color: #9d0006;">function</span> <span style="color: #b57614;">drawheatmap</span>(<span style="color: #076678;">hgnc_id</span>, <span style="color: #076678;">hgnc_symbol</span>) {
-  <span style="color: #9d0006;">const</span> <span style="color: #076678;">margin</span> = {top: <span style="color: #8f3f71; font-weight: bold;">0</span>, right: <span style="color: #8f3f71; font-weight: bold;">20</span>, bottom: <span style="color: #8f3f71; font-weight: bold;">80</span>, left: <span style="color: #8f3f71; font-weight: bold;">400</span>},
-    width = <span style="color: #8f3f71; font-weight: bold;">1050</span> - margin.left - margin.right,
-    height = <span style="color: #8f3f71; font-weight: bold;">900</span> - margin.top - margin.bottom;
-
-  <span style="color: #a89984;">// </span><span style="color: #a89984;">append the svg object to the body of the page</span>
-  <span style="color: #9d0006;">const</span> <span style="color: #076678;">svg</span> = d3.select(<span style="color: #79740e;">"#heatmap"</span>)
-    .append(<span style="color: #79740e;">"svg"</span>)
-    .attr(<span style="color: #79740e;">"width"</span>, width + margin.left + margin.right)
-    .attr(<span style="color: #79740e;">"height"</span>, height + margin.top + margin.bottom)
-    .append(<span style="color: #79740e;">"g"</span>)
-    .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(${margin.left}, ${margin.top})`</span>);
-
-
-  <span style="color: #9d0006;">const</span> <span style="color: #076678;">myGroups</span> = [
-    <span style="color: #79740e;">"2021-03-01"</span>, <span style="color: #79740e;">"2021-04-01"</span>, <span style="color: #79740e;">"2021-05-01"</span>, <span style="color: #79740e;">"2021-06-01"</span>, <span style="color: #79740e;">"2021-07-01"</span>,
-    <span style="color: #79740e;">"2021-08-01"</span>, <span style="color: #79740e;">"2021-09-01"</span>, <span style="color: #79740e;">"2021-10-01"</span>, <span style="color: #79740e;">"2021-11-01"</span>, <span style="color: #79740e;">"2021-12-01"</span>,
-    <span style="color: #79740e;">"2022-01-01"</span>, <span style="color: #79740e;">"2022-03-01"</span>, <span style="color: #79740e;">"2022-04-01"</span>, <span style="color: #79740e;">"2022-05-01"</span>, <span style="color: #79740e;">"2022-06-01"</span>,
-    <span style="color: #79740e;">"2022-07-01"</span>, <span style="color: #79740e;">"2022-09-01"</span>, <span style="color: #79740e;">"2022-10-01"</span>, <span style="color: #79740e;">"2023-01-01"</span>, <span style="color: #79740e;">"2023-03-02"</span>,
-    <span style="color: #79740e;">"2023-04-01"</span>, <span style="color: #79740e;">"2023-05-01"</span>, <span style="color: #79740e;">"2023-06-01"</span>, <span style="color: #79740e;">"2023-07-01"</span>, <span style="color: #79740e;">"2023-08-01"</span>,
-    <span style="color: #79740e;">"2023-09-01"</span>, <span style="color: #79740e;">"2023-10-01"</span>, <span style="color: #79740e;">"2023-11-01"</span>, <span style="color: #79740e;">"2023-12-01"</span>, <span style="color: #79740e;">"2024-01-01"</span>,
-    <span style="color: #79740e;">"2024-02-01"</span>, <span style="color: #79740e;">"2024-03-01"</span>, <span style="color: #79740e;">"2024-04-01"</span>, <span style="color: #79740e;">"2024-06-04"</span>,
-  ]
-  <span style="color: #a89984;">//</span><span style="color: #a89984;">Read the data</span>
-  heatmap_data_url=<span style="color: #79740e;">"/bioscripts/hgnc_version/heatmap_data/"</span>.concat(hgnc_id)
-  d3.csv(heatmap_data_url).then( <span style="color: #9d0006;">function</span>(<span style="color: #076678;">data</span>) {
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">Labels of row and columns -&gt; unique identifier of the column called 'group' and 'variable'</span>
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">const myGroups = Array.from(new Set(data.map(d =&gt; d.group))).sort((a, b) =&gt; new Date(a) - new Date(b));</span>
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">myVars</span> = Array.from(<span style="color: #9d0006;">new</span> <span style="color: #8f3f71;">Set</span>(data.map(d =&gt; d.variable)))
-
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">Build X scales and axis:</span>
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">x</span> = d3.scaleBand()
-      .range([ <span style="color: #8f3f71; font-weight: bold;">0</span>, width ])
-      .domain(myGroups)
-      .padding(<span style="color: #8f3f71; font-weight: bold;">0.05</span>);
-    svg.append(<span style="color: #79740e;">"g"</span>)
-      .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #8f3f71; font-weight: bold;">15</span>)
-      .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(0, ${height})`</span>)
-      .call(d3.axisBottom(x).tickSize(<span style="color: #8f3f71; font-weight: bold;">0</span>))
-      .selectAll(<span style="color: #79740e;">"text"</span>)
-      .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">"rotate(-45)"</span>)
-      .style(<span style="color: #79740e;">"text-anchor"</span>, <span style="color: #79740e;">"end"</span>)
-      .select(<span style="color: #79740e;">".domain"</span>).remove()
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">Build Y scales and axis:</span>
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">y</span> = d3.scaleBand()
-      .range([ height, <span style="color: #8f3f71; font-weight: bold;">0</span> ])
-      .domain(myVars)
-      .padding(<span style="color: #8f3f71; font-weight: bold;">0.05</span>);
-    svg.append(<span style="color: #79740e;">"g"</span>)
-      .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #8f3f71; font-weight: bold;">15</span>)
-      .call(d3.axisLeft(y).tickSize(<span style="color: #8f3f71; font-weight: bold;">0</span>))
-      .selectAll(<span style="color: #79740e;">"text"</span>)
-      .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">"rotate(-30)"</span>)
-      .style(<span style="color: #79740e;">"text-anchor"</span>, <span style="color: #79740e;">"end"</span>)
-      .select(<span style="color: #79740e;">".domain"</span>).remove()
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">Build color scale</span>
-  <span style="color: #9d0006;">const</span> <span style="color: #076678;">myColor</span> = d3.scaleOrdinal()
-    .domain([<span style="color: #79740e;">"M"</span>, <span style="color: #79740e;">"D"</span>, <span style="color: #79740e;">"A"</span>]) <span style="color: #a89984;">// </span><span style="color: #a89984;">Values in your data</span>
-    .range(d3.schemeCategory10);
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">create a tooltip</span>
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">tooltip</span> = d3.select(<span style="color: #79740e;">"#heatmap"</span>)
-      .append(<span style="color: #79740e;">"div"</span>)
-      .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>)
-      .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"tooltip"</span>)
-    .style(<span style="color: #79740e;">"position"</span>, <span style="color: #79740e;">"absolute"</span>)  <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the position to absolute</span>
-      .style(<span style="color: #79740e;">"border"</span>, <span style="color: #79740e;">"solid"</span>)
-      .style(<span style="color: #79740e;">"border-width"</span>, <span style="color: #79740e;">"2px"</span>)
-      .style(<span style="color: #79740e;">"border-radius"</span>, <span style="color: #79740e;">"5px"</span>)
-      .style(<span style="color: #79740e;">"padding"</span>, <span style="color: #79740e;">"5px"</span>)
-      .style(<span style="color: #79740e;">"background-color"</span>, <span style="color: #79740e;">"var(--body-bg-color)"</span>)
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">Three function that change the tooltip when user hover / move / leave a cell</span>
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">mouseover</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
-      tooltip
-        .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>)
-      d3.select(<span style="color: #8f3f71;">this</span>)
-        .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"black"</span>)
-        .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>)
-    }
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">mousemove</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
-      tooltip
-        .html(<span style="color: #79740e;">"Diff:"</span> + d.diff)
-        .style(<span style="color: #79740e;">"left"</span>, (event.pageX) + <span style="color: #79740e;">"px"</span>)
-        .style(<span style="color: #79740e;">"top"</span>, (event.pageY) + <span style="color: #79740e;">"px"</span>)
-    }
-    <span style="color: #9d0006;">const</span> <span style="color: #076678;">mouseleave</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
-      tooltip
-        .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>)
-      d3.select(<span style="color: #8f3f71;">this</span>)
-        .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"none"</span>)
-        .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0.8</span>)
-    }
-
-    <span style="color: #a89984;">// </span><span style="color: #a89984;">add the squares</span>
-    svg.selectAll()
-      .data(data, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) {<span style="color: #9d0006;">return</span> d.group+<span style="color: #79740e;">':'</span>+d.variable;})
-      .join(<span style="color: #79740e;">"rect"</span>)
-        .attr(<span style="color: #79740e;">"x"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> x(d.group) })
-        .attr(<span style="color: #79740e;">"y"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> y(d.variable) })
-        .attr(<span style="color: #79740e;">"rx"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
-        .attr(<span style="color: #79740e;">"ry"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
-        .attr(<span style="color: #79740e;">"width"</span>, x.bandwidth() )
-        .attr(<span style="color: #79740e;">"height"</span>, y.bandwidth() )
-        .style(<span style="color: #79740e;">"fill"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> myColor(d.value)} )
-        .style(<span style="color: #79740e;">"stroke-width"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
-        .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"none"</span>)
-        .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0.8</span>)
-      .on(<span style="color: #79740e;">"mouseover"</span>, mouseover)
-      .on(<span style="color: #79740e;">"mousemove"</span>, mousemove)
-      .on(<span style="color: #79740e;">"mouseleave"</span>, mouseleave)
-
+&#9474; <span style="color: #9d0006;">const</span> <span style="color: #076678;">margin</span> = {top: <span style="color: #8f3f71; font-weight: bold;">0</span>, right: <span style="color: #8f3f71; font-weight: bold;">20</span>, bottom: <span style="color: #8f3f71; font-weight: bold;">80</span>, left: <span style="color: #8f3f71; font-weight: bold;">400</span>},
+&#9474;   width = <span style="color: #8f3f71; font-weight: bold;">1050</span> - margin.left - margin.right,
+&#9474;   height = <span style="color: #8f3f71; font-weight: bold;">900</span> - margin.top - margin.bottom;
+&#9474;
+&#9474; <span style="color: #a89984;">// </span><span style="color: #a89984;">append the svg object to the body of the page</span>
+&#9474; <span style="color: #9d0006;">const</span> <span style="color: #076678;">svg</span> = d3.select(<span style="color: #79740e;">"#heatmap"</span>)
+&#9474;   .append(<span style="color: #79740e;">"svg"</span>)
+&#9474;   .attr(<span style="color: #79740e;">"width"</span>, width + margin.left + margin.right)
+&#9474;   .attr(<span style="color: #79740e;">"height"</span>, height + margin.top + margin.bottom)
+&#9474;   .append(<span style="color: #79740e;">"g"</span>)
+&#9474;   .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(${margin.left}, ${margin.top})`</span>);
+&#9474;
+&#9474;
+&#9474; <span style="color: #9d0006;">const</span> <span style="color: #076678;">myGroups</span> = [
+&#9474;   <span style="color: #79740e;">"2021-03-01"</span>, <span style="color: #79740e;">"2021-04-01"</span>, <span style="color: #79740e;">"2021-05-01"</span>, <span style="color: #79740e;">"2021-06-01"</span>, <span style="color: #79740e;">"2021-07-01"</span>,
+&#9474;   <span style="color: #79740e;">"2021-08-01"</span>, <span style="color: #79740e;">"2021-09-01"</span>, <span style="color: #79740e;">"2021-10-01"</span>, <span style="color: #79740e;">"2021-11-01"</span>, <span style="color: #79740e;">"2021-12-01"</span>,
+&#9474;   <span style="color: #79740e;">"2022-01-01"</span>, <span style="color: #79740e;">"2022-03-01"</span>, <span style="color: #79740e;">"2022-04-01"</span>, <span style="color: #79740e;">"2022-05-01"</span>, <span style="color: #79740e;">"2022-06-01"</span>,
+&#9474;   <span style="color: #79740e;">"2022-07-01"</span>, <span style="color: #79740e;">"2022-09-01"</span>, <span style="color: #79740e;">"2022-10-01"</span>, <span style="color: #79740e;">"2023-01-01"</span>, <span style="color: #79740e;">"2023-03-02"</span>,
+&#9474;   <span style="color: #79740e;">"2023-04-01"</span>, <span style="color: #79740e;">"2023-05-01"</span>, <span style="color: #79740e;">"2023-06-01"</span>, <span style="color: #79740e;">"2023-07-01"</span>, <span style="color: #79740e;">"2023-08-01"</span>,
+&#9474;   <span style="color: #79740e;">"2023-09-01"</span>, <span style="color: #79740e;">"2023-10-01"</span>, <span style="color: #79740e;">"2023-11-01"</span>, <span style="color: #79740e;">"2023-12-01"</span>, <span style="color: #79740e;">"2024-01-01"</span>,
+&#9474;   <span style="color: #79740e;">"2024-02-01"</span>, <span style="color: #79740e;">"2024-03-01"</span>, <span style="color: #79740e;">"2024-04-01"</span>, <span style="color: #79740e;">"2024-06-04"</span>,
+&#9474; ]
+&#9474; <span style="color: #a89984;">//</span><span style="color: #a89984;">Read the data</span>
+&#9474; heatmap_data_url=<span style="color: #79740e;">"/bioscripts/hgnc_version/heatmap_data/"</span>.concat(hgnc_id)
+&#9474; d3.csv(heatmap_data_url).then( <span style="color: #9d0006;">function</span>(<span style="color: #076678;">data</span>) {
+&#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">Labels of row and columns -&gt; unique identifier of the column called 'group' and 'variable'</span>
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">const myGroups = Array.from(new Set(data.map(d =&gt; d.group))).sort((a, b) =&gt; new Date(a) - new Date(b));</span>
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">myVars</span> = Array.from(<span style="color: #9d0006;">new</span> <span style="color: #8f3f71;">Set</span>(data.map(d =&gt; d.variable)))
+&#9474;
+&#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">Build X scales and axis:</span>
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">x</span> = d3.scaleBand()
+&#9474;   &#9474; .range([ <span style="color: #8f3f71; font-weight: bold;">0</span>, width ])
+&#9474;   &#9474; .domain(myGroups)
+&#9474;   &#9474; .padding(<span style="color: #8f3f71; font-weight: bold;">0.05</span>);
+&#9474;   svg.append(<span style="color: #79740e;">"g"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #8f3f71; font-weight: bold;">15</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(0, ${height})`</span>)
+&#9474;   &#9474; .call(d3.axisBottom(x).tickSize(<span style="color: #8f3f71; font-weight: bold;">0</span>))
+&#9474;   &#9474; .selectAll(<span style="color: #79740e;">"text"</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">"rotate(-45)"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"text-anchor"</span>, <span style="color: #79740e;">"end"</span>)
+&#9474;   &#9474; .select(<span style="color: #79740e;">".domain"</span>).remove()
+&#9474;   &#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">Build Y scales and axis:</span>
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">y</span> = d3.scaleBand()
+&#9474;   &#9474; .range([ height, <span style="color: #8f3f71; font-weight: bold;">0</span> ])
+&#9474;   &#9474; .domain(myVars)
+&#9474;   &#9474; .padding(<span style="color: #8f3f71; font-weight: bold;">0.05</span>);
+&#9474;   svg.append(<span style="color: #79740e;">"g"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #8f3f71; font-weight: bold;">15</span>)
+&#9474;   &#9474; .call(d3.axisLeft(y).tickSize(<span style="color: #8f3f71; font-weight: bold;">0</span>))
+&#9474;   &#9474; .selectAll(<span style="color: #79740e;">"text"</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">"rotate(-30)"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"text-anchor"</span>, <span style="color: #79740e;">"end"</span>)
+&#9474;   &#9474; .select(<span style="color: #79740e;">".domain"</span>).remove()
+&#9474;   &#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">Build color scale</span>
+&#9474; <span style="color: #9d0006;">const</span> <span style="color: #076678;">myColor</span> = d3.scaleOrdinal()
+&#9474;   .domain([<span style="color: #79740e;">"M"</span>, <span style="color: #79740e;">"D"</span>, <span style="color: #79740e;">"A"</span>]) <span style="color: #a89984;">// </span><span style="color: #a89984;">Values in your data</span>
+&#9474;   .range(d3.schemeCategory10);
+&#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">create a tooltip</span>
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">tooltip</span> = d3.select(<span style="color: #79740e;">"#heatmap"</span>)
+&#9474;   &#9474; .append(<span style="color: #79740e;">"div"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"tooltip"</span>)
+&#9474;   .style(<span style="color: #79740e;">"position"</span>, <span style="color: #79740e;">"absolute"</span>)  <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the position to absolute</span>
+&#9474;   &#9474; .style(<span style="color: #79740e;">"border"</span>, <span style="color: #79740e;">"solid"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"border-width"</span>, <span style="color: #79740e;">"2px"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"border-radius"</span>, <span style="color: #79740e;">"5px"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"padding"</span>, <span style="color: #79740e;">"5px"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"background-color"</span>, <span style="color: #79740e;">"var(--body-bg-color)"</span>)
+&#9474;   &#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">Three function that change the tooltip when user hover / move / leave a cell</span>
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">mouseover</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
+&#9474;   &#9474; tooltip
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>)
+&#9474;   &#9474; d3.select(<span style="color: #8f3f71;">this</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"black"</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">1</span>)
+&#9474;   }
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">mousemove</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
+&#9474;   &#9474; tooltip
+&#9474;   &#9474;   .html(<span style="color: #79740e;">"Diff:"</span> + d.diff)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"left"</span>, (event.pageX) + <span style="color: #79740e;">"px"</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"top"</span>, (event.pageY) + <span style="color: #79740e;">"px"</span>)
+&#9474;   }
+&#9474;   <span style="color: #9d0006;">const</span> <span style="color: #076678;">mouseleave</span> = <span style="color: #9d0006;">function</span>(<span style="color: #076678;">event</span>,<span style="color: #076678;">d</span>) {
+&#9474;   &#9474; tooltip
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0</span>)
+&#9474;   &#9474; d3.select(<span style="color: #8f3f71;">this</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"none"</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0.8</span>)
+&#9474;   }
+&#9474;
+&#9474;   <span style="color: #a89984;">// </span><span style="color: #a89984;">add the squares</span>
+&#9474;   svg.selectAll()
+&#9474;   &#9474; .data(data, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) {<span style="color: #9d0006;">return</span> d.group+<span style="color: #79740e;">':'</span>+d.variable;})
+&#9474;   &#9474; .join(<span style="color: #79740e;">"rect"</span>)
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"x"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> x(d.group) })
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"y"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> y(d.variable) })
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"rx"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"ry"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"width"</span>, x.bandwidth() )
+&#9474;   &#9474;   .attr(<span style="color: #79740e;">"height"</span>, y.bandwidth() )
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"fill"</span>, <span style="color: #9d0006;">function</span>(<span style="color: #076678;">d</span>) { <span style="color: #9d0006;">return</span> myColor(d.value)} )
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"stroke-width"</span>, <span style="color: #8f3f71; font-weight: bold;">4</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"stroke"</span>, <span style="color: #79740e;">"none"</span>)
+&#9474;   &#9474;   .style(<span style="color: #79740e;">"opacity"</span>, <span style="color: #8f3f71; font-weight: bold;">0.8</span>)
+&#9474;   &#9474; .on(<span style="color: #79740e;">"mouseover"</span>, mouseover)
+&#9474;   &#9474; .on(<span style="color: #79740e;">"mousemove"</span>, mousemove)
+&#9474;   &#9474; .on(<span style="color: #79740e;">"mouseleave"</span>, mouseleave)
+&#9474;   &#9474;
 <span style="color: #a89984;">// </span><span style="color: #a89984;">Define legend data</span>
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">legendData</span> = [<span style="color: #79740e;">"Modified"</span>, <span style="color: #79740e;">"Deleted"</span>, <span style="color: #79740e;">"Added"</span>];
 
@@ -826,59 +817,59 @@ Heatmap is drawn with the d3.js.
 
 <span style="color: #a89984;">// </span><span style="color: #a89984;">Append a group element for the legend</span>
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">legend</span> = svg.append(<span style="color: #79740e;">"g"</span>)
-    .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"legend"</span>)
-    .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(${margin.left}, ${height + margin.top})`</span>); <span style="color: #a89984;">// </span><span style="color: #a89984;">Position the legend at the bottom left</span>
-
+&#9474;   .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"legend"</span>)
+&#9474;   .attr(<span style="color: #79740e;">"transform"</span>, <span style="color: #79740e;">`translate(${margin.left}, ${height + margin.top})`</span>); <span style="color: #a89984;">// </span><span style="color: #a89984;">Position the legend at the bottom left</span>
+&#9474;
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">rectRadius</span> = <span style="color: #8f3f71; font-weight: bold;">7</span>; <span style="color: #a89984;">// </span><span style="color: #a89984;">Adjust the radius of the rounded corners as needed</span>
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">rectHeight</span> = <span style="color: #8f3f71; font-weight: bold;">20</span>; <span style="color: #a89984;">// </span><span style="color: #a89984;">Height of each legend item rectangle</span>
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">gap</span> = <span style="color: #8f3f71; font-weight: bold;">5</span>; <span style="color: #a89984;">// </span><span style="color: #a89984;">Gap between legend items</span>
 <span style="color: #a89984;">// </span><span style="color: #a89984;">Append rectangles and text for each legend item</span>
 <span style="color: #9d0006;">const</span> <span style="color: #076678;">legendItems</span> = legend.selectAll(<span style="color: #79740e;">".legend-item"</span>)
-    .data(legendData)
-    .enter()
-    .append(<span style="color: #79740e;">"g"</span>)
-    .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"legend-item"</span>)
-    .attr(<span style="color: #79740e;">"transform"</span>, (d, i) =&gt; <span style="color: #79740e;">`translate(0, ${i * (rectHeight + gap)})`</span>); <span style="color: #a89984;">// </span><span style="color: #a89984;">Adjusted vertical positioning with gap</span>
-
+&#9474;   .data(legendData)
+&#9474;   .enter()
+&#9474;   .append(<span style="color: #79740e;">"g"</span>)
+&#9474;   .attr(<span style="color: #79740e;">"class"</span>, <span style="color: #79740e;">"legend-item"</span>)
+&#9474;   .attr(<span style="color: #79740e;">"transform"</span>, (d, i) =&gt; <span style="color: #79740e;">`translate(0, ${i * (rectHeight + gap)})`</span>); <span style="color: #a89984;">// </span><span style="color: #a89984;">Adjusted vertical positioning with gap</span>
+&#9474;
 legendItems.append(<span style="color: #79740e;">"rect"</span>)
-    .attr(<span style="color: #79740e;">"x"</span>, -margin.left - <span style="color: #8f3f71; font-weight: bold;">330</span>)
-    .attr(<span style="color: #79740e;">"y"</span>, -<span style="color: #8f3f71; font-weight: bold;">120</span>)
-    .attr(<span style="color: #79740e;">"width"</span>, <span style="color: #8f3f71; font-weight: bold;">20</span>)
-    .attr(<span style="color: #79740e;">"height"</span>, rectHeight)
-    .attr(<span style="color: #79740e;">"rx"</span>, rectRadius) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the horizontal radius for rounded corners</span>
-    .attr(<span style="color: #79740e;">"ry"</span>, rectRadius) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the vertical radius for rounded corners</span>
-    .style(<span style="color: #79740e;">"fill"</span>, d =&gt; myColor(d[<span style="color: #8f3f71; font-weight: bold;">0</span>])); <span style="color: #a89984;">// </span><span style="color: #a89984;">Get the color based on the first character of the legend item</span>
-
+&#9474;   .attr(<span style="color: #79740e;">"x"</span>, -margin.left - <span style="color: #8f3f71; font-weight: bold;">330</span>)
+&#9474;   .attr(<span style="color: #79740e;">"y"</span>, -<span style="color: #8f3f71; font-weight: bold;">120</span>)
+&#9474;   .attr(<span style="color: #79740e;">"width"</span>, <span style="color: #8f3f71; font-weight: bold;">20</span>)
+&#9474;   .attr(<span style="color: #79740e;">"height"</span>, rectHeight)
+&#9474;   .attr(<span style="color: #79740e;">"rx"</span>, rectRadius) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the horizontal radius for rounded corners</span>
+&#9474;   .attr(<span style="color: #79740e;">"ry"</span>, rectRadius) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set the vertical radius for rounded corners</span>
+&#9474;   .style(<span style="color: #79740e;">"fill"</span>, d =&gt; myColor(d[<span style="color: #8f3f71; font-weight: bold;">0</span>])); <span style="color: #a89984;">// </span><span style="color: #a89984;">Get the color based on the first character of the legend item</span>
+&#9474;
 legendItems.append(<span style="color: #79740e;">"text"</span>)
-    .attr(<span style="color: #79740e;">"x"</span>, -margin.left - <span style="color: #8f3f71; font-weight: bold;">300</span>)
-    .attr(<span style="color: #79740e;">"y"</span>, -<span style="color: #8f3f71; font-weight: bold;">100</span>)
-    .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">"12px"</span>)
-    .style(<span style="color: #79740e;">"font-family"</span>, <span style="color: #79740e;">"sans-serif"</span>) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set font family to sans-serif</span>
-    .style(<span style="color: #79740e;">"fill"</span>, d =&gt; myColor(d[<span style="color: #8f3f71; font-weight: bold;">0</span>])) <span style="color: #a89984;">// </span><span style="color: #a89984;">Get the color based on the first character of the legend item</span>
-    .text(d =&gt; d);
-
-  })
-
-  <span style="color: #a89984;">// </span><span style="color: #a89984;">Add title to graph</span>
-  svg.append(<span style="color: #79740e;">"foreignObject"</span>)
-      .attr(<span style="color: #79740e;">"x"</span>, -margin.left)
-      .attr(<span style="color: #79740e;">"y"</span>, +<span style="color: #8f3f71; font-weight: bold;">180</span>)
-      .attr(<span style="color: #79740e;">"width"</span>, width)
-      .attr(<span style="color: #79740e;">"height"</span>, <span style="color: #8f3f71; font-weight: bold;">150</span>)
-    .append(<span style="color: #79740e;">"xhtml:div"</span>)
-      .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">"1.2em"</span>)
-      .html(<span style="color: #79740e;">`Changes for &lt;span class="gene-symbol"&gt;${hgnc_symbol}&lt;/span&gt; &lt;/br&gt; from ${myGroups[0]} &lt;/br&gt; to ${myGroups[myGroups.length -1]}`</span>);
-   <span style="color: #a89984;">// </span><span style="color: #a89984;">Add subtitle to graph</span>
-   svg.append(<span style="color: #79740e;">"foreignObject"</span>)
-      .attr(<span style="color: #79740e;">"x"</span>, -margin.left)
-      .attr(<span style="color: #79740e;">"y"</span>, +<span style="color: #8f3f71; font-weight: bold;">350</span>)
-      .attr(<span style="color: #79740e;">"width"</span>, width)
-      .attr(<span style="color: #79740e;">"height"</span>, <span style="color: #8f3f71; font-weight: bold;">150</span>)
-      .append(<span style="color: #79740e;">"xhtml:div"</span>)
-      .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">".8em"</span>)
-      .style(<span style="color: #79740e;">"fill"</span>, <span style="color: #79740e;">"grey"</span>)
-      .style(<span style="color: #79740e;">"max-width"</span>, <span style="color: #8f3f71; font-weight: bold;">400</span>)
-      .html(<span style="color: #79740e;">`&lt;a href="${heatmap_data_url}"&gt;Download the diff table&lt;/a&gt; &lt;/br&gt; &lt;a href="https://www.genenames.org/download/archive/"&gt;View the column definitions&lt;/a&gt;`</span>);
+&#9474;   .attr(<span style="color: #79740e;">"x"</span>, -margin.left - <span style="color: #8f3f71; font-weight: bold;">300</span>)
+&#9474;   .attr(<span style="color: #79740e;">"y"</span>, -<span style="color: #8f3f71; font-weight: bold;">100</span>)
+&#9474;   .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">"12px"</span>)
+&#9474;   .style(<span style="color: #79740e;">"font-family"</span>, <span style="color: #79740e;">"sans-serif"</span>) <span style="color: #a89984;">// </span><span style="color: #a89984;">Set font family to sans-serif</span>
+&#9474;   .style(<span style="color: #79740e;">"fill"</span>, d =&gt; myColor(d[<span style="color: #8f3f71; font-weight: bold;">0</span>])) <span style="color: #a89984;">// </span><span style="color: #a89984;">Get the color based on the first character of the legend item</span>
+&#9474;   .text(d =&gt; d);
+&#9474;
+&#9474; })
+&#9474;
+&#9474; <span style="color: #a89984;">// </span><span style="color: #a89984;">Add title to graph</span>
+&#9474; svg.append(<span style="color: #79740e;">"foreignObject"</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"x"</span>, -margin.left)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"y"</span>, +<span style="color: #8f3f71; font-weight: bold;">180</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"width"</span>, width)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"height"</span>, <span style="color: #8f3f71; font-weight: bold;">150</span>)
+&#9474;   .append(<span style="color: #79740e;">"xhtml:div"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">"1.2em"</span>)
+&#9474;   &#9474; .html(<span style="color: #79740e;">`Changes for &lt;span class="gene-symbol"&gt;${hgnc_symbol}&lt;/span&gt; &lt;/br&gt; from ${myGroups[0]} &lt;/br&gt; to ${myGroups[myGroups.length -1]}`</span>);
+&#9474;  <span style="color: #a89984;">// </span><span style="color: #a89984;">Add subtitle to graph</span>
+&#9474;  svg.append(<span style="color: #79740e;">"foreignObject"</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"x"</span>, -margin.left)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"y"</span>, +<span style="color: #8f3f71; font-weight: bold;">350</span>)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"width"</span>, width)
+&#9474;   &#9474; .attr(<span style="color: #79740e;">"height"</span>, <span style="color: #8f3f71; font-weight: bold;">150</span>)
+&#9474;   &#9474; .append(<span style="color: #79740e;">"xhtml:div"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"font-size"</span>, <span style="color: #79740e;">".8em"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"fill"</span>, <span style="color: #79740e;">"grey"</span>)
+&#9474;   &#9474; .style(<span style="color: #79740e;">"max-width"</span>, <span style="color: #8f3f71; font-weight: bold;">400</span>)
+&#9474;   &#9474; .html(<span style="color: #79740e;">`&lt;a href="${heatmap_data_url}"&gt;Download the diff table&lt;/a&gt; &lt;/br&gt; &lt;a href="https://www.genenames.org/download/archive/"&gt;View the column definitions&lt;/a&gt;`</span>);
 }
 </pre>
 </div>
@@ -887,12 +878,11 @@ legendItems.append(<span style="color: #79740e;">"text"</span>)
 </details>
 </div>
 </div>
-
-<div id="outline-container-org5a4900f" class="outline-3">
-<h3 id="org5a4900f">Django backend</h3>
-<div class="outline-text-3" id="text-org5a4900f">
+<div id="outline-container-org231c2f8" class="outline-3">
+<h3 id="org231c2f8">Django backend</h3>
+<div class="outline-text-3" id="text-org231c2f8">
 <p>
-This part gets the <a class="org-gls" href="#gls.20" id="glsr.20.9">HGNC</a> ID from the form and returns the diff data for d3.js.
+This part gets the <a class="org-gls" href="#gls.1" id="glsr.1.9">HGNC</a> ID from the form and returns the diff data for d3.js.
 </p>
 
 <details class="code-details"
@@ -911,80 +901,80 @@ This part gets the <a class="org-gls" href="#gls.20" id="glsr.20.9">HGNC</a> ID 
                   </summary>
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #9d0006;">def</span> <span style="color: #b57614;">left_join_lists</span>(list1, list2):
-    <span style="color: #076678;">joined_list</span> = []
-
-    <span style="color: #9d0006;">for</span> sublist1 <span style="color: #9d0006;">in</span> list1:
-        <span style="color: #076678;">joined_sublist</span> = sublist1.copy()
-
-        <span style="color: #9d0006;">for</span> sublist2 <span style="color: #9d0006;">in</span> list2:
-            <span style="color: #9d0006;">if</span> sublist1[:<span style="color: #8f3f71; font-weight: bold;">2</span>] == sublist2[:<span style="color: #8f3f71; font-weight: bold;">2</span>]:
-                joined_sublist.extend(sublist2[<span style="color: #8f3f71; font-weight: bold;">2</span>:])
-                <span style="color: #9d0006;">break</span>
-        joined_list.append(joined_sublist)
-
-    <span style="color: #9d0006;">return</span> joined_list
-
-
+&#9474;   <span style="color: #076678;">joined_list</span> = []
+&#9474;
+&#9474;   <span style="color: #9d0006;">for</span> sublist1 <span style="color: #9d0006;">in</span> list1:
+&#9474;   &#9474;   <span style="color: #076678;">joined_sublist</span> = sublist1.copy()
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #9d0006;">for</span> sublist2 <span style="color: #9d0006;">in</span> list2:
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">if</span> sublist1[:<span style="color: #8f3f71; font-weight: bold;">2</span>] == sublist2[:<span style="color: #8f3f71; font-weight: bold;">2</span>]:
+&#9474;   &#9474;   &#9474;   &#9474;   joined_sublist.extend(sublist2[<span style="color: #8f3f71; font-weight: bold;">2</span>:])
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">break</span>
+&#9474;   &#9474;   joined_list.append(joined_sublist)
+&#9474;   &#9474;
+&#9474;   <span style="color: #9d0006;">return</span> joined_list
+&#9474;
+&#9474;
 <span style="color: #9d0006;">class</span> <span style="color: #8f3f71;">Echo</span>:
-    <span style="color: #79740e; font-style: italic;">"""An object that implements just the write method of the file-like</span>
-<span style="color: #79740e; font-style: italic;">    interface.</span>
-<span style="color: #79740e; font-style: italic;">    """</span>
-
-    <span style="color: #9d0006;">def</span> <span style="color: #b57614;">write</span>(<span style="color: #9d0006;">self</span>, value):
-        <span style="color: #79740e; font-style: italic;">"""Write the value by returning it, instead of storing in a buffer."""</span>
-        <span style="color: #9d0006;">return</span> value
-
-
+&#9474;   <span style="color: #79740e; font-style: italic;">"""An object that implements just the write method of the file-like</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   interface.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   """</span>
+&#9474;
+&#9474;   <span style="color: #9d0006;">def</span> <span style="color: #b57614;">write</span>(<span style="color: #9d0006;">self</span>, value):
+&#9474;   &#9474;   <span style="color: #79740e; font-style: italic;">"""Write the value by returning it, instead of storing in a buffer."""</span>
+&#9474;   &#9474;   <span style="color: #9d0006;">return</span> value
+&#9474;   &#9474;
+&#9474;   &#9474;
 <span style="color: #9d0006;">def</span> <span style="color: #b57614;">get_heatmap_data</span>(request, hgnc_id):
-    <span style="color: #076678;">cmd</span> = f<span style="color: #79740e;">'git --git-dir </span>{os.path.join(hgnc_data_path, "hgnc-data.git")}<span style="color: #79740e;"> log -p --name-status --pretty="%d" -- HGNC:</span>{hgnc_id}<span style="color: #79740e;">'</span>
-
-    <span style="color: #076678;">data</span> = subprocess.check_output(cmd, shell=<span style="color: #8f3f71;">True</span>).decode(<span style="color: #79740e;">"utf-8"</span>)
-
-    <span style="color: #076678;">pattern</span> = re.<span style="color: #af3a03;">compile</span>(r<span style="color: #79740e;">"\(tag: (\d{4}-\d{2}-\d{2})\)|(\S+)\s+(\S+)"</span>)
-
-    <span style="color: #076678;">name_status</span> = []
-    <span style="color: #076678;">current_group</span> = <span style="color: #8f3f71;">None</span>
-    <span style="color: #9d0006;">for</span> line <span style="color: #9d0006;">in</span> data.splitlines():
-        <span style="color: #9d0006;">match</span> = pattern.search(line)
-        <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>:
-            <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>):
-                <span style="color: #076678;">current_group</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>)
-            <span style="color: #9d0006;">else</span>:
-                <span style="color: #076678;">file_name</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">3</span>).split(<span style="color: #79740e;">"/"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>]
-                <span style="color: #076678;">value</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>)
-                name_status.append([current_group, file_name, value])
-
-    <span style="color: #076678;">cmd</span> = rf<span style="color: #79740e;">'git --git-dir </span>{os.path.join(hgnc_data_path, "hgnc-data.git")}<span style="color: #79740e;"> log -p  --pretty="%d" -- HGNC:</span>{hgnc_id}<span style="color: #79740e;"> | grep -v "^index\|^---\|^+++\|No newline \|^@\|^new"| sed "/^\s*$/d"'</span>
-    <span style="color: #076678;">data</span> = subprocess.check_output(cmd, shell=<span style="color: #8f3f71;">True</span>).decode(<span style="color: #79740e;">"utf-8"</span>)
-    <span style="color: #076678;">pattern</span> = re.<span style="color: #af3a03;">compile</span>(
-        r<span style="color: #79740e;">"\(tag: (\d{4}-\d{2}-\d{2})\)|(diff --git \S+\s+\S+)|(^\+|^-)"</span>
-    )
-    <span style="color: #076678;">diffs</span> = []
-    <span style="color: #076678;">current_group</span> = <span style="color: #8f3f71;">None</span>
-    <span style="color: #9d0006;">for</span> line <span style="color: #9d0006;">in</span> data.splitlines():
-        <span style="color: #9d0006;">match</span> = pattern.search(line)
-        <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>:
-            <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>):
-                <span style="color: #076678;">current_group</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>)
-            <span style="color: #9d0006;">elif</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>):
-                <span style="color: #076678;">file_name</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>).split(<span style="color: #79740e;">"/"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>]
-                diffs.append([current_group, file_name, []])
-            <span style="color: #9d0006;">elif</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">3</span>):
-                diffs[-<span style="color: #8f3f71; font-weight: bold;">1</span>][<span style="color: #8f3f71; font-weight: bold;">2</span>].append(line)
-    <span style="color: #076678;">diffs</span> = [[diff[<span style="color: #8f3f71; font-weight: bold;">0</span>], diff[<span style="color: #8f3f71; font-weight: bold;">1</span>], <span style="color: #79740e;">"</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">"</span>.join(diff[<span style="color: #8f3f71; font-weight: bold;">2</span>])] <span style="color: #9d0006;">for</span> diff <span style="color: #9d0006;">in</span> diffs]
-
-    <span style="color: #a89984;"># </span><span style="color: #a89984;">Process the data</span>
-    <span style="color: #076678;">header</span> = [<span style="color: #79740e;">"group"</span>, <span style="color: #79740e;">"variable"</span>, <span style="color: #79740e;">"value"</span>, <span style="color: #79740e;">"diff"</span>]
-    <span style="color: #076678;">rows</span> = left_join_lists(name_status, diffs)
-    rows.insert(<span style="color: #8f3f71; font-weight: bold;">0</span>, header)
-
-    <span style="color: #076678;">pseudo_buffer</span> = Echo()
-    <span style="color: #076678;">writer</span> = csv.writer(pseudo_buffer)
-    <span style="color: #9d0006;">return</span> StreamingHttpResponse(
-        (writer.writerow(row) <span style="color: #9d0006;">for</span> row <span style="color: #9d0006;">in</span> rows),
-        content_type=<span style="color: #79740e;">"text/csv"</span>,
-        headers={<span style="color: #79740e;">"Content-Disposition"</span>: f<span style="color: #79740e;">'attachment; filename="HGNC:</span>{hgnc_id}<span style="color: #79740e;">.csv"'</span>},
-    )
+&#9474;   <span style="color: #076678;">cmd</span> = f<span style="color: #79740e;">'git --git-dir </span>{os.path.join(hgnc_data_path, "hgnc-data.git")}<span style="color: #79740e;"> log -p --name-status --pretty="%d" -- HGNC:</span>{hgnc_id}<span style="color: #79740e;">'</span>
+&#9474;
+&#9474;   <span style="color: #076678;">data</span> = subprocess.check_output(cmd, shell=<span style="color: #8f3f71;">True</span>).decode(<span style="color: #79740e;">"utf-8"</span>)
+&#9474;
+&#9474;   <span style="color: #076678;">pattern</span> = re.<span style="color: #af3a03;">compile</span>(r<span style="color: #79740e;">"\(tag: (\d{4}-\d{2}-\d{2})\)|(\S+)\s+(\S+)"</span>)
+&#9474;
+&#9474;   <span style="color: #076678;">name_status</span> = []
+&#9474;   <span style="color: #076678;">current_group</span> = <span style="color: #8f3f71;">None</span>
+&#9474;   <span style="color: #9d0006;">for</span> line <span style="color: #9d0006;">in</span> data.splitlines():
+&#9474;   &#9474;   <span style="color: #9d0006;">match</span> = pattern.search(line)
+&#9474;   &#9474;   <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>:
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>):
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">current_group</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>)
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">else</span>:
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">file_name</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">3</span>).split(<span style="color: #79740e;">"/"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>]
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">value</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>)
+&#9474;   &#9474;   &#9474;   &#9474;   name_status.append([current_group, file_name, value])
+&#9474;   &#9474;   &#9474;   &#9474;
+&#9474;   <span style="color: #076678;">cmd</span> = rf<span style="color: #79740e;">'git --git-dir </span>{os.path.join(hgnc_data_path, "hgnc-data.git")}<span style="color: #79740e;"> log -p  --pretty="%d" -- HGNC:</span>{hgnc_id}<span style="color: #79740e;"> | grep -v "^index\|^---\|^+++\|No newline \|^@\|^new"| sed "/^\s*$/d"'</span>
+&#9474;   <span style="color: #076678;">data</span> = subprocess.check_output(cmd, shell=<span style="color: #8f3f71;">True</span>).decode(<span style="color: #79740e;">"utf-8"</span>)
+&#9474;   <span style="color: #076678;">pattern</span> = re.<span style="color: #af3a03;">compile</span>(
+&#9474;   &#9474;   r<span style="color: #79740e;">"\(tag: (\d{4}-\d{2}-\d{2})\)|(diff --git \S+\s+\S+)|(^\+|^-)"</span>
+&#9474;   )
+&#9474;   <span style="color: #076678;">diffs</span> = []
+&#9474;   <span style="color: #076678;">current_group</span> = <span style="color: #8f3f71;">None</span>
+&#9474;   <span style="color: #9d0006;">for</span> line <span style="color: #9d0006;">in</span> data.splitlines():
+&#9474;   &#9474;   <span style="color: #9d0006;">match</span> = pattern.search(line)
+&#9474;   &#9474;   <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>:
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">if</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>):
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">current_group</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">1</span>)
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">elif</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>):
+&#9474;   &#9474;   &#9474;   &#9474;   <span style="color: #076678;">file_name</span> = <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">2</span>).split(<span style="color: #79740e;">"/"</span>)[-<span style="color: #8f3f71; font-weight: bold;">1</span>]
+&#9474;   &#9474;   &#9474;   &#9474;   diffs.append([current_group, file_name, []])
+&#9474;   &#9474;   &#9474;   <span style="color: #9d0006;">elif</span> <span style="color: #9d0006;">match</span>.group(<span style="color: #8f3f71; font-weight: bold;">3</span>):
+&#9474;   &#9474;   &#9474;   &#9474;   diffs[-<span style="color: #8f3f71; font-weight: bold;">1</span>][<span style="color: #8f3f71; font-weight: bold;">2</span>].append(line)
+&#9474;   <span style="color: #076678;">diffs</span> = [[diff[<span style="color: #8f3f71; font-weight: bold;">0</span>], diff[<span style="color: #8f3f71; font-weight: bold;">1</span>], <span style="color: #79740e;">"</span><span style="color: #8f3f71;">\n</span><span style="color: #79740e;">"</span>.join(diff[<span style="color: #8f3f71; font-weight: bold;">2</span>])] <span style="color: #9d0006;">for</span> diff <span style="color: #9d0006;">in</span> diffs]
+&#9474;
+&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Process the data</span>
+&#9474;   <span style="color: #076678;">header</span> = [<span style="color: #79740e;">"group"</span>, <span style="color: #79740e;">"variable"</span>, <span style="color: #79740e;">"value"</span>, <span style="color: #79740e;">"diff"</span>]
+&#9474;   <span style="color: #076678;">rows</span> = left_join_lists(name_status, diffs)
+&#9474;   rows.insert(<span style="color: #8f3f71; font-weight: bold;">0</span>, header)
+&#9474;
+&#9474;   <span style="color: #076678;">pseudo_buffer</span> = Echo()
+&#9474;   <span style="color: #076678;">writer</span> = csv.writer(pseudo_buffer)
+&#9474;   <span style="color: #9d0006;">return</span> StreamingHttpResponse(
+&#9474;   &#9474;   (writer.writerow(row) <span style="color: #9d0006;">for</span> row <span style="color: #9d0006;">in</span> rows),
+&#9474;   &#9474;   content_type=<span style="color: #79740e;">"text/csv"</span>,
+&#9474;   &#9474;   headers={<span style="color: #79740e;">"Content-Disposition"</span>: f<span style="color: #79740e;">'attachment; filename="HGNC:</span>{hgnc_id}<span style="color: #79740e;">.csv"'</span>},
+&#9474;   )
 
 </pre>
 </div>
@@ -994,10 +984,8 @@ This part gets the <a class="org-gls" href="#gls.20" id="glsr.20.9">HGNC</a> ID 
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org296af6a" class="outline-2">
-<h2 id="org296af6a"><span class="section-number-2">4.</span> References</h2>
+<div id="outline-container-orga251a35" class="outline-2">
+<h2 id="orga251a35"><span class="section-number-2">4.</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Replogle, Joseph M., Reuben A. Saunders, Angela N. Pogson, Jeffrey A. Hussmann, Alexander Lenail, Alina Guna, Lauren Mascibroda, et al. 2022. “Mapping Information-Rich Genotype-Phenotype Landscapes with Genome-Scale Perturb-seq.” <i>Cell</i> 185 (14): 2559–75.e28. <a href="https://doi.org/10.1016/j.cell.2022.05.013">https://doi.org/10.1016/j.cell.2022.05.013</a>.</div>
@@ -1005,23 +993,21 @@ This part gets the <a class="org-gls" href="#gls.20" id="glsr.20.9">HGNC</a> ID 
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgfeb0f2b" class="outline-2">
-<h2 id="orgfeb0f2b"><span class="section-number-2">5.</span> Acronyms</h2>
+<div id="outline-container-org0962011" class="outline-2">
+<h2 id="org0962011"><span class="section-number-2">5.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<b><span class="org-glsdef" id="gls.21">CSV</span></b>&emsp;Comma separated values&ensp;<a class="org-glsdef" href="#glsr.21.1">1</a>
+<b><span class="org-glsdef" id="gls.22">CSV</span></b>&emsp;Comma separated values&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.20">HGNC</span></b>&emsp;HUGO Gene Nomenclature Committee&ensp;<a class="org-glsdef" href="#glsr.20.1">1</a>, <a class="org-glsdef" href="#glsr.20.2">2</a>, <a class="org-glsdef" href="#glsr.20.3">3</a>, <a class="org-glsdef" href="#glsr.20.4">4</a>, <a class="org-glsdef" href="#glsr.20.5">5</a>, <a class="org-glsdef" href="#glsr.20.6">6</a>, <a class="org-glsdef" href="#glsr.20.7">7</a>, <a class="org-glsdef" href="#glsr.20.8">8</a>, <a class="org-glsdef" href="#glsr.20.9">9</a>
+<b><span class="org-glsdef" id="gls.21">HGNC</span></b>&emsp;HUGO Gene Nomenclature Committee&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>, <a class="org-glsdef" href="#glsr.1.4">4</a>, <a class="org-glsdef" href="#glsr.1.5">5</a>, <a class="org-glsdef" href="#glsr.1.6">6</a>, <a class="org-glsdef" href="#glsr.1.7">7</a>, <a class="org-glsdef" href="#glsr.1.8">8</a>, <a class="org-glsdef" href="#glsr.1.9">9</a>
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgbf56257" class="outline-2">
-<h2 id="orgbf56257">Comments</h2>
-<div class="outline-text-2" id="text-orgbf56257">
+<div id="outline-container-orge3fdd9d" class="outline-2">
+<h2 id="orge3fdd9d">Comments</h2>
+<div class="outline-text-2" id="text-orge3fdd9d">
 <section id="isso-thread">
 <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
