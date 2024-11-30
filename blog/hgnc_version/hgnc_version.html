@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HGNC Version Control</title>
@@ -252,6 +252,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -272,7 +275,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">HGNC Version Control</h1>
-<div class="post-tag" id="org4fa29b9">
+<div class="post-tag" id="orgfd3e4f9">
 <p>
 24 Jun 2024 — Barış Salman
 </p>
@@ -320,7 +323,6 @@ Links
 <p>
 This will be the start of a series of posts about tracking versions of the genetic concepts of gene symbols, transcripts, and variants.
 Gene is a hard-to-define concept.
-HUGO Gene Nomenclature Committee
  (<a class="org-gls" href="#gls.1" id="glsr.1.1">HGNC</a>) is the authority that curates the human gene symbols.
 The <a class="org-gls" href="#gls.1" id="glsr.1.2">HGNC</a> guidelines page summarizes genes in the following sections:
 </p>
@@ -364,7 +366,7 @@ For this, I come up with the following:
 </ol>
 
 
-<div id="orgceaaa2e" class="figure">
+<div id="org2393774" class="figure">
 <p><img src="_20240401_120126screenshot.png" alt="_20240401_120126screenshot.png" data-action="zoom" />
 </p>
 </div>
@@ -394,7 +396,7 @@ This way we can directly query the changes made to that id using the following c
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgba62850">
+<div class="sidenote" id="org38e31d1">
 <p>
 Git syntax allows for directory-based query by giving a directory name after &ldquo;&#x2013;&rdquo;
 </p>
@@ -432,7 +434,7 @@ Every new commit is around 1M, so the increase rate is smaller compared to TXT f
 I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 </p>
 
-<pre class="example" id="org4e3fb6a">
+<pre class="example" id="org084e835">
 ❯ du -hs txts
 518M    txts
 ❯ du -hs hgnc-data
@@ -447,7 +449,7 @@ I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 <h2 id="orgb5c8597"><span class="section-number-2">3.</span> App</h2>
 <div class="outline-text-2" id="text-3">
 
-<div id="orga0ed36c" class="figure">
+<div id="org16a40cf" class="figure">
 <p><img src="_20240623_164437screenshot.png" alt="_20240623_164437screenshot.png" />
 </p>
 </div>
@@ -465,8 +467,7 @@ After the symbol is selected Django runs a subprocess and queries the repository
 </div>
 
 <p>
-After a bit more parsing and merging the result of the two commands a simple Comma separated values
- (<a class="org-gls" href="#gls.2" id="glsr.2.1">CSV</a>), ready to be plotted, is returned to the frontend.
+After a bit more parsing and merging the result of the two commands a simple  (<a class="org-gls" href="#gls.2" id="glsr.2.1">CSV</a>), ready to be plotted, is returned to the frontend.
 </p>
 </div>
 </div>
@@ -997,11 +998,11 @@ This part gets the <a class="org-gls" href="#gls.1" id="glsr.1.9">HGNC</a> ID fr
 <h2 id="org0962011"><span class="section-number-2">5.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<b><span class="org-glsdef" id="gls.22">CSV</span></b>&emsp;Comma separated values&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>
+<b><span class="org-glsdef" id="gls.22">CSV</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.21">HGNC</span></b>&emsp;HUGO Gene Nomenclature Committee&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>, <a class="org-glsdef" href="#glsr.1.4">4</a>, <a class="org-glsdef" href="#glsr.1.5">5</a>, <a class="org-glsdef" href="#glsr.1.6">6</a>, <a class="org-glsdef" href="#glsr.1.7">7</a>, <a class="org-glsdef" href="#glsr.1.8">8</a>, <a class="org-glsdef" href="#glsr.1.9">9</a>
+<b><span class="org-glsdef" id="gls.21">HGNC</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>, <a class="org-glsdef" href="#glsr.1.4">4</a>, <a class="org-glsdef" href="#glsr.1.5">5</a>, <a class="org-glsdef" href="#glsr.1.6">6</a>, <a class="org-glsdef" href="#glsr.1.7">7</a>, <a class="org-glsdef" href="#glsr.1.8">8</a>, <a class="org-glsdef" href="#glsr.1.9">9</a>
 </p>
 </div>
 </div>

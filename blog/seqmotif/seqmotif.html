@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -249,6 +249,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -281,7 +284,7 @@ else {
 <li><a href="#org6009358">2.1.1. Creating Sequences</a></li>
 <li><a href="#org1c22bf6">2.1.2. Creating motifs</a></li>
 <li><a href="#org9dd2c6c">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#org9ccbdb3">2.1.4. Putting it all together</a></li>
+<li><a href="#org5a282f2">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org2da770e">2.2. Finding the motif</a>
@@ -290,7 +293,7 @@ else {
 <li><a href="#org5e25a7f">2.2.2. Weighted Model Matrix</a></li>
 <li><a href="#org5bb08da">2.2.3. Calculate probability</a></li>
 <li><a href="#orgcc6fe15">2.2.4. Sliding window</a></li>
-<li><a href="#org5a282f2">2.2.5. Putting it all together</a></li>
+<li><a href="#orgaad293d">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
 <li><a href="#org506188b">2.3. Parameters affecting the results</a></li>
@@ -301,7 +304,7 @@ else {
 </ul>
 </div>
 </div>
-<div class="abstract" id="org40f5dbd">
+<div class="abstract" id="org5b0285a">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -314,7 +317,7 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org348aca6">
+<div class="sidenote" id="orgdc2b1cb">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -334,6 +337,38 @@ Below code sets up the virtual environment.
 pip install -U matplotlib pandas
 </pre>
 </div>
+
+<p>
+created virtual environment cpython3.10.8.final.0-64 in 130ms
+  creator cpython3posix(dest=/home/bar/desktop/workbench/seqmotif/venv, clear=false, no<sub>vcs</sub><sub>ignore</sub>=false, global=false)
+  seeder fromappdata(download=false, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app<sub>data</sub><sub>dir</sub>=/home/bar/.local/share/virtualenv)
+    added seed packages: pillow==9.3.0, contourpy==1.0.6, cycler==0.11.0, fonttools==4.38.0, kiwisolver==1.4.4, matplotlib==3.6.2, numpy==1.23.4, packaging==21.3, pandas==1.5.1, pip==22.3, pyparsing==3.0.9, python<sub>dateutil</sub>==2.8.2, pytz==2022.6, scipy==1.9.3, setuptools==65.5.0, six==1.16.0, wheel==0.38.4
+  activators bashactivator,cshellactivator,fishactivator,nushellactivator,powershellactivator,pythonactivator
+requirement already satisfied: matplotlib in ./venv/lib/python3.10/site-packages (3.6.2)
+requirement already satisfied: pandas in ./venv/lib/python3.10/site-packages (1.5.1)
+requirement already satisfied: packaging&gt;=20.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (21.3)
+requirement already satisfied: numpy&gt;=1.19 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.23.4)
+requirement already satisfied: kiwisolver&gt;=1.0.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.4.4)
+requirement already satisfied: pyparsing&gt;=2.2.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (3.0.9)
+requirement already satisfied: contourpy&gt;=1.0.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.0.6)
+requirement already satisfied: fonttools&gt;=4.22.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (4.38.0)
+requirement already satisfied: cycler&gt;=0.10 in ./venv/lib/python3.10/site-packages (from matplotlib) (0.11.0)
+requirement already satisfied: pillow&gt;=6.2.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (9.3.0)
+requirement already satisfied: python-dateutil&gt;=2.7 in ./venv/lib/python3.10/site-packages (from matplotlib) (2.8.2)
+requirement already satisfied: pytz&gt;=2020.1 in ./venv/lib/python3.10/site-packages (from pandas) (2022.6)
+requirement already satisfied: six&gt;=1.5 in ./venv/lib/python3.10/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #076678;">(</span><span style="color: #9d0006;">setq</span> current-dir <span style="color: #b16286;">(</span><span style="color: #8f3f71;">file-name-directory</span> <span style="color: #8ec07c;">(</span><span style="color: #8f3f71;">file-truename</span> <span style="color: #79740e;">"seqmotif.org"</span><span style="color: #8ec07c;">)</span><span style="color: #b16286;">)</span><span style="color: #076678;">)</span>
+<span style="color: #076678;">(</span><span style="color: #9d0006;">setq</span> <span style="color: #076678;">org-babel-python-command</span> <span style="color: #b16286;">(</span><span style="color: #8f3f71;">concat</span> current-dir <span style="color: #79740e;">"venv/bin/python"</span><span style="color: #b16286;">)</span><span style="color: #076678;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+/home/bar/Desktop/Workbench/seqmotif/venv/bin/python
+</pre>
+
 
 <p>
 The newest function in use probably is random.choices which is implemented in python 3.6 so this code should work any version after python 3.6 (at least up to 3.10).
@@ -401,7 +436,7 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="org115978f">
+<pre class="example" id="orgfc3db08">
 TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGG
 TGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
 GCCTAATAAATTACACAGCAGAATACGTTAGTAGTCCGCACCGGCCTCGAGCACATCCCT
@@ -510,7 +545,7 @@ Lets create 10 logos.
 </pre>
 </div>
 
-<pre class="example" id="org41df72b">
+<pre class="example" id="org694280f">
 AGCCTGG
 AGCCTCG
 AGCCTCG
@@ -543,8 +578,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 </div>
 </div>
-<div id="outline-container-org9ccbdb3" class="outline-4">
-<h4 id="org9ccbdb3"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org5a282f2" class="outline-4">
+<h4 id="org5a282f2"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -634,7 +669,7 @@ random.seed(<span style="color: #8f3f71; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="org7f8415c">
+<pre class="example" id="orgf47bfea">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -857,8 +892,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 </div>
-<div id="outline-container-org5a282f2" class="outline-4">
-<h4 id="org5a282f2"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-orgaad293d" class="outline-4">
+<h4 id="orgaad293d"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #9d0006;">from</span> collections <span style="color: #9d0006;">import</span> Counter
@@ -997,7 +1032,7 @@ plot_logo(wmm, <span style="color: #79740e;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="orgec68c3d" class="figure">
+<div id="org2d1c33a" class="figure">
 <p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
@@ -1057,7 +1092,7 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="org97495a7" class="figure">
+<div id="orge2dad60" class="figure">
 <p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1101,7 +1136,7 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org04e6b42" class="figure">
+<div id="org5ab29fc" class="figure">
 <p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1143,7 +1178,7 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="orge67e6d7" class="figure">
+<div id="org7cd6969" class="figure">
 <p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
@@ -1221,7 +1256,7 @@ plot_logo(wmm, <span style="color: #79740e;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="orgfc3db08" class="figure">
+<div id="org39d1b0b" class="figure">
 <p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Investigating male X heterozygosity in short read sequencing</title>
@@ -252,6 +252,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -272,7 +275,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Investigating male X heterozygosity in short read sequencing</h1>
-<div class="dateauthor" id="org0f72458">
+<div class="dateauthor" id="org0b593f1">
 <p>
 26 Jun 2024 — Barış Salman
 </p>
@@ -356,18 +359,16 @@ Haplotypecaller has a parameter to give ploidy, but since the data we are dealin
 <h2 id="orgd385aa1"><span class="section-number-2">2.</span> Materials and Methods</h2>
 <div class="outline-text-2" id="text-2">
 
-<div id="org1961319" class="figure">
+<div id="org63ea010" class="figure">
 <p><img src="_20240626_175223screenshot.png" alt="_20240626_175223screenshot.png" data-action="zoom" />
 </p>
 </div>
 
 <p>
-These are whole genome Variant Call Format
- (<a class="org-gls" href="#gls.2" id="glsr.2.1">VCF</a>) files and I can&rsquo;t download them all, luckily bcftools can query specific regions on them over the line which makes it both space and speed-efficient.
+These are whole genome  (<a class="org-gls" href="#gls.2" id="glsr.2.1">VCF</a>) files and I can&rsquo;t download them all, luckily bcftools can query specific regions on them over the line which makes it both space and speed-efficient.
 The region we are going to query is the X chromosome without the <a class="org-gls" href="#gls.1" id="glsr.1.3">PAR</a>.
 We are excluding the <a class="org-gls" href="#gls.1" id="glsr.1.4">PAR</a> since it&rsquo;s a diploid region.
-We are going to further filtrate the variants to be heterozygous and since this all started from Exome Sequencing
- (<a class="org-gls" href="#gls.3" id="glsr.3.1">ES</a>) we are just going to look at the exonic regions.
+We are going to further filtrate the variants to be heterozygous and since this all started from  (<a class="org-gls" href="#gls.3" id="glsr.3.1">ES</a>) we are just going to look at the exonic regions.
 To make things simpler we are going to look at SNVs since INDELs can be challenging to genotype.
 We also want to have a depth enough to decide the genotype and don&rsquo;t want anything not passing filters.
 </p>
@@ -386,8 +387,7 @@ We are going to implement all this workflow in the nextflow.
 <div class="outline-text-3" id="text-2-1">
 <p>
 For this job we are going to use individual variant call files from the project since multi-sample <a class="org-gls" href="#gls.2" id="glsr.2.2">VCF</a> are phased.
-Looking at the individual variant calls there are New York Genome Center
- (<a class="org-gls" href="#gls.4" id="glsr.4.1">NYGC</a>) study from 2019.
+Looking at the individual variant calls there are  (<a class="org-gls" href="#gls.4" id="glsr.4.1">NYGC</a>) study from 2019.
 There are two versions of these with one directory named raw​_calls​_old and another directory named raw​_calls​_updated.
 </p>
 
@@ -483,7 +483,7 @@ Since we are only looking for the sex of the individuals we only need the fields
                   </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgc48453d">
+<div class="sidenote" id="org4feb32a">
 <p>
 The characters with preceding percent sign are encoded versions of characters like {, [, &ldquo;, ], }.
 Because only ASCII character are allowed in the URLs.
@@ -587,7 +587,7 @@ For each of our samples, we create the URL for the <a class="org-gls" href="#gls
                   </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org4a4ccd9">
+<div class="sidenote" id="org383b34d">
 <p>
 BCFs are more performant than <a class="org-gls" href="#gls.2" id="glsr.2.4">VCFs</a>.
 <a href="https://www.biostars.org/p/273673/">https://www.biostars.org/p/273673/</a>
@@ -737,7 +737,7 @@ To count we are using awk, and printing them out in a bedGraph format.
                   </summary>
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org2f71f11">
+<div class="sidenote" id="org99fc4f3">
 <p>
 <a href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a>
 </p>
@@ -1121,7 +1121,7 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 </table>
 
 
-<div id="org594ce7a" class="figure">
+<div id="org1fa7708" class="figure">
 <p><img src="_20240619_182836screenshot.png" alt="_20240619_182836screenshot.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Sum of genotype counts with close up to some genes. There are four tracks here. The first track shows the genotype counts along the whole chromosome X. Second track is the major regions in chromosome X (<a class="org-gls" href="#gls.1" id="glsr.1.6">PAR</a>, x-added region (<a class="org-gls" href="#gls.5" id="glsr.5.1">XAR</a>), x-conserved region (<a class="org-gls" href="#gls.6" id="glsr.6.1">XCR</a>), x-transposed region (<a class="org-gls" href="#gls.7" id="glsr.7.1">XTR</a>)). Below that is the low complexity and <a class="org-gls" href="#gls.8" id="glsr.8.1">ampliconic regions</a>. At the bottom top 20 genes with the highest heterozygous genotype counts sum. Close-up IGV screenshots of some genes and regions are also included to give a better sense.</p>
@@ -1131,56 +1131,56 @@ We found a total of 71553 heterozygous genotype calls in 1223 male samples.
 To further investigate I run the BLAT tool on IGV on some of the hits. The tracks with the gray bars show the BLAT matches.
 </p>
 
-<div id="orgdd45e0e" class="figure">
+<div id="orga1482a8" class="figure">
 <p><img src="IGVscreenshots/SLC25A5.png" alt="SLC25A5.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 2: </span>BLAT query of <i>SLC25A5</i>  on chrX.</p>
 </div>
 
 
-<div id="org50a46d8" class="figure">
+<div id="org5d666d7" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr2.png" alt="SLC25A5_chr2.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 3: </span>BLAT query of <i>SLC25A5</i>  on chr2.</p>
 </div>
 
 
-<div id="org59eabc1" class="figure">
+<div id="org42da7d6" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr7.png" alt="SLC25A5_chr7.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 4: </span>BLAT query of <i>SLC25A5</i>  on chr7.</p>
 </div>
 
 
-<div id="org98be02a" class="figure">
+<div id="org5e1f22c" class="figure">
 <p><img src="IGVscreenshots/SLC25A5_chr9.png" alt="SLC25A5_chr9.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 5: </span>BLAT query of <i>SLC25A5</i>  on chr9.</p>
 </div>
 
 
-<div id="orge230be0" class="figure">
+<div id="orgc62d36d" class="figure">
 <p><img src="IGVscreenshots/RBMX.png" alt="RBMX.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 6: </span>BLAT query of <i>RBMX</i> on chrX.</p>
 </div>
 
 
-<div id="org1b5a62f" class="figure">
+<div id="orgd36e110" class="figure">
 <p><img src="IGVscreenshots/RLIM.png" alt="RLIM.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 7: </span>BLAT query of <i>RLIM</i> on chrX.</p>
 </div>
 
 
-<div id="org7f11ae4" class="figure">
+<div id="org1f05ebd" class="figure">
 <p><img src="IGVscreenshots/RBMXL3.png" alt="RBMXL3.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 8: </span>BLAT query of <i>RBMXL3</i> on chrX.</p>
 </div>
 
 
-<div id="org1bcf6bf" class="figure">
+<div id="orgda7b5f6" class="figure">
 <p><img src="IGVscreenshots/RBMXL3_chr11.png" alt="RBMXL3_chr11.png" data-action="zoom" />
 </p>
 <p><span class="figure-number">Figure 9: </span>BLAT query of <i>RBMXL3</i> on chr11.</p>
@@ -1221,9 +1221,9 @@ We are just not looking because they&rsquo;re diploid regions and seeing heteroz
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd28bcb3">
+<div class="sidenote" id="orgdbfdf25">
 
-<div id="org5d615ae" class="figure">
+<div id="org9c844b4" class="figure">
 <p><img src="_20240620_012744screenshot.png" alt="_20240620_012744screenshot.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span><a href="https://en.wikipedia.org/wiki/Thomas_Hunt_Morgan">Discovery of gene-chromosome relation</a></p>
@@ -1250,15 +1250,15 @@ Maybe the X chromosome can be use to model this <code>(pseudogene and gene famil
 <h2 id="orga8d1448"><span class="section-number-2">6.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-<b><span class="org-glsdef" id="gls.12">ES</span></b>&emsp;Exome Sequencing&ensp;<a class="org-glsdef" href="#glsr.3.1">1</a>
+<b><span class="org-glsdef" id="gls.12">ES</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.3.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.6">NYGC</span></b>&emsp;New York Genome Center&ensp;<a class="org-glsdef" href="#glsr.4.1">1</a>
+<b><span class="org-glsdef" id="gls.6">NYGC</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.4.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.5">VCF</span></b>&emsp;Variant Call Format&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>, <a class="org-glsdef" href="#glsr.2.2">2</a>, <a class="org-glsdef" href="#glsr.2.3">3</a>, <a class="org-glsdef" href="#glsr.2.4">4</a>
+<b><span class="org-glsdef" id="gls.5">VCF</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>, <a class="org-glsdef" href="#glsr.2.2">2</a>, <a class="org-glsdef" href="#glsr.2.3">3</a>, <a class="org-glsdef" href="#glsr.2.4">4</a>
 </p>
 </div>
 </div>

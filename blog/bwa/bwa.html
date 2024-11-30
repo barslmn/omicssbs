@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sequence Alignment from Scratch with BWA</title>
@@ -281,6 +281,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -336,7 +339,83 @@ else {
 </ul>
 </div>
 </div>
-<div class="abstract" id="org7858b02">
+<div class="org-src-container">
+<pre class="src src-python">
+<span style="color: #a89984;"># </span><span style="color: #a89984;">This block is used below for visualizing the recursion.</span>
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">pretty_args</span>(args):
+&#9474;   <span style="color: #79740e; font-style: italic;">"""pretty prints the arguments in a string</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   """</span>
+&#9474;   <span style="color: #9d0006;">return</span> <span style="color: #79740e;">", "</span>.join([<span style="color: #af3a03;">repr</span>(arg) <span style="color: #9d0006;">for</span> arg <span style="color: #9d0006;">in</span> args][<span style="color: #8f3f71; font-weight: bold;">1</span>:])
+&#9474;
+&#9474;
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">pretty_kwargs</span>(kwargs):
+&#9474;   <span style="color: #79740e; font-style: italic;">"""pretty prints the keyword arguments in a string</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   """</span>
+&#9474;   <span style="color: #9d0006;">return</span> <span style="color: #79740e;">", "</span>.join([
+&#9474;   &#9474;   f<span style="color: #79740e;">"</span>{key}<span style="color: #79740e;">=</span>{<span style="color: #af3a03;">repr</span>(value)}<span style="color: #79740e;">"</span>
+&#9474;   &#9474;   <span style="color: #9d0006;">for</span> key, value <span style="color: #9d0006;">in</span> kwargs.items()
+&#9474;   ])
+&#9474;
+&#9474;
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">pretty_func</span>(fn, args, kwargs):
+&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Pretty print args in a string</span>
+&#9474;   <span style="color: #076678;">args_str</span> = pretty_args(args)
+&#9474;
+&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Pretty print kwargs in a string</span>
+&#9474;   <span style="color: #076678;">kwargs_str</span> = pretty_args(kwargs)
+&#9474;
+&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Format the function string and return</span>
+&#9474;   <span style="color: #9d0006;">if</span> args_str <span style="color: #9d0006;">and</span> kwargs_str:
+&#9474;   &#9474;   <span style="color: #9d0006;">return</span> f<span style="color: #79740e;">"</span>{fn.<span style="color: #af3a03;">__name__</span>}<span style="color: #79740e;">(</span>{args_str, kwargs_str}<span style="color: #79740e;">)"</span>
+&#9474;   <span style="color: #9d0006;">return</span> f<span style="color: #79740e;">"</span>{fn.<span style="color: #af3a03;">__name__</span>}<span style="color: #79740e;">(</span>{args_str <span style="color: #9d0006;">or</span> kwargs_str}<span style="color: #79740e;">)"</span>
+&#9474;
+&#9474;
+<span style="color: #9d0006;">def</span> <span style="color: #b57614;">recviz</span>(fn):
+&#9474;   <span style="color: #79740e; font-style: italic;">"""Decorator that pretty prints the recursion tree with</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   &#9474;  args, kwargs and return values.</span>
+&#9474;<span style="color: #79740e; font-style: italic;">   """</span>
+&#9474;
+&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">holds the current recursion level</span>
+&#9474;   <span style="color: #076678;">recursion_level</span> = <span style="color: #8f3f71; font-weight: bold;">1</span>
+&#9474;
+&#9474;   <span style="color: #9d0006;">def</span> <span style="color: #b57614;">wrapper</span>(*args, **kwargs):
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">we register a nonlocal recursion_level so that</span>
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">it binds with the the recursion_level variable.</span>
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">in this case, it will bind to the one defined</span>
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">in recviz function.</span>
+&#9474;   &#9474;   <span style="color: #9d0006;">nonlocal</span> recursion_level
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Generate the pretty printed function string</span>
+&#9474;   &#9474;   <span style="color: #076678;">fn_str</span> = pretty_func(fn, args, kwargs)
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Generate the whitespaces as per the recursion level</span>
+&#9474;   &#9474;   <span style="color: #076678;">whitespace</span> = <span style="color: #79740e;">"   "</span> * (recursion_level - <span style="color: #8f3f71; font-weight: bold;">1</span>)
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Pretty print the function with the whitespace</span>
+&#9474;   &#9474;   <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{whitespace}<span style="color: #79740e;"> -&gt; </span>{fn_str}<span style="color: #79740e;">"</span>)
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">increment the recursion level</span>
+&#9474;   &#9474;   <span style="color: #076678;">recursion_level</span> += <span style="color: #8f3f71; font-weight: bold;">1</span>
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Invoke the wrapped function and hold the return value</span>
+&#9474;   &#9474;   <span style="color: #076678;">return_value</span> = fn(*args, **kwargs)
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Post function evaluation we decrease the recursion</span>
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">level by 1</span>
+&#9474;   &#9474;   <span style="color: #076678;">recursion_level</span> -= <span style="color: #8f3f71; font-weight: bold;">1</span>
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Pretty print the return value</span>
+&#9474;   &#9474;   <span style="color: #af3a03;">print</span>(f<span style="color: #79740e;">"</span>{whitespace}<span style="color: #79740e;"> &lt;- </span>{<span style="color: #af3a03;">repr</span>(return_value)}<span style="color: #79740e;">"</span>)
+&#9474;   &#9474;
+&#9474;   &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">Return the return value of the wrapped function</span>
+&#9474;   &#9474;   <span style="color: #9d0006;">return</span> return_value
+&#9474;   &#9474;
+&#9474;   <span style="color: #9d0006;">return</span> wrapper
+</pre>
+</div>
+
+<div class="abstract" id="orgde9d897">
 <p>
 The burrow wheeler algorithm is used to perform short read alignment, a cornerstone process in bioinformatics, especially next-generation sequencing.
 Short sequence alignment or mapping is one of the primary steps in re-sequencing projects where short reads from a fragmented genome are aligned back to a reference genome.
@@ -349,7 +428,7 @@ We can use this aligned data to discover small or structural variations in clini
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgca5ca41">
+<div class="sidenote" id="org828c12c">
 <p>
 Try it out yourself at this <a href="https://colab.research.google.com/drive/12idzfrTSRtEx5Dam9rTQcGv2c7s11nmo?usp=sharing">notebook</a>.
 </p>
@@ -374,7 +453,7 @@ Burrows-Wheeler Transform makes it possible to put these pieces to their place d
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgebcf07d">
+<div class="sidenote" id="orgeceff3e">
 <p>
 Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is performed once on the reference sequence before the alignment.
 </p>
@@ -387,7 +466,7 @@ Burrows-wheeler algorithm relies on burrows wheeler transform. This transform is
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org86ef818">
+<div class="sidenote" id="org5d595e1">
 <p>
 We loop over the length of the string and for every loop we add slices of the string from start and end as the index increments we get the shifting effect.
 </p>
@@ -506,7 +585,7 @@ Initial index: 4 of the: C
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orga64b863">
+<div class="sidenote" id="org4470d40">
 <p>
 Suffix array is the sequences that are up character <code>$</code> which is used by bowtie.
 </p>
@@ -693,7 +772,7 @@ To get a better grasp of whats happening lets track the index jumps too.
 </pre>
 </div>
 
-<pre class="example" id="org09f9fe2">
+<pre class="example" id="orgc89e3f0">
 loop	loopindex	index	initial_ind	first_column	last_column	c	t
 
 END          1          6          6                B               S           S       S$
@@ -881,7 +960,7 @@ Let&rsquo;s add this to our class too.
 </pre>
 </div>
 
-<pre class="example" id="orga52ed31">
+<pre class="example" id="org9076b6e">
 5 5
 0
 OMI
@@ -897,7 +976,7 @@ Backtracking algorithm described by (<a href="#citeproc_bib_item_1">Li and Durbi
 </p>
 
 
-<div id="org97c805a" class="figure">
+<div id="org4a8c0ef" class="figure">
 <p><img src="./fig3.jpeg" alt="fig3.jpeg" width="50%" />
 </p>
 </div>
@@ -977,7 +1056,7 @@ This function has two stop conditions either we reach the end of the string or w
 </pre>
 </div>
 
-<pre class="example" id="org99c5d29">
+<pre class="example" id="org4d612b0">
 Hİ 6 [[5, 5], [5, 4], [4, 3], [5, 5], [5, 4], [5, 5]]
 OMI
 OMI
@@ -990,7 +1069,7 @@ OMI
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org1829e5e">
+<div class="sidenote" id="orga001af3">
 <p>
 <b>Visualizing the recursion</b>
 </p>
@@ -1028,7 +1107,7 @@ We can use some help to better visualize the recursion. Lets yank this snippet: 
 </pre>
 </div>
 
-<pre class="example" id="orgdafb2dc">
+<pre class="example" id="orgb3049ad">
  -&gt; inexact_match('OMC', 2, 2, 1, 8)
     -&gt; inexact_match('OMC', 1, 1, 1, 8, 'ins')
        -&gt; inexact_match('OMC', 0, 0, 1, 8, 'ins')
@@ -3194,7 +3273,7 @@ everything is matched.
 </pre>
 </div>
 
-<pre class="example" id="orgfbfcf25">
+<pre class="example" id="org86cd0bf">
 @HD	VN:1.6	SO:coordinate
 @SQ	SN:REF	LN:120
 read1	0	REF	2	30	6M	*	0	6	TCCGCT	KKKKKK
@@ -3317,7 +3396,7 @@ samtools faidx ./ref.fasta
 </div>
 
 
-<div id="org162d411" class="figure">
+<div id="org4756f92" class="figure">
 <p><img src="./igv.svg" alt="igv.svg" class="org-svg" width="100%" />
 </p>
 </div>

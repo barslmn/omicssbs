@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Polygenic Risk Score Calculation</title>
@@ -249,6 +249,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -269,7 +272,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Polygenic Risk Score Calculation</h1>
-<div class="post-tag" id="orgb8df8d4">
+<div class="post-tag" id="org38260a2">
 <p>
 08 August 2023 — Barış Salman
 </p>
@@ -309,9 +312,9 @@ Links
 </li>
 <li><a href="#orga931b2c">3. Conclusion</a></li>
 <li><a href="#org908da4a">4. References</a></li>
+<li><a href="#orga793f2e">Comments</a></li>
 <li><a href="#org8cf6959">5. Acronyms</a></li>
 <li><a href="#org8fe2477">6. Glossary</a></li>
-<li><a href="#orga793f2e">Comments</a></li>
 </ul>
 </div>
 </div>
@@ -320,7 +323,7 @@ Links
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org78936d0">
+<div class="sidenote" id="orgd3f7942">
 <p>
 
 </p>
@@ -385,7 +388,7 @@ Since association studies show correlations and not causation a variant like rs1
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org0ee549e">
+<div class="sidenote" id="org19edb67">
 <p>
 You can create this ideogram at: <a href="https://www.ncbi.nlm.nih.gov/genome/tools/gdp">https://www.ncbi.nlm.nih.gov/genome/tools/gdp</a>
 </p>
@@ -476,7 +479,7 @@ With the following intervals:
 </div>
 
 
-<div id="orgd44fb1e" class="figure">
+<div id="orgb5abc38" class="figure">
 <p><img src="./ideogram.svg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Variations are marked with pink circles.</p>
@@ -580,7 +583,7 @@ Instead, we use the most significant variation and investigate their effect in o
 <div class="outline-text-3" id="text-2-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org371bfbc">
+<div class="sidenote" id="orga9598a9">
 <p>
 A great resource for viewing studies and their results is the <a href="https://www.ebi.ac.uk/gwas/">GWAS catalog</a>.
 A more hands-on example can be found at <a href="https://hail.is/docs/0.2/tutorials/01-genome-wide-association-study.html">Hail&rsquo;s site</a>.
@@ -595,12 +598,12 @@ As a result, we get p-values for how significant that association is and the <a 
 </p>
 
 <p>
-Let&rsquo;s say we have found <code>10</code> <a class="org-gls" href="#gls.7" id="glsr.7.4">SNPs</a> significant in a study with <code>50000</code> cases and <code>50000</code> controls.
+Let&rsquo;s say we have found <code class="src src-R">&lt;&lt;snp_number&gt;&gt;</code> <a class="org-gls" href="#gls.7" id="glsr.7.4">SNPs</a> significant in a study with <code class="src src-R">&lt;&lt;gwas_case_number&gt;&gt;</code> cases and <code class="src src-R">&lt;&lt;gwas_control_number&gt;&gt;</code> controls.
 First, let&rsquo;s go over the <a class="org-gls" href="#gls.7" id="glsr.7.5">SNPs</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R" id="orgd3e89e3">snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
+<pre class="src src-R" id="orge466fb8">snp_number <span style="color: #8f3f71;">&lt;-</span> &lt;&lt;snp_number&gt;&gt;
 
 gwas <span style="color: #8f3f71;">&lt;-</span> data.frame(
 &#9474; SNP_id = paste(<span style="color: #79740e;">"SNP"</span>, seq(snp_number), sep=<span style="color: #79740e;">""</span>)
@@ -747,18 +750,18 @@ We are going to use the log of <a href="https://en.wikipedia.org/wiki/Odds_ratio
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org2ef4f11">
+<div class="sidenote" id="orgcc2e191">
 <p>
-I want to set it up so every <code>SNP</code> is observed <code>2</code> % more incrementally.
+I want to set it up so every <code>SNP</code> is observed <code class="src src-R">&lt;&lt;increment_percent&gt;&gt; * <span style="color: #8f3f71; font-weight: bold;">100</span></code> % more incrementally.
 The lines with <a href="#coderef-step_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-step_case');" onmouseout="CodeHighlightOff(this, 'coderef-step_case');"><code>step_case</code></a> and <a href="#coderef-obs_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-obs_case');" onmouseout="CodeHighlightOff(this, 'coderef-obs_case');"><code>obs_case</code></a> just generalize this instead of hard-coding so it applies to any number of <code>SNPs</code> and sample size.
 </p>
 
 </div>
 
 <div class="org-src-container">
-<pre class="src src-R" id="org6d686a0">gwas_control_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
-gwas_case_number = <span style="color: #8f3f71; font-weight: bold;">50000</span>
-increment_percent = <span style="color: #8f3f71; font-weight: bold;">0.02</span>
+<pre class="src src-R" id="org9fa47dd">gwas_control_number = &lt;&lt;gwas_control_number&gt;&gt;
+gwas_case_number = &lt;&lt;gwas_case_number&gt;&gt;
+increment_percent = &lt;&lt;increment_percent&gt;&gt;
 gwas_sample_number = gwas_control_number + gwas_case_number
 
 <span id="coderef-step_case" class="coderef-off">step_case = round(gwas_case_number * increment_percent)</span>
@@ -863,14 +866,25 @@ print(rbind(head(gwas, <span style="color: #8f3f71; font-weight: bold;">3</span>
 </tbody>
 </table>
 
+<div class="org-src-container">
+<pre class="src src-R" id="org62797fc">gwas$log_OR[<span style="color: #8f3f71; font-weight: bold;">1</span>]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-R" id="org8546320">gwas$log_OR[nrow(gwas)]
+</pre>
+</div>
+
+
 <p>
 We get <code>effect sizes</code>
-for the first genotype and
-for the last genotype.
+<code class="src src-R">&lt;&lt;gwas_first_OR&gt;&gt;</code> for the first genotype and
+<code class="src src-R">&lt;&lt;gwas_last_OR&gt;&gt;</code> for the last genotype.
 A <code>BB</code> genotype would have score of
- <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="org-svg" /> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="org-svg" /> <code>TRUE</code>
+ <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="org-svg" /> <code class="src src-R">&lt;&lt;gwas_first_OR&gt;&gt;</code> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="org-svg" /> <code class="src src-R">&lt;&lt;gwas_first_OR&gt;&gt; * <span style="color: #8f3f71; font-weight: bold;">2</span></code>
  for the first genotype and
- <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="org-svg" /> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="org-svg" /> .
+ <img src="ltximg/prs_calculation_62c70cffac4c45b336c18ca0aaadb3b2c6b92b51.svg" alt="$2 \times$" class="org-svg" /> <code class="src src-R">&lt;&lt;gwas_last_OR&gt;&gt;</code> <img src="ltximg/prs_calculation_9e31fc8afa737a408b91d073da8ee248ee63fbae.svg" alt="$=$" class="org-svg" /> <code class="src src-R">&lt;&lt;gwas_last_OR&gt;&gt; * <span style="color: #8f3f71; font-weight: bold;">2</span></code>.
 </p>
 </div>
 </div>
@@ -879,13 +893,13 @@ A <code>BB</code> genotype would have score of
 <div class="outline-text-3" id="text-2-2">
 <p>
 We are screening our population concerning a phenotype.
-We aim to determine risk scores using the <a href="#org45625fd">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.1" id="glsr.1.4">PRS</a> and phenotype.
-We have genotyped <a href="#orgc86372d">the same <code>10</code> SNPs</a> in <code>2000</code> people for our study.
+We aim to determine risk scores using the <a href="#org552faf8">GWAS summary statistics</a> and see if we can make a correlation between <a class="org-gls" href="#gls.1" id="glsr.1.4">PRS</a> and phenotype.
+We have genotyped <a href="#orge4ce4a6">the same <code class="src src-R">&lt;&lt;snp_number&gt;&gt;</code> SNPs</a> in <code class="src src-R">&lt;&lt;sample_number&gt;&gt;</code> people for our study.
 </p>
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org939da2b">
+<div class="sidenote" id="orgfa8f1af">
 <p>
 The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-set_seed');" onmouseout="CodeHighlightOff(this, 'coderef-set_seed');"><code>set.seed()</code></a> in the first line ensure <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> randoms the same values every time.
 </p>
@@ -895,8 +909,8 @@ The <a href="#coderef-set_seed" class="coderef" onmouseover="CodeHighlightOn(thi
 <div class="org-src-container">
 <pre class="src src-R" id="org3a26924"><span id="coderef-set_seed" class="coderef-off">set.seed(<span style="color: #8f3f71; font-weight: bold;">42</span>)</span>
 
-sample_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">2000</span>
-snp_number <span style="color: #8f3f71;">&lt;-</span> <span style="color: #8f3f71; font-weight: bold;">10</span>
+sample_number <span style="color: #8f3f71;">&lt;-</span> &lt;&lt;sample_number&gt;&gt;
+snp_number <span style="color: #8f3f71;">&lt;-</span> &lt;&lt;snp_number&gt;&gt;
 samples <span style="color: #8f3f71;">&lt;-</span> data.frame(
 &#9474; sample_id = paste(<span style="color: #79740e;">"Sample"</span>, seq(sample_number), sep=<span style="color: #79740e;">""</span>),
 &#9474; status = c(
@@ -908,8 +922,8 @@ samples <span style="color: #8f3f71;">&lt;-</span> data.frame(
 &#9474; paste(sample(c(<span style="color: #79740e;">"A"</span>, <span style="color: #79740e;">"B"</span>), <span style="color: #8f3f71; font-weight: bold;">2</span>, replace=T, prob = prob), collapse=<span style="color: #79740e;">""</span>)
 }
 
-<span id="coderef-control_prob" class="coderef-off">control_prob <span style="color: #8f3f71;">&lt;-</span> c(<span style="color: #8f3f71; font-weight: bold;">0.55</span>, <span style="color: #8f3f71; font-weight: bold;">0.45</span>)</span>
-<span id="coderef-case_prob" class="coderef-off">case_prob <span style="color: #8f3f71;">&lt;-</span> c(<span style="color: #8f3f71; font-weight: bold;">0.45</span>, <span style="color: #8f3f71; font-weight: bold;">0.55</span>)</span>
+<span id="coderef-control_prob" class="coderef-off">control_prob <span style="color: #8f3f71;">&lt;-</span> &lt;&lt;control_prob&gt;&gt;</span>
+<span id="coderef-case_prob" class="coderef-off">case_prob <span style="color: #8f3f71;">&lt;-</span> &lt;&lt;case_prob&gt;&gt;</span>
 samples[gwas$SNP_id] <span style="color: #8f3f71;">&lt;-</span> rbind(
 &#9474; matrix(
 &#9474;   replicate(
@@ -1066,11 +1080,11 @@ print(rbind(head(samples, <span style="color: #8f3f71; font-weight: bold;">3</sp
 
 <p>
 We get random genotypes for controls for <a class="org-gls" href="#gls.6" id="glsr.6.2">alleles</a> <code>A</code>, and <code>B</code> with probabilities
-<a href="#coderef-control_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-control_prob');" onmouseout="CodeHighlightOff(this, 'coderef-control_prob');"><code>0.55, 0.45</code></a>
+<a href="#coderef-control_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-control_prob');" onmouseout="CodeHighlightOff(this, 'coderef-control_prob');"><code class="src src-R">paste(&lt;&lt;control_prob&gt;&gt;, collapse=<span style="color: #79740e;">", "</span>)</code> </a>
 ;
 cases for <a class="org-gls" href="#gls.6" id="glsr.6.3">alleles</a> <code>A</code>, and <code>B</code>
 with probabilities
-<a href="#coderef-case_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-case_prob');" onmouseout="CodeHighlightOff(this, 'coderef-case_prob');"><code>0.45, 0.55</code></a>
+<a href="#coderef-case_prob" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-case_prob');" onmouseout="CodeHighlightOff(this, 'coderef-case_prob');"><code class="src src-R">paste(&lt;&lt;case_prob&gt;&gt;, collapse=<span style="color: #79740e;">", "</span>)</code> </a>
 This way cases are more prone to having the <a class="org-gls" href="#gls.9" id="glsr.9.1">effect allele</a>.
 </p>
 </div>
@@ -1089,7 +1103,7 @@ We <a href="#coderef-prs" class="coderef" onmouseover="CodeHighlightOn(this, 'co
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org2236543">
+<div class="sidenote" id="org9f3b3dc">
 <p>
 We have both <code>AB</code> and <code>BA</code> genotypes in the <a href="#coderef-dosage_list" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-dosage_list');" onmouseout="CodeHighlightOff(this, 'coderef-dosage_list');">dosage list</a> because our <a href="#coderef-get_genotype" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-get_genotype');" onmouseout="CodeHighlightOff(this, 'coderef-get_genotype');"><code>get_genotype</code> function</a> returns both of these. Since there are no haplotypes or variant phasing both <code>AB</code> and <code>BA</code> are the same.
 </p>
@@ -1269,6 +1283,47 @@ To create the plot we will need <code>ggplot2</code>.
 </pre>
 </div>
 
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">ggplot2</td>
+</tr>
+
+<tr>
+<td class="org-left">stats</td>
+</tr>
+
+<tr>
+<td class="org-left">graphics</td>
+</tr>
+
+<tr>
+<td class="org-left">grDevices</td>
+</tr>
+
+<tr>
+<td class="org-left">utils</td>
+</tr>
+
+<tr>
+<td class="org-left">datasets</td>
+</tr>
+
+<tr>
+<td class="org-left">methods</td>
+</tr>
+
+<tr>
+<td class="org-left">base</td>
+</tr>
+</tbody>
+</table>
+
 
 <p>
 We <a href="#coderef-zero_shift" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-zero_shift');" onmouseout="CodeHighlightOff(this, 'coderef-zero_shift');">shift the scores by subtracting the mean of the controls</a> to make the controls center around 0.
@@ -1276,7 +1331,7 @@ We <a href="#coderef-zero_shift" class="coderef" onmouseover="CodeHighlightOn(th
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orge0c1841">
+<div class="sidenote" id="orgff9a25e">
 <p>
 We get the <a href="#coderef-mean_case" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-mean_case');" onmouseout="CodeHighlightOff(this, 'coderef-mean_case');">mean and standard deviations</a> to plot the curves with the <code>stat_function</code>.
 </p>
@@ -1308,7 +1363,7 @@ ggplot(samples, aes(x=PRS, color=status, fill=status)) +
 </div>
 
 
-<div id="org77db200" class="figure">
+<div id="orgaabf443" class="figure">
 <p><img src="PRS.svg" alt="PRS.svg" class="org-svg" />
 </p>
 </div>
@@ -1335,7 +1390,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org575d84a">
+<div class="sidenote" id="orga48482d">
 <ul class="org-ul">
 <li>Because most of the totals are the same they overlap and we plot only a few points as a result. <code>position_jitter</code> with <code>w=0.5</code> spreads the points around a bit allowing us the plot all of the points.</li>
 </ul>
@@ -1351,7 +1406,7 @@ Because the scores and the risk calculated here are relative. The effect becomes
 </div>
 
 
-<div id="org7aa9cbd" class="figure">
+<div id="orgb47c988" class="figure">
 <p><img src="PRS2.svg" alt="PRS2.svg" class="org-svg" />
 </p>
 </div>
@@ -1363,7 +1418,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="orgd8f54d3">
+<pre class="example" id="org61c86b9">
 
 Call:
 glm(formula = status ~ PRS, family = "binomial", data = samples)
@@ -1384,26 +1439,38 @@ AIC: 1246.5
 Number of Fisher Scoring iterations: 4
 </pre>
 
+<div class="org-src-container">
+<pre class="src src-R" id="org16fe257">signif(coef(model)[<span style="color: #8f3f71; font-weight: bold;">1</span>], <span style="color: #8f3f71; font-weight: bold;">4</span>)
+</pre>
+</div>
+
+<pre class="example">
+-0.3065
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-R" id="orgf85732d">signif(coef(model)[<span style="color: #8f3f71; font-weight: bold;">2</span>], <span style="color: #8f3f71; font-weight: bold;">4</span>)
+</pre>
+</div>
+
+<pre class="example">
+0.3417
+</pre>
+
+
 <p>
 In the model summary, we can find coefficients
-</p>
-
-<p>
+<code class="src src-R">&lt;&lt;odds_control&gt;&gt;</code>
 for the control group and
-</p>
-
-<p>
+<code class="src src-R">&lt;&lt;odds_case&gt;&gt;</code>
 for the case group.
 We can write our equation as
 <img src="ltximg/prs_calculation_9382adbeae32a6f5ddf4d1d75149d58ff47af273.svg" alt="$status =$" class="org-svg" />
-</p>
-<ul class="org-ul">
-<li><img src="ltximg/prs_calculation_287708b12fd2c9fbb814067bfc2ede158f99d43e.svg" alt="$\times PRS$" class="org-svg" />.</li>
-</ul>
-<p>
+<code class="src src-R">&lt;&lt;odds_control&gt;&gt;</code> + <code class="src src-R">&lt;&lt;odds_case&gt;&gt;</code> <img src="ltximg/prs_calculation_287708b12fd2c9fbb814067bfc2ede158f99d43e.svg" alt="$\times PRS$" class="org-svg" />.
 Inserting the sample&rsquo;s score into this equation would give us the log <a class="org-gls" href="#gls.10" id="glsr.10.1">odds</a> of having the phenotype.
 One unit increase in the <img src="ltximg/prs_calculation_7c44be32e772d062a92638a98ab44c377d36e9c0.svg" alt="$PRS$" class="org-svg" /> would increase the log <a class="org-gls" href="#gls.10" id="glsr.10.2">odds</a> by
-units.
+<code class="src src-R">&lt;&lt;odds_case&gt;&gt;</code> units.
 </p>
 
 <p>
@@ -1452,7 +1519,7 @@ ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -<span style="color: #8f
 </div>
 
 
-<div id="org296af26" class="figure">
+<div id="orge16f8c4" class="figure">
 <p><img src="PRS3.svg" alt="PRS3.svg" class="org-svg" />
 </p>
 </div>
@@ -1471,7 +1538,7 @@ The closer it gets to 1 better the fit.
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orga2e7f94">
+<div class="sidenote" id="org9aebe7e">
 <p>
 <code>rcompanion</code> has the <img src="ltximg/prs_calculation_afaa2d8edb5c7ca6f2150c71fefde583d19e45b9.svg" alt="$pseudo-R^2$" class="org-svg" /> calculations modules when the <code>Nagelkerke</code> function is called other methods results are also returned.
 </p>
@@ -1484,7 +1551,7 @@ nagelkerke(model)
 </pre>
 </div>
 
-<pre class="example" id="org8c84580">
+<pre class="example" id="org9003bc5">
 $Models
 
 Model: "glm, status ~ PRS, binomial, samples"
@@ -1710,7 +1777,7 @@ summary(model)
 </pre>
 </div>
 
-<pre class="example" id="org7c80a68">
+<pre class="example" id="orga280a1c">
 
 Call:
 glm(formula = status ~ deciles, family = "binomial", data = samples)
@@ -1762,7 +1829,7 @@ ggplot(my_sum_data, aes(decile, odds_ratio)) +
 </div>
 
 
-<div id="orgfee16b0" class="figure">
+<div id="org27b2d9c" class="figure">
 <p><img src="PRS-decile.svg" alt="PRS-decile.svg" class="org-svg" />
 </p>
 </div>
@@ -1814,6 +1881,14 @@ This post also never goes into more finickier subjects like population stratific
   <div class="csl-entry"><a id="citeproc_bib_item_16"></a>Uffelmann, Emil, Qin Qin Huang, Nchangwi Syntia Munung, Jantina de Vries, Yukinori Okada, Alicia R. Martin, Hilary C. Martin, Tuuli Lappalainen, and Danielle Posthuma. 2021. “Genome-Wide Association Studies.” <i>Nature Reviews Methods Primers</i> 1 (1): 1–21. <a href="https://doi.org/10.1038/s43586-021-00056-9">https://doi.org/10.1038/s43586-021-00056-9</a>.</div>
   <div class="csl-entry"><a id="citeproc_bib_item_17"></a>“Understanding Statistics: Risk BMJ Best Practice.” n.d. Accessed July 29, 2023.</div>
 </div>
+</div>
+</div>
+<div id="outline-container-orga793f2e" class="outline-2">
+<h2 id="orga793f2e">Comments</h2>
+<div class="outline-text-2" id="text-orga793f2e">
+<section id="isso-thread">
+    <noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
 </div>
 </div>
 <div id="outline-container-org8cf6959" class="outline-2">
@@ -1882,14 +1957,6 @@ This post also never goes into more finickier subjects like population stratific
 <p>
 <b><span class="org-glsdef" id="gls.32">Variant of unknown significance</span></b>&emsp;The variants we can&rsquo;t decide whether its pathogenic or benign&ensp;<a class="org-glsdef" href="#glsr.14.1">1</a>
 </p>
-</div>
-</div>
-<div id="outline-container-orga793f2e" class="outline-2">
-<h2 id="orga793f2e">Comments</h2>
-<div class="outline-text-2" id="text-orga793f2e">
-<section id="isso-thread">
-    <noscript>Javascript needs to be activated to view comments.</noscript>
-</section>
 </div>
 </div>
 </div>

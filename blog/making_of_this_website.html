@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Making of this website</title>
@@ -249,6 +249,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -269,7 +272,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Making of this website</h1>
-<div class="post-tag" id="org776422e">
+<div class="post-tag" id="orgcd783dc">
 <p>
 21 Feb 2024 — Barış Salman
 </p>
@@ -305,7 +308,7 @@ else {
 <li><a href="#org825ed99">Nginx</a></li>
 <li><a href="#orgd0e9ec7">Django</a></li>
 <li><a href="#orgdc1c677">Cron</a></li>
-<li><a href="#org3565379">Isso</a></li>
+<li><a href="#org7e5a62e">Isso</a></li>
 <li><a href="#org3679a03">Git</a></li>
 <li><a href="#orgbffee2c">systemd</a></li>
 </ul>
@@ -323,7 +326,7 @@ Django is an opinionated framework which works for me as a geneticist who don&rs
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgcaa4c75">
+<div class="sidenote" id="orgd58014c">
 <p>
 At this time I was also starting with Doomemacs.
 I had use vim/neovim for over 5 years before switching Emacs.
@@ -345,7 +348,7 @@ After seeing what org mode is capable of doing I looked no further for blogging.
 </p>
 
 
-<div id="orgdf68c38" class="figure">
+<div id="orgef85343" class="figure">
 <p><img src="./omicssbs_schema.svg" alt="omicssbs_schema.svg" class="org-svg" />
 </p>
 </div>
@@ -375,7 +378,7 @@ Orgmode compiles latex fragments as SVG figures and can add them to HTML files.
 I haven&rsquo;t tried to create a tikz image yet but chemfig images like below displayed as expected.
 </p>
 
-<pre class="example" id="org1ad8b5e">
+<pre class="example" id="org6d75e26">
 $$
 \chemname{\chemfig{[:150]@{C2}N*6(-(-N([:0]-@{C1}H)([:120]-H))=N-=-(=@{C3}O)-)}}{Cytosine} \qquad %
 \chemname{\chemfig{N([:180]-@{G2}H)*6(-(-N([:180]-@{G3}H)([:-60]-H))=N-*5(-N-=N-)=-(=@{G1}O)-[,,,2])}}{Guanine} %
@@ -414,7 +417,7 @@ I define variables in noweb blocks under a no-export header.
 I use noweb blocks in other blocks as well as in text itself with in like code. This way I can have text and code synchronized.
 </p>
 
-<pre class="example" id="org8e664b2">
+<pre class="example" id="orgb88bc21">
 ;* Variables :noexport:
 These are the variables used both in text and the code. This way both the code and the text are in sync.
 #+NAME: gwas_control_number
@@ -432,16 +435,6 @@ Let's say we have found src_R[:noweb yes :eval yes]{&lt;&lt;snp_number&gt;&gt;} 
 <p>
 Doomemacs <code>biblio</code> module includes citar and required packages. I export my bibliography from Zotero with <code>better-bibtex</code> plugin.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-org"><span style="color: #79740e;">bibliography: /home/bar/org/lib.bib</span>
-
-;* References
-<span style="color: #79740e;">print_bibliography:</span>
-
-<span style="color: #79740e;">print_glossary: :type glossary acronym index :level 0 :consume no :all no :only-contents no</span>
-</pre>
-</div>
 </div>
 </div>
 <div id="outline-container-orga5c446f" class="outline-3">
@@ -451,7 +444,7 @@ Doomemacs <code>biblio</code> module includes citar and required packages. I exp
 Orgmode publish function creates the index page based on index attributes in the individual files.
 </p>
 
-<pre class="example" id="org61b7cb4">
+<pre class="example" id="orgc78a474">
 #+INDEX: emacs
 #+INDEX: org mode
 #+INDEX: blog
@@ -501,7 +494,7 @@ Orgmode has <a href="https://orgmode.org/manual/Advanced-features.html">extendab
 Anything under the heading with the tag <code>noexport</code> will not be exported to the final document.
 </p>
 
-<pre class="example" id="org1bb144c">
+<pre class="example" id="org9e92643">
 #+EXCLUDE_TAGS: noexport
 
 ;* My_heading :noexport:
@@ -515,7 +508,7 @@ Anything under the heading with the tag <code>noexport</code> will not be export
 This way code blocks are not evaluated when exporting to html.
 </p>
 
-<pre class="example" id="org684a286">
+<pre class="example" id="org1d7fbad">
 #+PROPERTY: HEADER-ARGS+ :eval no-export
 </pre>
 </div>
@@ -527,7 +520,7 @@ This way code blocks are not evaluated when exporting to html.
 Appendices or any other unnumbered heading can be achieved like this.
 </p>
 
-<pre class="example" id="org7327c98">
+<pre class="example" id="org2307897">
 ;* Comments
 :PROPERTIES:
 :UNNUMBERED: t
@@ -900,7 +893,7 @@ In the second function, we grep for the 6 character token in task-spooler jobs. 
 There is one user cron for creating a JSON RSS feed from the university&rsquo;s announcement page. This runs every 4 hours in work hours from 6:00 AM to 6:00 PM.
 </p>
 
-<pre class="example" id="orgc6c2bab">
+<pre class="example" id="orgfa476f6">
 0 6-18/4 * * * /home/bar/omicssbs/feeds/duyuru.py
 </pre>
 
@@ -909,16 +902,16 @@ There is one user cron for creating a JSON RSS feed from the university&rsquo;s 
 There is also two root jobs. One for keeping everything updated and one for auto-renewing the SSL certificate managed by the autocertbot.
 </p>
 
-<pre class="example" id="org241fd27">
+<pre class="example" id="orga5adb15">
 0 0 * * * sudo apt autoremove -y ; sudo apt autoclean -y; sudo apt update -y; sudo apt upgrade -y
 
 15 0 * * * "/opt/acmesh/.acme.sh"/acme.sh --cron --home "/opt/acmesh/.acme.sh" &gt; /dev/null
 </pre>
 </div>
 </div>
-<div id="outline-container-org3565379" class="outline-3">
-<h3 id="org3565379">Isso</h3>
-<div class="outline-text-3" id="text-org3565379">
+<div id="outline-container-org7e5a62e" class="outline-3">
+<h3 id="org7e5a62e">Isso</h3>
+<div class="outline-text-3" id="text-org7e5a62e">
 <p>
 Isso is the standalone commenting app. Initially, I looked for a Django package for this, but I couldn&rsquo;t find anything to my liking. I later experimented with Commento but settled upon Isso.
 It has moderation and threads and easy to set up which was the main things I was looking for.
@@ -1031,9 +1024,9 @@ WantedBy=multi-user.target
 </div>
 </div>
 </div>
-<div id="outline-container-org7e5a62e" class="outline-4">
-<h4 id="org7e5a62e">isso</h4>
-<div class="outline-text-4" id="text-org7e5a62e">
+<div id="outline-container-org59c3c63" class="outline-4">
+<h4 id="org59c3c63">isso</h4>
+<div class="outline-text-4" id="text-org59c3c63">
 <div class="org-src-container">
 <pre class="src src-ini">[Unit]
 Description=gunicorn daemon

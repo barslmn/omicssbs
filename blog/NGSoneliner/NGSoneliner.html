@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 13:53 -->
+<!-- 2024-11-30 Sat 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>NGS one-liner to call variants</title>
@@ -255,6 +255,9 @@ else {
             <a href="https://omics.sbs/notes">Notes</a>
         </li>
         <li>
+            <a href="https://omics.sbs/photos">Photos</a>
+        </li>
+        <li>
             <a href="https://omics.sbs/bioscripts">Bioscripts</a>
         </li>
         <li class="preferences">
@@ -275,7 +278,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">NGS one-liner to call variants</h1>
-<div class="post-tag" id="org4f968f4">
+<div class="post-tag" id="orgf6f14ce">
 <p>
 22 Oct 2023 — Barış Salman
 </p>
@@ -294,9 +297,9 @@ Links
 <div class="outline-text-2" id="text-introduction">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd58d02c">
+<div class="sidenote" id="orga3a88cb">
 <p>
-<svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="380" height="160" version="1.1"><rect x="0" y="0" width="380" height="160" id="edraw-org7cfda5e-background" stroke="none" fill="rgba(255,255,255,0)" /><g id="edraw-org7cfda5e-body"><rect fill-opacity="0.4" height="20" width="140" y="20" x="20" ry="10" rx="10" fill="#e20e0e" stroke="none" /><rect fill-opacity="0.4" stroke="none" fill="#e20e0e" ry="10" rx="10" height="20" width="140" y="60" x="100" /><rect fill-opacity="0.4" stroke="none" fill="#e20e0e" ry="10" rx="10" height="20" width="140" y="100" x="180" /><rect fill-opacity="0.5" height="20" width="140" y="40" x="60" ry="10" rx="10" fill="#1f77b4" stroke="none" /><rect fill-opacity="0.5" stroke="none" fill="#1f77b4" ry="10" rx="10" height="20" width="140" y="80" x="140" /><rect fill-opacity="0.4" stroke="none" fill="#1f77b4" ry="10" rx="10" height="20" width="140" y="120" x="220" /><path stroke-width="6" stroke="#666" fill="none" d="M200,40L200,60" /><path stroke-width="6" stroke="#666" fill="none" d="M240,60L240,80" /><path stroke-width="6" stroke="#666" fill="none" d="M280,80L280,100" /><path stroke-width="6" stroke="#666" fill="none" d="M320,100L320,120" /><path stroke-width="6" stroke="#666" fill="none" d="M160,20L160,40" /></g></svg>
+<svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="380" height="160" version="1.1"><rect x="0" y="0" width="380" height="160" id="edraw-org00f0e01-background" stroke="none" fill="rgba(255,255,255,0)" /><g id="edraw-org00f0e01-body"><rect fill-opacity="0.4" height="20" width="140" y="20" x="20" ry="10" rx="10" fill="#e20e0e" stroke="none" /><rect fill-opacity="0.4" stroke="none" fill="#e20e0e" ry="10" rx="10" height="20" width="140" y="60" x="100" /><rect fill-opacity="0.4" stroke="none" fill="#e20e0e" ry="10" rx="10" height="20" width="140" y="100" x="180" /><rect fill-opacity="0.5" height="20" width="140" y="40" x="60" ry="10" rx="10" fill="#1f77b4" stroke="none" /><rect fill-opacity="0.5" stroke="none" fill="#1f77b4" ry="10" rx="10" height="20" width="140" y="80" x="140" /><rect fill-opacity="0.4" stroke="none" fill="#1f77b4" ry="10" rx="10" height="20" width="140" y="120" x="220" /><path stroke-width="6" stroke="#666" fill="none" d="M200,40L200,60" /><path stroke-width="6" stroke="#666" fill="none" d="M240,60L240,80" /><path stroke-width="6" stroke="#666" fill="none" d="M280,80L280,100" /><path stroke-width="6" stroke="#666" fill="none" d="M320,100L320,120" /><path stroke-width="6" stroke="#666" fill="none" d="M160,20L160,40" /></g></svg>
 </p>
 
 </div>
@@ -333,43 +336,7 @@ As I start building and testing the pipeline I had a few problems as well as que
 <h3 id="pipeline"><span class="section-number-3">2.1.</span> Pipeline</h3>
 <div class="outline-text-3" id="text-pipeline">
 <div class="org-src-container">
-<pre class="src src-sh"><span id="coderef-fastp" class="coderef-off"><span style="color: #a89984;"># </span><span style="color: #a89984;">fastp --in1 "$R1" --in2 "$R2" --stdout --html $OUTPUT.fastp.html --json $OUTPUT.fastp.json 2&gt;$OUTPUT.$$.fastp.log |</span></span>
-<span id="coderef-bwa" class="coderef-off">bwa mem -t <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -R <span style="color: #79740e;">"@RG\tID:</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">SAMPLE</span><span style="color: #79740e;">\tSM:</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">SAMPLE</span><span style="color: #79740e;">\tPL:illumina\tLB:lib1\tPU:foo"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">REFERENCE</span><span style="color: #79740e;">"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">R1</span><span style="color: #79740e;">"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">R2</span><span style="color: #79740e;">"</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bwa.log"</span> |</span>
-<span id="coderef-pv" class="coderef-off">&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN bwa -s "$(gzip -l "$R1" "$R2" | awk '{print $2}' | tail -n1)" |</span></span>
-<span id="coderef-samtools_collate" class="coderef-off">&#9474;   samtools collate -@ <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -O - |</span>
-<span id="coderef-samtools_fixmate" class="coderef-off">&#9474;   samtools fixmate -@ <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -m - - |</span>
-<span id="coderef-samtools_sort" class="coderef-off">&#9474;   samtools sort -@ <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> - <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.samtools.log"</span> |</span>
-&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN samtools_sort |</span>
-<span id="coderef-samtools_markdup" class="coderef-off">&#9474;   <span style="color: #076678;">(</span><span style="color: #b16286;">[</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">AMPLICON</span><span style="color: #79740e;">"</span> = <span style="color: #79740e;">"NO"</span> <span style="color: #b16286;">]</span> &amp;&amp; samtools markdup -@ <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> - - || <span style="color: #8f3f71;">cat</span><span style="color: #076678;">)</span> |</span>
-&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN samtools_markdup |</span>
-<span id="coderef-samtools_view" class="coderef-off">&#9474;   samtools view -C -T <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">REFERENCE</span><span style="color: #79740e;">"</span> - |</span>
-<span id="coderef-tee_cram" class="coderef-off">&#9474;   tee <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.cram"</span> |</span>
-<span id="coderef-bcftools_mpileup" class="coderef-off">&#9474;   bcftools mpileup --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -A -T <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">TARGET</span><span style="color: #79740e;">"</span> -d <span style="color: #8f3f71; font-weight: bold;">10000</span> -L <span style="color: #8f3f71; font-weight: bold;">10000</span> -a <span style="color: #79740e;">"FORMAT/AD,FORMAT/DP"</span> -f <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">REFERENCE</span><span style="color: #79740e;">"</span> - <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN bcftools_mpileup |</span>
-<span id="coderef-bcftools_call" class="coderef-off">&#9474;   bcftools call --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou --ploidy <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">ASSEMBLY</span><span style="color: #79740e;">"</span> -mv |</span>
-&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN bcftools_call |</span>
-<span id="coderef-bcftools_view" class="coderef-off">&#9474;   bcftools view -i <span style="color: #79740e;">'FORMAT/DP&gt;5&amp;&amp;QUAL&gt;5'</span> |</span>
-<span id="coderef-bcftools_norm" class="coderef-off">&#9474;   bcftools norm --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m-any --check-ref w -f <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">REFERENCE</span><span style="color: #79740e;">"</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-bcftools_fill-tags" class="coderef-off">&#9474;   bcftools +fill-tags -Ou -- -t all <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-bcftools_setGT_1" class="coderef-off">&#9474;   bcftools +setGT -Ou -- -t q -n c:<span style="color: #79740e;">'0/1'</span> -i <span style="color: #79740e;">'VAF&gt;=.1'</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-bcftools_setGT_2" class="coderef-off">&#9474;   bcftools +setGT -Ov -- -t q -n c:<span style="color: #79740e;">'1/1'</span> -i <span style="color: #79740e;">'VAF&gt;=.75'</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-vep" class="coderef-off">&#9474;   /home/bar/ensembl-vep/vep --everything --force_overwrite --vcf --pick --format vcf <span style="color: #79740e;">\</span></span>
-&#9474;   &#9474;   --fork $<span style="color: #076678;">THREADS</span> <span style="color: #79740e;">\</span>
-&#9474;   &#9474;   --stats_file <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">"</span>_summary.html <span style="color: #79740e;">\</span>
-&#9474;   &#9474;   --warning_file <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">"</span>_warnings.txt <span style="color: #79740e;">\</span>
-&#9474;   &#9474;   --output_file STDOUT --cache <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.vep.log"</span> |
-&#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN vep |</span>
-<span id="coderef-split-vep_1" class="coderef-off">&#9474;   bcftools +split-vep -c SYMBOL,gnomADg_AF:Float,IMPACT,Existing_variation <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-filter_OnTarget" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m+ -s <span style="color: #79740e;">'onTarget'</span> -M <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">TARGET</span><span style="color: #79740e;">"</span> |</span>
-<span id="coderef-filter_LowQual" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m+ -s <span style="color: #79740e;">'lowQual'</span> -g3 -G10 -e <span style="color: #79740e;">'FORMAT/DP&lt;=15 || QUAL&lt;=20'</span> |</span>
-<span id="coderef-filter_Freq" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m+ -s <span style="color: #79740e;">'highFreq'</span> -e <span style="color: #79740e;">'gnomADg_AF&gt;0.001'</span> |</span>
-<span id="coderef-filter_Impact" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m+ -s <span style="color: #79740e;">'lowIMPACT'</span> -i <span style="color: #79740e;">'IMPACT~"HIGH" || IMPACT~"MODERATE"'</span> |</span>
-<span id="coderef-filter_HomRare" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ou -m+ -s <span style="color: #79740e;">'HOMrare'</span> -e <span style="color: #79740e;">'GT="1/1" &amp;&amp; (gnomADg_AF &lt;= 0.001 || (Existing_variation="." &amp;&amp; gnomADg_AF="." &amp;&amp; ID="."))'</span> |</span>
-<span id="coderef-filter_HetNovel" class="coderef-off">&#9474;   bcftools filter --threads <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -Ob -m+ -s <span style="color: #79740e;">'HETnovel'</span> -e <span style="color: #79740e;">'GT="0/1" &amp;&amp; Existing_variation="." &amp;&amp; gnomADg_AF="." &amp;&amp; ID="."'</span> |</span>
-<span id="coderef-tee_bcf" class="coderef-off">&#9474;   tee <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.bcf"</span> |</span>
-<span id="coderef-split-vep_2" class="coderef-off">&#9474;   bcftools +split-vep -f <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">columns</span><span style="color: #79740e;">"</span> -d -i <span style="color: #79740e;">'CANONICAL~"YES"'</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bcftools.log"</span> |</span>
-<span id="coderef-awk" class="coderef-off">&#9474;   awk -v <span style="color: #076678;">header</span>=<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">header</span><span style="color: #79740e;">"</span> <span style="color: #79740e;">'BEGIN {printf  header} 1'</span> |</span>
-<span id="coderef-gzip" class="coderef-off">&#9474;   gzip -c &gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.tsv.gz"</span></span>
+<pre class="src src-sh">&lt;&lt;oneliner&gt;&gt;
 </pre>
 </div>
 </div>
@@ -382,7 +349,7 @@ As I start building and testing the pipeline I had a few problems as well as que
 <li><a id="orgaa4c448"></a>Preprocessing fastq<br />
 <div class="outline-text-5" id="text-2-2-0-1">
 <p>
-<a href="#coderef-fastp" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-fastp');" onmouseout="CodeHighlightOff(this, 'coderef-fastp');">fastp</a> with the <code>--stdout</code> parameter writes interleaved output. We are just using default operations.
+[BROKEN LINK: fastp] with the <code>--stdout</code> parameter writes interleaved output. We are just using default operations.
 Because of <a href="#org6537c31">different results</a> its commented out and not being used.
 </p>
 </div>
@@ -390,7 +357,7 @@ Because of <a href="#org6537c31">different results</a> its commented out and not
 <li><a id="org05c9c5d"></a>Alignment<br />
 <div class="outline-text-5" id="text-2-2-0-2">
 <p>
-<a href="#coderef-bwa" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bwa');" onmouseout="CodeHighlightOff(this, 'coderef-bwa');">bwa</a> can take interleaved input from stdin with `-p` option. This was used to get the input from fastp stdout.
+[BROKEN LINK: bwa] can take interleaved input from stdin with `-p` option. This was used to get the input from fastp stdout.
 We are just starting from bwa by giving the both fastq files as inputs.
 </p>
 </div>
@@ -398,40 +365,40 @@ We are just starting from bwa by giving the both fastq files as inputs.
 <li><a id="orgcb9e5bc"></a>Processing aligned reads<br />
 <div class="outline-text-5" id="text-2-2-0-3">
 <p>
-Samtools <a href="#coderef-samtools_collate" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_collate');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_collate');">collate</a>, <a href="#coderef-samtools_fixmate" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_fixmate');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_fixmate');">fixmate</a>, <a href="#coderef-samtools_sort" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_sort');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_sort');">sort</a>, <a href="#coderef-samtools_markdup" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_markdup');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_markdup');">markdup</a> submodules are used.
+Samtools [BROKEN LINK: samtools_collate], [BROKEN LINK: samtools_fixmate], [BROKEN LINK: samtools_sort], [BROKEN LINK: samtools_markdup] submodules are used.
 We use samtools to mark duplicate reads.
 <a href="http://www.htslib.org/doc/samtools-markdup.html">http://www.htslib.org/doc/samtools-markdup.html</a>
-<a href="#coderef-samtools_markdup" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_markdup');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_markdup');">markdup</a> has a conditional check beforehand for a variable named <code>AMPLICON</code> which if true skips the markdup and just cats the alignments.
+[BROKEN LINK: samtools_markdup] has a conditional check beforehand for a variable named <code>AMPLICON</code> which if true skips the markdup and just cats the alignments.
 </p>
 </div>
 </li>
 <li><a id="org4af4476"></a>Writing out the alignment file<br />
 <div class="outline-text-5" id="text-2-2-0-4">
 <p>
-<a href="#coderef-samtools_view" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-samtools_view');" onmouseout="CodeHighlightOff(this, 'coderef-samtools_view');">samtools view</a> is used to convert the bam file to cram.
-We can use <a href="#coderef-tee_cram" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-tee_cram');" onmouseout="CodeHighlightOff(this, 'coderef-tee_cram');">tee</a> to write out the cram file while passing it down the pipeline.
+[BROKEN LINK: samtools_view] is used to convert the bam file to cram.
+We can use [BROKEN LINK: tee_cram] to write out the cram file while passing it down the pipeline.
 </p>
 </div>
 </li>
 <li><a id="org2e3c3fd"></a>Variant calling<br />
 <div class="outline-text-5" id="text-2-2-0-5">
 <p>
-<a href="#coderef-bcftools_mpileup" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_mpileup');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_mpileup');">mpileup</a> has <code>-d 10000 -L 10000</code> parameters in case there are high depth amplicon sequencing.
-Beware the <a href="#org0639159">4.4</a> commands before the <a href="#coderef-bcftools_call" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_call');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_call');">call</a>.
+[BROKEN LINK: bcftools_mpileup] has <code>-d 10000 -L 10000</code> parameters in case there are high depth amplicon sequencing.
+Beware the <a href="#org0639159">4.4</a> commands before the [BROKEN LINK: bcftools_call].
 </p>
 </div>
 </li>
 <li><a id="org95ae0f2"></a>Post processing variants<br />
 <div class="outline-text-5" id="text-2-2-0-6">
 <p>
-Check out <a href="#orgf0cae20">this section</a> to understand rationale behind this <a href="#coderef-bcftools_view" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_view');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_view');">view</a> command.
-<a href="https://genome.sph.umich.edu/wiki/Variant_Normalization">Variant normalization</a> is performed by <a href="#coderef-bcftools_norm" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_norm');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_norm');">bcftools norm</a>.
-In <a href="#coderef-bcftools_fill-tags" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_fill-tags');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_fill-tags');">fill-tags</a> command the specific tag I need is the variant allele fraction (VAF).
-We later use the VAF with <a href="#coderef-bcftools_setGT_1" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_setGT_1');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_setGT_1');">setGT heterozygous</a> and <a href="#coderef-bcftools_setGT_2" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_setGT_2');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_setGT_2');">setGT homozygous</a> commands.
+Check out <a href="#orgf0cae20">this section</a> to understand rationale behind this [BROKEN LINK: bcftools_view] command.
+<a href="https://genome.sph.umich.edu/wiki/Variant_Normalization">Variant normalization</a> is performed by [BROKEN LINK: bcftools_norm].
+In [BROKEN LINK: bcftools_fill-tags] command the specific tag I need is the variant allele fraction (VAF).
+We later use the VAF with [BROKEN LINK: bcftools_setGT_1] and [BROKEN LINK: bcftools_setGT_2] commands.
 </p>
 
 <p>
-We are using -Ov <a href="#coderef-bcftools_setGT_2" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_setGT_2');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_setGT_2');">before the VEP command</a> because I had problem with VEP reading compressed from stdin.
+We are using -Ov [BROKEN LINK: bcftools_setGT_2] because I had problem with VEP reading compressed from stdin.
 <a href="https://github.com/Ensembl/ensembl-vep/issues/1502">https://github.com/Ensembl/ensembl-vep/issues/1502</a>
 </p>
 </div>
@@ -439,30 +406,30 @@ We are using -Ov <a href="#coderef-bcftools_setGT_2" class="coderef" onmouseover
 <li><a id="org804e3d1"></a>annotating variants<br />
 <div class="outline-text-5" id="text-2-2-0-7">
 <p>
-A bare bone <a href="#coderef-vep" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-vep');" onmouseout="CodeHighlightOff(this, 'coderef-vep');">vep</a> command. This brings a lot of annotation with the <code>--everything=</code> flag.
+A bare bone [BROKEN LINK: vep] command. This brings a lot of annotation with the <code>--everything=</code> flag.
 </p>
 </div>
 </li>
 <li><a id="org0b27b0d"></a>filtering variants<br />
 <div class="outline-text-5" id="text-2-2-0-8">
 <p>
-Here we use <a href="#coderef-split-vep_1" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-split-vep_1');" onmouseout="CodeHighlightOff(this, 'coderef-split-vep_1');">split-vep</a> and add some of the columns we&rsquo;re interested in into the INFO column before filtering.
+Here we use [BROKEN LINK: split-vep_1] and add some of the columns we&rsquo;re interested in into the INFO column before filtering.
 Filtering expressions depends on what we&rsquo;re trying to achieve, I just put the ones I like.
-<a href="#coderef-filter_OnTarget" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_OnTarget');" onmouseout="CodeHighlightOff(this, 'coderef-filter_OnTarget');">28</a> <a href="#coderef-filter_LowQual" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_LowQual');" onmouseout="CodeHighlightOff(this, 'coderef-filter_LowQual');">29</a> <a href="#coderef-filter_Freq" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_Freq');" onmouseout="CodeHighlightOff(this, 'coderef-filter_Freq');">30</a> <a href="#coderef-filter_Impact" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_Impact');" onmouseout="CodeHighlightOff(this, 'coderef-filter_Impact');">31</a> <a href="#coderef-filter_HomRare" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_HomRare');" onmouseout="CodeHighlightOff(this, 'coderef-filter_HomRare');">32</a> <a href="#coderef-filter_HetNovel" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-filter_HetNovel');" onmouseout="CodeHighlightOff(this, 'coderef-filter_HetNovel');">33</a>
+[BROKEN LINK: filter_OnTarget] [BROKEN LINK: filter_LowQual] [BROKEN LINK: filter_Freq] [BROKEN LINK: filter_Impact] [BROKEN LINK: filter_HomRare] [BROKEN LINK: filter_HetNovel]
 </p>
 
 <p>
 Here no variant is excluded but the tags we give with the <code>-s</code> parameters are appended to the <code>FILTER</code> column.
-After the filtering we <a href="#coderef-tee_bcf" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-tee_bcf');" onmouseout="CodeHighlightOff(this, 'coderef-tee_bcf');">write bcf</a> with the <code>tee</code> command.
+After the filtering we [BROKEN LINK: tee_bcf] with the <code>tee</code> command.
 </p>
 </div>
 </li>
 <li><a id="org81ce3c0"></a>writing out a tsv file<br />
 <div class="outline-text-5" id="text-2-2-0-9">
 <p>
-We define the columns we want to have in the final table <a href="#coderef-columns" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-columns');" onmouseout="CodeHighlightOff(this, 'coderef-columns');">columns</a> and use <a href="#coderef-split-vep_2" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-split-vep_2');" onmouseout="CodeHighlightOff(this, 'coderef-split-vep_2');">split-vep</a> to format it into a table.
-We can add these columns as the first line with <a href="#coderef-awk" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-awk');" onmouseout="CodeHighlightOff(this, 'coderef-awk');">awk</a> after we format it as a <a href="#coderef-header" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-header');" onmouseout="CodeHighlightOff(this, 'coderef-header');">header</a>.
-We can than use <a href="#coderef-gzip" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-gzip');" onmouseout="CodeHighlightOff(this, 'coderef-gzip');">gzip</a> to keep it compressed.
+We define the columns we want to have in the final table <a href="#coderef-columns" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-columns');" onmouseout="CodeHighlightOff(this, 'coderef-columns');">columns</a> and use [BROKEN LINK: split-vep_2] to format it into a table.
+We can add these columns as the first line with [BROKEN LINK: awk] after we format it as a <a href="#coderef-header" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-header');" onmouseout="CodeHighlightOff(this, 'coderef-header');">header</a>.
+We can than use [BROKEN LINK: gzip] to keep it compressed.
 </p>
 </div>
 </li>
@@ -492,12 +459,12 @@ It would be better make a hard filtered vcf and create the report that one but s
 <div class="outline-text-3" id="text-4-1">
 <p>
 These are the variable we later use in the pipeline.
-We can change <a href="#coderef-R1" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-R1');" onmouseout="CodeHighlightOff(this, 'coderef-R1');">R1</a> and <a href="#coderef-R2" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-R2');" onmouseout="CodeHighlightOff(this, 'coderef-R2');">R2</a> and <a href="#coderef-sample" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-sample');" onmouseout="CodeHighlightOff(this, 'coderef-sample');">sample</a> for changing the input.
+We can change [BROKEN LINK: R1] and [BROKEN LINK: R2] and <a href="#coderef-sample" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-sample');" onmouseout="CodeHighlightOff(this, 'coderef-sample');">sample</a> for changing the input.
 We can edit <a href="#coderef-columns" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-columns');" onmouseout="CodeHighlightOff(this, 'coderef-columns');">columns</a> to customize the output.
 </p>
 
 <p>
-Assembly is used in the <a href="#coderef-vep" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-vep');" onmouseout="CodeHighlightOff(this, 'coderef-vep');">VEP</a> command and if we want to use GRCh37 we need to <a href="#coderef-vep_install" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-vep_install');" onmouseout="CodeHighlightOff(this, 'coderef-vep_install');">install the GRCh37 cache</a> and also need to change the <a href="#coderef-reference" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-reference');" onmouseout="CodeHighlightOff(this, 'coderef-reference');">reference genome</a>.
+Assembly is used in the [BROKEN LINK: vep] command and if we want to use GRCh37 we need to <a href="#coderef-vep_install" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-vep_install');" onmouseout="CodeHighlightOff(this, 'coderef-vep_install');">install the GRCh37 cache</a> and also need to change the <a href="#coderef-reference" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-reference');" onmouseout="CodeHighlightOff(this, 'coderef-reference');">reference genome</a>.
 </p>
 
 <div class="org-src-container">
@@ -592,7 +559,7 @@ multiqc -f -s -o <span style="color: #79740e;">"</span><span style="color: #8f3f
 <h3 id="org0639159"><span class="section-number-3">4.4.</span> pv</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
-<a href="#coderef-pv" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-pv');" onmouseout="CodeHighlightOff(this, 'coderef-pv');">pipe viewer</a> is a command line utility that can show a progress bar as data pipe through it.
+[BROKEN LINK: pv] is a command line utility that can show a progress bar as data pipe through it.
 In its manual it uses -s (size) option with `du` command, in our case since our data is compressed we use `gzip -l`.
 After the first `pv`, it is harder to find out the amount of data passing through so others won&rsquo;t be accurate but it can still be used to show how much time is passed. Its <code>-S</code> parameter should not be used since it will stop the input prematurely.
 </p>
@@ -790,7 +757,7 @@ I noticed different variant counts in earlier tests because of the wrong paramet
 I did the initial setting up and making sure that pipeline runs with super small subset of the FASTQ files.
 </p>
 
-<pre class="example" id="orgd535208">
+<pre class="example" id="org37cf53a">
 zcat U0a_CGATGT_L001_R1_005.fastq.gz | sed 200q &gt; Test_CGATGT_L001_R1_005.fastq.gz
 zcat U0a_CGATGT_L001_R2_005.fastq.gz | sed 200q &gt; Test_CGATGT_L001_R2_005.fastq.gz
 </pre>
@@ -814,7 +781,7 @@ We have random reads coming from the fastq file and we should wait for alignment
 </p>
 
 <p>
-<svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="520" version="1.1"><defs id="edraw-orgccb06fe-defs"><marker id="edraw-orgccb06fe-def-0-arrow" markerWidth="6" markerHeight="07" preserveAspectRatio="none" viewBox="-10 -10 20 20" refX="2,3" refY="0" orient="auto" stroke="none" fill="#fb4934"><path d="M-10,-7 -10,7 4,0Z" /></marker></defs><rect x="0" y="0" width="500" height="520" fill="#f9f5d7" id="edraw-orgccb06fe-background" /><g id="edraw-orgccb06fe-body"><rect fill-opacity="0.3" height="200" width="260" y="40" x="200" ry="10" rx="10" fill="#b8bb26" stroke="none" /><text y="135" x="80" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">FASTQ</text><rect stroke="#83a598" fill-opacity="1" stroke-opacity="1" height="260" width="120" y="140" x="41" ry="10" rx="10" fill="#fbf1c7" /><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="360" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="376" x="100">Read 6</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="320" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="336" x="100">Read 5</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="280" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="296" x="100">Read 4</text></g><text y="76" x="351" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Variant</text><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="240" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="256" x="100">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="200" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="216" x="100">Read 2</text></g><g><rect stroke-opacity="1" fill-opacity="0.5" fill="#83a598" stroke="#83a598" height="20" width="80" y="160" x="60" ry="10" rx="10" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="176" x="100">Read 1</text></g><g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="200" x="340" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="216" x="380">Read 6</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="180" x="320" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="196" x="360">Read 5</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="160" x="300" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="176" x="340">Read 4</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="140" x="280" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="156" x="320">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="120" x="260" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="136" x="300">Read 2</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="100" x="240" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="116" x="280">Read 1</text></g></g><rect stroke-opacity="0.2" fill-opacity="0.4" stroke="#fb4934" height="80" width="20" y="140" x="340" ry="10" rx="10" fill="#fb4934" /><rect stroke-opacity="0.5" fill-opacity="0.5" stroke="#fe8019" height="20" width="220" y="80" x="220" ry="10" rx="10" fill="#fe8019" /><text y="96" x="273" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Reference</text><path stroke-width="4" marker-end="url(#edraw-orgccb06fe-def-0-arrow)" d="M350,80L350,120L350,120C350,120 350,140 350,140" fill="none" stroke="#fb4934" /><text y="36" x="340" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">ALIGNMENT IN DISTINCT STEPS</text><rect stroke="none" fill-opacity="0.3" fill="#b8bb26" ry="10" rx="10" height="200" width="260" y="300" x="200" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="336" x="351">Variant</text><rect stroke-opacity="0.2" stroke="#fb4934" fill-opacity="0.4" fill="#fb4934" ry="10" rx="10" height="80" width="20" y="400" x="340" /><rect stroke-opacity="0.5" stroke="#fe8019" fill-opacity="0.5" fill="#fe8019" ry="10" rx="10" height="20" width="220" y="340" x="220" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="356" x="273">Reference</text><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="296" x="300">ALIGNMENT IN PIPE</text><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="400" x="280" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="416" x="320">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="380" x="260" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="396" x="300">Read 2</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="360" x="240" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="376" x="280">Read 1</text></g><text y="460" x="360" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Reads are still aligning</text><path marker-end="url(#edraw-orgccb06fe-def-0-arrow)" stroke-width="4" stroke="#fb4934" fill="none" d="M350,340L350,380L350,380C350,380 350,400 350,400" /></g></svg>
+<svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="520" version="1.1"><defs id="edraw-orgf50ec20-defs"><marker id="edraw-orgf50ec20-def-0-arrow" markerWidth="6" markerHeight="07" preserveAspectRatio="none" viewBox="-10 -10 20 20" refX="2,3" refY="0" orient="auto" stroke="none" fill="#fb4934"><path d="M-10,-7 -10,7 4,0Z" /></marker></defs><rect x="0" y="0" width="500" height="520" fill="#f9f5d7" id="edraw-orgf50ec20-background" /><g id="edraw-orgf50ec20-body"><rect fill-opacity="0.3" height="200" width="260" y="40" x="200" ry="10" rx="10" fill="#b8bb26" stroke="none" /><text y="135" x="80" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">FASTQ</text><rect stroke="#83a598" fill-opacity="1" stroke-opacity="1" height="260" width="120" y="140" x="41" ry="10" rx="10" fill="#fbf1c7" /><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="360" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="376" x="100">Read 6</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="320" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="336" x="100">Read 5</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="280" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="296" x="100">Read 4</text></g><text y="76" x="351" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Variant</text><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="240" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="256" x="100">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="200" x="60" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="216" x="100">Read 2</text></g><g><rect stroke-opacity="1" fill-opacity="0.5" fill="#83a598" stroke="#83a598" height="20" width="80" y="160" x="60" ry="10" rx="10" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="176" x="100">Read 1</text></g><g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="200" x="340" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="216" x="380">Read 6</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="180" x="320" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="196" x="360">Read 5</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="160" x="300" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="176" x="340">Read 4</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="140" x="280" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="156" x="320">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="120" x="260" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="136" x="300">Read 2</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="100" x="240" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="116" x="280">Read 1</text></g></g><rect stroke-opacity="0.2" fill-opacity="0.4" stroke="#fb4934" height="80" width="20" y="140" x="340" ry="10" rx="10" fill="#fb4934" /><rect stroke-opacity="0.5" fill-opacity="0.5" stroke="#fe8019" height="20" width="220" y="80" x="220" ry="10" rx="10" fill="#fe8019" /><text y="96" x="273" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Reference</text><path stroke-width="4" marker-end="url(#edraw-orgf50ec20-def-0-arrow)" d="M350,80L350,120L350,120C350,120 350,140 350,140" fill="none" stroke="#fb4934" /><text y="36" x="340" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">ALIGNMENT IN DISTINCT STEPS</text><rect stroke="none" fill-opacity="0.3" fill="#b8bb26" ry="10" rx="10" height="200" width="260" y="300" x="200" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="336" x="351">Variant</text><rect stroke-opacity="0.2" stroke="#fb4934" fill-opacity="0.4" fill="#fb4934" ry="10" rx="10" height="80" width="20" y="400" x="340" /><rect stroke-opacity="0.5" stroke="#fe8019" fill-opacity="0.5" fill="#fe8019" ry="10" rx="10" height="20" width="220" y="340" x="220" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="356" x="273">Reference</text><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="296" x="300">ALIGNMENT IN PIPE</text><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="400" x="280" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="416" x="320">Read 3</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="380" x="260" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="396" x="300">Read 2</text></g><g><rect stroke-opacity="1" stroke="#83a598" fill-opacity="0.5" fill="#83a598" ry="10" rx="10" height="20" width="80" y="360" x="240" /><text fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif" y="376" x="280">Read 1</text></g><text y="460" x="360" fill="#222" text-anchor="middle" font-size="18" font-family="sans-serif">Reads are still aligning</text><path marker-end="url(#edraw-orgf50ec20-def-0-arrow)" stroke-width="4" stroke="#fb4934" fill="none" d="M350,340L350,380L350,380C350,380 350,400 350,400" /></g></svg>
 </p>
 
 <p>
@@ -823,7 +790,7 @@ However, when we remove the `samtools sort` I got no variants which in concordan
 This would need more thorough testing to be sure like showing bwa and bcftools running at the same time (but i didn&rsquo;t keep those stats).
 </p>
 
-<pre class="example" id="org14b8356">
+<pre class="example" id="org536b324">
 bar@debiantestin:~/runs$ ls -1 results.*/Test.*.bcftools.log | xargs grep '^Lines'
 
 Seperate Steps
@@ -861,7 +828,7 @@ In this time the first chunk of the alignments are written about 60-70 Mb, then 
 <p>
 Investigating further I found we are calling anything and everything; half a million variants in the file. Target intervals only includes 13007 of them which only 7 has depth and quality bigger than 5.
 </p>
-<pre class="example" id="orgdf0ef5f">
+<pre class="example" id="orgc11f4ba">
 bar@debiantestin:~/runs/results.89097$ bcftools view U0a.bcf -H | wc -l
 532845
 bar@debiantestin:~/runs/results.89097$ bcftools view U0a.bcf -i 'FORMAT/DP&gt;1' -H | wc -l
@@ -901,7 +868,7 @@ We utilize more of the system resources passing around the <a href="#coderef-thr
 <div class="outline-text-3" id="text-5-3">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orge01c030">
+<div class="sidenote" id="orgb90dec4">
 <div class="org-src-container">
 <pre class="src src-sh">bwa mem -t <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">THREADS</span><span style="color: #79740e;">"</span> -R <span style="color: #79740e;">"@RG\tID:</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">SAMPLE</span><span style="color: #79740e;">\tSM:</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">SAMPLE</span><span style="color: #79740e;">\tPL:illumina\tLB:lib1\tPU:foo"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">REFERENCE</span><span style="color: #79740e;">"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">R1</span><span style="color: #79740e;">"</span> <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">R2</span><span style="color: #79740e;">"</span> <span style="color: #8f3f71; font-weight: bold;">2</span>&gt;<span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.$$.bwa.log"</span> &gt; <span style="color: #79740e;">"</span><span style="color: #8f3f71;">$</span><span style="color: #076678;">OUTPUT</span><span style="color: #79740e;">.sam"</span>
 &#9474;   <span style="color: #a89984;"># </span><span style="color: #a89984;">pv -cN bwa |</span>
@@ -926,14 +893,14 @@ Disassembled commands. <code>tee</code> can also be used.
 Even after going through <a href="#orgc420afa">this section</a> I had different number of variants while running the pipeline.
 It would result in 6, 7 or 8 variants in every <a href="#org61d3817">ten batches</a> of my test runs.
 Debuging this was like disassembling an engine and testing each part individually.
-Variants are counted by <a href="#coderef-bcftools_norm" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_norm');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_norm');">bcftools norm</a> step.
+Variants are counted by [BROKEN LINK: bcftools_norm] step.
 So whatever was happening before this step.
 I worked my way up the ladder.
 </p>
 
 <p>
 I had 10 different runs with various number of variants.
-I first make sure <a href="#coderef-bcftools_mpileup" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_mpileup');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_mpileup');">bcftools mpileup</a> and <a href="#coderef-bcftools_call" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-bcftools_call');" onmouseout="CodeHighlightOff(this, 'coderef-bcftools_call');">bcftools call</a> worked correctly by running it ten times for different number of variant called runs.
+I first make sure [BROKEN LINK: bcftools_mpileup] and [BROKEN LINK: bcftools_call] worked correctly by running it ten times for different number of variant called runs.
 It produced the same output from every time whether it was 6, 7 or 8 variants.
 So it was something upstream.
 </p>
@@ -947,7 +914,7 @@ I separated each command before and checked the stats.
 </pre>
 </div>
 
-<pre class="example" id="orge718376">
+<pre class="example" id="orgdd2887e">
 ./results.148485/U0a.sorted.bam.stats:SN        reads mapped and paired:        4229234 # paired-end technology bit set + both mates mapped
 ./results.148485/U0a.markdup.bam.stats:SN       reads mapped and paired:        4229234 # paired-end technology bit set + both mates mapped
 ./results.148485/U0a.sam.stats:SN       reads mapped and paired:        4229234 # paired-end technology bit set + both mates mapped
@@ -990,7 +957,7 @@ Next I checked the fastq files produced by fastp.
 </pre>
 </div>
 
-<pre class="example" id="orgab10bc9">
+<pre class="example" id="org893129f">
 a90dd1e71c9e5432e8b67a54e65424a1  ./results.148485/U0a.fq.gz
 a90dd1e71c9e5432e8b67a54e65424a1  ./results.159805/U0a.fq.gz
 8f716b9f65748efdb3f30ba7d7794d4d  ./results.155247/U0a.fq.gz
