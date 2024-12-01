@@ -1,32 +1,32 @@
-const sun = document.querySelector(".sun")
-const moon = document.querySelector(".moon")
-const button = document.querySelector("#dark-mode-toggle")
-const typeFaceToggle = document.getElementById("typeface-toggle")
-
+const sun = document.querySelector(".sun");
+const moon = document.querySelector(".moon");
+const button = document.querySelector("#dark-mode-toggle");
+const typeFaceToggle = document.getElementById("typeface-toggle");
 
 button.addEventListener("click", () => {
-  sun.classList.toggle("visible")
-  moon.classList.toggle("visible")
+  sun.classList.toggle("visible");
+  moon.classList.toggle("visible");
   document.body.classList.toggle("latex-dark");
-  localStorage.darkMode=(localStorage.darkMode=="true")?"false":"true";
-})
-
+  localStorage.darkMode = localStorage.darkMode == "true" ? "false" : "true";
+});
 
 typeFaceToggle.addEventListener("click", () => {
-  document.body.classList.toggle("libertinus")
-  typeFaceToggle.title = document.body.classList.contains("libertinus") ? "Libertinus" : "Latin Modern"
-  localStorage.typeface = document.body.classList.contains("libertinus") ? "Libertinus" : "Latin Modern";
-})
+  document.body.classList.toggle("libertinus");
+  typeFaceToggle.title = document.body.classList.contains("libertinus")
+    ? "Libertinus"
+    : "Latin Modern";
+  localStorage.typeface = document.body.classList.contains("libertinus")
+    ? "Libertinus"
+    : "Latin Modern";
+});
 
-
-window.onload=function() {
-  if(localStorage.darkMode=="true") {
-    sun.classList.add("visible")
-    moon.classList.remove("visible")
-  }
-  else {
-    moon.classList.add("visible")
-    sun.classList.remove("visible")
+window.onload = function () {
+  if (localStorage.darkMode == "true") {
+    sun.classList.add("visible");
+    moon.classList.remove("visible");
+  } else {
+    moon.classList.add("visible");
+    sun.classList.remove("visible");
   }
 
   // if(localStorage.typeface=="Libertinus") {
@@ -41,18 +41,22 @@ window.onload=function() {
 };
 
 let processScroll = () => {
-	let docElem = document.documentElement,
-		docBody = document.body,
-		scrollTop = docElem['scrollTop'] || docBody['scrollTop'],
-    	scrollBottom = (docElem['scrollHeight'] || docBody['scrollHeight']) - window.innerHeight,
-		scrollPercent = scrollTop / scrollBottom * 100 + '%';
+  let docElem = document.documentElement,
+    docBody = document.body,
+    scrollTop = docElem["scrollTop"] || docBody["scrollTop"],
+    scrollBottom =
+      (docElem["scrollHeight"] || docBody["scrollHeight"]) - window.innerHeight,
+    scrollPercent = (scrollTop / scrollBottom) * 100 + "%";
+  // console.log(scrollTop + ' / ' + scrollBottom + ' / ' + scrollPercent);
+  //
+  try {
+    document
+      .getElementById("progress-bar")
+      .style.setProperty("--scrollAmount", scrollPercent);
+  } catch (err) {}
+};
 
-	// console.log(scrollTop + ' / ' + scrollBottom + ' / ' + scrollPercent);
-
-    document.getElementById("progress-bar").style.setProperty("--scrollAmount", scrollPercent);
-}
-
-document.addEventListener('scroll', processScroll);
+document.addEventListener("scroll", processScroll);
 
 // interactive TOC
 // const toc = document.getElementById("table-of-contents");
