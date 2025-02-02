@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Making of this website</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
@@ -224,6 +224,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -239,21 +266,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -272,7 +284,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">Making of this website</h1>
-<div class="post-tag" id="orgcd783dc">
+<div class="post-tag" id="org49d3b07">
 <p>
 21 Feb 2024 — Barış Salman
 </p>
@@ -283,37 +295,37 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org3b2e5fb">1. schema</a></li>
-<li><a href="#org67ebb52">2. Blogging with org mode</a>
+<li><a href="#org4e3f4a1">1. schema</a></li>
+<li><a href="#org16908e4">2. Blogging with org mode</a>
 <ul>
-<li><a href="#orgd1bb4a0">2.1. styling</a></li>
-<li><a href="#org5db162a">2.2. org mode can add latex figures to HTML</a></li>
-<li><a href="#org619bfe3">2.3. sidenotes</a></li>
-<li><a href="#org99891c7">2.4. noweb blocks</a></li>
-<li><a href="#org88746f9">2.5. bibliography</a></li>
-<li><a href="#orga5c446f">2.6. indexing</a></li>
-<li><a href="#orgbfd0e63">2.7. tables</a></li>
-<li><a href="#org1f0e390">2.8. tag noexport</a></li>
-<li><a href="#org46c5c3f">2.9. header argument :eval no-export</a></li>
-<li><a href="#org9fac67c">2.10. appendices</a></li>
-<li><a href="#org6078459">2.11. comments section</a></li>
-<li><a href="#org8f7f8ae">2.12. date and author signature at the begining</a></li>
-<li><a href="#org2a3842f">2.13. org-publish configuration</a></li>
-<li><a href="#orgc3d72db">2.14. org-glossary</a></li>
-<li><a href="#orgad172da">2.15. making plots</a></li>
+<li><a href="#org472064e">2.1. styling</a></li>
+<li><a href="#org56a5314">2.2. org mode can add latex figures to HTML</a></li>
+<li><a href="#org1182c0b">2.3. sidenotes</a></li>
+<li><a href="#orga7bc951">2.4. noweb blocks</a></li>
+<li><a href="#orgee825b4">2.5. bibliography</a></li>
+<li><a href="#org8547c21">2.6. indexing</a></li>
+<li><a href="#org8c8ef9f">2.7. tables</a></li>
+<li><a href="#org8bd81ff">2.8. tag noexport</a></li>
+<li><a href="#org84b91f1">2.9. header argument :eval no-export</a></li>
+<li><a href="#orgf9349b1">2.10. appendices</a></li>
+<li><a href="#org0cee962">2.11. comments section</a></li>
+<li><a href="#org9812edd">2.12. date and author signature at the begining</a></li>
+<li><a href="#org008f618">2.13. org-publish configuration</a></li>
+<li><a href="#org1e26c06">2.14. org-glossary</a></li>
+<li><a href="#org86bce90">2.15. making plots</a></li>
 </ul>
 </li>
-<li><a href="#orgee9a9e2">Server software components</a>
+<li><a href="#org827795c">Server software components</a>
 <ul>
-<li><a href="#org825ed99">Nginx</a></li>
-<li><a href="#orgd0e9ec7">Django</a></li>
-<li><a href="#orgdc1c677">Cron</a></li>
-<li><a href="#org7e5a62e">Isso</a></li>
-<li><a href="#org3679a03">Git</a></li>
-<li><a href="#orgbffee2c">systemd</a></li>
+<li><a href="#orgb327588">Nginx</a></li>
+<li><a href="#orgc1f05e8">Django</a></li>
+<li><a href="#orga43bc7f">Cron</a></li>
+<li><a href="#org9e6d7d5">Isso</a></li>
+<li><a href="#org55b7676">Git</a></li>
+<li><a href="#orgb591e60">systemd</a></li>
 </ul>
 </li>
-<li><a href="#org0cdf577">Comments</a></li>
+<li><a href="#orge2cc747">Comments</a></li>
 </ul>
 </div>
 </div>
@@ -326,7 +338,7 @@ Django is an opinionated framework which works for me as a geneticist who don&rs
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgd58014c">
+<div class="sidenote" id="orga775314">
 <p>
 At this time I was also starting with Doomemacs.
 I had use vim/neovim for over 5 years before switching Emacs.
@@ -339,46 +351,46 @@ I still have Astrovim installed but I mainly do everything on Emacs.
 After the initial setup I started looking for blogging solutions.
 After seeing what org mode is capable of doing I looked no further for blogging.
 </p>
-<div id="outline-container-org3b2e5fb" class="outline-2">
-<h2 id="org3b2e5fb"><span class="section-number-2">1.</span> schema</h2>
+<div id="outline-container-org4e3f4a1" class="outline-2">
+<h2 id="org4e3f4a1"><span class="section-number-2">1.</span> schema</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <code>org-publish-all</code> command exports the blog under the <code>omicssbs/</code> directory and changes are uploaded the website and github with <code>git push</code>.
-<a href="#orge32d73b">Git hooks</a> on server automatically deploy the changes and restart required services.
+<a href="#orgdc91ddc">Git hooks</a> on server automatically deploy the changes and restart required services.
 </p>
 
 
-<div id="orgef85343" class="figure">
+<div id="org176fb70" class="figure">
 <p><img src="./omicssbs_schema.svg" alt="omicssbs_schema.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org67ebb52" class="outline-2">
-<h2 id="org67ebb52"><span class="section-number-2">2.</span> Blogging with org mode</h2>
+<div id="outline-container-org16908e4" class="outline-2">
+<h2 id="org16908e4"><span class="section-number-2">2.</span> Blogging with org mode</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 There are a lot of features I use from org mode or org related plugins one tends to forget some of them.
 Tracking the features and options used in org mode and having a reference document to look back to were the main reasons for writing this post.
 </p>
 </div>
-<div id="outline-container-orgd1bb4a0" class="outline-3">
-<h3 id="orgd1bb4a0"><span class="section-number-3">2.1.</span> styling</h3>
+<div id="outline-container-org472064e" class="outline-3">
+<h3 id="org472064e"><span class="section-number-3">2.1.</span> styling</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 <a href="https://latex.vercel.app/">Style</a> I use for the website called <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="org-svg" />.css is based on <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="org-svg" /> which works really well with the org-mode exported HTML files.
 </p>
 </div>
 </div>
-<div id="outline-container-org5db162a" class="outline-3">
-<h3 id="org5db162a"><span class="section-number-3">2.2.</span> org mode can add latex figures to HTML</h3>
+<div id="outline-container-org56a5314" class="outline-3">
+<h3 id="org56a5314"><span class="section-number-3">2.2.</span> org mode can add latex figures to HTML</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Orgmode compiles latex fragments as SVG figures and can add them to HTML files.
 I haven&rsquo;t tried to create a tikz image yet but chemfig images like below displayed as expected.
 </p>
 
-<pre class="example" id="org6d75e26">
+<pre class="example" id="orgfe912b7">
 $$
 \chemname{\chemfig{[:150]@{C2}N*6(-(-N([:0]-@{C1}H)([:120]-H))=N-=-(=@{C3}O)-)}}{Cytosine} \qquad %
 \chemname{\chemfig{N([:180]-@{G2}H)*6(-(-N([:180]-@{G3}H)([:-60]-H))=N-*5(-N-=N-)=-(=@{G1}O)-[,,,2])}}{Guanine} %
@@ -391,8 +403,8 @@ $$
 </pre>
 </div>
 </div>
-<div id="outline-container-org619bfe3" class="outline-3">
-<h3 id="org619bfe3"><span class="section-number-3">2.3.</span> sidenotes</h3>
+<div id="outline-container-org1182c0b" class="outline-3">
+<h3 id="org1182c0b"><span class="section-number-3">2.3.</span> sidenotes</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The <img src="ltximg/making_of_this_website_db30dd30c3001cb81bd5713619ce270ada595831.svg" alt="$\LaTeX{}$" class="org-svg" />.css has support for sidenotes which can be used like this in an org file.
@@ -409,15 +421,15 @@ I still have Astrovim installed, but I mainly do everything on Emacs.
 </div>
 </div>
 </div>
-<div id="outline-container-org99891c7" class="outline-3">
-<h3 id="org99891c7"><span class="section-number-3">2.4.</span> noweb blocks</h3>
+<div id="outline-container-orga7bc951" class="outline-3">
+<h3 id="orga7bc951"><span class="section-number-3">2.4.</span> noweb blocks</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 I define variables in noweb blocks under a no-export header.
 I use noweb blocks in other blocks as well as in text itself with in like code. This way I can have text and code synchronized.
 </p>
 
-<pre class="example" id="orgb88bc21">
+<pre class="example" id="org9297c44">
 ;* Variables :noexport:
 These are the variables used both in text and the code. This way both the code and the text are in sync.
 #+NAME: gwas_control_number
@@ -429,22 +441,32 @@ Let's say we have found src_R[:noweb yes :eval yes]{&lt;&lt;snp_number&gt;&gt;} 
 </pre>
 </div>
 </div>
-<div id="outline-container-org88746f9" class="outline-3">
-<h3 id="org88746f9"><span class="section-number-3">2.5.</span> bibliography</h3>
+<div id="outline-container-orgee825b4" class="outline-3">
+<h3 id="orgee825b4"><span class="section-number-3">2.5.</span> bibliography</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Doomemacs <code>biblio</code> module includes citar and required packages. I export my bibliography from Zotero with <code>better-bibtex</code> plugin.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #79740e;">bibliography: /home/bar/org/lib.bib</span>
+
+;* References
+<span style="color: #79740e;">print_bibliography:</span>
+
+<span style="color: #79740e;">print_glossary: :type glossary acronym index :level 0 :consume no :all no :only-contents no</span>
+</pre>
 </div>
 </div>
-<div id="outline-container-orga5c446f" class="outline-3">
-<h3 id="orga5c446f"><span class="section-number-3">2.6.</span> indexing</h3>
+</div>
+<div id="outline-container-org8547c21" class="outline-3">
+<h3 id="org8547c21"><span class="section-number-3">2.6.</span> indexing</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Orgmode publish function creates the index page based on index attributes in the individual files.
 </p>
 
-<pre class="example" id="orgc78a474">
+<pre class="example" id="org6e8309a">
 #+INDEX: emacs
 #+INDEX: org mode
 #+INDEX: blog
@@ -452,8 +474,8 @@ Orgmode publish function creates the index page based on index attributes in the
 </pre>
 </div>
 </div>
-<div id="outline-container-orgbfd0e63" class="outline-3">
-<h3 id="orgbfd0e63"><span class="section-number-3">2.7.</span> tables</h3>
+<div id="outline-container-org8c8ef9f" class="outline-3">
+<h3 id="org8c8ef9f"><span class="section-number-3">2.7.</span> tables</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Orgmode has <a href="https://orgmode.org/manual/Advanced-features.html">extendable tables.</a>
@@ -487,40 +509,40 @@ Orgmode has <a href="https://orgmode.org/manual/Advanced-features.html">extendab
 </div>
 </div>
 </div>
-<div id="outline-container-org1f0e390" class="outline-3">
-<h3 id="org1f0e390"><span class="section-number-3">2.8.</span> tag noexport</h3>
+<div id="outline-container-org8bd81ff" class="outline-3">
+<h3 id="org8bd81ff"><span class="section-number-3">2.8.</span> tag noexport</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Anything under the heading with the tag <code>noexport</code> will not be exported to the final document.
 </p>
 
-<pre class="example" id="org9e92643">
+<pre class="example" id="org506317d">
 #+EXCLUDE_TAGS: noexport
 
 ;* My_heading :noexport:
 </pre>
 </div>
 </div>
-<div id="outline-container-org46c5c3f" class="outline-3">
-<h3 id="org46c5c3f"><span class="section-number-3">2.9.</span> header argument :eval no-export</h3>
+<div id="outline-container-org84b91f1" class="outline-3">
+<h3 id="org84b91f1"><span class="section-number-3">2.9.</span> header argument :eval no-export</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 This way code blocks are not evaluated when exporting to html.
 </p>
 
-<pre class="example" id="org1d7fbad">
+<pre class="example" id="org8bdc8d4">
 #+PROPERTY: HEADER-ARGS+ :eval no-export
 </pre>
 </div>
 </div>
-<div id="outline-container-org9fac67c" class="outline-3">
-<h3 id="org9fac67c"><span class="section-number-3">2.10.</span> appendices</h3>
+<div id="outline-container-orgf9349b1" class="outline-3">
+<h3 id="orgf9349b1"><span class="section-number-3">2.10.</span> appendices</h3>
 <div class="outline-text-3" id="text-2-10">
 <p>
 Appendices or any other unnumbered heading can be achieved like this.
 </p>
 
-<pre class="example" id="org2307897">
+<pre class="example" id="orgb43e2e4">
 ;* Comments
 :PROPERTIES:
 :UNNUMBERED: t
@@ -528,8 +550,8 @@ Appendices or any other unnumbered heading can be achieved like this.
 </pre>
 </div>
 </div>
-<div id="outline-container-org6078459" class="outline-3">
-<h3 id="org6078459"><span class="section-number-3">2.11.</span> comments section</h3>
+<div id="outline-container-org0cee962" class="outline-3">
+<h3 id="org0cee962"><span class="section-number-3">2.11.</span> comments section</h3>
 <div class="outline-text-3" id="text-2-11">
 <p>
 Comment section are added at the end of every blog post with following block.
@@ -542,16 +564,16 @@ Comment section are added at the end of every blog post with following block.
 <span style="color: #b57614;">:END:</span>
 <span style="color: #79740e;">HTML_HEAD_EXTRA: &lt;script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"&gt;&lt;/script&gt;</span>
 <span style="background-color: #d5c4a1; font-size: 80%;">EXPORT</span><span style="background-color: #d5c4a1;"> html</span>
-&lt;section id="isso-thread"&gt;
-&#9474;   &lt;noscript&gt;Javascript needs to <span style="text-decoration: underline;">be activated</span> to view comments.&lt;/noscript&gt;
-&lt;/section&gt;
+<span style="background-color: #ebdbb2;">&lt;</span><span style="color: #b57614; background-color: #ebdbb2;">section</span><span style="background-color: #ebdbb2;"> </span><span style="color: #076678; background-color: #ebdbb2;">id</span><span style="background-color: #ebdbb2;">=</span><span style="color: #79740e; background-color: #ebdbb2;">"isso-thread"</span><span style="background-color: #ebdbb2;">&gt;</span>
+&#9474;<span style="background-color: #ebdbb2;">   &lt;</span><span style="color: #b57614; background-color: #ebdbb2;">noscript</span><span style="background-color: #ebdbb2;">&gt;Javascript needs to </span><span style="background-color: #ebdbb2; text-decoration: underline;">be activated</span><span style="background-color: #ebdbb2;"> to view comments.&lt;/</span><span style="color: #b57614; background-color: #ebdbb2;">noscript</span><span style="background-color: #ebdbb2;">&gt;</span>
+<span style="background-color: #ebdbb2;">&lt;/</span><span style="color: #b57614; background-color: #ebdbb2;">section</span><span style="background-color: #ebdbb2;">&gt;</span>
 <span style="background-color: #d5c4a1; font-size: 80%;">EXPORT</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8f7f8ae" class="outline-3">
-<h3 id="org8f7f8ae"><span class="section-number-3">2.12.</span> date and author signature at the begining</h3>
+<div id="outline-container-org9812edd" class="outline-3">
+<h3 id="org9812edd"><span class="section-number-3">2.12.</span> date and author signature at the begining</h3>
 <div class="outline-text-3" id="text-2-12">
 <p>
 There is a special block named post-tag which has a custom css. I just have the date and some summary links at this block.
@@ -562,15 +584,15 @@ There is a special block named post-tag which has a custom css. I just have the 
 30 December 2023 &#8212; Bar&#305;&#351; Salman
 
 Links
-&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #689d6a; text-decoration: underline;"><a href="https://salsa.debian.org/yangfl-guest/scrcpy">https://salsa.debian.org/yangfl-guest/scrcpy</a></span>
-&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #689d6a; text-decoration: underline;"><a href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a></span>
+&#8211; <span style="color: #689d6a; text-decoration: underline;"><a href="https://salsa.debian.org/yangfl-guest/scrcpy">https://salsa.debian.org/yangfl-guest/scrcpy</a></span>
+&#8211; <span style="color: #689d6a; text-decoration: underline;"><a href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a></span>
 <span style="background-color: #d5c4a1; font-size: 80%;">post-tag</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org2a3842f" class="outline-3">
-<h3 id="org2a3842f"><span class="section-number-3">2.13.</span> org-publish configuration</h3>
+<div id="outline-container-org008f618" class="outline-3">
+<h3 id="org008f618"><span class="section-number-3">2.13.</span> org-publish configuration</h3>
 <div class="outline-text-3" id="text-2-13">
 <p>
 This configuration publishes to the blog directory under my Django project. So when I push both of them together. There is a preamble and head parts which makes it fit with the rest of the website. Any additional style or script I want in the blog pages I write to base app in the Django project. This way same style is applied everywhere (except notes which is a different app in itself).
@@ -676,8 +698,8 @@ This configuration publishes to the blog directory under my Django project. So w
 </div>
 </div>
 </div>
-<div id="outline-container-orgc3d72db" class="outline-3">
-<h3 id="orgc3d72db"><span class="section-number-3">2.14.</span> org-glossary</h3>
+<div id="outline-container-org1e26c06" class="outline-3">
+<h3 id="org1e26c06"><span class="section-number-3">2.14.</span> org-glossary</h3>
 <div class="outline-text-3" id="text-2-14">
 <p>
 <code>org-glossary</code> find the headers named glossary and acronyms and uses the definitions under them to create links to them when used in text.
@@ -685,15 +707,15 @@ This configuration publishes to the blog directory under my Django project. So w
 
 <div class="org-src-container">
 <pre class="src src-org">;* Glossary
-&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #a89984;">allele ::</span> One of the alternatives of a genomic locus. Human autosomal chromosomes have two alleles for every locus each inherited from a parent
+&#8211; <span style="color: #a89984;">allele ::</span> One of the alternatives of a genomic locus. Human autosomal chromosomes have two alleles for every locus each inherited from a parent
 ;* Acronyms
-&#8211;<span style="color: #fbf1c7;"> </span><span style="color: #a89984;">PRS ::</span> Polygenic Risk Score
+&#8211; <span style="color: #a89984;">PRS ::</span> Polygenic Risk Score
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgad172da" class="outline-3">
-<h3 id="orgad172da"><span class="section-number-3">2.15.</span> making plots</h3>
+<div id="outline-container-org86bce90" class="outline-3">
+<h3 id="org86bce90"><span class="section-number-3">2.15.</span> making plots</h3>
 <div class="outline-text-3" id="text-2-15">
 <p>
 In code blocks graphics file can be given as the output argument. Orgmode links this file into buffer which Emacs can display.
@@ -713,13 +735,13 @@ ggplot(samples, aes(x=PRS, y=as.numeric(samples$status) -1, color=status)) +
 </div>
 </div>
 </div>
-<div id="outline-container-orgee9a9e2" class="outline-2">
-<h2 id="orgee9a9e2">Server software components</h2>
-<div class="outline-text-2" id="text-orgee9a9e2">
+<div id="outline-container-org827795c" class="outline-2">
+<h2 id="org827795c">Server software components</h2>
+<div class="outline-text-2" id="text-org827795c">
 </div>
-<div id="outline-container-org825ed99" class="outline-3">
-<h3 id="org825ed99">Nginx</h3>
-<div class="outline-text-3" id="text-org825ed99">
+<div id="outline-container-orgb327588" class="outline-3">
+<h3 id="orgb327588">Nginx</h3>
+<div class="outline-text-3" id="text-orgb327588">
 <p>
 Nginx is the door to the internet.
 It serves the blog and note pages and acts as a reverse proxy for Django and Isso.
@@ -774,16 +796,16 @@ There also some redirect directive which makes it easier to share other socials.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd0e9ec7" class="outline-3">
-<h3 id="orgd0e9ec7">Django</h3>
-<div class="outline-text-3" id="text-orgd0e9ec7">
+<div id="outline-container-orgc1f05e8" class="outline-3">
+<h3 id="orgc1f05e8">Django</h3>
+<div class="outline-text-3" id="text-orgc1f05e8">
 <p>
 Django is the web framework that serves the landing page and bioscripts apps. Its biggest use is making bioscripts front-end pages.
 </p>
 </div>
-<div id="outline-container-org1259434" class="outline-4">
-<h4 id="org1259434">var2texshade</h4>
-<div class="outline-text-4" id="text-org1259434">
+<div id="outline-container-org872c22c" class="outline-4">
+<h4 id="org872c22c">var2texshade</h4>
+<div class="outline-text-4" id="text-org872c22c">
 <p>
 This is composed of two functions. First, acts like an api, just takes in the hgvsp id returns the pdf file.
 </p>
@@ -820,9 +842,9 @@ Second function just renders the form the user sees gets the hgvsp id from the f
 </div>
 </div>
 </div>
-<div id="outline-container-orgd3456c9" class="outline-4">
-<h4 id="orgd3456c9">cross-symbol-checker</h4>
-<div class="outline-text-4" id="text-orgd3456c9">
+<div id="outline-container-orge1a3c36" class="outline-4">
+<h4 id="orge1a3c36">cross-symbol-checker</h4>
+<div class="outline-text-4" id="text-orge1a3c36">
 <p>
 Because this process takes longer, I had a different approach to this one.
 There is again two functions.
@@ -886,14 +908,14 @@ In the second function, we grep for the 6 character token in task-spooler jobs. 
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc1c677" class="outline-3">
-<h3 id="orgdc1c677">Cron</h3>
-<div class="outline-text-3" id="text-orgdc1c677">
+<div id="outline-container-orga43bc7f" class="outline-3">
+<h3 id="orga43bc7f">Cron</h3>
+<div class="outline-text-3" id="text-orga43bc7f">
 <p>
 There is one user cron for creating a JSON RSS feed from the university&rsquo;s announcement page. This runs every 4 hours in work hours from 6:00 AM to 6:00 PM.
 </p>
 
-<pre class="example" id="orgfa476f6">
+<pre class="example" id="org7b6833d">
 0 6-18/4 * * * /home/bar/omicssbs/feeds/duyuru.py
 </pre>
 
@@ -902,25 +924,25 @@ There is one user cron for creating a JSON RSS feed from the university&rsquo;s 
 There is also two root jobs. One for keeping everything updated and one for auto-renewing the SSL certificate managed by the autocertbot.
 </p>
 
-<pre class="example" id="orga5adb15">
+<pre class="example" id="org0d26ac4">
 0 0 * * * sudo apt autoremove -y ; sudo apt autoclean -y; sudo apt update -y; sudo apt upgrade -y
 
 15 0 * * * "/opt/acmesh/.acme.sh"/acme.sh --cron --home "/opt/acmesh/.acme.sh" &gt; /dev/null
 </pre>
 </div>
 </div>
-<div id="outline-container-org7e5a62e" class="outline-3">
-<h3 id="org7e5a62e">Isso</h3>
-<div class="outline-text-3" id="text-org7e5a62e">
+<div id="outline-container-org9e6d7d5" class="outline-3">
+<h3 id="org9e6d7d5">Isso</h3>
+<div class="outline-text-3" id="text-org9e6d7d5">
 <p>
 Isso is the standalone commenting app. Initially, I looked for a Django package for this, but I couldn&rsquo;t find anything to my liking. I later experimented with Commento but settled upon Isso.
 It has moderation and threads and easy to set up which was the main things I was looking for.
 </p>
 </div>
 </div>
-<div id="outline-container-org3679a03" class="outline-3">
-<h3 id="org3679a03">Git</h3>
-<div class="outline-text-3" id="text-org3679a03">
+<div id="outline-container-org55b7676" class="outline-3">
+<h3 id="org55b7676">Git</h3>
+<div class="outline-text-3" id="text-org55b7676">
 <p>
 Git handles how I upload new stuff to the servers.
 Both of the repositories on my laptop have and additional push URL besides Github.
@@ -929,16 +951,16 @@ They&rsquo;re bare repositories meaning they just have the git objects and not t
 They do have scripts under them that runs when I pushed main branch.
 </p>
 </div>
-<div id="outline-container-orge32d73b" class="outline-4">
-<h4 id="orge32d73b">git post-receive hooks</h4>
-<div class="outline-text-4" id="text-orge32d73b">
+<div id="outline-container-orgdc91ddc" class="outline-4">
+<h4 id="orgdc91ddc">git post-receive hooks</h4>
+<div class="outline-text-4" id="text-orgdc91ddc">
 <p>
 These files live under the hook directory of the bare git repositories on the server. Any time a push is made to the main branch they are run. This script just puts the new files to a directory.
 </p>
 </div>
 <ul class="org-ul">
-<li><a id="orga8bb891"></a>bioscripts<br />
-<div class="outline-text-5" id="text-orga8bb891">
+<li><a id="org5b441c4"></a>bioscripts<br />
+<div class="outline-text-5" id="text-org5b441c4">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #a89984;">#</span><span style="color: #a89984;">!/bin/</span><span style="color: #9d0006;">sh</span>
 <span style="color: #076678;">WORK_TREE</span>=<span style="color: #79740e;">"/home/bar/bioscripts"</span>
@@ -961,8 +983,8 @@ These files live under the hook directory of the bare git repositories on the se
 </div>
 </div>
 </li>
-<li><a id="orge93d8ac"></a>omicssbs<br />
-<div class="outline-text-5" id="text-orge93d8ac">
+<li><a id="orgd1bda56"></a>omicssbs<br />
+<div class="outline-text-5" id="text-orgd1bda56">
 <p>
 This script, in addition to bioscripts hook, does django related things and restarts the gunicorn service. 
 </p>
@@ -991,16 +1013,16 @@ This script, in addition to bioscripts hook, does django related things and rest
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbffee2c" class="outline-3">
-<h3 id="orgbffee2c">systemd</h3>
-<div class="outline-text-3" id="text-orgbffee2c">
+<div id="outline-container-orgb591e60" class="outline-3">
+<h3 id="orgb591e60">systemd</h3>
+<div class="outline-text-3" id="text-orgb591e60">
 <p>
 Systemd manages starting/stoping the gunicorn and isso apps.
 </p>
 </div>
-<div id="outline-container-orga3833be" class="outline-4">
-<h4 id="orga3833be">gunicorn</h4>
-<div class="outline-text-4" id="text-orga3833be">
+<div id="outline-container-org1918e4d" class="outline-4">
+<h4 id="org1918e4d">gunicorn</h4>
+<div class="outline-text-4" id="text-org1918e4d">
 <div class="org-src-container">
 <pre class="src src-ini">[Unit]
 Description=gunicorn daemon
@@ -1024,9 +1046,9 @@ WantedBy=multi-user.target
 </div>
 </div>
 </div>
-<div id="outline-container-org59c3c63" class="outline-4">
-<h4 id="org59c3c63">isso</h4>
-<div class="outline-text-4" id="text-org59c3c63">
+<div id="outline-container-orgbf73e36" class="outline-4">
+<h4 id="orgbf73e36">isso</h4>
+<div class="outline-text-4" id="text-orgbf73e36">
 <div class="org-src-container">
 <pre class="src src-ini">[Unit]
 Description=gunicorn daemon
@@ -1048,9 +1070,9 @@ WantedBy=multi-user.target
 </div>
 </div>
 </div>
-<div id="outline-container-org0cdf577" class="outline-2">
-<h2 id="org0cdf577">Comments</h2>
-<div class="outline-text-2" id="text-org0cdf577">
+<div id="outline-container-orge2cc747" class="outline-2">
+<h2 id="orge2cc747">Comments</h2>
+<div class="outline-text-2" id="text-orge2cc747">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
@@ -1059,7 +1081,7 @@ WantedBy=multi-user.target
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

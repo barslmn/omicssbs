@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HGNC Version Control</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <style>img{max-width:100%}</style>
 <style>details{background-color:#fff !important}</style>
 <link href="https://cdn.jsdelivr.net/npm/zoom-vanilla.js/dist/zoom.css" rel="stylesheet">
@@ -227,6 +227,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -242,21 +269,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -275,7 +287,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">HGNC Version Control</h1>
-<div class="post-tag" id="orgfd3e4f9">
+<div class="post-tag" id="org2025204">
 <p>
 24 Jun 2024 — Barış Salman
 </p>
@@ -295,34 +307,35 @@ Links
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbbe3959">1. Introduction</a></li>
-<li><a href="#org3827d6a">2. Implementation</a>
+<li><a href="#orga5373b5">1. Introduction</a></li>
+<li><a href="#org53ba064">2. Implementation</a>
 <ul>
-<li><a href="#org4e0bf3a">2.1. Why git?</a></li>
-<li><a href="#org3e53026">2.2. Why not just diff the whole file?</a></li>
-<li><a href="#org023fb17">2.3. Notes on storage</a></li>
+<li><a href="#org0d1b0b0">2.1. Why git?</a></li>
+<li><a href="#orge4b8566">2.2. Why not just diff the whole file?</a></li>
+<li><a href="#org575fa44">2.3. Notes on storage</a></li>
 </ul>
 </li>
-<li><a href="#orgb5c8597">3. App</a></li>
-<li><a href="#org11268d4">Appendix</a>
+<li><a href="#org71369d5">3. App</a></li>
+<li><a href="#org3b629fc">Appendix</a>
 <ul>
-<li><a href="#orgd0729b8">HGNC parse and commit script</a></li>
-<li><a href="#orgad64509">Visualization frontend</a></li>
-<li><a href="#org231c2f8">Django backend</a></li>
+<li><a href="#orga08b107">HGNC parse and commit script</a></li>
+<li><a href="#org0d4badd">Visualization frontend</a></li>
+<li><a href="#org7f683cc">Django backend</a></li>
 </ul>
 </li>
-<li><a href="#orga251a35">4. References</a></li>
-<li><a href="#org0962011">5. Acronyms</a></li>
-<li><a href="#orge3fdd9d">Comments</a></li>
+<li><a href="#org2b5c463">4. References</a></li>
+<li><a href="#org6462726">5. Acronyms</a></li>
+<li><a href="#org3c5bce0">Comments</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbbe3959" class="outline-2">
-<h2 id="orgbbe3959"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-orga5373b5" class="outline-2">
+<h2 id="orga5373b5"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This will be the start of a series of posts about tracking versions of the genetic concepts of gene symbols, transcripts, and variants.
 Gene is a hard-to-define concept.
+HUGO Gene Nomenclature Committee
  (<a class="org-gls" href="#gls.1" id="glsr.1.1">HGNC</a>) is the authority that curates the human gene symbols.
 The <a class="org-gls" href="#gls.1" id="glsr.1.2">HGNC</a> guidelines page summarizes genes in the following sections:
 </p>
@@ -337,7 +350,7 @@ The <a class="org-gls" href="#gls.1" id="glsr.1.2">HGNC</a> guidelines page summ
 <p>
 Gene symbols and their other annotations are not static and change.
 Especially with newer technologies like perturb-seq we are now discovering more of their biological functions and naming them accordingly. (<a href="#citeproc_bib_item_1">Replogle et al. 2022</a>)
-<a class="org-gls" href="#gls.1" id="glsr.1.3">HGNC</a> summarize the new gene and gene family entries, and what changed in their 2023 paper. (<a href="#citeproc_bib_item_2">Seal et al. 2022</a>)
+<a class="org-gls" href="#gls.1" id="glsr.1.3">HGNC</a> summarize the new gene and gene family entries, and what changed in their 2023 paper. (NO_ITEM_DATA:sealGenenamesOrgHGNC2022)
 </p>
 
 <p>
@@ -347,8 +360,8 @@ I wanted something a bit more comprehensive than these monthly changes and the a
 </p>
 </div>
 </div>
-<div id="outline-container-org3827d6a" class="outline-2">
-<h2 id="org3827d6a"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org53ba064" class="outline-2">
+<h2 id="org53ba064"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 For this, I come up with the following:
@@ -366,13 +379,13 @@ For this, I come up with the following:
 </ol>
 
 
-<div id="org2393774" class="figure">
+<div id="org7b96447" class="figure">
 <p><img src="_20240401_120126screenshot.png" alt="_20240401_120126screenshot.png" data-action="zoom" />
 </p>
 </div>
 </div>
-<div id="outline-container-org4e0bf3a" class="outline-3">
-<h3 id="org4e0bf3a"><span class="section-number-3">2.1.</span> Why git?</h3>
+<div id="outline-container-org0d1b0b0" class="outline-3">
+<h3 id="org0d1b0b0"><span class="section-number-3">2.1.</span> Why git?</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Git is the first thing that comes to mind when version control is concerned.
@@ -381,8 +394,8 @@ It may be more performant or easier to maintain in a database like dolt, or usin
 </p>
 </div>
 </div>
-<div id="outline-container-org3e53026" class="outline-3">
-<h3 id="org3e53026"><span class="section-number-3">2.2.</span> Why not just diff the whole file?</h3>
+<div id="outline-container-orge4b8566" class="outline-3">
+<h3 id="orge4b8566"><span class="section-number-3">2.2.</span> Why not just diff the whole file?</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 One concern here is the fact that we are flatting the contents of the file to a lot of files; 1005973 files to be exact.
@@ -396,7 +409,7 @@ This way we can directly query the changes made to that id using the following c
 
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="org38e31d1">
+<div class="sidenote" id="org0037f84">
 <p>
 Git syntax allows for directory-based query by giving a directory name after &ldquo;&#x2013;&rdquo;
 </p>
@@ -415,8 +428,8 @@ It takes around ~75 seconds to commit a single file.
 </p>
 </div>
 </div>
-<div id="outline-container-org023fb17" class="outline-3">
-<h3 id="org023fb17"><span class="section-number-3">2.3.</span> Notes on storage</h3>
+<div id="outline-container-org575fa44" class="outline-3">
+<h3 id="org575fa44"><span class="section-number-3">2.3.</span> Notes on storage</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The text files that <a class="org-gls" href="#gls.1" id="glsr.1.6">HGNC</a> stores take around 500Mb as of today.
@@ -434,7 +447,7 @@ Every new commit is around 1M, so the increase rate is smaller compared to TXT f
 I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 </p>
 
-<pre class="example" id="org084e835">
+<pre class="example" id="orgbce3554">
 ❯ du -hs txts
 518M    txts
 ❯ du -hs hgnc-data
@@ -445,11 +458,11 @@ I am only keeping the bare repo on the website so it&rsquo;s space efficient.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb5c8597" class="outline-2">
-<h2 id="orgb5c8597"><span class="section-number-2">3.</span> App</h2>
+<div id="outline-container-org71369d5" class="outline-2">
+<h2 id="org71369d5"><span class="section-number-2">3.</span> App</h2>
 <div class="outline-text-2" id="text-3">
 
-<div id="org16a40cf" class="figure">
+<div id="org8d0853f" class="figure">
 <p><img src="_20240623_164437screenshot.png" alt="_20240623_164437screenshot.png" />
 </p>
 </div>
@@ -467,17 +480,18 @@ After the symbol is selected Django runs a subprocess and queries the repository
 </div>
 
 <p>
-After a bit more parsing and merging the result of the two commands a simple  (<a class="org-gls" href="#gls.2" id="glsr.2.1">CSV</a>), ready to be plotted, is returned to the frontend.
+After a bit more parsing and merging the result of the two commands a simple Comma separated values
+ (<a class="org-gls" href="#gls.2" id="glsr.2.1">CSV</a>), ready to be plotted, is returned to the frontend.
 </p>
 </div>
 </div>
-<div id="outline-container-org11268d4" class="outline-2">
-<h2 id="org11268d4">Appendix</h2>
-<div class="outline-text-2" id="text-org11268d4">
+<div id="outline-container-org3b629fc" class="outline-2">
+<h2 id="org3b629fc">Appendix</h2>
+<div class="outline-text-2" id="text-org3b629fc">
 </div>
-<div id="outline-container-orgd0729b8" class="outline-3">
-<h3 id="orgd0729b8">HGNC parse and commit script</h3>
-<div class="outline-text-3" id="text-orgd0729b8">
+<div id="outline-container-orga08b107" class="outline-3">
+<h3 id="orga08b107">HGNC parse and commit script</h3>
+<div class="outline-text-3" id="text-orga08b107">
 <p>
 The Script parses and writes <a class="org-gls" href="#gls.1" id="glsr.1.8">HGNC</a> tables to the files.
 This script also tags and commits the changes.
@@ -671,9 +685,9 @@ repo_path.mkdir(exist_ok=<span style="color: #8f3f71;">True</span>)
 </details>
 </div>
 </div>
-<div id="outline-container-orgad64509" class="outline-3">
-<h3 id="orgad64509">Visualization frontend</h3>
-<div class="outline-text-3" id="text-orgad64509">
+<div id="outline-container-org0d4badd" class="outline-3">
+<h3 id="org0d4badd">Visualization frontend</h3>
+<div class="outline-text-3" id="text-org0d4badd">
 <p>
 Heatmap is drawn with the d3.js.
 </p>
@@ -879,9 +893,9 @@ legendItems.append(<span style="color: #79740e;">"text"</span>)
 </details>
 </div>
 </div>
-<div id="outline-container-org231c2f8" class="outline-3">
-<h3 id="org231c2f8">Django backend</h3>
-<div class="outline-text-3" id="text-org231c2f8">
+<div id="outline-container-org7f683cc" class="outline-3">
+<h3 id="org7f683cc">Django backend</h3>
+<div class="outline-text-3" id="text-org7f683cc">
 <p>
 This part gets the <a class="org-gls" href="#gls.1" id="glsr.1.9">HGNC</a> ID from the form and returns the diff data for d3.js.
 </p>
@@ -985,41 +999,43 @@ This part gets the <a class="org-gls" href="#gls.1" id="glsr.1.9">HGNC</a> ID fr
 </div>
 </div>
 </div>
-<div id="outline-container-orga251a35" class="outline-2">
-<h2 id="orga251a35"><span class="section-number-2">4.</span> References</h2>
+<div id="outline-container-org2b5c463" class="outline-2">
+<h2 id="org2b5c463"><span class="section-number-2">4.</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Replogle, Joseph M., Reuben A. Saunders, Angela N. Pogson, Jeffrey A. Hussmann, Alexander Lenail, Alina Guna, Lauren Mascibroda, et al. 2022. “Mapping Information-Rich Genotype-Phenotype Landscapes with Genome-Scale Perturb-seq.” <i>Cell</i> 185 (14): 2559–75.e28. <a href="https://doi.org/10.1016/j.cell.2022.05.013">https://doi.org/10.1016/j.cell.2022.05.013</a>.</div>
-  <div class="csl-entry"><a id="citeproc_bib_item_2"></a>Seal, Ruth L, Bryony Braschi, Kristian Gray, Tamsin E M Jones, Susan Tweedie, Liora Haim-Vilmovsky, and Elspeth A Bruford. 2022. “Genenames.Org: The HGNC Resources in 2023.” <i>Nucleic Acids Research</i>, October, gkac888. <a href="https://doi.org/10.1093/nar/gkac888">https://doi.org/10.1093/nar/gkac888</a>.</div>
+  <div class="csl-entry">NO_ITEM_DATA:sealGenenamesOrgHGNC2022</div>
 </div>
 </div>
 </div>
-<div id="outline-container-org0962011" class="outline-2">
-<h2 id="org0962011"><span class="section-number-2">5.</span> Acronyms</h2>
+<div id="outline-container-org6462726" class="outline-2">
+<h2 id="org6462726"><span class="section-number-2">5.</span> Acronyms</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<b><span class="org-glsdef" id="gls.22">CSV</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>
+<b><span class="org-glsdef" id="gls.22">CSV</span></b>&emsp;Comma separated values&ensp;<a class="org-glsdef" href="#glsr.2.1">1</a>
 </p>
 
 <p>
-<b><span class="org-glsdef" id="gls.21">HGNC</span></b>&emsp;&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>, <a class="org-glsdef" href="#glsr.1.4">4</a>, <a class="org-glsdef" href="#glsr.1.5">5</a>, <a class="org-glsdef" href="#glsr.1.6">6</a>, <a class="org-glsdef" href="#glsr.1.7">7</a>, <a class="org-glsdef" href="#glsr.1.8">8</a>, <a class="org-glsdef" href="#glsr.1.9">9</a>
+<b><span class="org-glsdef" id="gls.21">HGNC</span></b>&emsp;HUGO Gene Nomenclature Committee&ensp;<a class="org-glsdef" href="#glsr.1.1">1</a>, <a class="org-glsdef" href="#glsr.1.2">2</a>, <a class="org-glsdef" href="#glsr.1.3">3</a>, <a class="org-glsdef" href="#glsr.1.4">4</a>, <a class="org-glsdef" href="#glsr.1.5">5</a>, <a class="org-glsdef" href="#glsr.1.6">6</a>, <a class="org-glsdef" href="#glsr.1.7">7</a>, <a class="org-glsdef" href="#glsr.1.8">8</a>, <a class="org-glsdef" href="#glsr.1.9">9</a>
 </p>
 </div>
 </div>
-<div id="outline-container-orge3fdd9d" class="outline-2">
-<h2 id="orge3fdd9d">Comments</h2>
-<div class="outline-text-2" id="text-orge3fdd9d">
+<div id="outline-container-org3c5bce0" class="outline-2">
+<h2 id="org3c5bce0">Comments</h2>
+<div class="outline-text-2" id="text-org3c5bce0">
 <section id="isso-thread">
 <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/zoom-vanilla.js/dist/zoom-vanilla.min.js" type="text/javascript"></script>
+
+<div id="progress-bar"></div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>@@html:&lt;img src="nisan_2024_.jpg"&gt;@@ Barış Salman</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <link rel="stylesheet" type="text/css" href="cv.css" />
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
@@ -224,6 +224,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -239,21 +266,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -275,9 +287,9 @@ else {
 <br />
 <span class="subtitle">Curriculum vitae <br> <a href="mailto:barslmn@gmail.com">E-mail</a> <a href="tel:+905343878420">Phone</a> <a href="https://omics.sbs">Website</a><br> <a href="https://omics.sbs/github">Github</a> <a href="https://omics.sbs/linkedin">Linkedin</a> <a href="https://omics.sbs/biostars">Biostars</a> <a href="https://omics.sbs/orcid">Orcid</a></span>
 </h1>
-<div id="outline-container-org83d88a1" class="outline-2">
-<h2 id="org83d88a1">Jobs</h2>
-<div class="outline-text-2" id="text-org83d88a1">
+<div id="outline-container-orgaa7e3ea" class="outline-2">
+<h2 id="orgaa7e3ea">Jobs</h2>
+<div class="outline-text-2" id="text-orgaa7e3ea">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -357,9 +369,9 @@ else {
 </tbody>
 </table>
 </div>
-<div id="outline-container-orgb8a7425" class="outline-3">
-<h3 id="orgb8a7425">Internships &amp; Rotations</h3>
-<div class="outline-text-3" id="text-orgb8a7425">
+<div id="outline-container-org727ba8e" class="outline-3">
+<h3 id="org727ba8e">Internships &amp; Rotations</h3>
+<div class="outline-text-3" id="text-org727ba8e">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -457,9 +469,9 @@ else {
 </table>
 </div>
 </div>
-<div id="outline-container-org9751c4a" class="outline-3">
-<h3 id="org9751c4a">Certificates</h3>
-<div class="outline-text-3" id="text-org9751c4a">
+<div id="outline-container-org5d4144d" class="outline-3">
+<h3 id="org5d4144d">Certificates</h3>
+<div class="outline-text-3" id="text-org5d4144d">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -513,13 +525,13 @@ else {
 </div>
 </div>
 </div>
-<div id="outline-container-orga4ca507" class="outline-2">
-<h2 id="orga4ca507">Technical skills</h2>
-<div class="outline-text-2" id="text-orga4ca507">
+<div id="outline-container-org76b5dba" class="outline-2">
+<h2 id="org76b5dba">Technical skills</h2>
+<div class="outline-text-2" id="text-org76b5dba">
 </div>
-<div id="outline-container-org4cd6616" class="outline-3">
-<h3 id="org4cd6616">Wet lab and Bioinformatics</h3>
-<div class="outline-text-3" id="text-org4cd6616">
+<div id="outline-container-orga2273f0" class="outline-3">
+<h3 id="orga2273f0">Wet lab and Bioinformatics</h3>
+<div class="outline-text-3" id="text-orga2273f0">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -571,9 +583,9 @@ else {
 </table>
 </div>
 </div>
-<div id="outline-container-org78731a0" class="outline-3">
-<h3 id="org78731a0">Computers and Data Analyses</h3>
-<div class="outline-text-3" id="text-org78731a0">
+<div id="outline-container-org4675a63" class="outline-3">
+<h3 id="org4675a63">Computers and Data Analyses</h3>
+<div class="outline-text-3" id="text-org4675a63">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -640,9 +652,9 @@ else {
 </div>
 </div>
 </div>
-<div id="outline-container-org33cbadc" class="outline-2">
-<h2 id="org33cbadc">Education</h2>
-<div class="outline-text-2" id="text-org33cbadc">
+<div id="outline-container-orga8b5570" class="outline-2">
+<h2 id="orga8b5570">Education</h2>
+<div class="outline-text-2" id="text-orga8b5570">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -741,9 +753,9 @@ else {
 </table>
 </div>
 </div>
-<div id="outline-container-orgebc5ee8" class="outline-2">
-<h2 id="orgebc5ee8">Publications</h2>
-<div class="outline-text-2" id="text-orgebc5ee8">
+<div id="outline-container-orge4b4246" class="outline-2">
+<h2 id="orge4b4246">Publications</h2>
+<div class="outline-text-2" id="text-orge4b4246">
 <ol class="org-ol">
 <li>Susgun, S. et al. Reanalysis of exome sequencing data reveals a treatable neurometabolic origin in two previously undiagnosed siblings with neurodevelopmental disorder. Neurol Sci 44, 2527–2540 (2023).</li>
 <li>Susgun, S. et al. Targeted resequencing reveals high-level mosaicism for a novel frameshift variant in WDR45 associated with beta-propeller protein-associated neurodegeneration. Int J Neurosci 1–6 (2023) doi:10.1080/00207454.2023.2208279.</li>
@@ -757,26 +769,26 @@ else {
 Akçakaya, N. H., Salman, B., Görmez, Z., Tarkan Argüden, Y., Çırakoğlu, A., Çakmur, R., Dönmez Çolakoğlu, B., Hacıhanefioğlu, S., Özbek, U., Yapıcı, Z., &amp; Uğur İşeri, S. A. (2019). A Novel and Mosaic WDR45 Nonsense Variant Causes Beta-Propeller Protein-Associated Neurodegeneration Identified Through Whole Exome Sequencing and X chromosome Heterozygosity Analysis. Neuromolecular Medicine, 21(1), 54–59. <a href="https://doi.org/10.1007/s12017-018-08522-6">https://doi.org/10.1007/s12017-018-08522-6</a></li>
 </ol>
 </div>
-<div id="outline-container-org0999672" class="outline-3">
-<h3 id="org0999672">in pipeline</h3>
-<div class="outline-text-3" id="text-org0999672">
+<div id="outline-container-org4b191ea" class="outline-3">
+<h3 id="org4b191ea">in pipeline</h3>
+<div class="outline-text-3" id="text-org4b191ea">
 <ul class="org-ul">
 <li>Whole exome sequencing widens the spectrum of associated genes in a cohort with lateral temporal lobe epilepsy <b>(in review.)</b></li>
 <li>Variant Version Control: A Git Framework For Keeping Track Of Variant Annotation Changes <b>(in prep.)</b></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcb938c6" class="outline-3">
-<h3 id="orgcb938c6">Collaborative</h3>
-<div class="outline-text-3" id="text-orgcb938c6">
+<div id="outline-container-org1328638" class="outline-3">
+<h3 id="org1328638">Collaborative</h3>
+<div class="outline-text-3" id="text-org1328638">
 <ul class="org-ul">
 <li><a href="https://pubmed.ncbi.nlm.nih.gov/?term=epi25+collaborative">Epi25 Collaborative</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org13d1cd2" class="outline-3">
-<h3 id="org13d1cd2">Posters</h3>
-<div class="outline-text-3" id="text-org13d1cd2">
+<div id="outline-container-org934f64a" class="outline-3">
+<h3 id="org934f64a">Posters</h3>
+<div class="outline-text-3" id="text-org934f64a">
 <ol class="org-ol">
 <li>Susgun S., Kesim Y., Salman B., Yucesan E., Khalilov D., Sirin G., Baykan B, Bebek N., Iseri Ugur S., <b>Two candidates bi-allelic variant to neurodevelopmental disorder in a consanguineous family from Turkey</b>, ESHG 2022</li>
 <li>Acar A., Say M., Salman B., Dulger M.V., <b>Comparison of Established Microsatellite Instability Detection Tools in Next Generation Sequencing</b>, ESHG 2021</li>
@@ -784,18 +796,18 @@ Akçakaya, N. H., Salman, B., Görmez, Z., Tarkan Argüden, Y., Çırakoğlu, A.
 </ol>
 </div>
 </div>
-<div id="outline-container-org47a4d1c" class="outline-3">
-<h3 id="org47a4d1c">Congresses</h3>
-<div class="outline-text-3" id="text-org47a4d1c">
+<div id="outline-container-org83d2355" class="outline-3">
+<h3 id="org83d2355">Congresses</h3>
+<div class="outline-text-3" id="text-org83d2355">
 <ol class="org-ol">
 <li>Investigation of Gene Variants Associated with Syndromic Intellectual Disability, 7. International Congress of Cerebral Palsy and Developmental Disorders, February 23-25 2018, Istanbul, Turkey</li>
 </ol>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc282c73" class="outline-2">
-<h2 id="orgc282c73">Projects</h2>
-<div class="outline-text-2" id="text-orgc282c73">
+<div id="outline-container-org727b706" class="outline-2">
+<h2 id="org727b706">Projects</h2>
+<div class="outline-text-2" id="text-org727b706">
 <ol class="org-ol">
 <li>2021-2022 TUBITAK 1501 Project, 3210420, <b>Modeling and Automatic Analysis of Genotype-Phenotype Related Copy Number Variations</b> Researcher</li>
 <li>2021-2022 Research Fund of Istanbul University, ONAP-37862, <b>Transcriptomics Approaches To Biomarker Potential Of  B Cell Expression Analyses In Anti-Neuronal Antibody Related Autoimmune Epilepsy</b> Researcher</li>
@@ -806,9 +818,9 @@ Akçakaya, N. H., Salman, B., Görmez, Z., Tarkan Argüden, Y., Çırakoğlu, A.
 </ol>
 </div>
 </div>
-<div id="outline-container-org02ef002" class="outline-2">
-<h2 id="org02ef002">Software</h2>
-<div class="outline-text-2" id="text-org02ef002">
+<div id="outline-container-orge5ee5f1" class="outline-2">
+<h2 id="orge5ee5f1">Software</h2>
+<div class="outline-text-2" id="text-orge5ee5f1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -891,17 +903,17 @@ Akçakaya, N. H., Salman, B., Görmez, Z., Tarkan Argüden, Y., Çırakoğlu, A.
 </table>
 </div>
 </div>
-<div id="outline-container-org219d5ee" class="outline-2">
-<h2 id="org219d5ee">Awards</h2>
-<div class="outline-text-2" id="text-org219d5ee">
+<div id="outline-container-org8abc51a" class="outline-2">
+<h2 id="org8abc51a">Awards</h2>
+<div class="outline-text-2" id="text-org8abc51a">
 <p>
 III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second place project award</b>, Istanbul, Turkey, 2017
 </p>
 </div>
 </div>
-<div id="outline-container-org7e2822f" class="outline-2">
-<h2 id="org7e2822f">Congresses&amp;Courses</h2>
-<div class="outline-text-2" id="text-org7e2822f">
+<div id="outline-container-orgee3f7da" class="outline-2">
+<h2 id="orgee3f7da">Congresses&amp;Courses</h2>
+<div class="outline-text-2" id="text-orgee3f7da">
 <ol class="org-ol">
 <li>2023 YTÜ Biyogen, II. Bioinformatic Conference, Nov 10, <b>Bioinformatics in uncovering the genetic basis of human diseases</b>  (Oral Presentation)</li>
 <li>2023 İSTisNa, Strategies, Genomic Approaches and Data Analysis for Rare and Undiagnosed Diseases Course, Oct 12-13, <b>Quality metrics in sequencing data</b>  (Oral Presentation)</li>
@@ -918,13 +930,13 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </ol>
 </div>
 </div>
-<div id="outline-container-org1a145d1" class="outline-2">
-<h2 id="org1a145d1">General skills</h2>
-<div class="outline-text-2" id="text-org1a145d1">
+<div id="outline-container-orgbe0218e" class="outline-2">
+<h2 id="orgbe0218e">General skills</h2>
+<div class="outline-text-2" id="text-orgbe0218e">
 </div>
-<div id="outline-container-org714f2f5" class="outline-3">
-<h3 id="org714f2f5">Languages</h3>
-<div class="outline-text-3" id="text-org714f2f5">
+<div id="outline-container-org4cdf4fc" class="outline-3">
+<h3 id="org4cdf4fc">Languages</h3>
+<div class="outline-text-3" id="text-org4cdf4fc">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -971,7 +983,7 @@ III. Rare Neurological Diseases Symposium and Neurogenetics Course, <b>Second pl
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

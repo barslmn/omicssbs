@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gibbs Sampling Algorithm Implementation for Searching DNA Motifs</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
@@ -224,6 +224,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -239,21 +266,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -276,35 +288,35 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2c29a30">1. Intro</a></li>
-<li><a href="#orgc309fb0">2. Implementation</a>
+<li><a href="#org7d2e329">1. Intro</a></li>
+<li><a href="#org9857647">2. Implementation</a>
 <ul>
-<li><a href="#org048311d">2.1. Creating the sample data</a>
+<li><a href="#orgf103cb6">2.1. Creating the sample data</a>
 <ul>
-<li><a href="#org6009358">2.1.1. Creating Sequences</a></li>
-<li><a href="#org1c22bf6">2.1.2. Creating motifs</a></li>
-<li><a href="#org9dd2c6c">2.1.3. Adding motifs to sequences</a></li>
-<li><a href="#org5a282f2">2.1.4. Putting it all together</a></li>
+<li><a href="#org09119e1">2.1.1. Creating Sequences</a></li>
+<li><a href="#orgfab7179">2.1.2. Creating motifs</a></li>
+<li><a href="#orgf051a1b">2.1.3. Adding motifs to sequences</a></li>
+<li><a href="#org83176f3">2.1.4. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#org2da770e">2.2. Finding the motif</a>
+<li><a href="#org2cba943">2.2. Finding the motif</a>
 <ul>
-<li><a href="#org199b6f5">2.2.1. Algorithm outline</a></li>
-<li><a href="#org5e25a7f">2.2.2. Weighted Model Matrix</a></li>
-<li><a href="#org5bb08da">2.2.3. Calculate probability</a></li>
-<li><a href="#orgcc6fe15">2.2.4. Sliding window</a></li>
-<li><a href="#orgaad293d">2.2.5. Putting it all together</a></li>
+<li><a href="#org36ae272">2.2.1. Algorithm outline</a></li>
+<li><a href="#org1ecca13">2.2.2. Weighted Model Matrix</a></li>
+<li><a href="#orga5d969b">2.2.3. Calculate probability</a></li>
+<li><a href="#orga4eb2c4">2.2.4. Sliding window</a></li>
+<li><a href="#orgb652130">2.2.5. Putting it all together</a></li>
 </ul>
 </li>
-<li><a href="#org506188b">2.3. Parameters affecting the results</a></li>
+<li><a href="#org9908523">2.3. Parameters affecting the results</a></li>
 </ul>
 </li>
-<li><a href="#org4ef52e8">3. Trying it out with real data</a></li>
-<li><a href="#org19fefb9">Comments</a></li>
+<li><a href="#org926d068">3. Trying it out with real data</a></li>
+<li><a href="#org45ee4e0">Comments</a></li>
 </ul>
 </div>
 </div>
-<div class="abstract" id="org5b0285a">
+<div class="abstract" id="org8b0d86f">
 <p>
 Sequence motifs are knobs and switches that allow organisms to control levels of RNA and protein products.
 They work as handles for regulatory proteins to interact with the sequences they control.
@@ -312,12 +324,12 @@ They are also a primary target for evolutionary processes to act on to fine-tune
 </p>
 
 </div>
-<div id="outline-container-org2c29a30" class="outline-2">
-<h2 id="org2c29a30"><span class="section-number-2">1.</span> Intro</h2>
+<div id="outline-container-org7d2e329" class="outline-2">
+<h2 id="org7d2e329"><span class="section-number-2">1.</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
 <label for="sn-symbol" class="sidenote-toggle">⊕</label>
 <input type="checkbox" id="sn-symbol" class="sidenote-toggle">
-<div class="sidenote" id="orgdc2b1cb">
+<div class="sidenote" id="org6beb9eb">
 <p>
 You can test it out yourself at this <a href="https://colab.research.google.com/drive/1KH5mlX50W7sKJs5nmh75obBvHZaMUEwC?usp=sharing">notebook</a>.
 </p>
@@ -337,38 +349,6 @@ Below code sets up the virtual environment.
 pip install -U matplotlib pandas
 </pre>
 </div>
-
-<p>
-created virtual environment cpython3.10.8.final.0-64 in 130ms
-  creator cpython3posix(dest=/home/bar/desktop/workbench/seqmotif/venv, clear=false, no<sub>vcs</sub><sub>ignore</sub>=false, global=false)
-  seeder fromappdata(download=false, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app<sub>data</sub><sub>dir</sub>=/home/bar/.local/share/virtualenv)
-    added seed packages: pillow==9.3.0, contourpy==1.0.6, cycler==0.11.0, fonttools==4.38.0, kiwisolver==1.4.4, matplotlib==3.6.2, numpy==1.23.4, packaging==21.3, pandas==1.5.1, pip==22.3, pyparsing==3.0.9, python<sub>dateutil</sub>==2.8.2, pytz==2022.6, scipy==1.9.3, setuptools==65.5.0, six==1.16.0, wheel==0.38.4
-  activators bashactivator,cshellactivator,fishactivator,nushellactivator,powershellactivator,pythonactivator
-requirement already satisfied: matplotlib in ./venv/lib/python3.10/site-packages (3.6.2)
-requirement already satisfied: pandas in ./venv/lib/python3.10/site-packages (1.5.1)
-requirement already satisfied: packaging&gt;=20.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (21.3)
-requirement already satisfied: numpy&gt;=1.19 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.23.4)
-requirement already satisfied: kiwisolver&gt;=1.0.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.4.4)
-requirement already satisfied: pyparsing&gt;=2.2.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (3.0.9)
-requirement already satisfied: contourpy&gt;=1.0.1 in ./venv/lib/python3.10/site-packages (from matplotlib) (1.0.6)
-requirement already satisfied: fonttools&gt;=4.22.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (4.38.0)
-requirement already satisfied: cycler&gt;=0.10 in ./venv/lib/python3.10/site-packages (from matplotlib) (0.11.0)
-requirement already satisfied: pillow&gt;=6.2.0 in ./venv/lib/python3.10/site-packages (from matplotlib) (9.3.0)
-requirement already satisfied: python-dateutil&gt;=2.7 in ./venv/lib/python3.10/site-packages (from matplotlib) (2.8.2)
-requirement already satisfied: pytz&gt;=2020.1 in ./venv/lib/python3.10/site-packages (from pandas) (2022.6)
-requirement already satisfied: six&gt;=1.5 in ./venv/lib/python3.10/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #076678;">(</span><span style="color: #9d0006;">setq</span> current-dir <span style="color: #b16286;">(</span><span style="color: #8f3f71;">file-name-directory</span> <span style="color: #8ec07c;">(</span><span style="color: #8f3f71;">file-truename</span> <span style="color: #79740e;">"seqmotif.org"</span><span style="color: #8ec07c;">)</span><span style="color: #b16286;">)</span><span style="color: #076678;">)</span>
-<span style="color: #076678;">(</span><span style="color: #9d0006;">setq</span> <span style="color: #076678;">org-babel-python-command</span> <span style="color: #b16286;">(</span><span style="color: #8f3f71;">concat</span> current-dir <span style="color: #79740e;">"venv/bin/python"</span><span style="color: #b16286;">)</span><span style="color: #076678;">)</span>
-</pre>
-</div>
-
-<pre class="example">
-/home/bar/Desktop/Workbench/seqmotif/venv/bin/python
-</pre>
-
 
 <p>
 The newest function in use probably is random.choices which is implemented in python 3.6 so this code should work any version after python 3.6 (at least up to 3.10).
@@ -391,16 +371,16 @@ matplotlib 3.6.2
 </pre>
 </div>
 </div>
-<div id="outline-container-orgc309fb0" class="outline-2">
-<h2 id="orgc309fb0"><span class="section-number-2">2.</span> Implementation</h2>
+<div id="outline-container-org9857647" class="outline-2">
+<h2 id="org9857647"><span class="section-number-2">2.</span> Implementation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org048311d" class="outline-3">
-<h3 id="org048311d"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
+<div id="outline-container-orgf103cb6" class="outline-3">
+<h3 id="orgf103cb6"><span class="section-number-3">2.1.</span> Creating the sample data</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org6009358" class="outline-4">
-<h4 id="org6009358"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
+<div id="outline-container-org09119e1" class="outline-4">
+<h4 id="org09119e1"><span class="section-number-4">2.1.1.</span> Creating Sequences</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 We can create our test data by using random module.
@@ -436,7 +416,7 @@ Lets create 10 random sequences.
 </pre>
 </div>
 
-<pre class="example" id="orgfc3db08">
+<pre class="example" id="org202d8c0">
 TTCCGCTCCGTGCTGCTTTTCGTGCACGTTCTCTGAGCTGACTACTAGATTCACGTAGGG
 TGTGGCGCGCAAGGCATTTTTTGCGCTTTGTGCGTTTAGCGTAGAATCTAAGAGTGGAGG
 GCCTAATAAATTACACAGCAGAATACGTTAGTAGTCCGCACCGGCCTCGAGCACATCCCT
@@ -450,8 +430,8 @@ CCAAAAACGGACGACCTACCGCACCTTCGGTCCTCACTACGCAAGGACTGGAGCGTATCT
 </pre>
 </div>
 </div>
-<div id="outline-container-org1c22bf6" class="outline-4">
-<h4 id="org1c22bf6"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
+<div id="outline-container-orgfab7179" class="outline-4">
+<h4 id="orgfab7179"><span class="section-number-4">2.1.2.</span> Creating motifs</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 There is a <a href="https://genome.ucsc.edu/goldenPath/help/iupac.html">standard definition from UIPAC</a> to represent multiple bases in single character.
@@ -545,7 +525,7 @@ Lets create 10 logos.
 </pre>
 </div>
 
-<pre class="example" id="org694280f">
+<pre class="example" id="orga84cda8">
 AGCCTGG
 AGCCTCG
 AGCCTCG
@@ -559,8 +539,8 @@ AGCCTGG
 </pre>
 </div>
 </div>
-<div id="outline-container-org9dd2c6c" class="outline-4">
-<h4 id="org9dd2c6c"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
+<div id="outline-container-orgf051a1b" class="outline-4">
+<h4 id="orgf051a1b"><span class="section-number-4">2.1.3.</span> Adding motifs to sequences</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Lastly we insert the motifs randomly into the sequences. Here we return the <code>insert_ind</code> so we can see where we inserted the motifs.
@@ -578,8 +558,8 @@ Lastly we insert the motifs randomly into the sequences. Here we return the <cod
 </div>
 </div>
 </div>
-<div id="outline-container-org5a282f2" class="outline-4">
-<h4 id="org5a282f2"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
+<div id="outline-container-org83176f3" class="outline-4">
+<h4 id="org83176f3"><span class="section-number-4">2.1.4.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Lets create 120 sequences and print first 10 of them. Here we can align using
@@ -669,7 +649,7 @@ random.seed(<span style="color: #8f3f71; font-weight: bold;">0</span>)
 </pre>
 </div>
 
-<pre class="example" id="orgf47bfea">
+<pre class="example" id="orgcf39118">
                                                             AKCYTSG
                                     TTCCGCTCCGTGCTGCTTTTCGTGAGCCTCGTCTGAGCTGACTACTAGATTCACGTAGGG
                                             CAATATCAGAAAAGTGAGCCTCGCCCGGTCCAGCAACGCACATTATGTGAAATAATAGAT
@@ -685,12 +665,12 @@ random.seed(<span style="color: #8f3f71; font-weight: bold;">0</span>)
 </div>
 </div>
 </div>
-<div id="outline-container-org2da770e" class="outline-3">
-<h3 id="org2da770e"><span class="section-number-3">2.2.</span> Finding the motif</h3>
+<div id="outline-container-org2cba943" class="outline-3">
+<h3 id="org2cba943"><span class="section-number-3">2.2.</span> Finding the motif</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org199b6f5" class="outline-4">
-<h4 id="org199b6f5"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
+<div id="outline-container-org36ae272" class="outline-4">
+<h4 id="org36ae272"><span class="section-number-4">2.2.1.</span> Algorithm outline</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Lecture summarizes the algorithm as such:
@@ -806,8 +786,8 @@ We return the wmm and the max<sub>indices</sub> as a result.
 </div>
 </div>
 </div>
-<div id="outline-container-org5e25a7f" class="outline-4">
-<h4 id="org5e25a7f"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
+<div id="outline-container-org1ecca13" class="outline-4">
+<h4 id="org1ecca13"><span class="section-number-4">2.2.2.</span> Weighted Model Matrix</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Weighted model matrix or position specific probability model implemented here as
@@ -841,8 +821,8 @@ frequeny of bases in each location.
 </div>
 </div>
 </div>
-<div id="outline-container-org5bb08da" class="outline-4">
-<h4 id="org5bb08da"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
+<div id="outline-container-orga5d969b" class="outline-4">
+<h4 id="orga5d969b"><span class="section-number-4">2.2.3.</span> Calculate probability</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 We use a sliding window and calculate the probability of our <code>wmm</code> against the
@@ -875,8 +855,8 @@ probability of seeing given base in wmm to probability of seeing in background.
 </div>
 </div>
 </div>
-<div id="outline-container-orgcc6fe15" class="outline-4">
-<h4 id="orgcc6fe15"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
+<div id="outline-container-orga4eb2c4" class="outline-4">
+<h4 id="orga4eb2c4"><span class="section-number-4">2.2.4.</span> Sliding window</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 This function returns part of that sequence in motif length.
@@ -892,8 +872,8 @@ This function returns part of that sequence in motif length.
 </div>
 </div>
 </div>
-<div id="outline-container-orgaad293d" class="outline-4">
-<h4 id="orgaad293d"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
+<div id="outline-container-orgb652130" class="outline-4">
+<h4 id="orgb652130"><span class="section-number-4">2.2.5.</span> Putting it all together</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #9d0006;">from</span> collections <span style="color: #9d0006;">import</span> Counter
@@ -1032,15 +1012,15 @@ plot_logo(wmm, <span style="color: #79740e;">'motif_logo.png'</span>)
 </div>
 
 
-<div id="org2d1c33a" class="figure">
+<div id="orgf9f2c43" class="figure">
 <p><img src="motif_logo.png" alt="motif_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org506188b" class="outline-3">
-<h3 id="org506188b"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
+<div id="outline-container-org9908523" class="outline-3">
+<h3 id="org9908523"><span class="section-number-3">2.3.</span> Parameters affecting the results</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 There are few variables that affect the results. Which we can test by tweaking parameters above.
@@ -1092,7 +1072,7 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_longer_logo.png"</span>)
 </div>
 
 
-<div id="orge2dad60" class="figure">
+<div id="orgd623a53" class="figure">
 <p><img src="motif_longer_logo.png" alt="motif_longer_logo.png" />
 </p>
 </div>
@@ -1136,7 +1116,7 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_lowentropy_logo.png"</span>)
 </div>
 
 
-<div id="org5ab29fc" class="figure">
+<div id="org3d5dc29" class="figure">
 <p><img src="motif_lowentropy_logo.png" alt="motif_lowentropy_logo.png" />
 </p>
 </div>
@@ -1178,15 +1158,15 @@ plot_logo(wmm, <span style="color: #79740e;">"motif_bgcontrast_logo.png"</span>)
 </div>
 
 
-<div id="org7cd6969" class="figure">
+<div id="orgbdc1def" class="figure">
 <p><img src="motif_bgcontrast_logo.png" alt="motif_bgcontrast_logo.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org4ef52e8" class="outline-2">
-<h2 id="org4ef52e8"><span class="section-number-2">3.</span> Trying it out with real data</h2>
+<div id="outline-container-org926d068" class="outline-2">
+<h2 id="org926d068"><span class="section-number-2">3.</span> Trying it out with real data</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Lets try to use our new program with real data.
@@ -1256,7 +1236,7 @@ plot_logo(wmm, <span style="color: #79740e;">"5prime_splice_site.png"</span>)
 </div>
 
 
-<div id="org39d1b0b" class="figure">
+<div id="orgbd2ffde" class="figure">
 <p><img src="5prime_splice_site.png" alt="5prime_splice_site.png" />
 </p>
 </div>
@@ -1266,9 +1246,9 @@ Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki
 </p>
 </div>
 </div>
-<div id="outline-container-org19fefb9" class="outline-2">
-<h2 id="org19fefb9">Comments</h2>
-<div class="outline-text-2" id="text-org19fefb9">
+<div id="outline-container-org45ee4e0" class="outline-2">
+<h2 id="org45ee4e0">Comments</h2>
+<div class="outline-text-2" id="text-org45ee4e0">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
@@ -1277,7 +1257,7 @@ Here what we are looking for is the <a href="https:https://en.wikipedia.org/wiki
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

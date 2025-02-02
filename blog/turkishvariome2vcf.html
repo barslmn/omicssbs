@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Converting Turkish Variome data from TSV to VCF</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <script data-isso="//comments.omics.sbs/" src="//comments.omics.sbs/js/embed.min.js"></script>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
@@ -256,6 +256,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -271,21 +298,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -308,17 +320,17 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org50109dc">1. Some background</a></li>
-<li><a href="#org3ddd0f8">2. Taking a look at the data</a></li>
-<li><a href="#orgb5b47f4">3. VCF metalines</a></li>
-<li><a href="#org9084235">4. Multiallelic variants</a></li>
-<li><a href="#orgf386cc7">5. Converting to VCF file</a></li>
-<li><a href="#org7b172a0">Comments</a></li>
+<li><a href="#org2123f27">1. Some background</a></li>
+<li><a href="#orge7504e2">2. Taking a look at the data</a></li>
+<li><a href="#orgda45531">3. VCF metalines</a></li>
+<li><a href="#org742be73">4. Multiallelic variants</a></li>
+<li><a href="#orgd3216fd">5. Converting to VCF file</a></li>
+<li><a href="#org036c234">Comments</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org50109dc" class="outline-2">
-<h2 id="org50109dc"><span class="section-number-2">1.</span> Some background</h2>
+<div id="outline-container-org2123f27" class="outline-2">
+<h2 id="org2123f27"><span class="section-number-2">1.</span> Some background</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 I have a patient cohort I want to annotate. I like Ensembl VEP so that&rsquo;s what I am going to use but this is not about VEP. I also want to add a custom annotation.
@@ -327,15 +339,15 @@ Authors shared their data as TSV file. The fields I am intrested in this dataset
 </p>
 </div>
 </div>
-<div id="outline-container-org3ddd0f8" class="outline-2">
-<h2 id="org3ddd0f8"><span class="section-number-2">2.</span> Taking a look at the data</h2>
+<div id="outline-container-orge7504e2" class="outline-2">
+<h2 id="orge7504e2"><span class="section-number-2">2.</span> Taking a look at the data</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-sh">zcat TurkishVariome.tsv.gz | head | column -ts$<span style="color: #79740e;">'\t'</span>
 </pre>
 </div>
 
-<pre class="example" id="org861885e">
+<pre class="example" id="org3463339">
 CHROM  GRCh37Pos  GRCh38Pos  ID               IDrs                         REF  ALT  AF           AC   AN    Hom  Het  SequencingMethod  Filter  QUAL     DP     GeneName       GeneID           Feature     FeatureID        Effect                 LoF  HGVS_C      HGVS_P  GERP_RS  CADD_phred  SIFT_pred  Polyphen2_HVAR_pred  AF_gnomAD_WES  AF_gnomAD_WGS  GME_AF  1000GP_AF   ESP_AF
 1      100000012  99534456   1_100000012_G_T  1_100000012_G_T;rs10875231   G    T    0.240621     372  1546  48   276  WGS               PASS    75630.0  23720  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .    n.-441C&gt;A   .       .        .           .          .                    .              0.2900         .       0.301118    0.0
 1      10000006   9939948    1_10000006_G_A   1_10000006_G_A;rs186077422   G    A    0.000646831  1    1546  0    1    WGS               PASS    159.0    15959  RP11-84A14.4   ENSG00000228150  transcript  ENST00000445884  upstream_gene_variant  .    n.-2975G&gt;A  .       .        .           .          .                    .              0.0030         .       0.00259585  0.0
@@ -356,7 +368,7 @@ Another thing I want to get beforehand is which column is in which index because
 </pre>
 </div>
 
-<pre class="example" id="orgced3201">
+<pre class="example" id="orgaa8b517">
      1  CHROM
      2  GRCh37Pos
      3  GRCh38Pos
@@ -397,10 +409,10 @@ These are the columns <code>AF, AC, AN, Hom, Het</code> I want to extract and I 
 </p>
 </div>
 </div>
-<div id="outline-container-orgb5b47f4" class="outline-2">
-<h2 id="orgb5b47f4"><span class="section-number-2">3.</span> VCF metalines</h2>
+<div id="outline-container-orgda45531" class="outline-2">
+<h2 id="orgda45531"><span class="section-number-2">3.</span> VCF metalines</h2>
 <div class="outline-text-2" id="text-3">
-<pre class="example" id="org69c42ec">
+<pre class="example" id="org6376a3b">
 ##INFO=&lt;ID=AF,Number=1,Type=Float,Description="Allele Frequency"&gt;
 </pre>
 
@@ -423,7 +435,7 @@ One thing I want to make sure is how many fields are in the columns. One slow wa
 </pre>
 </div>
 
-<pre class="example" id="org32e2484">
+<pre class="example" id="org5422ef5">
 -
 .
 0
@@ -455,8 +467,8 @@ zcat ../TurkishVariome.tsv.gz| awk <span style="color: #79740e;">'{print $11}'</
 </div>
 </div>
 </div>
-<div id="outline-container-org9084235" class="outline-2">
-<h2 id="org9084235"><span class="section-number-2">4.</span> Multiallelic variants</h2>
+<div id="outline-container-org742be73" class="outline-2">
+<h2 id="org742be73"><span class="section-number-2">4.</span> Multiallelic variants</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Columns don&rsquo;t have multiple values which raises the question: Where are the multiallelic variants? We can check by finding the duplicates in the position column.
@@ -467,7 +479,7 @@ Columns don&rsquo;t have multiple values which raises the question: Where are th
 </pre>
 </div>
 
-<pre class="example" id="orgc34bbcf">
+<pre class="example" id="org639e6ba">
 1 100001671
 1 100001698
 1 100004209
@@ -482,7 +494,7 @@ We can than grep for these positions.
 </pre>
 </div>
 
-<pre class="example" id="orgc8a816e">
+<pre class="example" id="orged6a9f3">
 1  100001671  99536115  1_100001671_CT_C   1_100001671_CT_C;rs1212539010  CT  C    0.00323415  5   1546  0  5   WGS  PASS  1875.0    20603  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101delA         .  .  .  .  .  .  0.0035  .  0.0  0.0
 1  100001671  99536115  1_100001671_C_CTT  1_100001671_C_CTT;rs571399445  C   CTT  0.0535248   82  1532  2  78  WGS  PASS  205865.0  21435  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-2101_-2100insAA  .  .  .  .  .  .  0.0960  .  0.0  0.0
 </pre>
@@ -492,7 +504,7 @@ We can than grep for these positions.
 </pre>
 </div>
 
-<pre class="example" id="org24fd52c">
+<pre class="example" id="orge8d5922">
 1  100004209  99538653  1_100004209_G_GTTTTTTTT   1_100004209_G_GTTTTTTTT;rs10680837   G  GTTTTTTTT   0.00981675  15   1528  0   15   WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAA   .  .  .  .  .  .  0.0016  .  0.0       0.0
 1  100004209  99538653  1_100004209_G_GTTTTTT     1_100004209_G_GTTTTTT;rs10680837     G  GTTTTTT     0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAA     .  .  .  .  .  .  0.0030  .  0.0       0.0
 1  100004209  99538653  1_100004209_G_GTTTTTTTTT  1_100004209_G_GTTTTTTTTT;rs10680837  G  GTTTTTTTTT  0.0013089   2    1528  0   2    WGS  PASS  307984.0  23790  RP11-413P11.1  ENSG00000224445  transcript  ENST00000438829  upstream_gene_variant  .  n.-4639_-4638insAAAAAAAAA  .  .  .  .  .  .  .       .  0.0       0.0
@@ -507,8 +519,8 @@ INDELs and SNPs are all splitted. However INDELs are not left aligned which we m
 </p>
 </div>
 </div>
-<div id="outline-container-orgf386cc7" class="outline-2">
-<h2 id="orgf386cc7"><span class="section-number-2">5.</span> Converting to VCF file</h2>
+<div id="outline-container-orgd3216fd" class="outline-2">
+<h2 id="orgd3216fd"><span class="section-number-2">5.</span> Converting to VCF file</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Our command is make out of few parts:
@@ -596,9 +608,9 @@ We can now index the file with \(tabix -p vcf TurkishVariome.GRCh38.vcf.gz\) and
 </p>
 </div>
 </div>
-<div id="outline-container-org7b172a0" class="outline-2">
-<h2 id="org7b172a0">Comments</h2>
-<div class="outline-text-2" id="text-org7b172a0">
+<div id="outline-container-org036c234" class="outline-2">
+<h2 id="org036c234">Comments</h2>
+<div class="outline-text-2" id="text-org036c234">
 <section id="isso-thread">
     <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
@@ -607,7 +619,7 @@ We can now index the file with \(tabix -p vcf TurkishVariome.GRCh38.vcf.gz\) and
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

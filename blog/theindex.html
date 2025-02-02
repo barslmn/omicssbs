@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-30 Sat 15:14 -->
+<!-- 2025-02-02 Sun 23:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Index</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
      function CodeHighlightOn(elem, id)
@@ -223,6 +223,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -238,21 +265,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -275,35 +287,35 @@ else {
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgeb1dc2e">1. 1</a></li>
-<li><a href="#orgc3217d6">2. A</a></li>
-<li><a href="#org49de412">3. B</a></li>
-<li><a href="#org3c4af02">4. C</a></li>
-<li><a href="#orgcb4b0ea">5. D</a></li>
-<li><a href="#org89d790d">6. E</a></li>
-<li><a href="#orga0dc58c">7. G</a></li>
-<li><a href="#orgfb72fd7">8. H</a></li>
-<li><a href="#org869fb0d">9. I</a></li>
-<li><a href="#orgbb33027">10. N</a></li>
-<li><a href="#orgaf36e34">11. O</a></li>
-<li><a href="#org57272de">12. P</a></li>
-<li><a href="#org5734aca">13. R</a></li>
-<li><a href="#org23ea901">14. S</a></li>
-<li><a href="#org3535211">15. V</a></li>
-<li><a href="#org37dbac2">16. X</a></li>
+<li><a href="#orgbf92c86">1. 1</a></li>
+<li><a href="#org06c8913">2. A</a></li>
+<li><a href="#org94756e7">3. B</a></li>
+<li><a href="#org8ff4356">4. C</a></li>
+<li><a href="#orgd56703d">5. D</a></li>
+<li><a href="#org466358c">6. E</a></li>
+<li><a href="#org5031479">7. G</a></li>
+<li><a href="#orge48adf0">8. H</a></li>
+<li><a href="#org20ff4a4">9. I</a></li>
+<li><a href="#org7e13a8b">10. N</a></li>
+<li><a href="#orgf6eb4e4">11. O</a></li>
+<li><a href="#orgd2cb101">12. P</a></li>
+<li><a href="#org2a06651">13. R</a></li>
+<li><a href="#org9c29caf">14. S</a></li>
+<li><a href="#orge94c4ae">15. V</a></li>
+<li><a href="#org40e9f1c">16. X</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgeb1dc2e" class="outline-2">
-<h2 id="orgeb1dc2e"><span class="section-number-2">1.</span> 1</h2>
+<div id="outline-container-orgbf92c86" class="outline-2">
+<h2 id="orgbf92c86"><span class="section-number-2">1.</span> 1</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">1000genomes</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc3217d6" class="outline-2">
-<h2 id="orgc3217d6"><span class="section-number-2">2.</span> A</h2>
+<div id="outline-container-org06c8913" class="outline-2">
+<h2 id="org06c8913"><span class="section-number-2">2.</span> A</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li><a href="NGSoneliner/NGSoneliner.html">alignment</a></li>
@@ -311,8 +323,8 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org49de412" class="outline-2">
-<h2 id="org49de412"><span class="section-number-2">3.</span> B</h2>
+<div id="outline-container-org94756e7" class="outline-2">
+<h2 id="org94756e7"><span class="section-number-2">3.</span> B</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="prs/prs_calculation.html">Binomial Regression</a></li>
@@ -321,16 +333,16 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org3c4af02" class="outline-2">
-<h2 id="org3c4af02"><span class="section-number-2">4.</span> C</h2>
+<div id="outline-container-org8ff4356" class="outline-2">
+<h2 id="org8ff4356"><span class="section-number-2">4.</span> C</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">chrX</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcb4b0ea" class="outline-2">
-<h2 id="orgcb4b0ea"><span class="section-number-2">5.</span> D</h2>
+<div id="outline-container-orgd56703d" class="outline-2">
+<h2 id="orgd56703d"><span class="section-number-2">5.</span> D</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li><a href="updating_a_debian_package.html">debian</a></li>
@@ -338,16 +350,17 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org89d790d" class="outline-2">
-<h2 id="org89d790d"><span class="section-number-2">6.</span> E</h2>
+<div id="outline-container-org466358c" class="outline-2">
+<h2 id="org466358c"><span class="section-number-2">6.</span> E</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li><a href="making_of_this_website.html">emacs</a></li>
+<li><a href="epilepsi_sınıflandırması_ilae_2017.html">epilepsy</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orga0dc58c" class="outline-2">
-<h2 id="orga0dc58c"><span class="section-number-2">7.</span> G</h2>
+<div id="outline-container-org5031479" class="outline-2">
+<h2 id="org5031479"><span class="section-number-2">7.</span> G</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li><a href="seqmotif/seqmotif.html">Gibbs Sampling</a></li>
@@ -355,8 +368,8 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-orgfb72fd7" class="outline-2">
-<h2 id="orgfb72fd7"><span class="section-number-2">8.</span> H</h2>
+<div id="outline-container-orge48adf0" class="outline-2">
+<h2 id="orge48adf0"><span class="section-number-2">8.</span> H</h2>
 <div class="outline-text-2" id="text-8">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">heterozgosity</a></li>
@@ -364,32 +377,33 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org869fb0d" class="outline-2">
-<h2 id="org869fb0d"><span class="section-number-2">9.</span> I</h2>
+<div id="outline-container-org20ff4a4" class="outline-2">
+<h2 id="org20ff4a4"><span class="section-number-2">9.</span> I</h2>
 <div class="outline-text-2" id="text-9">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">IGV</a></li>
+<li><a href="epilepsi_sınıflandırması_ilae_2017.html">ILAE</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbb33027" class="outline-2">
-<h2 id="orgbb33027"><span class="section-number-2">10.</span> N</h2>
+<div id="outline-container-org7e13a8b" class="outline-2">
+<h2 id="org7e13a8b"><span class="section-number-2">10.</span> N</h2>
 <div class="outline-text-2" id="text-10">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">nextflow</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgaf36e34" class="outline-2">
-<h2 id="orgaf36e34"><span class="section-number-2">11.</span> O</h2>
+<div id="outline-container-orgf6eb4e4" class="outline-2">
+<h2 id="orgf6eb4e4"><span class="section-number-2">11.</span> O</h2>
 <div class="outline-text-2" id="text-11">
 <ul class="org-ul">
 <li><a href="making_of_this_website.html">org mode</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org57272de" class="outline-2">
-<h2 id="org57272de"><span class="section-number-2">12.</span> P</h2>
+<div id="outline-container-orgd2cb101" class="outline-2">
+<h2 id="orgd2cb101"><span class="section-number-2">12.</span> P</h2>
 <div class="outline-text-2" id="text-12">
 <ul class="org-ul">
 <li><a href="NGSoneliner/NGSoneliner.html">pipeline</a></li>
@@ -397,16 +411,16 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org5734aca" class="outline-2">
-<h2 id="org5734aca"><span class="section-number-2">13.</span> R</h2>
+<div id="outline-container-org2a06651" class="outline-2">
+<h2 id="org2a06651"><span class="section-number-2">13.</span> R</h2>
 <div class="outline-text-2" id="text-13">
 <ul class="org-ul">
 <li><a href="prs/prs_calculation.html">R</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org23ea901" class="outline-2">
-<h2 id="org23ea901"><span class="section-number-2">14.</span> S</h2>
+<div id="outline-container-org9c29caf" class="outline-2">
+<h2 id="org9c29caf"><span class="section-number-2">14.</span> S</h2>
 <div class="outline-text-2" id="text-14">
 <ul class="org-ul">
 <li><a href="updating_a_debian_package.html">scrcpy</a></li>
@@ -418,8 +432,8 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org3535211" class="outline-2">
-<h2 id="org3535211"><span class="section-number-2">15.</span> V</h2>
+<div id="outline-container-orge94c4ae" class="outline-2">
+<h2 id="orge94c4ae"><span class="section-number-2">15.</span> V</h2>
 <div class="outline-text-2" id="text-15">
 <ul class="org-ul">
 <li><a href="NGSoneliner/NGSoneliner.html">variant calling</a></li>
@@ -428,8 +442,8 @@ else {
 </ul>
 </div>
 </div>
-<div id="outline-container-org37dbac2" class="outline-2">
-<h2 id="org37dbac2"><span class="section-number-2">16.</span> X</h2>
+<div id="outline-container-org40e9f1c" class="outline-2">
+<h2 id="org40e9f1c"><span class="section-number-2">16.</span> X</h2>
 <div class="outline-text-2" id="text-16">
 <ul class="org-ul">
 <li><a href="XHetRel/1KGP_Xhet.html">X</a></li>
@@ -439,7 +453,7 @@ else {
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>

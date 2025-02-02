@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="tr" xml:lang="tr">
 <head>
-<!-- 2024-12-01 Sun 23:09 -->
+<!-- 2025-02-02 Sun 23:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ILAE 2017 Epilepsi Sınıflandırması</title>
@@ -195,9 +195,9 @@
 </style>
 
 <script async src="https://analytics.umami.is/script.js" data-website-id="c0d0b77c-5c98-4814-9721-bb72437e9467"></script>
-<link rel="shortcut icon" href="https://omics.sbs/static/base/img/fav.ico" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/latex.css" />
-<link rel="stylesheet" href="https://omics.sbs/static/base/css/style.css" />
+<link rel="shortcut icon" href="/static/base/img/fav.ico" />
+<link rel="stylesheet" href="/static/base/css/latex.css" />
+<link rel="stylesheet" href="/static/base/css/style.css" />
 <style>img{max-width:100%}</style>
 <style>details{background-color:#fff !important}</style>
 <link href="https://cdn.jsdelivr.net/npm/zoom-vanilla.js/dist/zoom.css" rel="stylesheet">
@@ -227,6 +227,33 @@
 <div id="preamble" class="status">
 
 <script>
+// Set base domain dynamically
+const currentDomain = window.location.hostname;
+const isNewDomain = currentDomain.includes('barissalman');
+const basePath = isNewDomain ? '' : '/blog';  // Adjust if needed
+
+// Update all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = {
+        'Home': '/',
+        'Blog': '/blog',
+        'Notes': '/notes',
+        'Photos': '/photos',
+        'Bioscripts': '/bioscripts'
+    };
+
+    const navbar = document.getElementById('navbar');
+    Object.entries(navLinks).forEach(([text, path]) => {
+        const link = document.createElement('a');
+        link.href = path;
+        link.textContent = text;
+        const li = document.createElement('li');
+        li.appendChild(link);
+        navbar.insertBefore(li, navbar.querySelector('.preferences'));
+    });
+});
+</script>
+<script>
 if (localStorage.darkMode == "true") {
   document.body.classList.add("latex-dark");
 }
@@ -242,21 +269,6 @@ else {
 </script>
 
     <ul id="navbar">
-        <li>
-            <a href="https://omics.sbs/">Home</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/blog">Blog</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/notes">Notes</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/photos">Photos</a>
-        </li>
-        <li>
-            <a href="https://omics.sbs/bioscripts">Bioscripts</a>
-        </li>
         <li class="preferences">
             <button class="dark-mode-button" id="dark-mode-toggle" aria-label="Toggle color mode"
                 title="Toggle color mode">
@@ -275,7 +287,7 @@ else {
 </div>
 <div id="content" class="content">
 <h1 class="title">ILAE 2017 Epilepsi Sınıflandırması</h1>
-<div class="post-tag" id="org016bbae">
+<div class="post-tag" id="orgdb112c7">
 <p>
 22 Jul 2022 — Barış Salman
 </p>
@@ -286,24 +298,24 @@ else {
 <h2>İçindekiler</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc51d574">1. ILAE Sınıfılandırması</a></li>
-<li><a href="#orga114076">2. Epilepsi Sınıflandırması</a>
+<li><a href="#orge7a429a">1. ILAE Sınıfılandırması</a></li>
+<li><a href="#orgdd389b2">2. Epilepsi Sınıflandırması</a>
 <ul>
 <li><a href="#nöbet-tipleri">2.1. Nöbet Tipleri</a></li>
 <li><a href="#epilepsi-tipleri">2.2. Epilepsi Tipleri</a></li>
-<li><a href="#orgd86813f">2.3. Epilepsi Sendromları</a></li>
-<li><a href="#org1b96d01">2.4. Etiyoloji</a></li>
-<li><a href="#org0f9ff5e">2.5. Eştanılar</a></li>
+<li><a href="#org9b6cb2b">2.3. Epilepsi Sendromları</a></li>
+<li><a href="#org97e0819">2.4. Etiyoloji</a></li>
+<li><a href="#org64ccc84">2.5. Eştanılar</a></li>
 </ul>
 </li>
-<li><a href="#org0cdf523">3. Yeni Terminoloji ve Tanımlar</a>
+<li><a href="#orgeb4f0a1">3. Yeni Terminoloji ve Tanımlar</a>
 <ul>
-<li><a href="#org7b10ab3">3.1. Gelişimsel ve Epileptik Ensefalopatiler</a></li>
-<li><a href="#orgb14e45e">3.2. Kendi-limitli Farmakoduyarlı</a></li>
+<li><a href="#org5482dcf">3.1. Gelişimsel ve Epileptik Ensefalopatiler</a></li>
+<li><a href="#orgddd3ae6">3.2. Kendi-limitli Farmakoduyarlı</a></li>
 </ul>
 </li>
-<li><a href="#orge9d1b13">4. Referanslar</a></li>
-<li><a href="#org92d0fe1">Comments</a></li>
+<li><a href="#orgc0af3fe">4. Referanslar</a></li>
+<li><a href="#org4dafced">Comments</a></li>
 </ul>
 </div>
 </div>
@@ -311,8 +323,8 @@ else {
 <p>
 Bu döküman 2017 Epilepsiye Karşı Uluslararası Lig epilepsi sınıflandırma yayından özettir. (<a href="#citeproc_bib_item_1">Scheffer et al. 2017</a>)
 </p>
-<div id="outline-container-orgc51d574" class="outline-2">
-<h2 id="orgc51d574"><span class="section-number-2">1.</span> ILAE Sınıfılandırması</h2>
+<div id="outline-container-orge7a429a" class="outline-2">
+<h2 id="orge7a429a"><span class="section-number-2">1.</span> ILAE Sınıfılandırması</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>İlk sınıflandırma 1860'da Gaustat tarafından önerildi ve 1985'de yapıldı ve 1989 revize edildi.</li>
@@ -338,8 +350,8 @@ Bu döküman 2017 Epilepsiye Karşı Uluslararası Lig epilepsi sınıflandırma
 </ul>
 </div>
 </div>
-<div id="outline-container-orga114076" class="outline-2">
-<h2 id="orga114076"><span class="section-number-2">2.</span> Epilepsi Sınıflandırması</h2>
+<div id="outline-container-orgdd389b2" class="outline-2">
+<h2 id="orgdd389b2"><span class="section-number-2">2.</span> Epilepsi Sınıflandırması</h2>
 <div class="outline-text-2" id="text-2">
 </div>
 <div id="outline-container-nöbet-tipleri" class="outline-3">
@@ -367,8 +379,8 @@ Epilepsi tipi, Epilepsi Sendromu tanısı yapılamadığı durumlarda tanının 
 <li>Daha az yaygın bir durum olarak, hem fokal bozulmuş farkındalıklı hem de absans nöbetler gözlenen ve EEG'de hem fokal deşarjların hem de jeneralize diken dalga gözlenen, MRI'sı normal olan 20 yaşındaki bir kadın Birleşik Jeneralize ve Fokal Epilepsi tanısı alacaktır.</li>
 </ul>
 </div>
-<div id="outline-container-org07326aa" class="outline-4">
-<h4 id="org07326aa"><span class="section-number-4">2.2.1.</span> Jeneralize  epilepsiler</h4>
+<div id="outline-container-orged3d97f" class="outline-4">
+<h4 id="orged3d97f"><span class="section-number-4">2.2.1.</span> Jeneralize  epilepsiler</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Hastaların EEG'sinde diken dalga aktivitesi gözlenir.
@@ -387,8 +399,8 @@ nöbet tipleri gözlenir.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9e014ea" class="outline-4">
-<h4 id="org9e014ea"><span class="section-number-4">2.2.2.</span> Fokal epilepsiler</h4>
+<div id="outline-container-org01b42c0" class="outline-4">
+<h4 id="org01b42c0"><span class="section-number-4">2.2.2.</span> Fokal epilepsiler</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Fokal epilepsiler tek bir hemisferi saran nöbetleri ve tek ve çoklu fokal bozuklukları içerir.
@@ -407,8 +419,8 @@ nöbet tipleri gözlenir.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org86c517c" class="outline-4">
-<h4 id="org86c517c"><span class="section-number-4">2.2.3.</span> Birleşik Jeneralize ve Fokal epilepsiler</h4>
+<div id="outline-container-org386ec2c" class="outline-4">
+<h4 id="org386ec2c"><span class="section-number-4">2.2.3.</span> Birleşik Jeneralize ve Fokal epilepsiler</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 Hem fokal hem jeneralize nöbetler gözüken hastaların sınıflandırılması için kullanılan yeni bir gruptur.
@@ -422,8 +434,8 @@ sendromlarıdır.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb19d621" class="outline-4">
-<h4 id="orgb19d621"><span class="section-number-4">2.2.4.</span> Bilinmeyen epilepsi</h4>
+<div id="outline-container-orgaaae0ef" class="outline-4">
+<h4 id="orgaaae0ef"><span class="section-number-4">2.2.4.</span> Bilinmeyen epilepsi</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 Bilinmeyen terimi, hastanın Epilepsi olduğu ancak epilepsiyi fokal ya da jeneralize olarak sınıflandırabilmek için yeterli bilgi bulunmadığı zamanlarda kullanılır.
@@ -434,8 +446,8 @@ Bu durumda nöbetlerin başlangıcı bilinemez ve epilepsi tipi de bilinemez.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd86813f" class="outline-3">
-<h3 id="orgd86813f"><span class="section-number-3">2.3.</span> Epilepsi Sendromları</h3>
+<div id="outline-container-org9b6cb2b" class="outline-3">
+<h3 id="org9b6cb2b"><span class="section-number-3">2.3.</span> Epilepsi Sendromları</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Sınıflandırmanın üçüncü aşaması <b>Epilepsi Sendromu</b> tanısıdır.
@@ -445,8 +457,8 @@ Ayrıca belirli EEG ve görüntüleme bulgularının eşlik ettiği zihinsel yet
 Aynı zamanda etiyolojik, hastalığın seyri ve tedavisi ile ilişkilidir.
 </p>
 </div>
-<div id="outline-container-org76d49e4" class="outline-4">
-<h4 id="org76d49e4"><span class="section-number-4">2.3.1.</span> İdyopatik Jeneralize Epilepsiler</h4>
+<div id="outline-container-org7c50684" class="outline-4">
+<h4 id="org7c50684"><span class="section-number-4">2.3.1.</span> İdyopatik Jeneralize Epilepsiler</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 İdyopatik Jeneralize Epilepsiler (İJE'ler) jeneralize epilepsiler arasında iyi bilinen ve yaygın gözlenen bir alt gruptur.
@@ -466,8 +478,8 @@ Bu yüzden bu sendrom grubunu <b>Genetik Jeneralize Epilepsiler (GJE)</b> olarak
 </p>
 </div>
 </div>
-<div id="outline-container-orgf6bb954" class="outline-4">
-<h4 id="orgf6bb954"><span class="section-number-4">2.3.2.</span> Kendi-Limitli Fokal Epilepsiler</h4>
+<div id="outline-container-org0bc5816" class="outline-4">
+<h4 id="org0bc5816"><span class="section-number-4">2.3.2.</span> Kendi-Limitli Fokal Epilepsiler</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <ul class="org-ul">
 <li>Sentrotemporal dikenli kendi-limitli epilepsi</li>
@@ -486,12 +498,12 @@ Bu yüzden bu sendrom grubunu <b>Genetik Jeneralize Epilepsiler (GJE)</b> olarak
 </div>
 </div>
 </div>
-<div id="outline-container-org1b96d01" class="outline-3">
-<h3 id="org1b96d01"><span class="section-number-3">2.4.</span> Etiyoloji</h3>
+<div id="outline-container-org97e0819" class="outline-3">
+<h3 id="org97e0819"><span class="section-number-3">2.4.</span> Etiyoloji</h3>
 <div class="outline-text-3" id="text-2-4">
 </div>
-<div id="outline-container-org1ac62a1" class="outline-4">
-<h4 id="org1ac62a1"><span class="section-number-4">2.4.1.</span> Yapısal Etiyoloji</h4>
+<div id="outline-container-org388c5fd" class="outline-4">
+<h4 id="org388c5fd"><span class="section-number-4">2.4.1.</span> Yapısal Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 Yapısal anormallikler, epilepsi riskinin artışı ile ilişkilidir.
@@ -536,8 +548,8 @@ Tuberoskleroz hastalığında yapısal etiyoloji iyi tanımlanmış olup hamarti
 </p>
 </div>
 </div>
-<div id="outline-container-orgf617772" class="outline-4">
-<h4 id="orgf617772"><span class="section-number-4">2.4.2.</span> Genetik Etiyoloji</h4>
+<div id="outline-container-orgcb336b4" class="outline-4">
+<h4 id="orgcb336b4"><span class="section-number-4">2.4.2.</span> Genetik Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 Genetik etiyoloji, hastalığın öz belirtisi olan nöbetlerin bilinen ya da varsayılan bir genetik mutasyondan sonuçlanmasıdır.
@@ -577,8 +589,8 @@ Hem hafif hem ağır epilepsilerde artan sayıda de novo varyant tespit edilmekt
 </p>
 </div>
 </div>
-<div id="outline-container-org8a01359" class="outline-4">
-<h4 id="org8a01359"><span class="section-number-4">2.4.3.</span> Bulaşıcı Etiyoloji</h4>
+<div id="outline-container-org521b741" class="outline-4">
+<h4 id="org521b741"><span class="section-number-4">2.4.3.</span> Bulaşıcı Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 Dünya çapındaki en yaygın etiyoloji enfeksiyon sonucu oluşur.
@@ -604,8 +616,8 @@ Bulaşıcı etiyoloji, aynı zamanda viral ensefalit gibi enfeksiyon sonrasında
 </p>
 </div>
 </div>
-<div id="outline-container-org2cb0bde" class="outline-4">
-<h4 id="org2cb0bde"><span class="section-number-4">2.4.4.</span> Metabolik Etiyoloji</h4>
+<div id="outline-container-orgb1af441" class="outline-4">
+<h4 id="orgb1af441"><span class="section-number-4">2.4.4.</span> Metabolik Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 Metabolik etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan metabolik hastalıktan kaynaklanmasıdır.
@@ -622,8 +634,8 @@ Metabolik etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan 
 </p>
 </div>
 </div>
-<div id="outline-container-org333dd8c" class="outline-4">
-<h4 id="org333dd8c"><span class="section-number-4">2.4.5.</span> İmmün Etiyoloji</h4>
+<div id="outline-container-orgca95764" class="outline-4">
+<h4 id="orgca95764"><span class="section-number-4">2.4.5.</span> İmmün Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-5">
 <p>
 İmmün etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan immün hastalıktan kaynaklanmasıdır. İmmün etiyoloji, otoimmün aracılı merkezi sinir sistemi inflamasyonu olarak düşünülebilir.
@@ -634,8 +646,8 @@ Metabolik etiyoloji, epilepsinin temel nöbetlerinin, bilinen ya da varsayılan 
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb48ef23" class="outline-4">
-<h4 id="orgb48ef23"><span class="section-number-4">2.4.6.</span> Bilinmeyen Etiyoloji</h4>
+<div id="outline-container-orge5db881" class="outline-4">
+<h4 id="orge5db881"><span class="section-number-4">2.4.6.</span> Bilinmeyen Etiyoloji</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <p>
 Epilepsinin kaynağının daha bilinmemesi durumudur. Bu kategoride frontal lop epilepsisi gibi temel elektroklinik yollar dışında bir tanı mümkün değildir.
@@ -643,8 +655,8 @@ Epilepsinin kaynağının daha bilinmemesi durumudur. Bu kategoride frontal lop 
 </div>
 </div>
 </div>
-<div id="outline-container-org0f9ff5e" class="outline-3">
-<h3 id="org0f9ff5e"><span class="section-number-3">2.5.</span> Eştanılar</h3>
+<div id="outline-container-org64ccc84" class="outline-3">
+<h3 id="org64ccc84"><span class="section-number-3">2.5.</span> Eştanılar</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Epilepsiler çoğu zaman farklı bozukluklarla beraber seyretmektedir. Bu bozukluklar hafiften ağıra bir yelpaze içerisindedir.
@@ -660,12 +672,12 @@ Epilepsiler çoğu zaman farklı bozukluklarla beraber seyretmektedir. Bu bozukl
 </div>
 </div>
 </div>
-<div id="outline-container-org0cdf523" class="outline-2">
-<h2 id="org0cdf523"><span class="section-number-2">3.</span> Yeni Terminoloji ve Tanımlar</h2>
+<div id="outline-container-orgeb4f0a1" class="outline-2">
+<h2 id="orgeb4f0a1"><span class="section-number-2">3.</span> Yeni Terminoloji ve Tanımlar</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org7b10ab3" class="outline-3">
-<h3 id="org7b10ab3"><span class="section-number-3">3.1.</span> Gelişimsel ve Epileptik Ensefalopatiler</h3>
+<div id="outline-container-org5482dcf" class="outline-3">
+<h3 id="org5482dcf"><span class="section-number-3">3.1.</span> Gelişimsel ve Epileptik Ensefalopatiler</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Epileptik ensefalopati (EE), altta yatan patolojinin ötesinde, epilepsinin de ağır bilişsel ve davranışsal bozukluklara yol açması durumunu anlatmak için yeniden tanımlanmıştır.
@@ -681,8 +693,8 @@ Ancak tek gen bozuklukları bazı insanlarda EE'ye yol açabilirken bazı insanl
 </p>
 </div>
 </div>
-<div id="outline-container-orgb14e45e" class="outline-3">
-<h3 id="orgb14e45e"><span class="section-number-3">3.2.</span> Kendi-limitli Farmakoduyarlı</h3>
+<div id="outline-container-orgddd3ae6" class="outline-3">
+<h3 id="orgddd3ae6"><span class="section-number-3">3.2.</span> Kendi-limitli Farmakoduyarlı</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Daha önceden kullanılan selim terimi diğer eştanılı durumların önemini yeterince belirtememektedir.
@@ -710,17 +722,17 @@ Yeni isimlendirmede, "kendi-limitli" sendromun kendiliğinden çözüm bulması,
 </div>
 </div>
 </div>
-<div id="outline-container-orge9d1b13" class="outline-2">
-<h2 id="orge9d1b13"><span class="section-number-2">4.</span> Referanslar</h2>
+<div id="outline-container-orgc0af3fe" class="outline-2">
+<h2 id="orgc0af3fe"><span class="section-number-2">4.</span> Referanslar</h2>
 <div class="outline-text-2" id="text-4">
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
   <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Scheffer, Ingrid E., Samuel Berkovic, Giuseppe Capovilla, Mary B. Connolly, Jacqueline French, Laura Guilhoto, Edouard Hirsch, et al. 2017. “ILAE Classification of the Epilepsies: Position Paper of the ILAE Commission for Classification and Terminology.” <i>Epilepsia</i> 58 (4): 512–21. <a href="https://doi.org/10.1111/epi.13709">https://doi.org/10.1111/epi.13709</a>.</div>
 </div>
 </div>
 </div>
-<div id="outline-container-org92d0fe1" class="outline-2">
-<h2 id="org92d0fe1">Comments</h2>
-<div class="outline-text-2" id="text-org92d0fe1">
+<div id="outline-container-org4dafced" class="outline-2">
+<h2 id="org4dafced">Comments</h2>
+<div class="outline-text-2" id="text-org4dafced">
 <section id="isso-thread">
 <noscript>Javascript needs to be activated to view comments.</noscript>
 </section>
@@ -733,7 +745,7 @@ Yeni isimlendirmede, "kendi-limitli" sendromun kendiliğinden çözüm bulması,
 </div>
 <div id="postamble" class="status">
 
-<script src="https://omics.sbs/static/base/js/script.js"></script>
+<script src="/static/base/js/script.js"></script>
 </div>
 </body>
 </html>
