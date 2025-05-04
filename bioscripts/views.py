@@ -17,6 +17,10 @@ def index(request):
     return render(request, "bioscripts/index.html")
 
 
+def brainspan(request):
+    return render(request, "bioscripts/brainspan.html")
+
+
 def prism(request):
     return render(request, "bioscripts/prism.html")
 

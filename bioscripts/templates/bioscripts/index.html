@@ -1,16 +1,30 @@
-{% extends "bioscripts/base.html" %}
-{% load static %}
-{% block content %}
-<p style="display:none;">
-    bioscripts/index.html
-</p>
+{% extends "bioscripts/base.html" %} {% load static %} {% block content %}
+<p style="display: none">bioscripts/index.html</p>
 
 This page indexes a collection of tools available as web applications for
 bioinformaticians and geneticists. The tools automate various tasks that often
-are performed manually. The source code for this page is available on <a
-    href="https://github.com/barslmn/omicsbs">GitHub</a>.
+are performed manually. The source code for this page is available on
+<a href="https://github.com/barslmn/omicsbs">GitHub</a>.
 <div class="row">
-    <!-- <div class="column">
+  <div class="column">
+    <div class="card">
+      <h3>
+        <a href="https://barissalman.com/bioscripts/brainspan">PRiSm</a>
+      </h3>
+      <img
+        src="{% static 'bioscripts/img/brainspan.png' %}"
+        alt="Polygenic Risk Score Simulation"
+      />
+      <p>
+        This tool plots expression the given gene in various brain structures in
+        various developmental stages and ages. Image is available at
+        <a href="https://hub.docker.com/r/barslmn/brainspan-shiny-app"
+          >dockerhub</a
+        >.
+      </p>
+    </div>
+  </div>
+  <!-- <div class="column">
             <div class="card">
                 <h3>
                     <a href="{% url 'bioscripts:var2texshade' %}">Var2TexShade</a>
@@ -27,106 +41,121 @@ are performed manually. The source code for this page is available on <a
             </div>
         </div> -->
 
-    <div class="column">
-        <div class="card">
-            <h3>
-                <a href="{% url 'bioscripts:hgnc_version' %}">HGNC version</a>
-            </h3>
-                <img src="{% static 'bioscripts/img/hgnc_version.png' %}" alt="HGNC version">
-            <p>
-                This tool shows the differences of gene symbols over the months on a heatmap.
-                HGNC archive tables have been flattened out to the files and have
-                been committed to a git repo in a chronological order.
-                The data repo can be found at
-                <a href="https://github.com/barslmn/hgnc-data">github</a>.
-                <!-- In order to use the app just start entering a gene symbol to the text box.
+  <div class="column">
+    <div class="card">
+      <h3>
+        <a href="{% url 'bioscripts:hgnc_version' %}">HGNC version</a>
+      </h3>
+      <img
+        src="{% static 'bioscripts/img/hgnc_version.png' %}"
+        alt="HGNC version"
+      />
+      <p>
+        This tool shows the differences of gene symbols over the months on a
+        heatmap. HGNC archive tables have been flattened out to the files and
+        have been committed to a git repo in a chronological order. The data
+        repo can be found at
+        <a href="https://github.com/barslmn/hgnc-data">github</a>.
+        <!-- In order to use the app just start entering a gene symbol to the text box.
                                 The autocomplete function will show the you matching symbols.
                                 The heatmap will be rendered when a symbol is selected. -->
-            </p>
-        </div>
+      </p>
     </div>
+  </div>
 
-    <div class="column">
-        <div class="card">
-            <h3>
-                <a href="{% url 'bioscripts:crosssymbolchecker' %}">Cross-symbol checker</a>
-            </h3>
-                <img src="{% static 'bioscripts/img/crosssymbolchecker.svg' %}" alt="Cross Symbol Checker Logo">
-            <p>
-                This tool maps aliases, and previous or withdrawn symbols to current approved
-                HGNC symbols as well as check for any entries that are not gene symbols and fix
-                capitalization. Ensembl and RefSeq annotation files sometimes use previous or
-                alias symbols. This tool also cross checks against Ensembl and NCBI annotation
-                files for different genome versions and shows which gene symbols used. This way
-                an accurate gene set can be utilized to avoid false negatives in the variant
-                discovery process. The source code is available on <a
-                    href="https://github.com/barslmn/cross-symbol-checker">GitHub</a>.
-            </p>
-        </div>
+  <div class="column">
+    <div class="card">
+      <h3>
+        <a href="{% url 'bioscripts:crosssymbolchecker' %}"
+          >Cross-symbol checker</a
+        >
+      </h3>
+      <img
+        src="{% static 'bioscripts/img/crosssymbolchecker.svg' %}"
+        alt="Cross Symbol Checker Logo"
+      />
+      <p>
+        This tool maps aliases, and previous or withdrawn symbols to current
+        approved HGNC symbols as well as check for any entries that are not gene
+        symbols and fix capitalization. Ensembl and RefSeq annotation files
+        sometimes use previous or alias symbols. This tool also cross checks
+        against Ensembl and NCBI annotation files for different genome versions
+        and shows which gene symbols used. This way an accurate gene set can be
+        utilized to avoid false negatives in the variant discovery process. The
+        source code is available on
+        <a href="https://github.com/barslmn/cross-symbol-checker">GitHub</a>.
+      </p>
     </div>
+  </div>
 </div>
 
-
 <div class="row">
-    <div class="column">
-        <div class="card">
-            <h3>
-                <a href="{% url 'bioscripts:prism' %}">PRiSm</a>
-            </h3>
-                <img src="{% static 'bioscripts/img/prism.png' %}" alt="Polygenic Risk Score Simulation">
-            <p>
-                This tool simulates genotypes for control and case groups and performs logistic regression on score.
-                The tools is served at <a href="https://barslmn.shinyapps.io/PRiSm/">shinyapps</a>.
-                You can read more about how it works and the components within at <a
-                    href="https://omics.sbs/blog/prs/prs_calculation.html">this post</a>
-                The source code is available on <a href="https://github.com/barslmn/omicssbs">GitHub</a>.
-            </p>
-        </div>
+  <div class="column">
+    <div class="card">
+      <h3>
+        <a href="{% url 'bioscripts:prism' %}">PRiSm</a>
+      </h3>
+      <img
+        src="{% static 'bioscripts/img/prism.png' %}"
+        alt="Polygenic Risk Score Simulation"
+      />
+      <p>
+        This tool simulates genotypes for control and case groups and performs
+        logistic regression on score. The tools is served at
+        <a href="https://barslmn.shinyapps.io/PRiSm/">shinyapps</a>. You can
+        read more about how it works and the components within at
+        <a href="https://omics.sbs/blog/prs/prs_calculation.html">this post</a>
+        The source code is available on
+        <a href="https://github.com/barslmn/omicssbs">GitHub</a>.
+      </p>
     </div>
+  </div>
 </div>
 
 <style type="text/css" media="screen">
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-/* Float four columns side by side */
-.column {
-  float: left;
-  width: 50%;
-  padding: 0 1em 0 0;
-}
+  /* Float four columns side by side */
+  .column {
+    float: left;
+    width: 50%;
+    padding: 0 1em 0 0;
+  }
 
-/* Remove extra left and right margins, due to padding in columns */
-.row {margin: 1em 0 1em 0;}
+  /* Remove extra left and right margins, due to padding in columns */
+  .row {
+    margin: 1em 0 1em 0;
+  }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 
-h3 {
+  h3 {
     margin-top: 0.6em;
     margin-bottom: 0.6em;
- }
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  padding: .6em;
-  text-align: center;
-  background-color: var(--body-bg-color);
-}
-
-/* Responsive columns - one column layout (vertical) on small screens */
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
   }
-}
+  /* Style the counter cards */
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+    padding: 0.6em;
+    text-align: center;
+    background-color: var(--body-bg-color);
+  }
+
+  /* Responsive columns - one column layout (vertical) on small screens */
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
 </style>
 
 {% endblock %}
