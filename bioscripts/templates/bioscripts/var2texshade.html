@@ -1,13 +1,72 @@
-{% extends "bioscripts/base.html" %}
-{% block content %}
+{% extends "bioscripts/base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2>Variant Alignment Generator (TeXshade)</h2>
 
-{{ error }}
+  {% if error %}
+  <div class="alert alert-danger" role="alert">{{ error }}</div>
+  {% endif %}
 
-<p>Only accepting HGVSp notation using NCBI Protein accession ids for <span style="font-style:italic">H. Sapeins</span>. e.g: NP_001501.2:p.Arg121Leu</p>
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+  <div class="card p-4 shadow-sm">
+    <p class="text-muted">
+      Generate publication-quality Multiple Sequence Alignments (MSA). Enter
+      NCBI Protein Accessions (e.g., <code>NP_001501.2:p.Arg121Leu</code>).
+    </p>
 
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.variants.label_tag }} {{ form.variants }}
+        <small class="form-text text-muted"
+          >{{ form.variants.help_text }}</small
+        >
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label><strong>Mode</strong></label>
+          <div class="form-check">
+            {% for radio in form.mode %}
+            <div class="form-check">
+              {{ radio.tag }}
+              <label class="form-check-label" for="{{ radio.id_for_label }}">
+                {{ radio.choice_label }}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          {{ form.taxa.label_tag }} {{ form.taxa }}
+          <small class="form-text text-muted">{{ form.taxa.help_text }}</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          {{ form.max_seqs.label_tag }} {{ form.max_seqs }}
+        </div>
+        <div class="col-md-4 mb-3">
+          {{ form.padding.label_tag }} {{ form.padding }}
+        </div>
+        <div class="col-md-4 mb-3 d-flex align-items-center">
+          <div class="form-check">
+            {{ form.show_all }}
+            <label
+              class="form-check-label"
+              for="{{ form.show_all.id_for_label }}"
+            >
+              {{ form.show_all.label }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg mt-3">
+        Generate PDF
+      </button>
+    </form>
+  </div>
+</div>
 {% endblock %}

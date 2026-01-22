@@ -24,21 +24,69 @@ def brainspan(request):
 def prism(request):
     return render(request, "bioscripts/prism.html")
 
-
 def var2texshade(request):
-    # if this is a POST request we need to process the form data
     if request.method == "POST":
-        # create a form instance and populate it with data from the request:
         form = Var2TexShadeForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            hgvsp = form.cleaned_data["hgvsp"]
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return redirect("bioscripts:var2texshade_api", hgvsp=hgvsp)
+            # 1. Extract Data
+            raw_variants = form.cleaned_data["variants"]
+            # Normalize newlines/commas to list
+            variants_list = re.split(r'[\s,]+', raw_variants.strip())
+            
+            mode = form.cleaned_data["mode"]
+            taxa = form.cleaned_data["taxa"]
+            max_seqs = form.cleaned_data["max_seqs"]
+            padding = form.cleaned_data["padding"]
+            show_all = form.cleaned_data["show_all"]
 
-    # if a GET (or any other method) we'll create a blank form
+            # 2. Setup Paths
+            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/var2texshade/var2texshade.py")
+            # Create a safe temp filename
+            output_filename = f"alignment_{secrets.token_hex(4)}.pdf"
+            output_path = os.path.join("/tmp", output_filename)
+
+            # 3. Construct Command (List format is safer than shell=True)
+            # We use 'tsp -fn' to run in foreground but queue the slot
+            cmd = ["tsp", "-fn", "python3", str(module_path)]
+            
+            # Append Variants
+            cmd.extend(variants_list)
+            
+            # Append Options
+            cmd.extend(["--output", output_path])
+            cmd.extend(["--mode", mode])
+            if taxa:
+                cmd.extend(["--taxa", taxa])
+            cmd.extend(["--max_seqs", str(max_seqs)])
+            cmd.extend(["--padding", str(padding)])
+            if show_all:
+                cmd.append("--show_all")
+
+            # 4. Execute
+            try:
+                # check_output captures stdout/stderr if needed
+                subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+                
+                # 5. Return File
+                if os.path.exists(output_path):
+                    return FileResponse(
+                        open(output_path, "rb"),
+                        as_attachment=True,
+                        filename="variant_alignment.pdf"
+                    )
+                else:
+                    return render(request, "bioscripts/var2texshade.html", {
+                        "form": form, 
+                        "error": "Error: Output file was not generated."
+                    })
+            except subprocess.CalledProcessError as e:
+                # Decode error output for debugging
+                err_msg = e.output.decode('utf-8') if e.output else str(e)
+                return render(request, "bioscripts/var2texshade.html", {
+                    "form": form, 
+                    "error": f"Processing Error: {err_msg}"
+                })
+
     else:
         form = Var2TexShadeForm()
 
