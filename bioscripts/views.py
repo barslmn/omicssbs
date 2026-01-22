@@ -1,16 +1,14 @@
 from django.shortcuts import render, redirect
-from django.http import FileResponse, StreamingHttpResponse
+from django.http import FileResponse, StreamingHttpResponse, Http404
 from django.conf import settings
+from django.urls import reverse
 import subprocess
 import secrets
+import time
 import csv
 import re
 import os
-
-
 from .forms import Var2TexShadeForm, CrossSymbolCheckerForm
-
-# Create your views here.
 
 
 def index(request):
@@ -24,68 +22,46 @@ def brainspan(request):
 def prism(request):
     return render(request, "bioscripts/prism.html")
 
+
 def var2texshade(request):
     if request.method == "POST":
         form = Var2TexShadeForm(request.POST)
         if form.is_valid():
-            # 1. Extract Data
+            # 1. Prepare Data
             raw_variants = form.cleaned_data["variants"]
-            # Normalize newlines/commas to list
             variants_list = re.split(r'[\s,]+', raw_variants.strip())
             
-            mode = form.cleaned_data["mode"]
-            taxa = form.cleaned_data["taxa"]
-            max_seqs = form.cleaned_data["max_seqs"]
-            padding = form.cleaned_data["padding"]
-            show_all = form.cleaned_data["show_all"]
-
-            # 2. Setup Paths
-            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/var2texshade/var2texshade.py")
-            # Create a safe temp filename
-            output_filename = f"alignment_{secrets.token_hex(4)}.pdf"
+            # 2. Generate Unique Job ID
+            job_id = secrets.token_hex(8)
+            output_filename = f"alignment_{job_id}.pdf"
             output_path = os.path.join("/tmp", output_filename)
-
-            # 3. Construct Command (List format is safer than shell=True)
-            # We use 'tsp -fn' to run in foreground but queue the slot
-            cmd = ["tsp", "-fn", "python3", str(module_path)]
             
-            # Append Variants
-            cmd.extend(variants_list)
+            # 3. Construct Command
+            module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/var2texshade/var2texshade.py")
             
-            # Append Options
-            cmd.extend(["--output", output_path])
-            cmd.extend(["--mode", mode])
-            if taxa:
-                cmd.extend(["--taxa", taxa])
-            cmd.extend(["--max_seqs", str(max_seqs)])
-            cmd.extend(["--padding", str(padding)])
-            if show_all:
-                cmd.append("--show_all")
+            # Build the python command string
+            cmd_args = [f"python3 {module_path}"]
+            cmd_args.extend(variants_list)
+            cmd_args.append(f"--output {output_path}")
+            cmd_args.append(f"--mode {form.cleaned_data['mode']}")
+            
+            if form.cleaned_data['taxa']:
+                cmd_args.append(f"--taxa '{form.cleaned_data['taxa']}'")
+            
+            cmd_args.append(f"--max_seqs {form.cleaned_data['max_seqs']}")
+            cmd_args.append(f"--padding {form.cleaned_data['padding']}")
+            
+            if form.cleaned_data['show_all']:
+                cmd_args.append("--show_all")
+            
+            full_cmd = " ".join(cmd_args)
 
-            # 4. Execute
-            try:
-                # check_output captures stdout/stderr if needed
-                subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-                
-                # 5. Return File
-                if os.path.exists(output_path):
-                    return FileResponse(
-                        open(output_path, "rb"),
-                        as_attachment=True,
-                        filename="variant_alignment.pdf"
-                    )
-                else:
-                    return render(request, "bioscripts/var2texshade.html", {
-                        "form": form, 
-                        "error": "Error: Output file was not generated."
-                    })
-            except subprocess.CalledProcessError as e:
-                # Decode error output for debugging
-                err_msg = e.output.decode('utf-8') if e.output else str(e)
-                return render(request, "bioscripts/var2texshade.html", {
-                    "form": form, 
-                    "error": f"Processing Error: {err_msg}"
-                })
+            # 4. Queue with TSP
+            # -L labels the job with our job_id so we can find it later
+            subprocess.run(f"tsp -L {job_id} {full_cmd}", shell=True)
+
+            # 5. Redirect to Status Page
+            return redirect("bioscripts:var2texshade_status", job_id=job_id)
 
     else:
         form = Var2TexShadeForm()
@@ -93,23 +69,61 @@ def var2texshade(request):
     return render(request, "bioscripts/var2texshade.html", {"form": form})
 
 
-def var2texshade_api(request, hgvsp):
-    module_path = settings.BASE_DIR.parent.joinpath("bioscripts/modules/var2texshade/")
+def var2texshade_status(request, job_id):
+    """Checks the status of a TSP job and renders the loading or result page."""
     try:
-        result = subprocess.check_output(
-            f"tsp -fn {module_path.joinpath('var2texshade.sh')} {hgvsp}", shell=True
+        # Query TSP for the job with this label
+        # awk prints: State, ExitLevel
+        # tsp output cols: ID State Output E-Level ... [Label]
+        cmd = f"tsp -l | grep '{job_id}'"
+        output = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
+        
+        if not output:
+            return render(request, "bioscripts/var2texshade_status.html", {
+                "status": "error", "error_msg": "Job not found."
+            })
+
+        # Parse TSP output roughly
+        parts = output.split()
+        # State is usually index 1 (queued, running, finished)
+        state = parts[1]
+        
+        if state == "finished":
+            # E-Level is usually index 3
+            exit_code = parts[3]
+            if exit_code == "0":
+                return render(request, "bioscripts/var2texshade_status.html", {
+                    "status": "finished", "job_id": job_id
+                })
+            else:
+                return render(request, "bioscripts/var2texshade_status.html", {
+                    "status": "error", "error_msg": "Processing failed (Exit Code non-zero)."
+                })
+        else:
+            # running or queued
+            time.sleep(15)
+            return render(request, "bioscripts/var2texshade_status.html", {
+                "status": "running", "job_id": job_id
+            })
+
+    except subprocess.CalledProcessError:
+        # grep failed means label not found
+        return render(request, "bioscripts/var2texshade_status.html", {
+            "status": "error", "error_msg": "Job ID not found in queue."
+        })
+
+
+def var2texshade_download(request, job_id):
+    """Serves the generated PDF."""
+    output_path = os.path.join("/tmp", f"alignment_{job_id}.pdf")
+    if os.path.exists(output_path):
+        return FileResponse(
+            open(output_path, "rb"), 
+            as_attachment=True, 
+            filename="variant_alignment.pdf"
         )
-    except subprocess.CalledProcessError as E:
-        return render(
-            request,
-            "bioscripts/var2texshade.html",
-            {"error": f"Error: {E.output.decode('utf-8')}"},
-        )
-    return FileResponse(
-        open(result.decode("utf-8").strip(), "rb"),
-        as_attachment=True,
-        filename=f"{hgvsp}.pdf",
-    )
+    else:
+        raise Http404("File not found")
 
 
 def crosssymbolchecker(request):
@@ -129,7 +143,7 @@ def crosssymbolchecker(request):
             module_path = settings.BASE_DIR.parent.joinpath(
                 "bioscripts/modules/cross-symbol-checker/"
             )
-            label = secrets.token_urlsafe(6)
+            label = secrets.token_hex(6)
             subprocess.run(
                 f"tsp -L {label} {module_path.joinpath('check-geneset.sh')} -s {source} -a {assembly} {symbols}",
                 shell=True,

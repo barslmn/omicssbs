@@ -9,7 +9,8 @@ urlpatterns = [
     path("brainspan", views.brainspan, name="brainspan"),
     path("prism", views.prism, name="prism"),
     path("var2texshade/", views.var2texshade, name="var2texshade"),
-    path("var2texshade/<str:hgvsp>", views.var2texshade_api, name="var2texshade_api"),
+    path("var2texshade/status/<str:job_id>/", views.var2texshade_status, name="var2texshade_status"),
+    path("var2texshade/download/<str:job_id>/", views.var2texshade_download, name="var2texshade_download"),
     path("crosssymbolchecker/", views.crosssymbolchecker, name="crosssymbolchecker"),
     path(
         "crosssymbolchecker/<str:label>",
